@@ -29,13 +29,14 @@ import utilities.Log;
  * @author ben
  */
 public class GotoLabelRewrite {
-    /* Invocations to rewrite */
+    
+    /** Invocations to rewrite */
     public static final String LABEL = "LABEL";
     public static final String GOTO = "GOTO";
-    /* Map of GOTOs and LABELs instructions */
-    HashMap<Integer, LabelNode> __map = new HashMap<Integer, LabelNode>();
-    /* Path for generated class files */
-    private String __path;
+    /** Map of GOTOs and LABELs instructions */
+    HashMap<Integer, LabelNode> hashMap = new HashMap<>();
+    /** Path for generated class files */
+    private String path;
     
     public static boolean checkPath(Path path, boolean isFile) {
         if (path == null || !Files.exists(path))
@@ -49,11 +50,11 @@ public class GotoLabelRewrite {
     }
     
     public GotoLabelRewrite(String path) {
-        __path = path.isEmpty() ? "" : path;
-        Log.doLog = false; /* Change this to 'true' for debugging */
+        this.path = path.isEmpty() ? "" : path;
+        Log.doLog = false; // Change this to 'true' for debugging
         Log.log("======================================");
         Log.log(" Rewriting goto and labels..");
-        Log.log(" Path: " + __path);
+        Log.log(" Path: " + this.path);
         Log.log("======================================");
     }
     
@@ -82,24 +83,24 @@ public class GotoLabelRewrite {
                 MethodInsnNode mNode = (MethodInsnNode) node;
                 if (GOTO.equals(mNode.name)) {
                     Log.log("Found goto/" + mNode.desc);
-                    /* Find the correct constant value on the operand stack
-                     * that belongs to this 'goto' label */
+                    // Find the correct constant value on the operand stack
+                    // that belongs to this 'goto' label
                     AbstractInsnNode prevIns = mNode.getPrevious();
                     int operand = Opcodes.ICONST_M1;
-                    /* Check if the node represents an instruction with a single
-                     * integer operand, e.g. the opcode of the instruction must
-                     * be one of the following: BIPUSH, SIPUSH, NEWARRAY */
+                    // Check if the node represents an instruction with a single
+                    // integer operand, e.g. the opcode of the instruction must
+                    // be one of the following: BIPUSH, SIPUSH, NEWARRAY
                     if (prevIns instanceof IntInsnNode) {
                         IntInsnNode iiNode = (IntInsnNode) prevIns;
                         operand = iiNode.operand;
                     } else {
-                        /* If we are here is because we have a node that represents
-                         * a zero operand instruction */
+                        // If we are here is because we have a node that represents
+                        // a zero operand instruction
                         InsnNode insNode = (InsnNode) prevIns;
                         operand = getOpcode(insNode.getOpcode());
                     }
-                    if (__map.get(operand) != null)
-                        insList.insert(mNode, new JumpInsnNode(Opcodes.GOTO, __map.get(operand)));
+                    if (hashMap.get(operand) != null)
+                        insList.insert(mNode, new JumpInsnNode(Opcodes.GOTO, hashMap.get(operand)));
                 }
             }
         }
@@ -117,25 +118,25 @@ public class GotoLabelRewrite {
                 MethodInsnNode mNode = (MethodInsnNode) node;
                 if (LABEL.equals(mNode.name)) {
                     Log.log("Found label/" + mNode.desc);
-                    /* Find the correct constant value on the operand stack
-                     * that belongs to this 'label' invocation */
+                    // Find the correct constant value on the operand stack
+                    // that belongs to this 'label' invocation
                     AbstractInsnNode prevIns = mNode.getPrevious();
-                    /* Replace the invocation with a label instruction */
+                    // Replace the invocation with a label instruction
                     LabelNode ln = new LabelNode();
                     insList.insert(mNode, ln);
-                    /* Check if the node represents an instruction with a single
-                     * integer operand, e.g. the opcode of the instruction must
-                     * be one of the following: BIPUSH, SIPUSH, NEWARRAY */
+                    // Check if the node represents an instruction with a single
+                    // integer operand, e.g. the opcode of the instruction must
+                    // be one of the following: BIPUSH, SIPUSH, NEWARRAY
                     if (prevIns instanceof IntInsnNode) {
                         IntInsnNode iiNode = (IntInsnNode) prevIns;
                         Log.log("Adding operand " + iiNode.operand);
-                        __map.put(iiNode.operand, ln);
+                        hashMap.put(iiNode.operand, ln);
                     } else {
-                        /* We have a node that represents a zero operand instruction */
+                        // We have a node that represents a zero operand instruction
                         InsnNode insNode = (InsnNode) prevIns;
                         int operand = getOpcode(insNode.getOpcode());
                         Log.log("Adding operand " + operand);
-                        __map.put(operand, ln);
+                        hashMap.put(operand, ln);
                     }
                 }
             }
@@ -183,11 +184,11 @@ public class GotoLabelRewrite {
     }
     
     public void rewrite() {
-        /* Verify that we have a valid path */
-        if (!checkPath(Paths.get(__path), false))
-            exit("File '" + __path + "' does not exists!", 101);
-        /* Grab .class files form given directory */
-        File[] cf = new File(__path).listFiles();
+        // Verify that we have a valid path
+        if (!checkPath(Paths.get(path), false))
+            exit("File '" + path + "' does not exists!", 101);
+        // Grab .class files form given directory
+        File[] cf = new File(path).listFiles();
         if (cf == null || cf.length == 0)
             exit("Missing .class files!", 101);
         for (File f : cf) {
@@ -201,9 +202,9 @@ public class GotoLabelRewrite {
                     ClassReader cr = new ClassReader(is);
                     ClassNode cn = new ClassNode();
                     cr.accept(cn, ClassReader.SKIP_DEBUG);
-                    /* Traverse the list of methods that belong to this class */
+                    // Traverse the list of methods that belong to this class
                     for (Object o : cn.methods) {
-                        /* Ignore anything that is not considered to be a method */
+                        // Ignore anything that is not considered to be a method
                         if (!(o instanceof MethodNode))
                             continue;
                         MethodNode mn = (MethodNode)o;
@@ -213,7 +214,7 @@ public class GotoLabelRewrite {
                         removeGotoInsn(mn);
                         removeLabelInsn(mn);
                     }
-                    /* Rewrite the class file(s) */
+                    // Rewrite the class file(s)
                     ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
                     cn.accept(cw);
                     byte[] newClass = cw.toByteArray();

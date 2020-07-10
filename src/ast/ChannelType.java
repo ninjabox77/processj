@@ -3,7 +3,7 @@ package ast;
 import utilities.Visitor;
 
 public class ChannelType extends Type {
-    // These are the different values the field 'shared' can take.
+    // These are the different values the field `shared' can take.
     public static final int SHARED_READ = 0;
     public static final int SHARED_WRITE = 1;
     public static final int SHARED_READ_WRITE = 2;
@@ -11,7 +11,6 @@ public class ChannelType extends Type {
 
     public String modSyms[] = { "shared read", "shared write", "shared", "" };
 
-    
     private int shared;
 
     public ChannelType(Type baseType, int shared) {
@@ -51,17 +50,16 @@ public class ChannelType extends Type {
     }
 
     public int byteSizeC() {
-        //TODO.
+        // TODO.
         return 4;
     }
-
 
     // *************************************************************************
     // ** Visitor Related Methods
 
-    @Override 
+    @Override
     public boolean isChannelType() {
-	return true;
+        return true;
     }
 
     // *************************************************************************
@@ -69,27 +67,27 @@ public class ChannelType extends Type {
 
     // if α = Channel(t1, a1) ∧ β = Channel(t2, a2)
     // α =T β ⇔ Channel?(α) ∧ Channel?(β) ∧ (t1 =T t2) ∧ (a1 = a2)
-    @Override 
+    @Override
     public boolean typeEqual(Type t) {
-	// Channel?(β) -- is t a channel?
-	if (!t.isChannelType())
-	    return false;
-	ChannelType other = (ChannelType)t;
-	// (a1 = a2) -- are both channels' ends shared in the same way?
-	if (shared != other.shared)
-	    return false;
-	// (t1 =T t2) -- are the base types type equal?
-	return baseType().typeEqual(other.baseType());
+        // Channel?(β) -- is t a channel?
+        if (!t.isChannelType())
+            return false;
+        ChannelType other = (ChannelType) t;
+        // (a1 = a2) -- are both channels' ends shared in the same way?
+        if (shared != other.shared)
+            return false;
+        // (t1 =T t2) -- are the base types type equal?
+        return baseType().typeEqual(other.baseType());
     }
 
     // α ∼T β ⇔ α =T β
-    @Override 
+    @Override
     public boolean typeEquivalent(Type t) {
         return this.typeEqual(t);
     }
 
     // Channels cannot be assigned.
-    @Override 
+    @Override
     public boolean typeAssignmentCompatible(Type t) {
         return false;
     }

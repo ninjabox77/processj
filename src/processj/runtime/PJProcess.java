@@ -121,11 +121,11 @@ public class PJProcess {
     
     // ------------------------------------------
     
-    /* Dummy LABEL for ASM bytecode rewrite */
+    // Dummy LABEL for ASM bytecode rewrite for loops
     public static void LABEL(int label) {
     }
     
-    /* Dummy GOTO for ASM bytecode rewrite */
+    // Dummy GOTO for ASM bytecode rewrite for loops
     public static void GOTO(int label) {
     }
 }

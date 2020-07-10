@@ -32,7 +32,7 @@ public class StatementRewrite extends Visitor<AST> {
 		Log.log(is, "Visiting an if statement");
 		
 		if (is.thenpart() != null) {
-			/* 'then-part' should be a block */
+			// 'then-part' should be a block
 			if (!(is.thenpart() instanceof Block))
 				is.children[1] = new Block(new Sequence<Statement>(is.thenpart()));
 			is.thenpart().visit(this);
@@ -40,12 +40,12 @@ public class StatementRewrite extends Visitor<AST> {
 			is.children[1] = new Block(new Sequence<Statement>());
 		
 		if (is.elsepart() != null) {
-			/* 'else-part' should be a block */
+			// 'else-part' should be a block
 			if (!(is.elsepart() instanceof Block))
 				is.children[2] = new Block(new Sequence<Statement>(is.elsepart()));
 			is.elsepart().visit(this);
 		} else
-		    ; /* This may be null */
+		    ; // This may be null
 		return null;
 	}
 
@@ -55,7 +55,7 @@ public class StatementRewrite extends Visitor<AST> {
 		Log.log(ws, "Visiting a while statement");
 		
 		if (ws.stat() != null) {
-			/* 'stat' should be a block */
+			// 'stat' should be a block
 			if (!(ws.stat() instanceof Block))
 				ws.children[1] = new Block(new Sequence<Statement>(ws.stat()));
 			ws.stat().visit(this);
@@ -70,7 +70,7 @@ public class StatementRewrite extends Visitor<AST> {
 		Log.log(fs, "Visiting a for statement");
 		
 		if (fs.stats() != null) {
-			/* 'stat' should be a block */
+			// 'stat' should be a block
 			if (!(fs.stats() instanceof Block))
 				fs.children[4] = new Block(new Sequence<Statement>(fs.stats()));
 			fs.stats().visit(this);
@@ -85,7 +85,7 @@ public class StatementRewrite extends Visitor<AST> {
 		Log.log(ds, "Visiting a do statement");
 		
 		if (ds.stat() != null) {
-			/* 'stat' should be a block */
+			// 'stat' should be a block
 			if (!(ds.stat() instanceof Block))
 				ds.children[0] = new Block(new Sequence<Statement>(ds.stat()));
 			ds.stat().visit(this);
@@ -100,12 +100,12 @@ public class StatementRewrite extends Visitor<AST> {
 		Log.log(ac, "Visiting an alt case");
 		
 		if (ac.stat() != null) {
-			/* 'stat' should be a block */
+			// 'stat' should be a block
 			if (!(ac.stat() instanceof Block))
 				ac.children[2] = new Block(new Sequence<Statement>(ac.stat())); 
 			ac.stat().visit(this);
 		} else
-			; /* This can never be null */
+			; // This can never be null!
 		return null;
 	}
 	

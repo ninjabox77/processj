@@ -16,7 +16,7 @@ import utilities.Settings;
 /**
  * This class contains helper methods for the CodeGenerator.
  *
- * @author Ben
+ * @author ben
  * @version 06/21/2018
  * @since 1.2
  */
@@ -57,7 +57,7 @@ public class Helper {
 
         switch (type) {
         case MAIN_NAME:
-            break; /* Do nothing for now */
+            break; // Do nothing for now
         case PROCEDURE_NAME:
             varName = Tag.PROCEDURE_NAME + name;
             break;
@@ -161,24 +161,22 @@ public class Helper {
                 if (!Character.isJavaIdentifierPart(ch))
                     return true;
             }
-            
             return false;
         }
-        
         return true;
     }
     
     public static String getPackage(String packageName, String sourceFile) {
-        /* An invocation comes from a external file (an import) if the source
-         * file from which the invocation was made is different to the package */
+        // An invocation comes from a external file (an import) if the source
+        // file from which the invocation was made is different to the package
         if (!packageName.contains(sourceFile)) {
             String includePath = Settings.includeDir + File.separator + Settings.language + File.separator;
-            /* The following replaces all '/' with '.' */
+            // The following replaces all '/' with '.'
             includePath = includePath.replaceAll(File.separator, "\\.");
             packageName = packageName.replaceAll(includePath, "");
             return packageName;
         }
-        /* Otherwise, the invocation was made from the same source file */
+        // The invocation was made from the same source file
         return sourceFile;
     }
     

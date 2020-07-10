@@ -1,104 +1,69 @@
 package processj.runtime;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+
+import utilities.Pair;
+import utilities.Util;
 
 /**
  * @author ben
  */
-public class PJRecord extends HashMap<String, Object> {
+public class PJRecord {
     
-    private int hashCode;
-    
-    public PJRecord(String[] keys, Object[] values) {
-        for (int i = 0; i < values.length; ++i)
-            super.put(keys[i], values[i]);
-    }
-    
-    @SuppressWarnings("unchecked")
-    public PJRecord(Map map) {
-        super(map);
-    }
-    
-    public Object get(String key) {
-        return super.get(key);
-    }
-    
-    @Override
-    public Object put(String key, Object value) {
-        return super.put(key, value);
-    }
-    
-    @Override
-    public Object remove(Object key) {
-        throw new RuntimeException(String.format("Record %s is immutable.", this));
-    }
-    
-    @Override
-    public void putAll(Map map) {
-        throw new RuntimeException(String.format("Record %s is immutable.", this));
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof PJRecord))
-            return false;
-        
-        PJRecord other = (PJRecord) o;
-        if (size() == other.size()) {
-            for (Object e : entrySet()) {
-                Map.Entry entry = (Map.Entry) e;
-                Object key = entry.getKey();
-                if (!entry.getValue().equals(other.get(key)))
-                    return false;
-            }
+    private static Pair<Object, Integer> getField(Map<Pair<Object, Integer>, String> hm, Object o) {
+        for (Map.Entry<Pair<Object,Integer>, String> e : hm.entrySet()) {
+            Pair<Object, Integer> p = (Pair<Object, Integer>) e.getKey();
+            if (p.getFirst() == o)
+                return p;
         }
-        return true;
-    }
-    
-    @Override
-    public int hashCode() {
-        if (hashCode == 0) {
-            for (Object key : keySet()) {
-                int hash = (key != null) ? key.hashCode() : 0xdadd;
-                hashCode ^= hash;
-            }
-        }
-        return hashCode;
-    }
-    
-    private String findKeyFor(HashMap<String, Object> entries, Object o) {
-        for (Map.Entry<String, Object> e : entries.entrySet())
-            if (e.getValue() == o)
-                return e.getKey();
         return null;
     }
     
-    public String toString(HashMap<String, Object> entries) {
-        if (entries == null)
-            entries = new HashMap<String, Object>();
-        StringBuilder sb = new StringBuilder("*:[");
-        Iterator<String> it = keySet().iterator();
-        while (it.hasNext()) {
-            String key = it.next();
-            Object value = get(key);
-            if (get(key) instanceof PJRecord) {
-                if (value == this) {
-                    String varName = findKeyFor(entries, value);
-                    varName = varName != null? "*" + varName : "*";
-                    sb.append(key).append(":").append(varName);
+    public String toString(Map<Pair<Object, Integer>, String> hm, int count) {
+        if (hm == null)
+            hm = new HashMap<>();
+        Class<? extends PJRecord> c = getClass();
+        StringBuilder sb = new StringBuilder("[");
+        try {
+            Field[] fields = c.getFields();
+            for (int i = 0; i < fields.length; ++i) {
+                Object o = fields[i].get(this);
+                if (o instanceof PJRecord) {
+                    Pair<Object, Integer> tuple = getField(hm, o);
+                    if (tuple != null) {
+                        String fname = Util.addChar('*', ++count);
+                        sb.append(fields[i].getName());
+                        sb.append(":");
+                        sb.append(fname);
+                        tuple.setValue(count);
+                    } else {
+                        tuple = new Pair<>(o, 0);
+                        hm.put(tuple, fields[i].getName());
+                        String s = ((PJRecord) o).toString(hm, count);
+                        tuple = getField(hm, o);
+                        if (tuple != null) {
+                            String fname = Util.addChar('*', tuple.getValue());
+                            s = fname + s;
+                        }
+                        sb.append(fields[i].getName());
+                        sb.append(":");
+                        sb.append(s);
+                    }
                 } else {
-                    entries.put(key, value);
-                    String s = ((PJRecord) value).toString(entries);
-                    if (s.startsWith("*"))
-                        s = s.substring(1, s.length());
-                    sb.append(key).append(s);
+                    sb.append(fields[i].getName());
+                    sb.append(":");
+                    sb.append(o);
                 }
-            } else
-                sb.append(key).append(":").append(value);
-            if (it.hasNext())
-                sb.append(", ");
+                if (i+1 != fields.length)
+                    sb.append(", ");
+            }
+        } catch (Exception e) {
+            // An exception should never be thrown because the members of a PJRecord
+            // are 'public' by default!
+            System.out.println("Failed to access field of PJRecord");
+            System.exit(1);
         }
         sb.append("]");
         return sb.toString();

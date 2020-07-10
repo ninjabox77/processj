@@ -64,29 +64,40 @@ public class ChannelEndType extends Type {
     public <S extends Object> S visit(Visitor<S> v) {
         return v.visitChannelEndType(this);
     }
-
+    
+    // α =T β ⇔ Channel?(α) ∧ Channel?(β) ∧ α = β ∧ (m1 = m2)
     @Override
     public boolean typeEqual(Type t) {
-        return false;
+        if (!t.isChannelEndType())
+            return false;
+        boolean b = false;
+        /** Protocols and records are NamedTyped for channel ends and channels. We
+         * must use the `actualType' which can be retrieved from the type() method */
+        ChannelEndType cet = (ChannelEndType) t;
+        if (cet.baseType().isNamedType() && this.baseType().isNamedType())
+            b = ((NamedType)baseType()).type().typeAssignmentCompatible(((NamedType)cet.baseType()).type());
+        else
+            b = baseType().typeAssignmentCompatible(cet.baseType());
+        /* Check if both channels' ends shared in the same way */
+        if (b) {
+            boolean bb = false;
+            if (this.isShared() && cet.isShared())
+                bb = true;
+            else if ((this.isRead() && cet.isRead()) || (this.isWrite() && cet.isWrite()))
+                bb = true;
+            b = b && bb;
+        }
+        return b;
     }
-
+    
+    // α =T β ⇔ Channel?(α) ∧ Channel?(β) ∧ α = β ∧ (m1 = m2)
     @Override
     public boolean typeEquivalent(Type t) {
-        return false;
+        return this.typeEqual(t);
     }
 
     @Override
     public boolean typeAssignmentCompatible(Type t) {
-        if (!t.isChannelEndType())
-            return false;
-        else {
-            // Protocols are NamedType's for channel ends and channels; therefore, we must
-            // use the 'actualType' which you can get from the 'type()' method.
-            ChannelEndType cet = (ChannelEndType) t;
-            if (cet.baseType().isNamedType() && this.baseType().isNamedType()) {
-                return ((NamedType)baseType()).type().typeAssignmentCompatible(((NamedType)cet.baseType()).type());
-            }
-            return baseType().typeAssignmentCompatible(cet.baseType());
-        }
+        return this.typeEqual(t);
     }
 }

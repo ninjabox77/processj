@@ -1,19 +1,18 @@
 package utilities;
 
 /**
- * This enum defines various types of programming languages
- * available in the ProcessJ compiler.
+ * This enum defines various types of programming languages available
+ * in the ProcessJ compiler.
  * 
- * @author Ben
+ * @author ben
  * @version 08/30/2018
  * @since 1.2
  */
 public enum Language {
     
-    JVM     ("JVM"),
-    CPLUS   ("C++"),
-    JS      ("JS")
-    ;
+    JVM ("JVM"),
+    CPLUS ("C++"),
+    JS ("JS");
     
     private final String language;
     

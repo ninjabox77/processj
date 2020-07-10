@@ -10,10 +10,8 @@ public class ProcTypeDecl extends Type implements DefineTopLevelDecl {
     public String nativeFunction; // Name of the native function, e.g. fabs
     public boolean yields = false;
 
-    public ProcTypeDecl(Sequence<Modifier> modifiers, Type returnType,
-                        Name name, Sequence<ParamDecl> formals,
-                        Sequence<Name> implement, Annotations annotations,
-                        Block body) {
+    public ProcTypeDecl(Sequence<Modifier> modifiers, Type returnType, Name name, Sequence<ParamDecl> formals,
+            Sequence<Name> implement, Annotations annotations, Block body) {
         super(name);
         nchildren = 7;
         children = new AST[] { modifiers, returnType, name, formals, implement, annotations, body };
@@ -98,7 +96,7 @@ public class ProcTypeDecl extends Type implements DefineTopLevelDecl {
         for (int i = 0; i < formalParams().size(); i++) {
             eq = eq && formalParams().child(i).type().typeEqual(other.formalParams().child(i).type());
         }
-	return eq;
+        return eq;
     }
 
     // α ∼T β ⇔ α =T β

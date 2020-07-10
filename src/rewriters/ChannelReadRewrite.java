@@ -3,8 +3,8 @@ package rewriters;
 import ast.*;
 import utilities.Visitor;
 import printers.*;
-import utilities.ProcessJMessage;
-import utilities.ProcessJBugManager;
+import utilities.PJMessage;
+import utilities.PJBugManager;
 import utilities.MessageType;
 import utilities.VisitorMessageNumber;
 import utilities.Error;
@@ -587,6 +587,7 @@ public class ChannelReadRewrite {
 				// appropriate node.
 				Sequence s = (Sequence) seq2.child(0); // [ <Si>; ]
 				retSeq.merge(s); // [ <S0>; ... <Si>; ]
+				retSeq.visit(new PrettyPrinter());
 				// }
 			}
 			return retSeq;

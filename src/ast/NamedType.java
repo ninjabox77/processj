@@ -75,12 +75,12 @@ public class NamedType extends Type implements DefineTopLevelDecl {
     // TODO
     @Override
     public boolean typeEquivalent(Type t) {
-        return typeEqual(t);
+        return this.typeEqual(t);
     }
 
     // TODO
     @Override
     public boolean typeAssignmentCompatible(Type t) {
-        return typeEqual(t);
+        return this.typeEqual(t);
     }
 }

@@ -6,213 +6,211 @@ import java.util.HashSet;
 /**
  * @author ben
  */
-public class Types {
+public enum Types {
+    
+    INSTANCE;
     
     // --------------------------------------------------
     // ESPECIAL TOKENS
-    public static final int EOF = 0;        /* End of file */
-    public static final int UNKNOWN = 1;    /* Unknown token */
+    public final int EOF = 0;        // End of file
+    public final int UNKNOWN = 1;    // Unknown token
     
     // --------------------------------------------------
     // LINE FEED TOKEN
-    public static final int NEWLINE = -1;   /* Line feed */
+    public final int NEWLINE = -1;   // Line feed
     
     // --------------------------------------------------
     // KEYWORDS
     
-    /* Atomic Types */
-    public static final int KEYWORD_BOOLEAN = 2;
-    public static final int KEYWORD_BYTE = 3;
-    public static final int KEYWORD_SHORT = 4;
-    public static final int KEYWORD_INT = 5;
-    public static final int KEYWORD_LONG = 6;
-    public static final int KEYWORD_FLOAT = 7;
-    public static final int KEYWORD_DOUBLE = 8;
-    public static final int KEYWORD_CHAR = 9;
-    public static final int KEYWORD_STRING = 10;
-    public static final int KEYWORD_VOID = 11;
+    // Atomic Types
+    public final int KEYWORD_BOOLEAN = 2;
+    public final int KEYWORD_BYTE = 3;
+    public final int KEYWORD_SHORT = 4;
+    public final int KEYWORD_INT = 5;
+    public final int KEYWORD_LONG = 6;
+    public final int KEYWORD_FLOAT = 7;
+    public final int KEYWORD_DOUBLE = 8;
+    public final int KEYWORD_CHAR = 9;
+    public final int KEYWORD_STRING = 10;
+    public final int KEYWORD_VOID = 11;
     
-    /* Channel related keywords */
-    public static final int KEYWORD_CHAN = 12;
-    public static final int KEYWORD_READ = 13;
-    public static final int KEYWORD_WRITE = 14;
-    public static final int KEYWORD_SHARED = 15;
-    public static final int KEYWORD_CLAIM = 16;  /* No longer need */
+    // Channel related keywords
+    public final int KEYWORD_CHAN = 12;
+    public final int KEYWORD_READ = 13;
+    public final int KEYWORD_WRITE = 14;
+    public final int KEYWORD_SHARED = 15;
+    public final int KEYWORD_CLAIM = 16;  // No longer need
     
-    /* Barrier related keywords */
-    public static final int KEYWORD_BARRIER = 17;
-    public static final int KEYWORD_SYNC = 18;
-    public static final int KEYWORD_ENROLL = 19;
+    // Barrier related keywords
+    public final int KEYWORD_BARRIER = 17;
+    public final int KEYWORD_SYNC = 18;
+    public final int KEYWORD_ENROLL = 19;
     
-    /* Timer related keywords */
-    public static final int KEYWORD_TIMER = 20;
-    public static final int KEYWORD_TIMEOUT = 21;
+    // Timer related keywords
+    public final int KEYWORD_TIMER = 20;
+    public final int KEYWORD_TIMEOUT = 21;
     
-    /* Silly keywords */
-    public static final int KEYWORD_SKIP = 22;
-    public static final int KEYWORD_STOP = 23;
-    public static final int KEYWORD_IS = 24;
+    // Silly keywords
+    public final int KEYWORD_SKIP = 22;
+    public final int KEYWORD_STOP = 23;
+    public final int KEYWORD_IS = 24;
     
-    /* Control flow related keywords */
-    public static final int KEYWORD_IF = 25;
-    public static final int KEYWORD_ELSE = 26;
-    public static final int KEYWORD_FOR = 27;
-    public static final int KEYWORD_WHILE = 28;
-    public static final int KEYWORD_SWITCH = 29;
-    public static final int KEYWORD_CASE = 30;
-    public static final int KEYWORD_DO = 31;
-    public static final int KEYWORD_DEFAULT = 32;
-    public static final int KEYWORD_BREAK = 33;
-    public static final int KEYWORD_CONTINUE = 34;
-    public static final int KEYWORD_RETURN = 35;
+    // Control flow related keywords
+    public final int KEYWORD_IF = 25;
+    public final int KEYWORD_ELSE = 26;
+    public final int KEYWORD_FOR = 27;
+    public final int KEYWORD_WHILE = 28;
+    public final int KEYWORD_SWITCH = 29;
+    public final int KEYWORD_CASE = 30;
+    public final int KEYWORD_DO = 31;
+    public final int KEYWORD_DEFAULT = 32;
+    public final int KEYWORD_BREAK = 33;
+    public final int KEYWORD_CONTINUE = 34;
+    public final int KEYWORD_RETURN = 35;
     
-    /* Other process oriented programming related keywords */
-    public static final int KEYWORD_SEQ = 36;
-    public static final int KEYWORD_PAR = 37;
-    public static final int KEYWORD_PRI = 38;
-    public static final int KEYWORD_ALT = 39;
+    // Other process oriented programming related keywords
+    public final int KEYWORD_SEQ = 36;
+    public final int KEYWORD_PAR = 37;
+    public final int KEYWORD_PRI = 38;
+    public final int KEYWORD_ALT = 39;
     
-    public static final int KEYWORD_NEW = 40;
+    public final int KEYWORD_NEW = 40;
     
-    /* Mobile processes related keywords */
-    public static final int KEYWORD_RESUME = 41;
-    public static final int KEYWORD_SUSPEND = 42;
-    public static final int KEYWORD_WITH = 43;
+    // Mobile processes related keywords
+    public final int KEYWORD_RESUME = 41;
+    public final int KEYWORD_SUSPEND = 42;
+    public final int KEYWORD_WITH = 43;
     
-    /* Top level element related keywords */
-    public static final int KEYWORD_PROC = 44;
-    public static final int KEYWORD_PROTOCOL = 45;
-    public static final int KEYWORD_RECORD = 46;
-    public static final int KEYWORD_EXTENDS = 47;
-    public static final int KEYWORD_IMPLEMENTS = 48;
+    // Top level element related keywords
+    public final int KEYWORD_PROC = 44;
+    public final int KEYWORD_PROTOCOL = 45;
+    public final int KEYWORD_RECORD = 46;
+    public final int KEYWORD_EXTENDS = 47;
+    public final int KEYWORD_IMPLEMENTS = 48;
     
-    /* Package related keywords */
-    public static final int KEYWORD_PACKAGE = 49;
-    public static final int KEYWORD_IMPORT = 50;
+    // Package related keywords
+    public final int KEYWORD_PACKAGE = 49;
+    public final int KEYWORD_IMPORT = 50;
     
-    /* Modifiers */
-    public static final int KEYWORD_MOBILE = 51;
-    public static final int KEYWORD_NATIVE = 52;
-    public static final int KEYWORD_PUBLIC = 53;
-    public static final int KEYWORD_PRIVATE = 54;
-    public static final int KEYWORD_PROTECTED = 55;
-    public static final int KEYWORD_CONST = 56;
-    public static final int KEYWORD_EXTERN = 57;
+    // Modifiers
+    public final int KEYWORD_MOBILE = 51;
+    public final int KEYWORD_NATIVE = 52;
+    public final int KEYWORD_PUBLIC = 53;
+    public final int KEYWORD_PRIVATE = 54;
+    public final int KEYWORD_PROTECTED = 55;
+    public final int KEYWORD_CONST = 56;
+    public final int KEYWORD_EXTERN = 57;
     
-    /* Boolean Literals */
-    public static final int KEYWORD_TRUE = 581;  /* BOOLEAN_LITERAL */
-    public static final int KEYWORD_FALSE = 582;  /* BOOLEAN_LITERAL */
+    // Boolean Literals
+    public final int KEYWORD_TRUE = 581;  // BOOLEAN_LITERAL
+    public final int KEYWORD_FALSE = 582;  // BOOLEAN_LITERAL
     
-    /* null Literal */
-    public static final int KEYWORD_NULL = 59;
+    // NULL Literal
+    public final int KEYWORD_NULL = 59;
     
-    /* Other stuff */
-    public static final int KEYWORD_PRAGMA = 60;
-
+    // Other stuff
+    public final int KEYWORD_PRAGMA = 60;
+    
     // --------------------------------------------------
     // OPERATORS AND OTHER STUFF
     
-    /* Parentheses */
-    public static final int LPAREN = 61;
-    public static final int RPAREN = 62;
-    public static final int LBRACE = 63;
-    public static final int RBRACE = 64;
-    public static final int LBRACK = 65;
-    public static final int RBRACK = 66;
+    // Parentheses
+    public final int LPAREN = 61;
+    public final int RPAREN = 62;
+    public final int LBRACE = 63;
+    public final int RBRACE = 64;
+    public final int LBRACK = 65;
+    public final int RBRACK = 66;
     
-    /* Separators */
-    public static final int SEMICOLON = 67;
-    public static final int COMMA = 68;
+    // Separators
+    public final int SEMICOLON = 67;
+    public final int COMMA = 68;
     
-    /* Assignment Operators */
-    public static final int EQ = 69;
-    public static final int MULTEQ = 70;
-    public static final int DIVEQ = 71;
-    public static final int MODEQ = 72;
-    public static final int PLUSEQ = 73;
-    public static final int MINUSEQ = 74;
-    public static final int LSHIFTEQ = 75;
-    public static final int RSHIFTEQ = 76;
-    public static final int RRSHIFTEQ = 77;
-    public static final int ANDEQ = 78;
-    public static final int XOREQ = 79;
-    public static final int OREQ = 80;
+    // Assignment Operators
+    public final int EQ = 69;
+    public final int MULTEQ = 70;
+    public final int DIVEQ = 71;
+    public final int MODEQ = 72;
+    public final int PLUSEQ = 73;
+    public final int MINUSEQ = 74;
+    public final int LSHIFTEQ = 75;
+    public final int RSHIFTEQ = 76;
+    public final int RRSHIFTEQ = 77;
+    public final int ANDEQ = 78;
+    public final int XOREQ = 79;
+    public final int OREQ = 80;
     
-    /* Relational Operators */
-    public static final int GT = 81;
-    public static final int LT = 82;
-    public static final int EQEQ = 83;
-    public static final int LTEQ = 84;
-    public static final int GTEQ = 85;
-    public static final int NOTEQ = 86;
+    // Relational Operators
+    public final int GT = 81;
+    public final int LT = 82;
+    public final int EQEQ = 83;
+    public final int LTEQ = 84;
+    public final int GTEQ = 85;
+    public final int NOTEQ = 86;
     
-    /* Binary Operators (Some Unary: +, -) */
-    public static final int LSHIFT = 87;
-    public static final int RSHIFT = 88;
-    public static final int RRSHIFT = 89;
-    public static final int ANDAND = 90;
-    public static final int OROR = 91;
-    public static final int PLUS = 92;
-    public static final int MINUS = 93;
-    public static final int MULT = 94;
-    public static final int DIV = 95;
-    public static final int AND = 96;
-    public static final int OR = 97;
-    public static final int XOR = 98;
-    public static final int MOD = 99;
+    // Binary Operators (Some Unary: +, -)
+    public final int LSHIFT = 87;
+    public final int RSHIFT = 88;
+    public final int RRSHIFT = 89;
+    public final int ANDAND = 90;
+    public final int OROR = 91;
+    public final int PLUS = 92;
+    public final int MINUS = 93;
+    public final int MULT = 94;
+    public final int DIV = 95;
+    public final int AND = 96;
+    public final int OR = 97;
+    public final int XOR = 98;
+    public final int MOD = 99;
     
-    /* Unary Operators */
-    public static final int NOT = 100;
-    public static final int COMP = 101;
-    public static final int PLUSPLUS = 102;
-    public static final int MINUSMINUS = 103;
+    // Unary Operators
+    public final int NOT = 100;
+    public final int COMP = 101;
+    public final int PLUSPLUS = 102;
+    public final int MINUSMINUS = 103;
     
-    /* Other stuff */
-    public static final int QUEST = 104;
-    public static final int COLONCOLON = 105;
-    public static final int COLON = 106;
-    public static final int DOT = 107;
-
+    // Other stuff
+    public final int QUEST = 104;
+    public final int COLONCOLON = 105;
+    public final int COLON = 106;
+    public final int DOT = 107;
+    
     // --------------------------------------------------
     // LITERALS
     
-    /* Numeric literals */
-    public static final int INTEGER_LITERAL = 108;
-    public static final int LONG_LITERAL = 109;
-    public static final int FLOAT_LITERAL = 110;
-    public static final int DOUBLE_LITERAL = 111;
-    public static final int STRING_LITERAL = 112;
-    public static final int CHARACTER_LITERAL = 113;
+    // Numeric literals
+    public final int INTEGER_LITERAL = 108;
+    public final int LONG_LITERAL = 109;
+    public final int FLOAT_LITERAL = 110;
+    public final int DOUBLE_LITERAL = 111;
+    public final int STRING_LITERAL = 112;
+    public final int CHARACTER_LITERAL = 113;
     
-    /* Identifiers */
+    // Identifiers
     public static final int IDENTIFIER = 114;
     
     // --------------------------------------------------
     // OTHER
     
-    private static final HashMap<Integer, String> TEXT = new HashMap<Integer, String>(); /* Symbol -> text */
-    private static final HashMap<String, Integer> TABLE = new HashMap<String, Integer>(); /* Text -> symbol */
-    private static final HashSet<String> KEYWORDS = new HashSet<String>(); /* ProcessJ keywords */
+    private final HashMap<Integer, String> TEXT = new HashMap<>(); // Symbol -> text
+    private final HashMap<String, Integer> TABLE = new HashMap<>(); // Text -> symbol
+    private final HashSet<String> KEYWORDS = new HashSet<>(); // ProcessJ keywords
     
     // ---------------------------------------------------
     // FIELDS AND METHODS
     
-    private static void addSymbols(String text, int sym) {
+    private void addSymbols(String text, int sym) {
         TEXT.put(sym, text);
         TABLE.put(text, sym);
     }
     
-    private static void addKeywords(String text, int sym) {
+    private void addKeywords(String text, int sym) {
         KEYWORDS.add(text);
         addSymbols(text, sym);
         
     }
     
     private Types() {
-        /* Empty */
-    }
-    
-    static {
         addSymbols("<EOF>",         EOF);
         addSymbols("<\n>",          NEWLINE);
         addSymbols("<UNKNOWN>",     UNKNOWN);

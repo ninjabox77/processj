@@ -9,9 +9,7 @@ import java.util.Properties;
 
 public class ConfigFileReader {
     
-    /**
-     * Local path to configuration file.
-     */
+    /** Local path to configuration file */
     private final static String PATH = "resources/properties/PJConfig.properties";
     
     public static Properties openConfiguration() {

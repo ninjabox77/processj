@@ -5,33 +5,25 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * This class represents a sequences of immutable objects.
- *
- * @param <T>
- *          The type of value.
- *
- * @author Ben
- * @version 09/04/2018
- * @since 1.2
+ * A class that represents a sequences of _inmutable_ objects.
+ * 
+ * @author ben
  */
 public class Tuple<T> extends AbstractList<T> {
+
     private final T[] values;
 
     public Tuple(T[] values) {
-        if (Util.isArrayEmpty(values))
-            throw new IllegalArgumentException("The array may not be empty.");
-
+//        if (Util.isArrayEmpty(values))
+//            throw new IllegalArgumentException("Array cannot be empty!");
         this.values = values;
     }
 
     @Override
     public List<T> subList(int fromIndex, int toIndex) {
         final int size = toIndex - fromIndex;
-
-        @SuppressWarnings("unchecked")
         T[] newValues = (T[]) new Object[size];
         System.arraycopy(values, fromIndex, newValues, 0, size);
-
         return new Tuple<>(newValues);
     }
 
@@ -46,28 +38,28 @@ public class Tuple<T> extends AbstractList<T> {
     }
 
     @Override
+    public boolean isEmpty() {
+        return values == null || values.length == 0;
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         for (final T v : values)
             result = prime * result + v.hashCode();
-
         return result;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) 
+    public boolean equals(Object o) {
+        if (this == o)
             return true;
-
-        if (obj == null || getClass() != obj.getClass())
+        if (!(o instanceof Tuple<?>))
             return false;
-
-        @SuppressWarnings("rawtypes")
-        final Tuple other = (Tuple) obj;
+        Tuple<T> other = (Tuple<T>) o;
         if (size() != other.size())
             return false;
-
         return Arrays.equals(values, other.values);
     }
 

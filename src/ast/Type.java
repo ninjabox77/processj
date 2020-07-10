@@ -30,20 +30,6 @@ public abstract class Type extends AST {
     public abstract boolean typeEquivalent(Type other);
 
     public abstract boolean typeAssignmentCompatible(Type other);
-
-    // Not sure why this one is here - shuld be in protocolType, shouldn't it?
-
-    public boolean protocolExtends(ProtocolTypeDecl sup, ProtocolTypeDecl sub) {
-        if (sup.typeEqual(sub))
-            return true;
-        else {
-            boolean b = false;
-            for (int i = 0; i < sub.extend().size(); i++) {
-                b = b || protocolExtends(sup, (ProtocolTypeDecl) sub.extend().child(i).myDecl);
-            }
-            return b;
-        }
-    }
     
     /*
      * NOTE: the general implementation of all these should be to return 'false'.

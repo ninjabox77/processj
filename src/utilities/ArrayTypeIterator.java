@@ -6,7 +6,7 @@ import java.util.Iterator;
 /**
  * A helper iterator for arrays.
  * 
- * @author Ben
+ * @author ben
  * @version 11/04/2018
  * @since 1.2
  */
@@ -17,7 +17,8 @@ public class ArrayTypeIterator implements Iterator<Object> {
     private int size;
     
     public ArrayTypeIterator(Object array) {
-        this.array = Assert.nonNull(array, "ArrayTypeIterator cannot be used with a 'null' array.");
+        this.array = Assert.nonNull(array, "ArrayTypeIterator cannot be " + 
+                "used with a 'null' array.");
         size = Array.getLength(array);
         position = -1;
     }

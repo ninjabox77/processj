@@ -36,27 +36,30 @@ public class ExternType extends Type {
     // *************************************************************************
     // ** Type Related Methods
 
-    @Override 
+    @Override
     public boolean isExternType() {
-	return true;
+        return true;
     }
 
-    // α = ExternType(n1) and β = ExternType(n2) 
+    // α = ExternType(n1) and β = ExternType(n2)
     // α =T β ⇔ n1 == n2
-    @Override public boolean typeEqual(Type t) {
-	if (!t.isExternType())
-	    return false;
-	ExternType other = (ExternType)t;
+    @Override
+    public boolean typeEqual(Type t) {
+        if (!t.isExternType())
+            return false;
+        ExternType other = (ExternType) t;
         return name().getname().equals(other.name().getname());
     }
 
     // α ~T β ⇔ α =T β
-    @Override public boolean typeEquivalent(Type t) {
-        return typeEqual(t);
+    @Override
+    public boolean typeEquivalent(Type t) {
+        return this.typeEqual(t);
     }
 
-    // α :=T β ⇔ α =T β  
-    @Override public boolean typeAssignmentCompatible(Type t) {
-        return typeEqual(t);
+    // α :=T β ⇔ α =T β
+    @Override
+    public boolean typeAssignmentCompatible(Type t) {
+        return this.typeEqual(t);
     }
 }

@@ -123,7 +123,7 @@ fi
 ############################################################################
 
 ## run the generated Java files with the JVM
-O=`javac -classpath $installdir/bin/:$installdir/lib/JVM:. $workingdir/*.java`
+O=`javac --release 8 -classpath $installdir/bin/:$installdir/lib/JVM:. $workingdir/*.java`
 
 ## in the unlikely event of a Java issue
 if [ ! -z "${O}" ] ; then

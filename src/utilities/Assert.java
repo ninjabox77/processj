@@ -6,7 +6,7 @@ import java.util.Collection;
  * The class Assert provides a convenient way for checking 'null'
  * objects.
  * 
- * @author Ben
+ * @author ben
  * @version 08/06/2018
  * @since 1.2
  */
@@ -16,11 +16,11 @@ public class Assert {
      * Throws a NullPointerException if a given object is null.
      * 
      * @param obj
-     *          The object to be cheked.
+     *          The object to be checked.
      * @return The same object.
      */
     public static <T> T noNull(T obj) {
-        return nonNull(obj, "Null object.");
+        return nonNull(obj, "null object!");
     }
 
     /**
@@ -28,13 +28,13 @@ public class Assert {
      * 
      * @param obj
      *          The object to be checked.
-     * @param message
+     * @param msg
      *          The detail message.
      * @return The same object.
      */
-    public static <T> T nonNull(T obj, String message) {
+    public static <T> T nonNull(T obj, String msg) {
         if (obj == null)
-            throw new NullPointerException(message);
+            throw new NullPointerException(msg);
         return obj;
     }
     

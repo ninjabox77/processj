@@ -9,35 +9,34 @@ import java.util.stream.Collectors;
  * yielding procedures, non-yielding procedures, parameters,
  * local variables, protocols, records, channels, etc.
  *
- * @author Ben
+ * @author ben
  * @version 06/15/2018
  * @since 1.2
  */
 public enum Tag {
     
-    /* Signatures and types. These labels can be used for debugging */
+    // Signatures and types. These labels can be used for debugging
     MAIN_NAME           ("([T;)V"   , "mainProcedureType"),
     PROCEDURE_NAME      ("_proc$"   , "procedureType"),
     METHOD_NAME         ("_method$" , "methodType"),
     PARAM_NAME          ("_pd$"     , "parameterType"),
     LOCAL_NAME          ("_ld$"     , "localVariableType"),
-    PAR_BLOCK_NAME      ("_par"      , "parBlockType"),
-    PROTOCOL_NAME       ("_prot$"   , "protocolType")
-    ;
+    PAR_BLOCK_NAME      ("_par"     , "parBlockType"),
+    PROTOCOL_NAME       ("_prot$"   , "protocolType");
 
     private final String tag;
     private final String label;
 
-    Tag(final String tag, final String label) {
+    Tag(String tag, String label) {
         this.tag = tag;
         this.label = label;
     }
 
-    public static Tag get(final String tag) {
+    public static Tag get(String tag) {
         return findValueOf(tag);
     }
 
-    public static boolean has(final String tag) {
+    public static boolean has(String tag) {
         try {
             return findValueOf(tag) != null;
         } catch (IllegalArgumentException e) {
@@ -45,7 +44,7 @@ public enum Tag {
         }
     }
 
-    public static Tag findValueOf(final String name) {
+    public static Tag findValueOf(String name) {
         try {
             return Tag.valueOf(name);
         } catch (IllegalArgumentException e) {
@@ -67,7 +66,7 @@ public enum Tag {
     }
 
     public static List<String> tags() {
-        return Arrays.stream(values())
+        return (List<String>) Arrays.stream(values())
                      .map(tag -> tag.toString())
                      .collect(Collectors.toList());
     }

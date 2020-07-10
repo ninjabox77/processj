@@ -10,8 +10,8 @@ import ast.NamedType;
 import ast.ProcTypeDecl;
 import ast.ProtocolTypeDecl;
 import ast.RecordTypeDecl;
-import utilities.ProcessJMessage;
-import utilities.ProcessJBugManager;
+import utilities.PJMessage;
+import utilities.PJBugManager;
 import utilities.Log;
 import utilities.MessageType;
 import utilities.SymbolTable;
@@ -29,7 +29,7 @@ public class TopLevelDecls<T extends AST> extends Visitor<T> {
     // Symbol table associated with this file. Set in the constructor.
     private SymbolTable symtab;
 
-    public static String currentFileName = ProcessJBugManager.INSTANCE.fileName;
+    public static String currentFileName = PJBugManager.INSTANCE.fileName;
 
     // All imported files are kept in this table - indexed by absolute path and
     // name.
@@ -40,7 +40,7 @@ public class TopLevelDecls<T extends AST> extends Visitor<T> {
         Log.logHeader("*****************************************");
         Log.logHeader("*     T O P   L E V E L   D E C L S     *");
         Log.logHeader("*****************************************");
-        Log.logHeader("> File: " + ProcessJBugManager.INSTANCE.fileName);
+        Log.logHeader("> File: " + PJBugManager.INSTANCE.fileName);
         Log.logHeader("");
         this.symtab = symtab;
     }
@@ -63,14 +63,14 @@ public class TopLevelDecls<T extends AST> extends Visitor<T> {
      *            a Compilation parse tree node.
      */
     public T visitCompilation(Compilation co) {
-        Log.log(" Defining forward referencable names (" + ProcessJBugManager.INSTANCE.fileName + ").");
+        Log.log(" Defining forward referencable names (" + PJBugManager.INSTANCE.fileName + ").");
         currentCompilation = co;
         // now visit all the type declarations and the constants in this compilation.
-        Log.log(" Visiting type declarations for " + ProcessJBugManager.INSTANCE.fileName);
+        Log.log(" Visiting type declarations for " + PJBugManager.INSTANCE.fileName);
         co.typeDecls().visit(this);
 
         Log.logHeader("");
-        Log.logHeader("> File: " + ProcessJBugManager.INSTANCE.fileName);
+        Log.logHeader("> File: " + PJBugManager.INSTANCE.fileName);
         Log.logHeader("*******************************************");
         Log.logHeader("* T O P   L E V E L   D E C L S   D O N E *");
         Log.logHeader("*******************************************");
@@ -90,8 +90,8 @@ public class TopLevelDecls<T extends AST> extends Visitor<T> {
         Log.log(cd.line + ": Visiting a ConstantDecl " + cd.var().name().getname());
         cd.myCompilation = currentCompilation;
         if (!symtab.put(cd.var().name().getname(), cd))
-            ProcessJBugManager.INSTANCE.reportMessage(
-                    new ProcessJMessage.Builder()
+            PJBugManager.INSTANCE.reportMessage(
+                    new PJMessage.Builder()
                     .addAST(cd)
                     .addError(VisitorMessageNumber.TOP_LEVEL_DECLS_200)
                     .addArguments(cd.var().name().getname())
@@ -109,7 +109,7 @@ public class TopLevelDecls<T extends AST> extends Visitor<T> {
         // another symbol table which is indexed by signature.
         if (Modifier.hasModifierSet(pd.modifiers(), Modifier.MOBILE))
             if (!pd.returnType().isVoidType())
-                ProcessJBugManager.INSTANCE.reportMessage(new ProcessJMessage.Builder()
+                PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
                         .addAST(pd)
                         .addError(VisitorMessageNumber.TOP_LEVEL_DECLS_205)
                         .addArguments(pd.name().getname())
@@ -130,13 +130,13 @@ public class TopLevelDecls<T extends AST> extends Visitor<T> {
                 SymbolTable st = (SymbolTable) s;
                 if (Modifier.hasModifierSet(pd.modifiers(), Modifier.MOBILE)) {
                     if (st.isMobileProcedure)
-                        ProcessJBugManager.INSTANCE.reportMessage(new ProcessJMessage.Builder()
+                        PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
                                 .addAST(pd)
                                 .addError(VisitorMessageNumber.TOP_LEVEL_DECLS_206)
                                 .addArguments(pd.name().getname())
                                 .build());
                     else
-                        ProcessJBugManager.INSTANCE.reportMessage(new ProcessJMessage.Builder()
+                        PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
                                 .addAST(pd)
                                 .addError(VisitorMessageNumber.TOP_LEVEL_DECLS_208)
                                 .addArguments(pd.name().getname())
@@ -144,7 +144,7 @@ public class TopLevelDecls<T extends AST> extends Visitor<T> {
                 } else
                     st.put(pd.signature(), pd);
             } else
-                ProcessJBugManager.INSTANCE.reportMessage(new ProcessJMessage.Builder()
+                PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
                         .addAST(pd)
                         .addError(VisitorMessageNumber.TOP_LEVEL_DECLS_201)
                         .addArguments(pd.getname())
@@ -158,7 +158,7 @@ public class TopLevelDecls<T extends AST> extends Visitor<T> {
         Log.log(rd.line + ": Visiting a RecordTypeDecl " + rd.name().getname());
         rd.myCompilation = currentCompilation;
         if (!symtab.put(rd.name().getname(), rd))
-            ProcessJBugManager.INSTANCE.reportMessage(new ProcessJMessage.Builder()
+            PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
                     .addAST(rd)
                     .addError(VisitorMessageNumber.TOP_LEVEL_DECLS_202)
                     .addArguments(rd.name().getname())
@@ -171,7 +171,7 @@ public class TopLevelDecls<T extends AST> extends Visitor<T> {
         Log.log(pd.line + ": Visiting a ProtocolTypeDecl " + pd.name().getname());
         pd.myCompilation = currentCompilation;
         if (!symtab.put(pd.name().getname(), pd))
-            ProcessJBugManager.INSTANCE.reportMessage(new ProcessJMessage.Builder()
+            PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
                     .addAST(pd)
                     .addError(VisitorMessageNumber.TOP_LEVEL_DECLS_203)
                     .addArguments(pd.name().getname())
@@ -184,7 +184,7 @@ public class TopLevelDecls<T extends AST> extends Visitor<T> {
         Log.log("Toplevel Named Type:" + nt);
         nt.myCompilation = currentCompilation;
         if (!symtab.put(nt.name().getname(), nt))
-            ProcessJBugManager.INSTANCE.reportMessage(new ProcessJMessage.Builder()
+            PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
                     .addAST(nt)
                     .addError(VisitorMessageNumber.TOP_LEVEL_DECLS_207)
                     .addArguments(nt.name().getname())

@@ -46,8 +46,8 @@ public class <name> {
 // A main method definition that represents the entry point of every
 // ProcessJ program and one that is called by the JVM when the program
 // is run.
-// 1.) class: the name of the class from which a 'main' process
-//           can be created and then called by the JVM.
+// 1.) class: the name of the class from which a 'main' process can be
+//           created and then called by the JVM.
 // 2.) name: an instance of an entry point of any ProcessJ program.
 // 3.) types: the type of values associated with formal parameters.
 // 4.) vars: the names of the formal parameters.
@@ -214,8 +214,8 @@ final PJPar <name> = new PJPar(<count>, <process>);
 <! Not to be scheduled again until 'data' is ready !>
 if (<name>.shouldYield()) {
     this.runLabel = <jump>;
-    yield();
-    label(<jump>);
+    this.yield();
+    this.label(<jump>);
 }<\n>
 >>
 
@@ -315,7 +315,7 @@ try {
     <name>.start();
     setNotReady();
     this.runLabel = <resume0>;
-    yield();
+    this.yield();
 } catch (InterruptedException e) {
     System.out.println("An Interrupted exception occurred for a timer!");
 }
@@ -330,7 +330,7 @@ label(<resume0>);
 ChanWriteStat(chanName, writeExpr, resume0) ::= <<
 <chanName>.write(this, <writeExpr>);
 this.runLabel = <resume0>;
-yield();
+this.yield();
 label(<resume0>);<\n>
 >>
 
@@ -342,7 +342,7 @@ label(<resume0>);<\n>
 ChannelReadExpr(chanName, lhs, op, resume0, resume1, extendRv) ::= <<
 if (!<chanName>.isReadyToRead(this)) {
     this.runLabel = <resume0>;
-    yield();
+    this.yield();
 }
 
 label(<resume0>);
@@ -356,7 +356,7 @@ label(<resume0>);
 <endif>
 <endif>
 this.runLabel = <resume1>;
-yield();
+this.yield();
 
 label(<resume1>);<!-- remove 'line-feed' --!>
 >>
@@ -370,13 +370,13 @@ label(<resume1>);<!-- remove 'line-feed' --!>
 ChannelOne2Many(chanName, lhs, op, resume0, resume1, resume2, extendRv) ::= <<
 if (!<chanName>.claimRead(this)) {
     this.runLabel = <resume0>;
-    yield();
+    this.yield();
 }
 label(<resume0>);
 
 if (!<chanName>.isReadyToRead(this)) {
     this.runLabel = <resume1>;
-    yield();
+    this.yield();
 }
 
 label(<resume1>);
@@ -393,7 +393,7 @@ this.runLabel = <resume2>;
 
 <chanName>.unclaimRead();
 
-yield();
+this.yield();
 label(<resume2>);
 >>
 
@@ -406,14 +406,14 @@ label(<resume2>);
 ChannelMany2One(chanName, writeExpr, resume0, resume1) ::= <<
 if (!<chanName>.claimWrite(this)) {
     this.runLabel = <resume0>;
-    yield();
+    this.yield();
 }
 label(<resume0>);
 
 <chanName>.write(this, <writeExpr>);
 this.runLabel = <resume1>;
 
-yield();
+this.yield();
 label(<resume1>);
 
 <chanName>.unclaimWrite();<\n>
@@ -506,31 +506,19 @@ Import(package, file) ::= "import <package><if(file)>.<file><endif>"
 // 4.) vars:
 // 5.) extend:
 RecordType(modifiers, name, types, vars, extend) ::= <<
-<if(modifiers)><modifiers; separator=" "> <else>protected <endif>interface I_<name> {
-	<! -------- Accessors -------- !>
-    <if(vars)><types,vars:{t,v | public <t> <v>()}; separator=";\n">;<\n><endif>
-    <! -------- Modifiers -------- !>
-    <if(vars)><types,vars:{t,v | public void <v>(<t> <v>)}; separator=";\n">;<\n><endif>
-}
+<if(modifiers)><modifiers; separator=" "> <else>protected <endif>interface I_<name> { }
 
 <if(modifiers)><modifiers; separator=" "> <else>protected <endif>static class <name> extends PJRecord implements <extend:{e | I_<e>}; separator=", "> {
     <! -------- Member variables -------- !>
-    <! <if(vars)><types,vars:{t,v | private <t> <v>}; separator=";\n">;<\n><endif> !>
+    <if(vars)><types,vars:{t,v | public <t> <v>}; separator=";\n">;<\n><endif>
     <! -------- Default Constructor -------- !>
     public <name>(<types,vars:{t,v | <t> <v>}; separator=", ">) {
-        <! Collect all members !>
-        super(new String[] { <vars:{v | "<v>"}; separator=", "> }, new Object[] { <vars:{v | <v>}; separator=", "> } );
         <! Initialize member fields !>
-        <! <if(vars)><vars:{v | this.<v> = <v>}; separator=";\n">;<endif> !>
+        <if(vars)><vars:{v | this.<v> = <v>}; separator=";\n">;<endif>
     }
     
-    <! -------- Accessors -------- !>
-    <if(vars)><types,vars:{t,v | @Override public <t> <v>() { return (<t>) get("<v>"); \}}; separator="\n"><\n><endif>
-    <! -------- Modifiers -------- !>
-    <if(vars)><types,vars:{t,v | @Override public void <v>(<t> <v>) { put("<v>", <v>); \}}; separator="\n"><endif>
-
     @Override public String toString() {
-        return toString(new HashMap\<String, Object>());
+    	return toString(null, 0);
     }
 }
 >>
@@ -548,13 +536,6 @@ new <type>(<vals; separator=", ">)
 // 1.) name:
 // 3.) member:
 RecordAccessor(name, member) ::= "<if(name)><name>.<member><endif>"
-
-//========================================================================================
-//
-// 1.) name:
-// 3.) member:
-// 4.) value:
-RecordSetter(name, member, val) ::= "<if(name)><name>.<member>(<val>)<endif>;"
 
 //========================================================================================
 //
@@ -637,7 +618,7 @@ ProtocolAccess(protocName, tag, var, member) ::= <<
 SyncStat(barrier, resume0) ::= <<
 <barrier>.sync(this);
 this.runLabel = <resume0>;
-yield();
+this.yield();
 label(<resume0>);
 >>
 
@@ -669,7 +650,7 @@ for (PJProcess p : processes)
 
 this.setNotReady();
 this.runLabel = <jump>;
-yield();
+this.yield();
 label(<jump>);
 >>
 
@@ -710,7 +691,7 @@ if (!ready) {
 this.setNotReady();
 <index> = <alt>.enable();
 this.runLabel = <jump>;
-yield();
+this.yield();
 
 label(<jump>);
 int selected = <alt>.disable(<index>);
@@ -764,3 +745,9 @@ InvocationIgnore(name, var) ::= "<name>(<var>);"
 // 1.) name:
 // 2.) type:
 RecordExtend(name, type) ::= "<name> instanceof <type>"
+
+//========================================================================================
+//
+// 1.) str1:
+// 2.) str2:
+StringCompare(str1, str2) ::= "<str1>.equals(<str2>)"

@@ -1,7 +1,7 @@
 package rewriters;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 import ast.AST;
 import ast.Name;
@@ -13,13 +13,13 @@ import utilities.Visitor;
 /**
  * Visitor used to rewrite the body of protocols that inherit tags
  * from one or more than one protocol. Note that this visitor adds
- * _shallow_ copies of tags (and their members) into a protocol that
+ * _shallow_ copies of tags (and their members) to a protocol that
  * extends multiple protocols.
  * 
- * @author Ben
+ * @author ben
  */
 public class ProtocolRewrite extends Visitor<AST> {
-    // The top level symbol table.
+    // TODO: THIS NEED TO BE REWRITTEN!!!!
     public SymbolTable sym;
     
     public ProtocolRewrite(SymbolTable sym) {
@@ -29,36 +29,34 @@ public class ProtocolRewrite extends Visitor<AST> {
         Log.logHeader("****************************************");
     }
     
-    public void addProtocolName(HashSet<Name> hashSet, Name name) {
+    public void addProtocolName(Set<Name> set, Name name) {
     	boolean found = false;
-        for (Name n : hashSet) {
+        for (Name n : set) {
             if (n.getname().equals(name.getname())) {
             	found = true;
             	break;
             }
         }
         if (!found)
-            hashSet.add(name);
+            set.add(name);
     }
     
-    public HashSet<Name> addExtendProtocolName(AST a) {
+    public Set<Name> addExtendProtocolName(AST a) {
         Log.log(a, "extends a ProtocolypeDecl (" + ((ProtocolTypeDecl) a).name().getname() + ")");
         
         ProtocolTypeDecl pd = (ProtocolTypeDecl) a;
-        HashSet<Name> hashSet = new LinkedHashSet<Name>();
+        Set<Name> set = new LinkedHashSet<>();
         Log.log(pd, "adding protocol " + pd.name().getname());
-        hashSet.add(pd.name());
-        /* Add member tags that belong to the extended protocols */
-        if (pd.extend().size() > 0) {
-            for (Name parent : pd.extend()) {
-                if (sym.get(parent.getname()) != null) {
-                    HashSet<Name> protoNames = addExtendProtocolName((ProtocolTypeDecl) sym.get(parent.getname()));
-                    for (Name pdt : protoNames)
-                    	addProtocolName(hashSet, pdt);
-                }
+        set.add(pd.name());
+        // Add members that belong to the extended protocols
+        for (Name parent : pd.extend()) {
+            if (sym.get(parent.getname()) != null) {
+                Set<Name> setNames = addExtendProtocolName((ProtocolTypeDecl) sym.get(parent.getname()));
+                for (Name pdt : setNames)
+                    addProtocolName(set, pdt);
             }
         }
-        return hashSet;
+        return (Set<Name>) set;
     }
     
     // DONE
@@ -66,21 +64,18 @@ public class ProtocolRewrite extends Visitor<AST> {
     public AST visitProtocolTypeDecl(ProtocolTypeDecl pd) {
         Log.log(pd, "Visiting a ProtocolTypeDecl (" + pd.name().getname() + ")");
         
-        HashSet<Name> hashSet = new LinkedHashSet<Name>();
-        /* Merge the member tags of all extended protocols */
-        if (pd.extend().size() > 0) {
-            for (Name name : pd.extend()) {
-                if (sym.get(name.getname()) != null)
-                    hashSet.addAll(addExtendProtocolName((ProtocolTypeDecl) sym.get(name.getname())));
-            }
-        }
+        Set<Name> set = new LinkedHashSet<>();
+        // Merge the member tags of all extended protocols
+        for (Name name : pd.extend())
+            if (sym.get(name.getname()) != null)
+                set.addAll(addExtendProtocolName((ProtocolTypeDecl) sym.get(name.getname())));
         for (Name n : pd.extend())
-            addProtocolName(hashSet, n);
+            addProtocolName(set, n);
         pd.extend().clear();
-        /* Rewrite the extend node */
-        for (Name n : hashSet)
+        // Rewrite the extend node
+        for (Name n : set)
             pd.extend().append(n);
-        Log.log(pd, "protocol " + pd.name().getname() + " with " + pd.extend().size() + " parent(s)");
+        Log.log(pd, String.format("Protocol %s with %s parent(s)", pd.name().getname(), pd.extend().size()));
         for (Name n : pd.extend())
             Log.log(pd, "> protocol " + n);
         return null;

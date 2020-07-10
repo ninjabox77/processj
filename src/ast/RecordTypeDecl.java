@@ -49,12 +49,13 @@ public class RecordTypeDecl extends Type implements DefineTopLevelDecl {
         return typeName();
     }
     
-    public boolean doesExtend(String name) {
-        for (Name n : extend()) {
-            if (n.getname().equals(name))
-                return true;
-        }
-        return false;
+    public boolean extendsRecord(RecordTypeDecl rt) {
+        if (typeEqual(rt))
+            return true;
+        boolean b = false;
+        for (Name n : extend())
+            b = ((RecordTypeDecl) n.myDecl).extendsRecord(rt) || b;
+        return b;
     }
 
     // *************************************************************************
@@ -87,8 +88,8 @@ public class RecordTypeDecl extends Type implements DefineTopLevelDecl {
     public boolean typeEqual(Type t) {
         if (!t.isRecordType())
             return false;
-        RecordTypeDecl other = (RecordTypeDecl) t;
-        return name().getname().equals(other.name().getname());
+        RecordTypeDecl rt = (RecordTypeDecl) t;
+        return name().getname().equals(rt.name().getname());
     }
 
     // α∼T β ⇔ α =T β
@@ -100,6 +101,9 @@ public class RecordTypeDecl extends Type implements DefineTopLevelDecl {
     // α :=T β ⇔ α ∼T β ⇔ α =T β
     @Override
     public boolean typeAssignmentCompatible(Type t) {
-        return typeEqual(t);
+        if (!t.isRecordType())
+            return false;
+        RecordTypeDecl rt = (RecordTypeDecl) t;
+        return rt.extendsRecord(this);
     }
 }

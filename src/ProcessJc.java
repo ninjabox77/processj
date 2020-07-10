@@ -13,12 +13,12 @@ import parser.parser;
 import printers.ParseTreePrinter;
 import rewriters.CastRewrite;
 import scanner.Scanner;
-import utilities.ProcessJBugManager;
+import utilities.PJBugManager;
 import utilities.ConfigFileReader;
 import utilities.Language;
 import utilities.Log;
-import utilities.ProcessJMessage;
-import utilities.RuntimeInfo;
+import utilities.PJMessage;
+import utilities.RuntimeVersion;
 import utilities.Settings;
 import utilities.SymbolTable;
 import utilities.VisitorMessageNumber;
@@ -29,56 +29,56 @@ import utilities.VisitorMessageNumber;
  * @author ben
  */
 public class ProcessJc {
-    /* Kinds of available options for the ProcessJ compiler */
+    
+    // Kinds of available options for the ProcessJ compiler
     public static enum OptionType {
         STRING,
-        BOOLEAN
-        ;
+        BOOLEAN;
     }
     
     public static class Option {
-        protected String d_fieldName;
-        protected String d_optionName;
-        protected OptionType d_optionType;
-        protected String d_desc;
+        protected String fieldName;
+        protected String optionName;
+        protected OptionType optionType;
+        protected String description;
         
-        public Option(String field, String name, OptionType type, String desc) {
-            d_fieldName = field;
-            d_optionName = name;
-            d_optionType = type;
-            d_desc = desc;
+        public Option(String field, String option, OptionType type, String desc) {
+            this.fieldName = field;
+            this.optionName = option;
+            this.optionType = type;
+            this.description = desc;
         }
         
-        public Option(String field, String name, String desc) {
-            this(field, name, OptionType.BOOLEAN, desc);
+        public Option(String field, String option, String desc) {
+            this(field, option, OptionType.BOOLEAN, desc);
         }
     }
     
-    /* List of available options for the ProcessJ compiler */
+    // List of available options for the ProcessJ compiler
     public static final Option[] OPTIONS = {
-            new Option("d_showColor", "-showColor", "Use color on terminals that support ansi espace codes"),
-            new Option("d_help", "-help", "Show this help message and exit"),
-            new Option("d_include", "-include", OptionType.STRING, "Override the default include directory"),
-            new Option("d_showMessage", "-showMessage", "Show info of error and warning messages when available"),
-            new Option("d_target", "-target", OptionType.STRING, "Specify the target language -- C++, Java (default)"),
-            new Option("d_version", "-version", "Print version information and exit"),
-            new Option("d_visitor", "-visitor", "Generate all parse tree visitors"),
-            new Option("d_showTree", "-showTree", "Show the AST constructed from the parser")
+            new Option("showColor", "-showColor", "Use color on terminals that support ansi espace codes"),
+            new Option("help", "-help", "Show this help message and exit"),
+            new Option("include", "-include", OptionType.STRING, "Override the default include directory"),
+            new Option("showMessage", "-showMessage", "Show info of error and warning messages when available"),
+            new Option("target", "-target", OptionType.STRING, "Specify the target language -- C++, Java (default)"),
+            new Option("version", "-version", "Print version information and exit"),
+            new Option("visitAll", "-visitAll", "Generate all parse tree visitors"),
+            new Option("showTree", "-showTree", "Show the AST constructed from the parser")
     };
     
     // <--
-    /* Fields used by the ProcessJ compiler */
-    public boolean d_showColor = false;
-    public boolean d_help = false;
-    public String d_include = null;
-    public boolean d_showMessage = false;
-    public Language d_target = Settings.language;
-    public boolean d_version = false;
-    public boolean d_visitor = false;
-    public boolean d_showTree = false;
+    // Fields used by the ProcessJ compiler
+    public boolean showColor = false;
+    public boolean help = false;
+    public String include = null;
+    public boolean showMessage = false;
+    public Language target = Settings.language;
+    public boolean version = false;
+    public boolean visitAll = false;
+    public boolean showTree = false;
     // -->
     
-    private ArrayList<String> inputFiles = new ArrayList<String>();
+    private ArrayList<String> inputFiles = new ArrayList<>();
     private String[] args = null;
     private Properties config = ConfigFileReader.openConfiguration();
     
@@ -89,42 +89,43 @@ public class ProcessJc {
      *          A vector of command arguments passed to the compiler.
      */
     public static void main(String[] args) {
-        ProcessJc pj = new ProcessJc(args);
-        /* Do we have any arguments? */
-        if (args.length == 0 && !pj.d_help) {
-            /* At least one file must be provided. Throw an error if no
-             * file is given, or if the file does not exists */
-            System.out.println(new ProcessJMessage.Builder()
+        ProcessJc pJc = new ProcessJc(args);
+        // Do we have any arguments?
+        if (args.length == 0 && !pJc.help) {
+            // At least one file must be provided. Throw an error if no
+            // file is given, or if the file does not exists
+            System.out.println(new PJMessage.Builder()
                                    .addError(VisitorMessageNumber.RESOLVE_IMPORTS_100)
                                    .build()
-                                   .st()
+                                   .getST()
                                    .render());
-            pj.printUsageAndExit();
+            pJc.printUsageAndExit();
         }
         
-        if (pj.d_help)
-            pj.printUsageAndExit();
-        else if (pj.d_version)
-            pj.version();
+        if (pJc.help)
+            pJc.printUsageAndExit();
         
-        Settings.includeDir = pj.d_include;
+        if (pJc.version)
+            pJc.version();
+        
+        Settings.includeDir = pJc.include;
         AST root = null;
-        /* Process source file, one by one */
-        for (String f : pj.inputFiles) {
+        // Process source file, one by one
+        for (String f : pJc.inputFiles) {
             File inFile = new File(f);
             Scanner s = null;
             parser p = null;
             try {
                 String absoluteFilePath = inFile.getAbsolutePath();
-                /* Set the package and filename */
-                ProcessJBugManager.INSTANCE.setFileName(absoluteFilePath);
-                ProcessJBugManager.INSTANCE.setPackageName(absoluteFilePath);
+                // Set the package and filename
+                PJBugManager.INSTANCE.setFileName(absoluteFilePath);
+                PJBugManager.INSTANCE.setPackageName(absoluteFilePath);
                 s = new Scanner(new java.io.FileReader(absoluteFilePath));
                 p = new parser(s);
             } catch (java.io.FileNotFoundException e) {
-                /* This won't execute! The error is handled above by the command */
+                // This won't execute! The error is handled above by the command
             } catch (Exception e) {
-                /* TODO: Handled syntax-error here using the abstract class AstNode */
+                // TODO: Handled syntax-error here using the 'ASTNode'
                 e.printStackTrace();
                 System.exit(1);
             }
@@ -140,35 +141,35 @@ public class ProcessJc {
                 System.exit(1);
             }
 
-            /* Cast the result from the parse to a Compilation -- this is
-             * the root of the tree */
+            // Cast the result from the parse to a Compilation -- this is
+            // the root of the tree
             Compilation c = (Compilation) root;
-            /* Set the absolute path, file, and package name from where this
-             * compilation is created */
-            System.out.println("-- Setting absolute path, file and package name for '" + inFile.getName() + "'.");
+            // Set the absolute path, file, and package name from where this
+            // compilation is created
+            System.out.println("-- Setting absolute path, file and package name for '" +
+                    inFile.getName() + "'.");
             c.fileName = inFile.getName();
-            /* The parent's path of the compiled file */
+            // The parent's path of the compiled file
             String parentPath = inFile.getAbsolutePath();
-            /* The parent's absolute path of the compiled file */
+            // The parent's absolute path of the compiled file
             c.path = parentPath.substring(0, parentPath.lastIndexOf(File.separator));
-            /* A package declaration is optional -- this can be null */
+            // A package declaration is optional -- this can be null
             if (c.packageName() != null)
                 c.packageName = ResolveImports.packageNameToString(c.packageName());
             
-            /* Decode pragmas -- these are used for generating stubs from libraries.
-             * No regular program would have them */
+            // Decode pragmas -- these are used for generating stubs from libraries.
+            // No regular program would have them
             Library.decodePragmas(c);
             Library.generateLibraries(c);
 
-            /* This table will hold all the top level types */
-            SymbolTable globalTypeTable = new SymbolTable("Main file: " + ProcessJBugManager.INSTANCE.fileName);
+            // This table will hold all the top level types
+            SymbolTable globalTypeTable = new SymbolTable("Main file: " + PJBugManager.INSTANCE.fileName);
 
-            /* Dump log messages if true */
-            if (pj.d_visitor)
+            // Dump log messages if true
+            if (pJc.visitAll)
                 Log.startLogging();
-            
-            /* Dump generated AST */
-            if (pj.d_showTree)
+            // Dump generated AST
+            if (pJc.showTree)
                 c.visit(new ParseTreePrinter());
             
             SymbolTable.hook = null;
@@ -196,7 +197,7 @@ public class ProcessJc {
             
             // Visit and resolve import for top-level declarations.
             System.out.println("-- Checking native Top Level Declarations.");
-            c.visit(new namechecker.ResolveImportTopDecls());
+            c.visit(new namechecker.ResolveNativeImports());
 
             // Visit and resolve types from imported packages.
             System.out.println("-- Resolving imported types.");
@@ -251,7 +252,10 @@ public class ProcessJc {
             c.visit(new rewriters.UnrollLoopRewrite());
             
             System.out.println("-- Rewriting yielding expressions.");
+            c.visit(new rewriters.ChannelRead());
+//            c.visit(new rewriters.ChannelEndRewriteTest());
 //            new rewriters.ChannelReadRewrite().go(c);
+            
             //System.out.println("Lets reprint it all");
             //c.visit(new printers.ParseTreePrinter());
             //c.visit(new printers.PrettyPrinter());
@@ -261,11 +265,11 @@ public class ProcessJc {
             System.out.println("-- Collecting left-hand sides for par for code generation.");
             c.visit(new rewriters.ParFor());
             
-            /* Run the code generator for the known (specified) target language */
-            if (Settings.language == pj.d_target)
-                pj.generateCodeJava(c, inFile, globalTypeTable);
+            // Run the code generator for the known (specified) target language
+            if (Settings.language == pJc.target)
+                pJc.generateCodeJava(c, inFile, globalTypeTable);
             else {
-                /* Unknown target language so abort/terminate program */
+                // Unknown target language so abort/terminate program
                 System.out.println("Invalid target language!");
                 System.exit(1);
             }
@@ -281,68 +285,68 @@ public class ProcessJc {
      * whitespace characters and comments.
      *
      * @param c
-     *              A Compilation unit consisting of a single file.
+     *          A Compilation unit consisting of a single file.
      * @param inFile
      *              The compiled file.
      * @param s
-     *              A symbol table consisting of all the top level types.
+     *          A symbol table consisting of all the top level types.
      */
     private void generateCodeJava(Compilation c, File inFile, SymbolTable s) {
         Properties p = utilities.ConfigFileReader.getProcessJConfig();
-        /* Run the code generator to decode pragmas, generate libraries,
-         * resolve types, and set the symbol table for top level declarations */
-        CodeGenJava generator = new CodeGenJava(s);
-        /* Set the user working directory */
-        generator.workingDir(p.getProperty("workingdir"));
-        /* Visit this compilation unit and recursively build the program
-         * after returning strings rendered by the string template */
-        String code = (String) c.visit(generator);
-        /* Write the output to a file */
-        Helper.writeToFile(code, c.fileNoExtension(), generator.workingDir());
+        // Run the code generator to decode pragmas, generate libraries,
+        // resolve types, and set the symbol table for top level declarations
+        CodeGenJava codeGen = new CodeGenJava(s);
+        // Set the user working directory
+        codeGen.workingDir(p.getProperty("workingdir"));
+        // Visit this compilation unit and recursively build the program
+        // after returning strings rendered by the string template
+        String code = (String) c.visit(codeGen);
+        // Write the output to a file
+        Helper.writeToFile(code, c.fileNoExtension(), codeGen.workingDir());
     }
     
     public ProcessJc(String[] args) {
         this.args = args;
         Settings.showColor = Boolean.valueOf(config.getProperty("color"));
-        run(); /* Parse command line arguments */
-        colorMode(); /* Switch to turn color mode on/off */
+        parseArgs(); // Parse command-line arguments
+        ANSIColorMode(); // Switch to turn color mode ON/OFF
     }
     
-    public void colorMode() {        
-        /* Check default value before switching mode to on/off */
-        if (!Settings.showColor && this.d_showColor) /* Color mode 'on' */
-            config.setProperty("color", String.valueOf(this.d_showColor));
-        else if (Settings.showColor && this.d_showColor) /* Color mode 'off' */
+    public void ANSIColorMode() {        
+        // Check default value before switching mode to on/off
+        if (!Settings.showColor && this.showColor) // Color mode 'ON'
+            config.setProperty("color", String.valueOf(Boolean.TRUE));
+        else if (Settings.showColor && this.showColor) // Color mode 'OFF'
             config.setProperty("color", String.valueOf(Boolean.FALSE));
         Settings.showColor = Boolean.valueOf(config.getProperty("color"));
         ConfigFileReader.closeConfiguration(config);
     }
     
-    public void run() {
+    public void parseArgs() {
         for (int pos = 0; pos < args.length;) {
             String arg = args[pos++];
             if (arg.charAt(0) != '-') {
-                /* We found a 'Xxx.pj' file */
+                // We found a 'Xxx.pj' file
                 if (!inputFiles.contains(arg))
                     inputFiles.add(arg);
             } else {
                 boolean foundOption = false;
                 for (Option o : OPTIONS) {
-                    if (arg.equals(o.d_optionName)) {
+                    if (arg.equals(o.optionName)) {
                         foundOption = true;
-                        String optValue = null;
-                        if (o.d_optionType != OptionType.BOOLEAN)
-                            optValue = args[pos++];
-                        /* Same as before with Java reflection */
+                        String optionValue = null;
+                        if (o.optionType != OptionType.BOOLEAN)
+                            optionValue = args[pos++];
+                        // Same as before with Java reflection
                         Class<? extends ProcessJc> c = this.getClass();
                         try {
-                            Field f = c.getField(o.d_fieldName);
-                            if (optValue != null)
-                                f.set(this, optValue);
+                            Field f = c.getField(o.fieldName);
+                            if (optionValue != null)
+                                f.set(this, optionValue);
                             else
                                 f.set(this, true);
                         } catch (Exception e) {
-                            System.out.println("Failed to access field '" + o.d_fieldName + "'");
+                            System.out.println("Failed to access field '" + o.fieldName + "'");
                             exit(101);
                         }
                         break;
@@ -358,12 +362,12 @@ public class ProcessJc {
     
     public void printUsageAndExit() {
         for (Option o : OPTIONS)
-            System.err.println(String.format("%-20s %s", o.d_optionName, o.d_desc));
+            System.err.println(String.format("%-20s %s", o.optionName, o.description));
         exit(0);
     }
     
     public void version() {
-        String msg = "ProcessJ Version: " + RuntimeInfo.runtimeVersion();
+        String msg = "ProcessJ Version: " + Settings.VERSION;
         System.err.println(msg);
         exit(0);
     }

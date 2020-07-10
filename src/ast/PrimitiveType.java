@@ -17,10 +17,9 @@ public class PrimitiveType extends Type {
     public final static int BarrierKind = PrimitiveLiteral.BarrierKind;
     public final static int TimerKind = PrimitiveLiteral.TimerKind;
 
-
     private static String[] names = {
-        "boolean", "byte", "short", "char", "int", "long", "float",
-        "double",  "string", "void", "barrier", "timer" };
+            "boolean", "byte", "short", "char", "int", "long", "float",
+            "double", "string", "void", "barrier", "timer" };
 
     private int kind;
 
@@ -35,34 +34,34 @@ public class PrimitiveType extends Type {
     }
 
     /** Return the size of this type in bytes in C. */
-    public int byteSizeC(){
+    public int byteSizeC() {
         switch (kind) {
-            case BooleanKind:
-                return 1;
-            case ByteKind:
-                return 1;
-            case ShortKind:
-                return 2;
-            case CharKind:
-                return 1;
-            case IntKind:
-                return 4;
-            case LongKind:
-                return 8;
-            case FloatKind:
-                return 4;
-            case DoubleKind:
-                return 8;
-            case StringKind:
-                return 4;
-            case BarrierKind:
-                //TODO
-                return 4;
-            case TimerKind:
-                //TODO
-                return 4;
-            default:
-                return -1;
+        case BooleanKind:
+            return 1;
+        case ByteKind:
+            return 1;
+        case ShortKind:
+            return 2;
+        case CharKind:
+            return 1;
+        case IntKind:
+            return 4;
+        case LongKind:
+            return 8;
+        case FloatKind:
+            return 4;
+        case DoubleKind:
+            return 8;
+        case StringKind:
+            return 4;
+        case BarrierKind:
+            // TODO
+            return 4;
+        case TimerKind:
+            // TODO
+            return 4;
+        default:
+            return -1;
         }
     }
 
@@ -86,32 +85,32 @@ public class PrimitiveType extends Type {
 
     public String signature() {
         switch (kind) {
-            case BooleanKind:
-                return "Z";
-            case ByteKind:
-                return "B";
-            case ShortKind:
-                return "S";
-            case CharKind:
-                return "C";
-            case IntKind:
-                return "I";
-            case LongKind:
-                return "J";
-            case FloatKind:
-                return "F";
-            case DoubleKind:
-                return "D";
-            case StringKind:
-                return "T";
-            case VoidKind:
-                return "V";
-            case BarrierKind:
-                return "R";
-            case TimerKind:
-                return "M";
-            default:
-                return "UNKNOWN TYPE";
+        case BooleanKind:
+            return "Z";
+        case ByteKind:
+            return "B";
+        case ShortKind:
+            return "S";
+        case CharKind:
+            return "C";
+        case IntKind:
+            return "I";
+        case LongKind:
+            return "J";
+        case FloatKind:
+            return "F";
+        case DoubleKind:
+            return "D";
+        case StringKind:
+            return "T";
+        case VoidKind:
+            return "V";
+        case BarrierKind:
+            return "R";
+        case TimerKind:
+            return "M";
+        default:
+            return "UNKNOWN TYPE";
         }
     }
 
@@ -128,10 +127,10 @@ public class PrimitiveType extends Type {
     // α =T β ⇔ Primitive?(α) ∧ Primitive?(β) ∧ α = β
     @Override
     public boolean typeEqual(Type t) {
-	if (!t.isPrimitiveType())
-	    return false;
-	PrimitiveType other = (PrimitiveType)t;
-	return (this.kind == other.kind);
+        if (!t.isPrimitiveType())
+            return false;
+        PrimitiveType other = (PrimitiveType) t;
+        return (this.kind == other.kind);
     }
 
     // α ∼T β ⇔ Primitive?(α) ∧ Primitive?(β) ∧ α =T β
@@ -143,116 +142,116 @@ public class PrimitiveType extends Type {
     // α :=T β ⇔ Primitive?(α) ∧ Primitive?(β) ∧ β ≤ α
     @Override
     public boolean typeAssignmentCompatible(Type t) {
-	if (!t.isPrimitiveType())
-	    return false;
-	PrimitiveType other = (PrimitiveType)t;
-	return other.typeLessThanEqual(this);
+        if (!t.isPrimitiveType())
+            return false;
+        PrimitiveType other = (PrimitiveType) t;
+        return other.typeLessThanEqual(this);
     }
 
-    // α <T β ⇔ Numeric?(α) ∧ Numeric?(β) 
+    // α <T β ⇔ Numeric?(α) ∧ Numeric?(β)
     // Definition:
-    // byte <T short <T char <T int <T long <T float <T double  
+    // byte <T short <T char <T int <T long <T float <T double
     public boolean typeLessThan(Type t) {
-	if (!this.isNumericType() || !t.isNumericType())
-	    return false;
-	PrimitiveType other = (PrimitiveType)t;
-	return this.kind < other.kind;
-    }
-    
-    // α <=T β ⇔ Primitive?(α) ∧ Primitive?(β) ∧ 
-    //           (α =T β || (Numeric?(α) ∧ Numeric?(β) ∧ α <T β))
-    public boolean typeLessThanEqual(Type t) {
-	if (!t.isPrimitiveType())
+        if (!this.isNumericType() || !t.isNumericType())
             return false;
-	if (t.typeEqual(this))
-	    return true;
-	return this.typeLessThan(t);
+        PrimitiveType other = (PrimitiveType) t;
+        return this.kind < other.kind;
+    }
+
+    // α <=T β ⇔ Primitive?(α) ∧ Primitive?(β) ∧
+    // (α =T β || (Numeric?(α) ∧ Numeric?(β) ∧ α <T β))
+    public boolean typeLessThanEqual(Type t) {
+        if (!t.isPrimitiveType())
+            return false;
+        if (t.typeEqual(this))
+            return true;
+        return this.typeLessThan(t);
     }
 
     public Type typeCeiling(PrimitiveType t) {
-	// TODO: This should probably be an assertion as 
-	// ceiling should only ever be called on numeric types anyways
-	if (!this.isNumericType() || !t.isNumericType())
-	    return new ErrorType();
+        // TODO: This should probably be an assertion as
+        // ceiling should only ever be called on numeric types anyways
+        if (!this.isNumericType() || !t.isNumericType())
+            return new ErrorType();
         if (this.kind < IntKind && t.kind < IntKind)
             return new PrimitiveType(IntKind);
 
-	if (this.kind < t.kind)
+        if (this.kind < t.kind)
             return t;
         return this;
     }
 
-    @Override 
+    @Override
     public boolean isPrimitiveType() {
-	return true;
+        return true;
     }
-    
-    @Override 
+
+    @Override
     public boolean isIntegerType() {
-	return (kind == IntKind);
+        return (kind == IntKind);
     }
-    
+
     @Override
     public boolean isTimerType() {
         return (kind == TimerKind);
     }
-    
+
     @Override
     public boolean isBarrierType() {
         return (kind == BarrierKind);
     }
 
-    @Override 
+    @Override
     public boolean isBooleanType() {
         return (kind == BooleanKind);
     }
 
-    @Override 
+    @Override
     public boolean isByteType() {
-	return (kind == ByteKind);
+        return (kind == ByteKind);
     }
 
-    @Override 
+    @Override
     public boolean isShortType() {
-	return (kind == ShortKind);
+        return (kind == ShortKind);
     }
 
-    @Override 
+    @Override
     public boolean isCharType() {
         return (kind == CharKind);
     }
 
-    @Override 
+    @Override
     public boolean isLongType() {
         return (kind == LongKind);
     }
 
-    @Override 
+    @Override
     public boolean isVoidType() {
         return (kind == VoidKind);
     }
-   
-    @Override 
+
+    @Override
     public boolean isStringType() {
         return (kind == StringKind);
     }
 
-    @Override 
+    @Override
     public boolean isFloatType() {
         return (kind == FloatKind);
     }
 
-    @Override 
+    @Override
     public boolean isDoubleType() {
         return (kind == DoubleKind);
     }
 
-    @Override 
+    @Override
     public boolean isNumericType() {
         return (isFloatType() || isDoubleType() || isIntegralType());
     }
-    
-    @Override 
+
+    @Override
     public boolean isIntegralType() {
         return (isIntegerType() || isShortType() || isByteType() || isCharType() || isLongType());
     }

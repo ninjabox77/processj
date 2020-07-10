@@ -488,6 +488,9 @@ public class UnrollLoopRewrite extends Visitor<AST> {
 			bls.remove(ws.getLabel());
 			cls.remove(ws.getLabel());
 		}
+		// reset labels
+		bl = bl_old;
+		cl = cl_old;
 		inside = inside_old;
 		Block returnBlock = new Block(stmts);
 		returnBlock.canBeMerged = true;

@@ -1,7 +1,7 @@
 package rewriters;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 import ast.*;
 import utilities.Log;
@@ -12,12 +12,12 @@ import utilities.Visitor;
  * Visitor used for rewriting the body of records that inherit fields
  * from one or more than one record. Since multiple inheritance is not
  * supported in Java, this visitor adds _shallow_ copies of fields
- * into a record that extends multiple records.
+ * to a record that extends multiple records.
  * 
- * @author Ben
+ * @author ben
  */
 public class RecordRewrite extends Visitor<AST> {
-    // The top level symbol table.
+    
     public SymbolTable sym;
     
     public RecordRewrite(SymbolTable sym) {
@@ -27,28 +27,25 @@ public class RecordRewrite extends Visitor<AST> {
         Log.logHeader("****************************************");
     }
     
-    public HashSet<RecordMember> addExtendedRecord(AST a) {
+    public Set<RecordMember> addExtendedRecordName(AST a) {
         Log.log(a, "extends a RecordTypeDecl (" + ((RecordTypeDecl) a).name().getname() + ")");
 
         RecordTypeDecl rt = (RecordTypeDecl) a;
-        HashSet<RecordMember> hashSet = new LinkedHashSet<RecordMember>();
+        Set<RecordMember> set = new LinkedHashSet<>();
         for (RecordMember rm : rt.body()) {
             Log.log(rt, "adding member " + rm.type() + " " + rm.name().getname());
-            hashSet.add(rm);
+            set.add(rm);
         }
-        /* Add member fields that belong to extended records */
-        if (rt.extend().size() > 0) {
-            for (Name parent : rt.extend()) {
-                if (sym.get(parent.getname()) != null) {
-                    HashSet<RecordMember> recNames = addExtendedRecord((RecordTypeDecl) sym.get(parent.getname()));
-                    for (RecordMember rm : recNames) {
-                        if (!hashSet.add(rm))
-                            Log.log(rt, "Name '" + rm.name().getname() + "' already in (" + rt.name().getname() + ")");
-                    }
-                }
+        // Add member fields that belong to extended records
+        for (Name parent : rt.extend()) {
+            if (sym.get(parent.getname()) != null) {
+                Set<RecordMember> setNames = addExtendedRecordName((RecordTypeDecl) sym.get(parent.getname()));
+                for (RecordMember rm : setNames)
+                    if (!set.add(rm))
+                        Log.log(rt, String.format("Name '%s' already in (%s)", rm.name().getname(), rt.name().getname()));
             }
-        }        
-        return hashSet;
+        }
+        return (Set<RecordMember>) set;
     }
     
     // DONE
@@ -56,21 +53,18 @@ public class RecordRewrite extends Visitor<AST> {
     public AST visitRecordTypeDecl(RecordTypeDecl rt) {
         Log.log(rt, "Visiting a RecordTypeDecl (" + rt.name().getname() + ")");
         
-        HashSet<RecordMember> hashSet = new LinkedHashSet<RecordMember>();
-        /* Merge the member fields of all extended records */
-        if (rt.extend().size() > 0) {
-            for (Name name : rt.extend()) {
-                if (sym.get(name.getname()) != null)
-                    hashSet.addAll(addExtendedRecord((RecordTypeDecl) sym.get(name.getname())));
-            }
-        }
+        Set<RecordMember> set = new LinkedHashSet<>();
+        // Merge the member fields of all extended records
+        for (Name name : rt.extend())
+            if (sym.get(name.getname()) != null)
+                set.addAll(addExtendedRecordName((RecordTypeDecl) sym.get(name.getname())));
         for (RecordMember rm : rt.body())
-            hashSet.add(rm);
+            set.add(rm);
         rt.body().clear();
-        /* Rewrite the extend node */
-        for (RecordMember rm : hashSet)
+        // Rewrite the extend node
+        for (RecordMember rm : set)
             rt.body().append(rm);
-        Log.log(rt, "record " + rt.name().getname() + " with " + rt.body().size() + " member(s)");
+        Log.log(rt, String.format("record %s with %s member(s)", rt.name().getname(), rt.body().size()));
         for (RecordMember rm : rt.body())
             Log.log(rt, "> member " + rm.type() + " " + rm.name());
         return null;

@@ -82,7 +82,7 @@ public class ArrayType extends Type {
 
     @Override
     public boolean isArrayType() {
-	return true;
+        return true;
     }
 
     // if α=Array(t1,I1) ∧ β=Array(t2,I2)
