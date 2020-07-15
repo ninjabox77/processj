@@ -14,8 +14,6 @@ public class Tuple<T> extends AbstractList<T> {
     private final T[] values;
 
     public Tuple(T[] values) {
-//        if (Util.isArrayEmpty(values))
-//            throw new IllegalArgumentException("Array cannot be empty!");
         this.values = values;
     }
 
@@ -57,7 +55,7 @@ public class Tuple<T> extends AbstractList<T> {
             return true;
         if (!(o instanceof Tuple<?>))
             return false;
-        Tuple<T> other = (Tuple<T>) o;
+        Tuple<?> other = (Tuple<?>) o;
         if (size() != other.size())
             return false;
         return Arrays.equals(values, other.values);

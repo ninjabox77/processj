@@ -125,7 +125,7 @@ public class ProcessJc {
             } catch (java.io.FileNotFoundException e) {
                 // This won't execute! The error is handled above by the command
             } catch (Exception e) {
-                // TODO: Handled syntax-error here using the 'ASTNode'
+                // TODO: Handled syntax-error here using the 'ASTSyntaxNode'
                 e.printStackTrace();
                 System.exit(1);
             }
@@ -253,7 +253,6 @@ public class ProcessJc {
             
             System.out.println("-- Rewriting yielding expressions.");
             c.visit(new rewriters.ChannelRead());
-//            c.visit(new rewriters.ChannelEndRewriteTest());
 //            new rewriters.ChannelReadRewrite().go(c);
             
             //System.out.println("Lets reprint it all");
@@ -308,8 +307,10 @@ public class ProcessJc {
     public ProcessJc(String[] args) {
         this.args = args;
         Settings.showColor = Boolean.valueOf(config.getProperty("color"));
-        parseArgs(); // Parse command-line arguments
-        ANSIColorMode(); // Switch to turn color mode ON/OFF
+        // Parse command-line arguments
+        parseArgs();
+        // Switch to turn color mode ON/OFF
+        ANSIColorMode();
     }
     
     public void ANSIColorMode() {        

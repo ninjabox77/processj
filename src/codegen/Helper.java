@@ -8,8 +8,10 @@ import java.io.Writer;
 
 import ast.ProcTypeDecl;
 import ast.Type;
+import processj.runtime.PJBarrier;
 import processj.runtime.PJChannel;
 import processj.runtime.PJRecord;
+import processj.runtime.PJTimer;
 import utilities.Assert;
 import utilities.Settings;
 
@@ -128,6 +130,10 @@ public class Helper {
             typeName = PJRecord.class;
         else if (type.isChannelType() || type.isChannelEndType())
             typeName = PJChannel.class;
+        else if (type.isTimerType())
+            typeName = PJTimer.class;
+        else if (type.isBarrierType())
+            typeName = PJBarrier.class;
         
         return typeName;
     }
@@ -176,7 +182,8 @@ public class Helper {
             packageName = packageName.replaceAll(includePath, "");
             return packageName;
         }
-        // The invocation was made from the same source file
+        // If we get here, then the invocation was made from the same
+        // source file
         return sourceFile;
     }
     

@@ -102,10 +102,10 @@ public static class <name> extends PJProcess {
 
 //========================================================================================
 // An simple (or normal) invocation consists of associating the caller
-// with the parameters that are used to invoked it with. This will apply
-// only to procedures that act and behave like any Java method (such methods
-// are referred to by names and can be invoked at any point during the
-// execution of the program) and ones that do not extend the class
+// with the parameters that are used to invoked it with. This only ever
+// applies to procedures that act and behave like any Java method (such
+// methods are referred to by name and can be invoked at any point during
+// the execution of the program) and ones that do not extend the class
 // PJProcess.
 // 1.) name: the name of the invoked procedure.
 // 2.) vars: the names of the formal parameters.
@@ -542,26 +542,20 @@ RecordAccessor(name, member) ::= "<if(name)><name>.<member><endif>"
 // 1.) modifier: access level such as public, private, or protected.
 // 2.) name: the name that uniquely applies and identifies the protocol.
 // 3.) body:
-// 4.) extend:
-ProtocolClass(modifiers, name, body, extend) ::= <<
-<if(modifiers)><modifiers; separator=" "> <else>protected <endif>interface I_<name><if(extend)> extends <extend:{e | I_<e>}; separator=", "><endif> { }
-
+ProtocolClass(modifiers, name, body) ::= <<
 <if(modifiers)><modifiers; separator=" "> <else>protected <endif>static class <name> {
     <body; separator="\n\n">
 }
 >>
 
 //========================================================================================
-//========================================================================================
-//========================================================================================
 //
 // 1.) modifier:
 // 2.) name:
 // 3.) types:
 // 4.) vars:
-// 5.) protType:
-ProtocolType(modifier, name, types, vars, protType) ::= <<
-<if(modifier)><modifier> <else>protected <endif>static class <name> extends PJProtocolCase<if(protType)> implements I_<protType> <endif> {
+ProtocolType(modifier, name, types, vars) ::= <<
+<if(modifier)><modifier> <else>protected <endif>static class <name> extends PJProtocolCase {
     <! -------- Member variables -------- !>
     <if(vars)><types,vars:{t,v | public <t> <v>}; separator=";\n">;<\n><endif>
     <! -------- Default Constructor -------- !>
@@ -751,3 +745,10 @@ RecordExtend(name, type) ::= "<name> instanceof <type>"
 // 1.) str1:
 // 2.) str2:
 StringCompare(str1, str2) ::= "<str1>.equals(<str2>)"
+
+//========================================================================================
+//
+// 1.) expr:
+// 2.) trueBranch:
+// 3.) falseBranch:
+Ternary(expr, trueBranch, falseBranch) ::= "<expr> ? <trueBranch> : <falseBranch>"

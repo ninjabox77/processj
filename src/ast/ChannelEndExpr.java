@@ -27,6 +27,10 @@ public class ChannelEndExpr extends Expression {
     public Expression channel() {
         return (Expression) children[0];
     }
+    
+    public int endType() {
+        return end;
+    }
 
     public <S extends Object> S visit(Visitor<S> v) {
         return v.visitChannelEndExpr(this);

@@ -39,7 +39,7 @@ public enum RuntimeVersion implements Comparator<String> {
     
     @Override
     public int compare(String s1, String s2) {
-        // Remove all whitespaces
+        // Remove all white spaces
         if (!isEmpty(s1))
             s1 = s1.replaceAll(" ", "");
         if (!isEmpty(s2))
@@ -50,7 +50,7 @@ public enum RuntimeVersion implements Comparator<String> {
         String build1 = v1.length > 1 ? getPreReleaseBuild(v1[1]) : null;
         String build2 = v2.length > 1 ? getPreReleaseBuild(v2[1]) : null;
         int cmp = compareStrings(v1[0], v2[0]);
-        // Compare metadata & build
+        // Compare metadata and build
         if (cmp == 0) {
             if (isEmpty(build1) && isEmpty(build2))
                 cmp = 0;

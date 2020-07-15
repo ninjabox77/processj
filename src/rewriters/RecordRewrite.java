@@ -29,7 +29,6 @@ public class RecordRewrite extends Visitor<AST> {
     
     public Set<RecordMember> addExtendedRecordName(AST a) {
         Log.log(a, "extends a RecordTypeDecl (" + ((RecordTypeDecl) a).name().getname() + ")");
-
         RecordTypeDecl rt = (RecordTypeDecl) a;
         Set<RecordMember> set = new LinkedHashSet<>();
         for (RecordMember rm : rt.body()) {
@@ -52,7 +51,6 @@ public class RecordRewrite extends Visitor<AST> {
     @Override
     public AST visitRecordTypeDecl(RecordTypeDecl rt) {
         Log.log(rt, "Visiting a RecordTypeDecl (" + rt.name().getname() + ")");
-        
         Set<RecordMember> set = new LinkedHashSet<>();
         // Merge the member fields of all extended records
         for (Name name : rt.extend())

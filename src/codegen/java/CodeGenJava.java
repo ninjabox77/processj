@@ -255,19 +255,17 @@ public class CodeGenJava extends Visitor<Object> {
             Sequence<ParamDecl> formals = pd.formalParams();
             // Do we have any parameters?
             if (formals != null && formals.size() > 0) {
-                // Iterate through and visit every parameter declaration
-                for (int i = 0; i < formals.size(); ++i) {
-                    ParamDecl actualParam = formals.child(i);
-                    // Retrieve the name and type of each parameter specified in a
-                    // list of comma-separated arguments. Note that we ignored the
-                    // value returned by this visitor
-                    actualParam.visit(this);
-                }
+                // Iterate through and visit every parameter declaration.
+                // Retrieve the name and type of each parameter specified in
+                // a list of comma-separated arguments. Note that we ignored
+                // the value returned by this visitor
+                for (int i = 0; i < formals.size(); ++i)
+                    formals.child(i).visit(this);
             }            
             // Visit all declarations that appear in the procedure
             String[] body = (String[]) pd.body().visit(this);
             // Retrieve the modifier(s) attached to the invoked procedure such
-            // as private, public, protected, etc. */
+            // as private, public, protected, etc.
             String[] modifiers = (String[]) pd.modifiers().visit(this);
             // Grab the return type of the invoked procedure
             String procType = (String) pd.returnType().visit(this);
@@ -356,13 +354,13 @@ public class CodeGenJava extends Visitor<Object> {
         
         // <--
         // Silly rewrite for comparing two strings in ProcessJ using the
-        // 'Xxx'.equals(...) method from Java
+        // 'Xxx'.equals(...) method from Java -- this is just a monstrosity
         if ("==".equals(op) && (be.left() instanceof NameExpr && be.right() instanceof NameExpr) &&
             (((NameExpr) be.left()).myDecl != null && (((NameExpr) be.left()).myDecl instanceof LocalDecl)) &&
             ((NameExpr) be.right()).myDecl != null && (((NameExpr) be.right()).myDecl instanceof LocalDecl)) {
-            LocalDecl leftDecl = (LocalDecl) ((NameExpr) be.left()).myDecl;
-            LocalDecl rightDecl = (LocalDecl) ((NameExpr) be.right()).myDecl;
-            if (leftDecl.type().isStringType() && rightDecl.type().isStringType()) {
+            LocalDecl lhsDecl = (LocalDecl) ((NameExpr) be.left()).myDecl;
+            LocalDecl rhsDecl = (LocalDecl) ((NameExpr) be.right()).myDecl;
+            if (lhsDecl.type().isStringType() && rhsDecl.type().isStringType()) {
                stBinaryExpr = stGroup.getInstanceOf("StringCompare");
                stBinaryExpr.add("str1", lhs);
                stBinaryExpr.add("str2", rhs);
@@ -370,10 +368,10 @@ public class CodeGenJava extends Visitor<Object> {
             }
         }
         // A rewrite for the 'instanceof' operator in Java happens when <op>
-        // in a binary expression is the token 'IS'. Thus, to render the correct
-        // code, we look for and find the name of the 'lhs', which represents
-        // a record or protocol variable, and then use the NameType of the 'rhs'
-        // as the type to test if 'lhs' is an instanceof 'rhs'
+        // in a binary expression is the token 'IS'. Thus, to render the
+        // correct code, we look for the name of the 'lhs', which represents
+        // a record or protocol variable, and then use the NameType of the
+        // 'rhs' as the type to test if 'lhs' is an instanceof 'rhs'
         if ("instanceof".equals(op) && localToFields.containsKey(lhs)) {
             String namedType = localToFields.get(lhs);
             Object o = topLvlDecls.get(namedType);
@@ -402,6 +400,21 @@ public class CodeGenJava extends Visitor<Object> {
     // WhileStat -- nothing to do    
     // DoStat -- nothing to do
     // ForStat -- nothing to do
+    
+    @Override
+    public Object visitTernary(Ternary te) {
+        Log.log(te, "Visiting a Ternary");
+        
+        ST stTernary = stGroup.getInstanceOf("Ternary");
+        String expr = (String) te.expr().visit(this);
+        String trueBranch = (String) te.trueBranch().visit(this);
+        String falseBranch = (String) te.falseBranch().visit(this);
+        stTernary.add("expr", expr);
+        stTernary.add("trueBranch", trueBranch);
+        stTernary.add("falseBranch", falseBranch);
+        
+        return stTernary.render();
+    }
     
     @Override
     public Object visitContinueStat(ContinueStat cs) {
@@ -523,14 +536,16 @@ public class CodeGenJava extends Visitor<Object> {
         String val = null;
         String chanType = type;
         
+        // <-- This is not longer needed??
         // If we have a channel or channel-end declaration, grab the type
         // directly. Note that a visit to a channel or channel's end type
         // returns one of the following channel versions: one-2-one, one-2-many,
         // many-2-one, and many-2-many; which is something that we don't want!
         // A channel declaration should _always_ be of type 'PJChannel<?>' and
         // not one of the above-mentioned channels
-        if (ld.type().isChannelType() || ld.type().isChannelEndType())
-            type = PJChannel.class.getSimpleName() + type.substring(type.indexOf("<"), type.length());
+//        if (ld.type().isChannelType() || ld.type().isChannelEndType())
+//            type = PJChannel.class.getSimpleName() + type.substring(type.indexOf("<"), type.length());
+        // -->
         
         // Create a tag for this local declaration
         String newName = Helper.makeVariableName(name, ++localDecID, Tag.LOCAL_NAME);
@@ -842,7 +857,10 @@ public class CodeGenJava extends Visitor<Object> {
     public Object visitArrayType(ArrayType at) {
         Log.log(at, "Visiting an ArrayType (" + at.typeName() + ")");
         
-        String stArrayType = String.format("%s[]", (String) at.baseType().visit(this));
+        String type = (String) at.baseType().visit(this);
+        if (at.baseType().isChannelType() || at.baseType().isChannelEndType())
+            type = type.substring(0, type.indexOf("<")) + "<?>";
+        String stArrayType = String.format("%s[]", type);
         
         return stArrayType;
     }
@@ -885,10 +903,9 @@ public class CodeGenJava extends Visitor<Object> {
                 //   2.) a single statement
                 // found in a block statement, e.g. local declarations,
                 // variable declarations, invocations, etc.
-                if (stats instanceof String[]) {
-                    String[] statsStr = (String[]) stats;
-                    seqs.addAll(Arrays.asList(statsStr));
-                } else
+                if (stats instanceof String[])
+                    seqs.addAll(Arrays.asList((String[]) stats));
+                else
                     seqs.add((String) stats);
             }
         }
@@ -940,9 +957,15 @@ public class CodeGenJava extends Visitor<Object> {
             labels.add((String) sl.visit(this));
         
         ArrayList<String> stats = new ArrayList<>();
-        for (Statement st : sg.statements())
-            if (st != null)
-                stats.add((String) st.visit(this));
+        for (Statement st : sg.statements()) {
+            if (st != null) {
+                Object stmt = st.visit(this);
+                if (stmt instanceof String[])
+                    stats.addAll(Arrays.asList((String[]) stmt));
+                else
+                    stats.add((String) stmt);
+            }
+        }
         
         stSwitchGroup.add("labels", labels);
         stSwitchGroup.add("stats", stats);
@@ -1088,11 +1111,9 @@ public class CodeGenJava extends Visitor<Object> {
             modifiers.add((String) m.visit(this));
         
         curProtocol = name;
-        ArrayList<String> extend = new ArrayList<>();
         // We use tags to associate parent and child protocols
         if (pd.extend().size() > 0) {
             for (Name n : pd.extend()) {
-                extend.add(n.getname());
                 ProtocolTypeDecl ptd = (ProtocolTypeDecl) topLvlDecls.get(n.getname());
                 for (ProtocolCase pc : ptd.body())
                     protNameToProtTag.put(String.format("%s.%s", pd.name().getname(),
@@ -1105,7 +1126,6 @@ public class CodeGenJava extends Visitor<Object> {
             for (ProtocolCase pc : pd.body())
                 body.add((String) pc.visit(this));
         
-        stProtocolClass.add("extend", extend);
         stProtocolClass.add("name", name);
         stProtocolClass.add("modifiers", modifiers);
         stProtocolClass.add("body", body);
@@ -1135,8 +1155,6 @@ public class CodeGenJava extends Visitor<Object> {
             stProtocolType.add("types", recMemberToField.values());
             stProtocolType.add("vars", recMemberToField.keySet());
         }
-        
-        stProtocolType.add("protType", curProtocol);
         stProtocolType.add("name", protocName);
         
         return stProtocolType.render();
@@ -1166,11 +1184,11 @@ public class CodeGenJava extends Visitor<Object> {
             }
         }
         
-        // A visit to a RecordLiteral returns a string of the form
-        //    <var> = <val>
-        // where <var> is a record member, and <val> is the value assigned to
-        // <var>. Instead of parsing the string, we are going to grab the values
-        // assigned to each protocol member, one by one, while traversing the AST
+        // A visit to a RecordLiteral returns a string of the form:
+        // <var> = <val>, where <var> is a record member, and <val> is
+        // the value assigned to <var>. Instead of parsing the string,
+        // we are going to grab the values assigned to each protocol
+        // member, one by one, while traversing the AST
         for (RecordMemberLiteral rm : pl.expressions()) {
             String lhs = rm.name().getname();
             String expr = (String) rm.expr().visit(this);
@@ -1257,11 +1275,11 @@ public class CodeGenJava extends Visitor<Object> {
                 members.put(name, null);
             }
         
-        // A visit to a RecordMemberLiteral returns a string of the form
-        //     <var> = <val>
-        // where <var> is a record member, and <val> is the value assigned to
-        // <var>. Instead of parsing the string, we are going to grab the values
-        // assigned to each record member, one by one, while traversing the AST
+        // A visit to a RecordMemberLiteral returns a string of the form:
+        // <var> = <val>, where <var> is a record member, and <val> is the
+        // value assigned to <var>. Instead of parsing the string, we are
+        // going to grab the values assigned to each record member, one by
+        // one, while traversing the AST
         for (RecordMemberLiteral rm : rl.members()) {
             String lhs = rm.name().getname();
             String expr = (String) rm.expr().visit(this);
@@ -1662,6 +1680,12 @@ public class CodeGenJava extends Visitor<Object> {
         String[] dims = (String[]) na.dimsExpr().visit(this);
         String type = (String) na.baseType().visit(this);
         
+        // This is done so that we can instantiate arrays of channel types
+        // whose types are generic -- can't instantiate arrays template
+        // classes because generics are invariant unlike arrays
+        if (na.baseType().isChannelType() || na.baseType().isChannelEndType())
+            type = type.substring(0, type.indexOf("<")) + "<?>";
+        
         ST stNewArrayLiteral = stGroup.getInstanceOf("NewArrayLiteral");
         if (na.init() != null) {
             ArrayList<String> inits = new ArrayList<>();
@@ -1732,8 +1756,8 @@ public class CodeGenJava extends Visitor<Object> {
         return stChannelReadExpr.render();
     }
     
-    /** Returns a string representing the signature of the wrapper class
-     * or Java method that encapsulates a PJProcess */
+    // Returns a string representing the signature of the wrapper class
+    // or Java method that encapsulates a PJProcess
     private String createProcSignature(ProcTypeDecl pd) {
         String s = "";
         for (ParamDecl param : pd.formalParams()) {

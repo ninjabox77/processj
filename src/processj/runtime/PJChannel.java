@@ -7,7 +7,7 @@ package processj.runtime;
  *
  * @param <T>
  */
-public abstract class PJChannel<T> {
+public class PJChannel<T> {
     
     protected T data;
     
@@ -21,17 +21,17 @@ public abstract class PJChannel<T> {
     // ************************************
     // One-2-One Channel
     // ************************************
-    public abstract void write(PJProcess p, T data);
+    public void write(PJProcess p, T data) { }
     
-    public abstract T read(PJProcess p);
+    public T read(PJProcess p) { return (T) null; }
     
-    public abstract boolean isReadyToRead(PJProcess p);
+    public boolean isReadyToRead(PJProcess p) { return false; }
     
-    public abstract boolean isReadyToWrite();
+    public boolean isReadyToWrite() { return false; }
     
-    public abstract T preReadRendezvous(PJProcess p);
+    public T preReadRendezvous(PJProcess p) { return (T) null; }
     
-    public abstract void postReadRendezvous(PJProcess p);
+    public void postReadRendezvous(PJProcess p) { }
     
     //
     // The methods below must be overridden by the appropriate
@@ -63,7 +63,7 @@ public abstract class PJChannel<T> {
     // ************************************
     // Alternations (long for 'alt')
     // ************************************
-    public abstract PJProcess altGetWriter(PJProcess p);
+    public PJProcess altGetWriter(PJProcess p) { return (PJProcess) null; }
     
-    public abstract PJProcess setReaderGetWriter(PJProcess p);
+    public PJProcess setReaderGetWriter(PJProcess p) { return (PJProcess) null; }
 }
