@@ -26,13 +26,12 @@ public class ArraysRewrite extends Visitor<AST> {
 		
 		if (ld.type().isArrayType() && ld.var().init() != null && ld.var().init() instanceof Literal) {
 			int depth = ((ArrayType) ld.type()).getDepth();
-			Sequence<AST> s = new Sequence<AST>();
+			Sequence<AST> se = new Sequence<AST>();
 			for (int i = 0; i < depth; ++i)
-				s.append(null);
+				se.append(null);
 			ld.var().children[1] = new NewArray(((ArrayType) ld.type()).baseType(),
 			                                    new Sequence<Expression>() /* dimsExpr */,
-			                                    s,
-			                                    ((ArrayLiteral) ld.var().init()));
+			                                    se, ((ArrayLiteral) ld.var().init()));
 		}
 		
 		return null;

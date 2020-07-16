@@ -1,6 +1,7 @@
 package rewriters;
 
 import ast.AST;
+import ast.AltCase;
 import ast.AltStat;
 import ast.ArrayAccessExpr;
 import ast.Assignment;
@@ -31,6 +32,7 @@ import ast.UnaryPostExpr;
 import ast.UnaryPreExpr;
 import ast.Var;
 import printers.PrettyPrinter;
+import utilities.Log;
 import utilities.Pair;
 import utilities.Visitor;
 
@@ -84,6 +86,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
     @Override
     public Pair<Sequence, Expression> visitCompilation(Compilation co) {
         System.out.println("Visiting Compilation");
+        // TODO: Don't wee need to traverse everything else??
         for (AST decl : co.typeDecls()) {
             if (decl instanceof Type && decl != null) {
                 Type t = ((Type) decl);
@@ -641,15 +644,22 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
         return p;
     }
     
-    @Override
-    public Pair<Sequence, Expression> visitAltStat(AltStat as) {
-        System.out.println("Visiting a AltStat");
-        Pair<Sequence, Expression> p = null;
-        // TODO:
-        return p;
-    }
+//    @Override
+//    public Pair<Sequence, Expression> visitAltStat(AltStat as) {
+//        System.out.println("Visiting an AltStat");
+//        Pair<Sequence, Expression> p = null;
+//        // TODO:
+//        return p;
+//    }
+//    
+//    @Override
+//    public Pair<Sequence, Expression> visitAltCase(AltCase ac) {
+//        System.out.println("Visiting an AltCase");
+//        Pair<Sequence, Expression> p = null;
+//        return p;
+//    }
     
     // TODO: Record
     // TODO: Protocol
-    // TODO: ReturnStat -- Should processes return a value?
+    // TODO: ReturnStat -- Should processes return a value??
 }

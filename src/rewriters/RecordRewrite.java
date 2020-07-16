@@ -18,7 +18,8 @@ import utilities.Visitor;
  */
 public class RecordRewrite extends Visitor<AST> {
     
-    public SymbolTable sym;
+    /** Top level declarations */
+    private SymbolTable sym;
     
     public RecordRewrite(SymbolTable sym) {
         this.sym = sym;

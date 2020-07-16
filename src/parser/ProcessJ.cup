@@ -1270,7 +1270,7 @@ array_creation_expression ::=
         {: RESULT = new NewArray(t, d1, d2, null); :}
         | NEW primitive_type:t dims:d array_initializer:i  
         {: RESULT = new NewArray(t, new Sequence<Expression>(), d, i); :}
-        | NEW IDENTIFIER:id dim_exprs:d1 dims_opt:d2        
+        | NEW IDENTIFIER:id dim_exprs:d1 dims_opt:d2
         {: RESULT = new NewArray(new NamedType(new Name(id)), d1, d2, null); :}
         | NEW IDENTIFIER:id dims:d array_initializer:i      
         {: RESULT = new NewArray(new NamedType(new Name(id)), new Sequence<Expression>(), d, i); :}

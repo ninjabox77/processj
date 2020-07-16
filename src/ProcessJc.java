@@ -174,70 +174,67 @@ public class ProcessJc {
             
             SymbolTable.hook = null;
             
-            // Visit import declarations.
+            // Visit import declarations
             System.out.println("-- Resolving imports.");
             c.visit(new namechecker.ResolveImports<AST>(globalTypeTable));
             globalTypeTable.printStructure("");
             
-            // Visit top-level declarations.
+            // Visit top-level declarations
             System.out.println("-- Declaring Top Level Declarations.");
             c.visit(new namechecker.TopLevelDecls<AST>(globalTypeTable));
             
-            // Visit and re-construct record types correctly.
+            // Visit and re-construct record types correctly
             System.out.println("-- Reconstructing records.");
             c.visit(new rewriters.RecordRewrite(globalTypeTable));
             
-            // Visit and re-construct protocol types correctly.
+            // Visit and re-construct protocol types correctly
             System.out.println("-- Reconstructing protocols.");
             c.visit(new rewriters.ProtocolRewrite(globalTypeTable));
             
-            // Visit and re-construct if-stmt, while-stmt, for-stmt, and do-stmt.
+            // Visit and re-construct if-stmt, while-stmt, for-stmt, and do-stmt
             System.out.println("-- Reconstructing statements.");
             c.visit(new rewriters.StatementRewrite());
             
-            // Visit and resolve import for top-level declarations.
+            // Visit and resolve import for top-level declarations
             System.out.println("-- Checking native Top Level Declarations.");
             c.visit(new namechecker.ResolveNativeImports());
 
-            // Visit and resolve types from imported packages.
+            // Visit and resolve types from imported packages
             System.out.println("-- Resolving imported types.");
             c.visit(new namechecker.ResolvePackageTypes());
             
-            // Visit name checker.
+            // Visit name checker
             System.out.println("-- Checking name usage.");
             c.visit(new namechecker.NameChecker<AST>(globalTypeTable));
             
             // Visit and re-construct array types correctly
             System.out.println("-- Reconstructing array types.");
             root.visit(new namechecker.ArrayTypeConstructor());
-            
-//            System.out.println(">> Before");
-//            c.visit(new ParseTreePrinter());
 
             // Visit and re-construct array literals
             System.out.println("-- Reconstructing array literas.");
             c.visit(new rewriters.ArraysRewrite());
-
-//            System.out.println(">> After");
-//            c.visit(new ParseTreePrinter());
             
-            // Visit type checker.
+            // Visit type checker
             System.out.println("-- Checking types.");
             c.visit(new typechecker.TypeChecker(globalTypeTable));
             
-            // Visit cast-rewrite.
+            // Visit cast-rewrite
+            System.out.println("-- Rewriting cast-expressions.");
             c.visit(new CastRewrite());
             
-            // Visit reachability.
+            // Visit reachability
             System.out.println("-- Computing reachability.");
             c.visit(new reachability.Reachability());
             
-            // Visit parallel usage.
+            // Visit parallel usage
             System.out.println("-- Performing parallel usage check.");
             c.visit(new parallel_usage_check.ParallelUsageCheck());
             
-            // Visit yield.
+            // Visit yield
+            System.out.println("-- Annotating procedures that may issue a yield call.");
             c.visit(new yield.Yield());
+            
             System.out.println("-- Marking yielding statements and expressions.");
             c.visit(new rewriters.Yield());
             //c.visit(new rewriters.Expr());
@@ -253,7 +250,6 @@ public class ProcessJc {
             
             System.out.println("-- Rewriting yielding expressions.");
             c.visit(new rewriters.ChannelRead());
-//            new rewriters.ChannelReadRewrite().go(c);
             
             //System.out.println("Lets reprint it all");
             //c.visit(new printers.ParseTreePrinter());

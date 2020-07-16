@@ -354,13 +354,12 @@ public class CodeGenJava extends Visitor<Object> {
         
         // <--
         // Silly rewrite for comparing two strings in ProcessJ using the
-        // 'Xxx'.equals(...) method from Java -- this is just a monstrosity
+        // 'Xxx'.equals(...) method from Java
         if ("==".equals(op) && (be.left() instanceof NameExpr && be.right() instanceof NameExpr) &&
-            (((NameExpr) be.left()).myDecl != null && (((NameExpr) be.left()).myDecl instanceof LocalDecl)) &&
-            ((NameExpr) be.right()).myDecl != null && (((NameExpr) be.right()).myDecl instanceof LocalDecl)) {
-            LocalDecl lhsDecl = (LocalDecl) ((NameExpr) be.left()).myDecl;
-            LocalDecl rhsDecl = (LocalDecl) ((NameExpr) be.right()).myDecl;
-            if (lhsDecl.type().isStringType() && rhsDecl.type().isStringType()) {
+            ((((NameExpr) be.left()).myDecl instanceof LocalDecl) && ((NameExpr) be.right()).myDecl instanceof LocalDecl)) {
+            LocalDecl ld1 = (LocalDecl) ((NameExpr) be.left()).myDecl;
+            LocalDecl ld2 = (LocalDecl) ((NameExpr) be.right()).myDecl;
+            if (ld1.type().isStringType() && ld2.type().isStringType()) {
                stBinaryExpr = stGroup.getInstanceOf("StringCompare");
                stBinaryExpr.add("str1", lhs);
                stBinaryExpr.add("str2", rhs);
@@ -1478,11 +1477,8 @@ public class CodeGenJava extends Visitor<Object> {
         
         ST stAltCase = stGroup.getInstanceOf("AltCase");
         Statement stat = ac.guard().guard();
-        String guard = null;
+        String guard = (String) stat.visit(this);
         String[] stats = (String[]) ac.stat().visit(this);
-        
-        if (stat instanceof ExprStat)
-            guard = (String) stat.visit(this);
         
         stAltCase.add("number", ac.getCaseNumber());
         stAltCase.add("guardExpr", guard);
@@ -1550,6 +1546,8 @@ public class CodeGenJava extends Visitor<Object> {
             if (stat instanceof ExprStat) {
                 Expression e = ((ExprStat) stat).expr();
                 ChannelReadExpr cr = null;
+                if (!(e instanceof Assignment))
+                    ; // TODO: Should this throw an error??
                 if (e instanceof Assignment)
                     cr = (ChannelReadExpr) ((Assignment) e).right();
                 guards.add((String) cr.channel().visit(this));

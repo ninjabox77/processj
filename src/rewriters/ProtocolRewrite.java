@@ -19,8 +19,9 @@ import utilities.Visitor;
  * @author ben
  */
 public class ProtocolRewrite extends Visitor<AST> {
-    // TODO: THIS NEED TO BE REWRITTEN!!!!
-    public SymbolTable sym;
+    
+    /** Top level declarations */
+    private SymbolTable sym;
     
     public ProtocolRewrite(SymbolTable sym) {
         this.sym = sym;

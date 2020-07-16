@@ -84,6 +84,7 @@ public class InfiniteLoopRewrite {
                                     new Var(new Name(temp), null), true /* constant */);
                             // Replace the boolean literal value with the new local variable
                             NameExpr ne = new NameExpr(new Name(temp));
+                            ne.type = ld.type();
                             ExprStat es = new ExprStat(new Assignment(ne, ws.expr(), Assignment.EQ));
                             // Rewrite the expression for the while-loop
                             ws.children[0] = ne;
@@ -105,6 +106,7 @@ public class InfiniteLoopRewrite {
                                     new Var(new Name(temp), null), true /* constant */);
                             // Replace the boolean literal value with the new local variable
                             NameExpr ne = new NameExpr(new Name(temp));
+                            ne.type = ld.type();
                             ExprStat es = new ExprStat(new Assignment(ne, ds.expr(), Assignment.EQ));
                             // Rewrite the expression for the do-while loop
                             ds.children[1] = ne;
@@ -131,6 +133,7 @@ public class InfiniteLoopRewrite {
                                 newExpr = new PrimitiveLiteral(new Token(0, Boolean.toString(true), 0, 0, 0), 0 /* kind */);
                             // Replace the boolean literal value with the new local variable
                             NameExpr ne = new NameExpr(new Name(temp));
+                            ne.type = ld.type();
                             ExprStat es = new ExprStat(new Assignment(ne, newExpr, Assignment.EQ));
                             // Rewrite the expression for the for-loop
                             fs.children[1] = ne;
