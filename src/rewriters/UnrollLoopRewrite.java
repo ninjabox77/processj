@@ -84,7 +84,7 @@ public class UnrollLoopRewrite extends Visitor<AST> {
 
 	public UnrollLoopRewrite() {
 		Log.logHeader("*****************************************");
-		Log.logHeader("*      L O O P  -  R E W R I T E R       ");
+		Log.logHeader("*      L O O P  -  R E W R I T E R      *");
 		Log.logHeader("*****************************************");
 	}
 

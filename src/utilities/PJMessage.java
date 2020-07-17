@@ -39,7 +39,7 @@ public class PJMessage extends PJBugMessage {
             stStackInfo.add("stack", throwable.getStackTrace());
         }
         
-        /* Apply color code if allowed on terminal */
+        // Apply color code if allowed on terminal
         String tag = stTag.render();
         if (Settings.showColor)
             tag = ANSICode.setColor(stTag.render(), errorNumber.getErrorSeverity());

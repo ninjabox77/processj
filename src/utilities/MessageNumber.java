@@ -15,7 +15,7 @@ public interface MessageNumber {
     public static final int UNKNOWN = -1;
     
     default ErrorSeverity getErrorSeverity() {
-        return ErrorSeverity.INFO;
+        return ErrorSeverity.ERROR;
     }
     
     default int getNumber() {
@@ -23,7 +23,7 @@ public interface MessageNumber {
     }
     
     default String getMessage() {
-        return "<EMPTY>";
+        return "EMPTY MESSAGE!";
     }
     
     // If none is given then abort/terminate

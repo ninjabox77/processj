@@ -46,6 +46,9 @@ public class CodeGenJava extends Visitor<Object> {
 
     /** The user working directory */
     private String directory = null;
+    
+    /** The source program */
+    private String sourceFile = null;
 
     /** Currently executing procedure */
     private String curProcName = null;
@@ -118,9 +121,9 @@ public class CodeGenJava extends Visitor<Object> {
      *          protocols, constants, and/or external types.
      */
     public CodeGenJava(SymbolTable s) {
-        Log.logHeader("*****************************************");
-        Log.logHeader("* C O D E   G E N E R A T O R   J A V A *");
-        Log.logHeader("*****************************************");
+        Log.logHeader("*******************************************");
+        Log.logHeader("*  C O D E   G E N E R A T O R   J A V A  *");
+        Log.logHeader("*******************************************");
         
         topLvlDecls = s;
         stGroup = new STGroupFile(STGRAMMAR_FILE);
@@ -137,10 +140,27 @@ public class CodeGenJava extends Visitor<Object> {
     }
     
     /**
+     * Sets the current source program.
+     * 
+     * @param sourceFile
+     *          A source program being processed.
+     */
+    public void sourceProgam(String sourceFile) {
+        this.sourceFile = sourceFile;
+    }
+    
+    /**
      * Return a string representing the current working directory.
      */
     public String workingDir() {
         return directory;
+    }
+    
+    /**
+     * Return the current source program.
+     */
+    public String sourceProgram() {
+        return sourceFile;
     }
     
     /**
@@ -189,7 +209,7 @@ public class CodeGenJava extends Visitor<Object> {
 
         stCompilation.add("pathName", packagename);
         stCompilation.add("fileName", co.fileName);
-        stCompilation.add("name", co.fileNoExtension());
+        stCompilation.add("name", sourceFile);
         stCompilation.add("body", body);
         stCompilation.add("version", JVM_RUNTIME);
         
@@ -200,9 +220,9 @@ public class CodeGenJava extends Visitor<Object> {
         // This will render the code for debugging
         codeGen = stCompilation.render();
         
-        Log.logHeader("****************************************");
-        Log.logHeader("*     G E N E R A T E D   C O D E      *");
-        Log.logHeader("****************************************");
+        Log.log("========================================");
+        Log.log("*           J A V A   C O D E          *");
+        Log.log("========================================");
         Log.logHeader(codeGen);
         
         return codeGen;
@@ -367,10 +387,10 @@ public class CodeGenJava extends Visitor<Object> {
             }
         }
         // A rewrite for the 'instanceof' operator in Java happens when <op>
-        // in a binary expression is the token 'IS'. Thus, to render the
-        // correct code, we look for the name of the 'lhs', which represents
+        // in a binary expression represents the token 'IS'. Thus, to render
+        // the correct code, we look for the name of the 'lhs', which is
         // a record or protocol variable, and then use the NameType of the
-        // 'rhs' as the type to test if 'lhs' is an instanceof 'rhs'
+        // 'rhs' as the type to test if the 'lhs' is an instanceof the 'rhs'
         if ("instanceof".equals(op) && localToFields.containsKey(lhs)) {
             String namedType = localToFields.get(lhs);
             Object o = topLvlDecls.get(namedType);
@@ -1015,7 +1035,7 @@ public class CodeGenJava extends Visitor<Object> {
     @Override
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public Object visitInvocation(Invocation in) {
-        // We ignore any GOTO or LABEL invocation because they are only needed
+        // We ignore any GOTO or LABEL invocation since they are only needed
         // for the ASM bytecode rewrite
         if (in.ignore) {
             Log.log(in, "Visiting a " + in.procedureName().getname());

@@ -58,12 +58,25 @@ public abstract class PJBugMessage {
     
     public PJBugMessage(Builder<?> builder) {
         ast = builder.ast;
-        errorNumber = builder.error;
         arguments = builder.arguments;
+        errorNumber = builder.error == null? new MessageNumber() { // This is not ideal!!
+            @Override
+            public String getMessage() {
+                StringBuilder sb = new StringBuilder();
+                Object[] args = builder.arguments;
+                if (args != null) {
+                    for (int i = 0; i < args.length; ++i) {
+                        sb.append(args[i]);
+                        sb.append("\n");
+                    }
+                    return sb.toString().trim();
+                }
+                return "EMPTY MESSAGE!"; }
+            } : builder.error;
         throwable = builder.throwable;
-        fileName = builder.fileName == null ? new File(PJBugManager.INSTANCE.fileName).getAbsolutePath() :
-                                               new File(builder.fileName).getAbsolutePath();
-        packageName = builder.packageName == null ? PJBugManager.INSTANCE.fileName : builder.packageName;
+        fileName = builder.fileName == null? new File(PJBugManager.INSTANCE.fileName).getAbsolutePath() :
+                                             new File(builder.fileName).getAbsolutePath();
+        packageName = builder.packageName == null? PJBugManager.INSTANCE.fileName : builder.packageName;
         rowNum = builder.rowNum;
         colNum = builder.colNum;
     }

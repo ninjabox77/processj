@@ -237,7 +237,6 @@ public class ProcessJc {
             
             System.out.println("-- Marking yielding statements and expressions.");
             c.visit(new rewriters.Yield());
-            //c.visit(new rewriters.Expr());
             
             System.out.println("-- Checking literal inits are free of channel communication.");
             c.visit(new semanticcheck.LiteralInits());
@@ -247,6 +246,9 @@ public class ProcessJc {
             
             System.out.println("-- Rewriting loops.");
             c.visit(new rewriters.UnrollLoopRewrite());
+            
+            System.out.println("-- Performing alt statement usage check.");
+            c.visit(new rewriters.AltStatRewrite());
             
             System.out.println("-- Rewriting yielding expressions.");
             c.visit(new rewriters.ChannelRead());
@@ -293,6 +295,8 @@ public class ProcessJc {
         CodeGenJava codeGen = new CodeGenJava(s);
         // Set the user working directory
         codeGen.workingDir(p.getProperty("workingdir"));
+        // Set the working source file
+        codeGen.sourceProgam(c.fileNoExtension());
         // Visit this compilation unit and recursively build the program
         // after returning strings rendered by the string template
         String code = (String) c.visit(codeGen);

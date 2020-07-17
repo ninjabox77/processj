@@ -43,7 +43,7 @@ public enum PJBugManager {
         stackTrace = new Stack<PJBugMessage>();
     }
     
-    public void addMessageAndExit(PJBugMessage cm, MessageNumber msg) {
+    private void addMessageAndExit(PJBugMessage cm, MessageNumber msg) {
         ErrorSeverity severity = msg.getErrorSeverity();
         switch (severity) {
         case INFO:
@@ -69,7 +69,7 @@ public enum PJBugManager {
             // Throw the first error that occurred
             if (postPonedMessage == null)
                 postPonedMessage = pjm;
-            System.out.println(pjm.getRenderMessage());
+            System.err.println(pjm.getRenderMessage());
             if (stop)
                 System.exit(1);
         case DONT_PRINT_CONTINUE:

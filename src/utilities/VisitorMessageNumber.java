@@ -170,7 +170,16 @@ public enum VisitorMessageNumber implements MessageNumber {
     REACHABILITY_812(812, ErrorSeverity.ERROR, MessageType.PRINT_CONTINUE),
     REACHABILITY_813(813, ErrorSeverity.WARNING, MessageType.PRINT_CONTINUE),
     
-    REWRITE_900(900, ErrorSeverity.ERROR, MessageType.PRINT_CONTINUE),
+    // --------------------------------------------------
+    // SEMANTIC CHECKS (900-999)
+    
+    // --------------------------------------------------
+    // REWRITERS (1000-1020)
+    
+    REWRITE_1000(1000, ErrorSeverity.ERROR, MessageType.PRINT_CONTINUE),
+    REWRITE_1001(1001, ErrorSeverity.ERROR, MessageType.PRINT_CONTINUE),
+    REWRITE_1002(1002, ErrorSeverity.ERROR, MessageType.PRINT_CONTINUE),
+    REWRITE_1003(1003, ErrorSeverity.ERROR, MessageType.PRINT_CONTINUE),
     ;
 
     
