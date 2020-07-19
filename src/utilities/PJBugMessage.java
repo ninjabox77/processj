@@ -59,7 +59,8 @@ public abstract class PJBugMessage {
     public PJBugMessage(Builder<?> builder) {
         ast = builder.ast;
         arguments = builder.arguments;
-        errorNumber = builder.error == null? new MessageNumber() { // This is not ideal!!
+        // This is not ideal!!
+        errorNumber = builder.error == null? new MessageNumber() {
             @Override
             public String getMessage() {
                 StringBuilder sb = new StringBuilder();
@@ -139,12 +140,12 @@ public abstract class PJBugMessage {
                 ", package="        + (packageName.isEmpty() ? "none" : packageName) +
                 ", errorNumber="    + errorNumber.getNumber() +
                 ", errorMessage="   + errorNumber.getMessage() +
-                ", arguments="      + (arguments != null ? "{" +
+                ", arguments="      + (arguments != null? "{" +
                                       Arrays.stream(arguments)
                                             .map(arg -> arg + "")
                                             .collect(Collectors.joining(",")) + "}"
                                             : "none") +
-                ", reason="         + (throwable != null ?
+                ", reason="         + (throwable != null?
                                             throwable.getMessage()
                                             : "none") +
                 ", row="            + rowNum +
@@ -179,7 +180,7 @@ public abstract class PJBugMessage {
             return false;
         if (!this.fileName.equals(other.fileName) || !this.packageName.equals(other.packageName))
             return false;
-        if (this.ast != other.ast) /* This should be ok */
+        if (this.ast != other.ast) // This should be OK
             return false;
         if (!this.errorNumber.equals(other.errorNumber))
             return false;

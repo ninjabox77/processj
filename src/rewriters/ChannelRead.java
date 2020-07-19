@@ -14,6 +14,7 @@ import ast.ChannelWriteStat;
 import ast.Compilation;
 import ast.ExprStat;
 import ast.Expression;
+import ast.Guard;
 import ast.IfStat;
 import ast.Invocation;
 import ast.LocalDecl;
@@ -644,20 +645,49 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
         return p;
     }
     
-//    @Override
-//    public Pair<Sequence, Expression> visitAltStat(AltStat as) {
-//        System.out.println("Visiting an AltStat");
-//        Pair<Sequence, Expression> p = null;
-//        // TODO:
-//        return p;
-//    }
-//    
-//    @Override
-//    public Pair<Sequence, Expression> visitAltCase(AltCase ac) {
-//        System.out.println("Visiting an AltCase");
-//        Pair<Sequence, Expression> p = null;
-//        return p;
-//    }
+    @Override
+    public Pair<Sequence, Expression> visitAltStat(AltStat as) {
+        System.out.println("Visiting an AltStat");
+        Sequence<AltCase> body = as.body();
+        for (int i = 0; i < body.size(); ++i)
+            body.child(i).visit(this);
+        return new Pair<>(new Sequence(as), null);
+    }
+    
+    @Override
+    public Pair<Sequence, Expression> visitAltCase(AltCase ac) {
+        System.out.println("Visiting an AltCase");
+        Pair<Sequence, Expression> p = null;
+        // Rewrite the guard stat if needed
+        p = ac.guard().visit(this);
+        // Rewrite the statement if needed
+        p = ac.stat().visit(this);
+        if (p != null) {
+            if (p.getFirst().size() > 1)
+                ac.children[2] = new Block(p.getFirst());
+            else
+                ac.children[2] = p.getFirst().child(0);
+        }
+        return (Pair<Sequence, Expression>) null;
+    }
+    
+    @Override
+    public Pair<Sequence, Expression> visitGuard(Guard gu) {
+        System.out.println("Visiting a Guard");
+        Pair<Sequence, Expression> p = null;
+        Statement stat = gu.guard();
+        if (stat instanceof ExprStat) {
+            ExprStat es = (ExprStat) stat;
+            p = es.visit(this);
+            if (p != null) {
+                if (p.getFirst().size() > 1)
+                    gu.children[0] = new Block(p.getFirst());
+                else
+                    gu.children[0] = p.getFirst().child(0);
+            }
+        }
+        return p;
+    }
     
     // TODO: Record
     // TODO: Protocol

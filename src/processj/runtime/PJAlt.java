@@ -2,19 +2,13 @@ package processj.runtime;
 
 public class PJAlt {
     
-    /**
-     * Can be skips, timers or channel-reads.
-     */
+    /** Can be skips, timers or channel-reads */
     private Object[] guards;
     
-    /**
-     * Boolean guards.
-     */
+    /** Boolean guards */
     private boolean[] bguards;
     
-    /**
-     * Process declaring the 'alt'.
-     */
+    /** Process declaring the 'alt' */
     private PJProcess process;
     
     public static final String SKIP = "skip";
@@ -39,8 +33,8 @@ public class PJAlt {
     
     @SuppressWarnings("rawtypes")
     public int enable() {
-        int i;
-        for (i = 0; i < guards.length; ++i) {
+        for (int i = 0; i < guards.length; ++i) {
+            // If no boolean guard is ready then continue
             if (!bguards[i])
                 continue;
             // A skip?
@@ -56,6 +50,22 @@ public class PJAlt {
                     return i;
                 }
             }
+            // A timer?
+            if (guards[i] instanceof PJTimer) {
+                // TODO: Shouldn't this be formally verified??
+                PJTimer t = (PJTimer) guards[i];
+                if (t.getDelay() <= 0L) {
+                    process.setReady();
+                    t.expire();
+                    return i;
+                } else {
+                    try {
+                        t.start();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
         return -1;
     }
@@ -66,6 +76,9 @@ public class PJAlt {
         if (i == -1)
             i = guards.length - 1;
         for (int j = i; j >= 0; --j) {
+            // If no boolean guard is ready then continue
+            if (!bguards[j])
+                continue;
             // A skip?
             if (guards[j] == PJAlt.SKIP)
                 selected = j;
@@ -74,6 +87,23 @@ public class PJAlt {
                 PJChannel chan = (PJChannel) guards[j];
                 if (chan.setReaderGetWriter(null) != null)
                     selected = j;
+            }
+            // A timer?
+            if (guards[j] instanceof PJTimer) {
+                // TODO: Shouldn't this be formally verified??
+                PJTimer timer = (PJTimer) guards[j];
+                if (timer.isExpired() || timer.getDelay() <= 0L) {
+                    if (selected == -1) {
+                        if (guards[j] instanceof PJChannel) {
+                            PJChannel chan = (PJChannel) guards[j];
+                            if (chan.setReaderGetWriter(null) != null)
+                                selected = j;
+                        } else if (guards[j] instanceof PJTimer) {
+                            PJTimer t = (PJTimer) guards[j];
+                            t.kill();
+                        }
+                    }
+                }
             }
         }
         return selected;

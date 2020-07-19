@@ -30,10 +30,8 @@ public class TimerQueue {
                     PJTimer timer = (PJTimer) delayQueue.take();
                     // Set the timer's expired flag to true.
                     timer.expire();
-
                     // Get the process in which the timeout was initiated.
                     PJProcess p = timer.getProcess();
-
                     // If the process is still around then set it ready to run again.
                     // time.getProcess() will return 'null' if the process has terminated.
                     if (p != null) {

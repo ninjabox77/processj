@@ -15,8 +15,8 @@ public class PJTimer implements Delayed {
 
     private long delay;
     private boolean killed = false;
-    public boolean started = false;
-    public boolean expired = false;
+    private boolean started = false;
+    private boolean expired = false;
 
     public final long timeout;
 
@@ -32,16 +32,23 @@ public class PJTimer implements Delayed {
     public void start() throws InterruptedException {
         this.delay = System.currentTimeMillis() + timeout;
         PJProcess.scheduler.insertTimer(this);
-
         started = true;
     }
 
     public void expire() {
         expired = true;
     }
+    
+    public boolean isExpired() {
+        return expired;
+    }
 
     public static long read() {
         return System.currentTimeMillis();
+    }
+    
+    public long getDelay() {
+        return delay;
     }
 
     public void kill() {

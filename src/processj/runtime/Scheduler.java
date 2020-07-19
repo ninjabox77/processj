@@ -19,28 +19,23 @@ public class Scheduler extends Thread {
         return rq.size();
     }
 
-
     private int contextSwitches = 0;
     private int maxrqsize = 0;
 
     synchronized void incContextSwitches() {
-	contextSwitches++;
+        contextSwitches++;
     }
 
     synchronized void incMaxrqsize(int size) {
-	if (size > maxrqsize) {
-	    maxrqsize = size;
-	}
-	
+        if (size > maxrqsize) {
+            maxrqsize = size;
+        }
     }
-
-    
-
 
     @Override
     public void run() {
         startTime = System.nanoTime();
-        //    System.err.println("[Scheduler] Scheduler running");
+        // System.err.println("[Scheduler] Scheduler running");
 
         tq.start();
 
@@ -75,7 +70,8 @@ public class Scheduler extends Thread {
                 rq.insert(p);
             }
 
-            // System.out.println("rq=" + rq.size() + " inactivePool=" + inactivePool.getCount() + " timerqueue=" + tq.size());
+            // System.out.println("rq=" + rq.size() + " inactivePool=" +
+            // inactivePool.getCount() + " timerqueue=" + tq.size());
             if (inactivePool.getCount() == rq.size() && rq.size() > 0 && tq.size() == 0) {
                 System.err.println("No processes ready to run. System is deadlocked");
                 tq.kill();
@@ -95,7 +91,7 @@ public class Scheduler extends Thread {
 
         logExecutionTime();
     }
-    
+
     @Override
     public String toString() {
         String str = "";

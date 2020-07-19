@@ -313,13 +313,28 @@ TimeoutStat(name, delay, resume0) ::= <<
 <name> = new PJTimer(this, <delay>);
 try {
     <name>.start();
-    setNotReady();
+    this.setNotReady();
     this.runLabel = <resume0>;
     this.yield();
 } catch (InterruptedException e) {
     System.out.println("An Interrupted exception occurred for a timer!");
 }
 label(<resume0>);
+>>
+
+//========================================================================================
+//
+// 1.) name:
+// 2.) delay:
+TimeoutStatCase(name, delay) ::= <<
+<name> = new PJTimer(this, <delay>);
+>>
+
+//========================================================================================
+//
+// 1.) block:
+BlockRV(block) ::= <<
+<if(block)><block; separator="\n"><endif>
 >>
 
 //========================================================================================
@@ -331,7 +346,8 @@ ChanWriteStat(chanName, writeExpr, resume0) ::= <<
 <chanName>.write(this, <writeExpr>);
 this.runLabel = <resume0>;
 this.yield();
-label(<resume0>);<\n>
+
+label(<resume0>);<!-- remove 'line-feed' --!>
 >>
 
 //========================================================================================
@@ -518,7 +534,7 @@ RecordType(modifiers, name, types, vars, extend) ::= <<
     }
     
     @Override public String toString() {
-    	return toString(null, 0);
+    	return "*" + toString(null, 0);
     }
 }
 >>
@@ -664,15 +680,17 @@ case <number>:
 //
 // 1.) alt:
 // 2.) count:
-// 3.) initBooleanGuards:
-// 4.) initGuards:
-// 5.) bguards:
-// 6.) guards:
-// 7.) jump:
-// 8.) cases:
-// 9.) index:
-AltStat(alt, count, initBooleanGuards, initGuards, bguards, guards, jump, cases, index) ::= <<
+// 3.) timerLocals:
+// 4.) initBooleanGuards:
+// 5.) initGuards:
+// 6.) bguards:
+// 7.) guards:
+// 8.) jump:
+// 9.) cases:
+// 10.) index:
+AltStat(alt, count, timerLocals, initBooleanGuards, initGuards, bguards, guards, jump, cases, index) ::= <<
 <alt> = new PJAlt(<count>, this);
+<timerLocals>
 <initBooleanGuards>
 <initGuards>
 boolean ready = <alt>.setGuards(<bguards>, <guards>);
@@ -711,6 +729,13 @@ BooleanGuards(locals, constants) ::= <<
 // 1.) guards:
 ObjectGuards(guards) ::= <<
 <if(guards)>Object[] objectGuards = { <guards; separator=", "> };<endif>
+>>
+
+//========================================================================================
+//
+// 1.) timers:
+TimerLocals(timers) ::= <<
+<if(timers)><timers; separator="\n"><endif>
 >>
 
 //========================================================================================

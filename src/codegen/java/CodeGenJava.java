@@ -555,17 +555,6 @@ public class CodeGenJava extends Visitor<Object> {
         String val = null;
         String chanType = type;
         
-        // <-- This is not longer needed??
-        // If we have a channel or channel-end declaration, grab the type
-        // directly. Note that a visit to a channel or channel's end type
-        // returns one of the following channel versions: one-2-one, one-2-many,
-        // many-2-one, and many-2-many; which is something that we don't want!
-        // A channel declaration should _always_ be of type 'PJChannel<?>' and
-        // not one of the above-mentioned channels
-//        if (ld.type().isChannelType() || ld.type().isChannelEndType())
-//            type = PJChannel.class.getSimpleName() + type.substring(type.indexOf("<"), type.length());
-        // -->
-        
         // Create a tag for this local declaration
         String newName = Helper.makeVariableName(name, ++localDecID, Tag.LOCAL_NAME);
         localToFields.put(newName, type);
@@ -1340,7 +1329,7 @@ public class CodeGenJava extends Visitor<Object> {
             stAccessor.add("var", name);
             stAccessor.add("member", field);
         }
-        // This is for arrays and strings -- ProcessJ has no concept of classes,
+        // This is for arrays and strings -- ProcessJ has no notion of classes,
         // i.e. it has no concept of objects either. Arrays and strings are
         // therefore treated as primitive data types
         else {
@@ -1497,7 +1486,8 @@ public class CodeGenJava extends Visitor<Object> {
         
         ST stAltCase = stGroup.getInstanceOf("AltCase");
         Statement stat = ac.guard().guard();
-        String guard = (String) stat.visit(this);
+//        String guard = (String) stat.visit(this);
+        String guard = stat instanceof TimeoutStat? null : (String) stat.visit(this);
         String[] stats = (String[]) ac.stat().visit(this);
         
         stAltCase.add("number", ac.getCaseNumber());
@@ -1523,14 +1513,16 @@ public class CodeGenJava extends Visitor<Object> {
         Log.log(as, "Visiting an AltStat");
         
         ST stAltStat = stGroup.getInstanceOf("AltStat");
+        ST stTimerLocals = stGroup.getInstanceOf("TimerLocals");
         ST stBooleanGuards = stGroup.getInstanceOf("BooleanGuards");
         ST stObjectGuards = stGroup.getInstanceOf("ObjectGuards");
         
         Sequence<AltCase> cases = as.body();
-        ArrayList<String> blocals = new ArrayList<>();
-        ArrayList<String> bguards = new ArrayList<>();
-        ArrayList<String> guards = new ArrayList<>();
-        ArrayList<String> altCases = new ArrayList<>();
+        ArrayList<String> blocals = new ArrayList<>(); // Variables for pre-guard expressions
+        ArrayList<String> bguards = new ArrayList<>(); // Default boolan guards
+        ArrayList<String> guards = new ArrayList<>();  // Guard statements
+        ArrayList<String> altCases = new ArrayList<>();// Generated code for each alt-cases
+        ArrayList<String> tlocals = new ArrayList<>(); // Timeouts
         
         // Set boolean guards
         for (int i = 0; i < cases.size(); ++i) {
@@ -1542,16 +1534,13 @@ public class CodeGenJava extends Visitor<Object> {
                     bguards.add((String) ac.precondition().visit(this));
                 else { // This is an expression
                     Name n = new Name("btemp");
-                    LocalDecl ld = new LocalDecl(
-                            new PrimitiveType(PrimitiveType.BooleanKind),
-                            new Var(n, ac.precondition()),
-                            false);
+                    LocalDecl ld = new LocalDecl(new PrimitiveType(PrimitiveType.BooleanKind),
+                            new Var(n, ac.precondition()), false);
                     blocals.add((String) ld.visit(this));
                     bguards.add((String) n.visit(this));
                 }
             }
         }
-        
         stBooleanGuards.add("constants", bguards);
         stBooleanGuards.add("locals", blocals);
         
@@ -1566,25 +1555,34 @@ public class CodeGenJava extends Visitor<Object> {
             if (stat instanceof ExprStat) {
                 Expression e = ((ExprStat) stat).expr();
                 ChannelReadExpr cr = null;
-                if (!(e instanceof Assignment))
-                    ; // TODO: Should this throw an error??
                 if (e instanceof Assignment)
                     cr = (ChannelReadExpr) ((Assignment) e).right();
                 guards.add((String) cr.channel().visit(this));
-            } else if (stat instanceof SkipStat)
+            }
+            // Skip statement?
+            else if (stat instanceof SkipStat)
                 guards.add(String.format("%s.SKIP", PJAlt.class.getSimpleName()));
+            // Timeout statement?
+            else if (stat instanceof TimeoutStat) {
+                // Initialize the timeout statement
+                TimeoutStat ts = (TimeoutStat) stat;
+                ST stTimeout = stGroup.getInstanceOf("TimeoutStatCase");
+                stTimeout.add("name", ts.timer().visit(this));
+                stTimeout.add("delay", ts.delay().visit(this));
+                tlocals.add(stTimeout.render());
+                guards.add((String) ts.timer().visit(this));
+            }
             altCases.add((String) ac.visit(this));
         }
-        
+        stTimerLocals.add("timers", tlocals);
         stObjectGuards.add("guards", guards);
         
         // <--
-        // This is needed because of the StackMapTable for the generated Java bytecode
+        // This is needed because of the StackMapTable for the generated
+        // Java bytecode
         Name n = new Name("index");
-        new LocalDecl(
-                new PrimitiveType(PrimitiveType.IntKind),
-                new Var(n, null),
-                false /* not constant */).visit(this);
+        new LocalDecl(new PrimitiveType(PrimitiveType.IntKind),
+                new Var(n, null), false).visit(this);
         // Create a tag for this local alt declaration
         String newName = Helper.makeVariableName("alt", ++localDecID, Tag.LOCAL_NAME);
         localToFields.put(newName, "PJAlt");
@@ -1593,6 +1591,7 @@ public class CodeGenJava extends Visitor<Object> {
         
         stAltStat.add("alt", newName);
         stAltStat.add("count", cases.size());
+        stAltStat.add("timerLocals", stTimerLocals.render());
         stAltStat.add("initBooleanGuards", stBooleanGuards.render());
         stAltStat.add("initGuards", stObjectGuards.render());
         stAltStat.add("bguards", "booleanGuards");
@@ -1699,8 +1698,7 @@ public class CodeGenJava extends Visitor<Object> {
         String type = (String) na.baseType().visit(this);
         
         // This is done so that we can instantiate arrays of channel types
-        // whose types are generic -- can't instantiate arrays template
-        // classes because generics are invariant unlike arrays
+        // whose types are generic
         if (na.baseType().isChannelType() || na.baseType().isChannelEndType())
             type = type.substring(0, type.indexOf("<")) + "<?>";
         
@@ -1757,7 +1755,9 @@ public class CodeGenJava extends Visitor<Object> {
         // Do we have an extended rendezvous?
         if (cr.extRV() != null) {
             Object o = cr.extRV().visit(this);
-            stChannelReadExpr.add("extendRv", o);
+            ST stBlockRV = stGroup.getInstanceOf("BlockRV");
+            stBlockRV.add("block", o);
+            stChannelReadExpr.add("extendRv", stBlockRV.render());
         }
         
         stChannelReadExpr.add("chanName", chanEndName);

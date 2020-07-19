@@ -60,8 +60,8 @@ public class PJRecord {
                     sb.append(", ");
             }
         } catch (Exception e) {
-            // An exception should never be thrown because the members of a PJRecord
-            // are 'public' by default!
+            // An exception should never be thrown because the members of a
+            // PJRecord are 'public' by default!
             System.out.println("Failed to access field of PJRecord");
             System.exit(1);
         }
