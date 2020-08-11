@@ -19,6 +19,7 @@ public class PJMessage extends PJBugMessage {
     
     @Override
     public ST getST() {
+        ErrorSeverity errno = ErrorSeverity.ERROR;
         ST stFile = stGroup.getInstanceOf("File");
         ST stTag = stGroup.getInstanceOf("Tag");
         ST stStackInfo = stGroup.getInstanceOf("StackInfo");
@@ -28,21 +29,19 @@ public class PJMessage extends PJBugMessage {
             stFile.add("fileName", fileName);
             stFile.add("lineNumber", ast.line);
         }
-        
         if (errorNumber != null) {
+            errno = errorNumber.getErrorSeverity();
             stTag.add("tag", errorNumber.getErrorSeverity());
             stTag.add("number", errorNumber.getNumber());
         }
-        
         if (throwable != null) {
             stStackInfo.add("reason", throwable);
             stStackInfo.add("stack", throwable.getStackTrace());
         }
-        
         // Apply color code if allowed on terminal
         String tag = stTag.render();
         if (Settings.showColor)
-            tag = ANSICode.setColor(stTag.render(), errorNumber.getErrorSeverity());
+            tag = ANSICode.setColor(stTag.render(), errno);
         
         stMessage.add("tag", tag);
         stMessage.add("message", super.getST().render());
@@ -52,7 +51,7 @@ public class PJMessage extends PJBugMessage {
         return stMessage;
     }
     
-    public String getRenderMessage() {
+    public String getRenderedMessage() {
         ST stResult = getST();
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(stResult.render());

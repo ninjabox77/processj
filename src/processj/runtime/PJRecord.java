@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import utilities.Pair;
-import utilities.Util;
+import utilities.PJUtil;
 
 /**
  * @author ben
@@ -33,7 +33,7 @@ public class PJRecord {
                 if (o instanceof PJRecord) {
                     Pair<Object, Integer> tuple = getField(hm, o);
                     if (tuple != null) {
-                        String fname = Util.addChar('*', ++count);
+                        String fname = PJUtil.addChar('*', ++count);
                         sb.append(fields[i].getName());
                         sb.append(":");
                         sb.append(fname);
@@ -44,7 +44,7 @@ public class PJRecord {
                         String s = ((PJRecord) o).toString(hm, count);
                         tuple = getField(hm, o);
                         if (tuple != null) {
-                            String fname = Util.addChar('*', tuple.getValue());
+                            String fname = PJUtil.addChar('*', tuple.getValue());
                             s = fname + s;
                         }
                         sb.append(fields[i].getName());

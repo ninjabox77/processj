@@ -48,6 +48,6 @@ public class Assert {
      * @return The same object.
      */
     public static <T> T nonNull(T obj, Collection<String> args) {
-        return nonNull(obj, Util.join(args, ", "));
+        return nonNull(obj, PJUtil.join(args, ", "));
     }
 }

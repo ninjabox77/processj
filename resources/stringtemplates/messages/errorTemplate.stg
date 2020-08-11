@@ -22,7 +22,7 @@ AddNumber(lineNumber) ::= "<if(lineNumber)>:<lineNumber><endif>"
 // 1) tag: The level of severity of the error message.
 // 2) number: The type of error produced by the ProcessJ compiler.
 Tag(tag, number) ::= <<
-<tag>[<if(number)><number><else>000<endif>]: 
+<tag>[<if(number)><number><else>001<endif>]: 
 >>
 
 //========================================================================================
@@ -34,4 +34,11 @@ Message(tag, message, location, stack) ::= <<
 <tag><message>
 <location>
 <stack>
+>>
+
+//========================================================================================
+// 1) messages: The arguments that are the reason for the error.
+Report(messages) ::= <<
+Error message:
+<messages:{m | <m>}; separator="\n">
 >>

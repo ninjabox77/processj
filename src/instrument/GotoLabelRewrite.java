@@ -34,7 +34,7 @@ public class GotoLabelRewrite {
     public static final String LABEL = "LABEL";
     public static final String GOTO = "GOTO";
     /** Map of GOTOs and LABELs instructions */
-    HashMap<Integer, LabelNode> hashMap = new HashMap<>();
+    private HashMap<Integer, LabelNode> hashMap = new HashMap<>();
     /** Path for generated class files */
     private String path;
     
@@ -53,7 +53,7 @@ public class GotoLabelRewrite {
         this.path = path.isEmpty() ? "" : path;
         Log.doLog = false; // Change this to 'true' for debugging
         Log.log("======================================");
-        Log.log(" Rewriting goto and labels..");
+        Log.log(" Rewriting goto(s) and label(s)...");
         Log.log(" Path: " + this.path);
         Log.log("======================================");
     }

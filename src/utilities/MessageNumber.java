@@ -12,7 +12,7 @@ package utilities;
  */
 public interface MessageNumber {
     
-    public static final int UNKNOWN = -1;
+    public static final int UNKNOWN = 0;
     
     default ErrorSeverity getErrorSeverity() {
         return ErrorSeverity.ERROR;
@@ -23,7 +23,7 @@ public interface MessageNumber {
     }
     
     default String getMessage() {
-        return "EMPTY MESSAGE!";
+        return "<empty message>";
     }
     
     // If none is given then abort/terminate

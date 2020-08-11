@@ -29,7 +29,7 @@ public class TopLevelDecls<T extends AST> extends Visitor<T> {
     // Symbol table associated with this file. Set in the constructor.
     private SymbolTable symtab;
 
-    public static String currentFileName = PJBugManager.INSTANCE.fileName;
+    public static String currentFileName = PJBugManager.INSTANCE.getFileName();
 
     // All imported files are kept in this table - indexed by absolute path and
     // name.
@@ -40,7 +40,7 @@ public class TopLevelDecls<T extends AST> extends Visitor<T> {
         Log.logHeader("*****************************************");
         Log.logHeader("*     T O P   L E V E L   D E C L S     *");
         Log.logHeader("*****************************************");
-        Log.logHeader("> File: " + PJBugManager.INSTANCE.fileName);
+        Log.logHeader("> File: " + PJBugManager.INSTANCE.getFileName());
         Log.logHeader("");
         this.symtab = symtab;
     }
@@ -63,14 +63,14 @@ public class TopLevelDecls<T extends AST> extends Visitor<T> {
      *            a Compilation parse tree node.
      */
     public T visitCompilation(Compilation co) {
-        Log.log(" Defining forward referencable names (" + PJBugManager.INSTANCE.fileName + ").");
+        Log.log(" Defining forward referencable names (" + PJBugManager.INSTANCE.getFileName() + ").");
         currentCompilation = co;
         // now visit all the type declarations and the constants in this compilation.
-        Log.log(" Visiting type declarations for " + PJBugManager.INSTANCE.fileName);
+        Log.log(" Visiting type declarations for " + PJBugManager.INSTANCE.getFileName());
         co.typeDecls().visit(this);
 
         Log.logHeader("");
-        Log.logHeader("> File: " + PJBugManager.INSTANCE.fileName);
+        Log.logHeader("> File: " + PJBugManager.INSTANCE.getFileName());
         Log.logHeader("*******************************************");
         Log.logHeader("* T O P   L E V E L   D E C L S   D O N E *");
         Log.logHeader("*******************************************");

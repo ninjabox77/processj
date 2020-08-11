@@ -413,16 +413,12 @@ public class Library {
             pjClibFileName = c.packageName().getname() + "_"
                     + pragmaTable.get("FILE");
             pjHeaderFileName = pragmaTable.get("FILE");
-            System.out
-                    .println("Library.GenerateNativeCode.visitCompilation: ProcessJ C header file: "
+            System.out.println("Library.GenerateNativeCode.visitCompilation: ProcessJ C header file: "
                             + pjClibFileName + ".h");
-            System.out
-                    .println("Library.GenerateNativeCode.visitCompilation: ProcessJ C implementation file: "
+            System.out.println("Library.GenerateNativeCode.visitCompilation: ProcessJ C implementation file: "
                             + pjClibFileName + ".c");
-            System.out
-                    .println("Library.GenerateNativeCode.visitCompilation: ProcessJ header file: "
+            System.out.println("Library.GenerateNativeCode.visitCompilation: ProcessJ header file: "
                             + pjHeaderFileName + ".pj");
-
             packageName = c.packageName().getname();
 
             //Generate the .h and .c file
@@ -476,8 +472,7 @@ public class Library {
                 headerFile.close();
                 file.close();
             } catch (Exception e) {
-                System.err
-                        .println("Error encountered while writing library stub files.");
+                System.err.println("Error encountered while writing library stub files.");
                 e.printStackTrace();
             }
             return null;

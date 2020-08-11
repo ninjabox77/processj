@@ -53,16 +53,18 @@ public class Reachability extends Visitor<Boolean> {
         // if (true) S1 else S2 - S2 is unreachable
         if (is.expr().isConstant() && ((Boolean) is.expr().constantValue())
                 && is.elsepart() != null)
-            PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
-                                  .addAST(is)
-                                  .addError(VisitorMessageNumber.REACHABILITY_800)
-                                  .build());
+            PJBugManager.INSTANCE.reportMessage(
+                    new PJMessage.Builder()
+                    .addAST(is)
+                    .addError(VisitorMessageNumber.REACHABILITY_800)
+                    .build());
         // if (false) S1 ... - S1 is unreachable
         if (is.expr().isConstant() && (!(Boolean) is.expr().constantValue()))
-            PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
-                                  .addAST(is)
-                                  .addError(VisitorMessageNumber.REACHABILITY_801)
-                                  .build());
+            PJBugManager.INSTANCE.reportMessage(
+                    new PJMessage.Builder()
+                    .addAST(is)
+                    .addError(VisitorMessageNumber.REACHABILITY_801)
+                    .build());
         boolean thenBranch = true;
         boolean elseBranch = true;
         thenBranch = is.thenpart().visit(this);
@@ -82,10 +84,11 @@ public class Reachability extends Visitor<Boolean> {
                 && ((b && // the statement can run to completion
                 !ws.hasBreak && !ws.hasReturn) // but has no breaks, so it will loop forever
                 || !b)) {
-            PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
-                                  .addAST(ws)
-                                  .addError(VisitorMessageNumber.REACHABILITY_802)
-                                  .build());
+            PJBugManager.INSTANCE.reportMessage(
+                    new PJMessage.Builder()
+                    .addAST(ws)
+                    .addError(VisitorMessageNumber.REACHABILITY_802)
+                    .build());
             ws.foreverLoop = true;
             loopConstruct = oldLoopConstruct;
             return new Boolean(false);
@@ -93,10 +96,11 @@ public class Reachability extends Visitor<Boolean> {
 
         if (ws.expr() != null && ws.expr().isConstant()
                 && (!(Boolean) ws.expr().constantValue())) {
-            PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
-                                  .addAST(ws)
-                                  .addError(VisitorMessageNumber.REACHABILITY_810)
-                                  .build());
+            PJBugManager.INSTANCE.reportMessage(
+                    new PJMessage.Builder()
+                    .addAST(ws)
+                    .addError(VisitorMessageNumber.REACHABILITY_810)
+                    .build());
             loopConstruct = oldLoopConstruct;
             return new Boolean(true);
         }
@@ -120,10 +124,11 @@ public class Reachability extends Visitor<Boolean> {
                 !ds.hasBreak && !ds.hasReturn) || !b) { // but has no breaks, so it will loop forever
             loopConstruct = oldLoopConstruct;
             ds.foreverLoop = true;
-            PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
-                                  .addAST(ds)
-                                  .addError(VisitorMessageNumber.REACHABILITY_809)
-                                  .build());
+            PJBugManager.INSTANCE.reportMessage(
+                    new PJMessage.Builder()
+                    .addAST(ds)
+                    .addError(VisitorMessageNumber.REACHABILITY_809)
+                    .build());
             return new Boolean(false);
         }
         loopConstruct = oldLoopConstruct;
@@ -147,11 +152,12 @@ public class Reachability extends Visitor<Boolean> {
                 b = bl.stats().child(i).visit(this);
                 Log.log("visiting child: " + i + " done");
                 if (!b && bl.stats().size() - 1 > i) {
-                    PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
-                                          .addAST(bl.stats().child(i))
-                                          .addError(VisitorMessageNumber.REACHABILITY_803)
-                                          .addArguments(bl.stats().child(i).line)
-                                          .build());
+                    PJBugManager.INSTANCE.reportMessage(
+                            new PJMessage.Builder()
+                            .addAST(bl.stats().child(i))
+                            .addError(VisitorMessageNumber.REACHABILITY_803)
+                            .addArguments(bl.stats().child(i).line)
+                            .build());
                     canFinish = false;
                 }
             }
@@ -170,10 +176,11 @@ public class Reachability extends Visitor<Boolean> {
         // for (....; false ; ....) S1
         if (fs.expr() != null && fs.expr().isConstant()
                 && (!(Boolean) fs.expr().constantValue())) {
-            PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
-                                  .addAST(fs)
-                                  .addError(VisitorMessageNumber.REACHABILITY_804)
-                                  .build());
+            PJBugManager.INSTANCE.reportMessage(
+                    new PJMessage.Builder()
+                    .addAST(fs)
+                    .addError(VisitorMessageNumber.REACHABILITY_804)
+                    .build());
             loopConstruct = oldLoopConstruct;
             return new Boolean(true);
         }
@@ -187,10 +194,11 @@ public class Reachability extends Visitor<Boolean> {
                 .expr().constantValue()))) && (b && // the statement can run to completion
                 !fs.hasBreak && !fs.hasReturn) || !b) // but has no breaks, so it will loop forever
         {
-            PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
-                                  .addAST(fs)
-                                  .addError(VisitorMessageNumber.REACHABILITY_805)
-                                  .build());
+            PJBugManager.INSTANCE.reportMessage(
+                    new PJMessage.Builder()
+                    .addAST(fs)
+                    .addError(VisitorMessageNumber.REACHABILITY_805)
+                    .build());
             fs.foreverLoop = true;
             loopConstruct = oldLoopConstruct;
             return new Boolean(false);
@@ -206,16 +214,18 @@ public class Reachability extends Visitor<Boolean> {
     public Boolean visitBreakStat(BreakStat bs) {
         Log.log(bs, "Visiting a break-statement.");
         if (inParBlock)
-            PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
-                                  .addAST(bs)
-                                  .addError(VisitorMessageNumber.REACHABILITY_808)
-                                  .build());
+            PJBugManager.INSTANCE.reportMessage(
+                    new PJMessage.Builder()
+                    .addAST(bs)
+                    .addError(VisitorMessageNumber.REACHABILITY_808)
+                    .build());
 
         if (loopConstruct == null && switchConstruct == null) {
-            PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
-                                  .addAST(bs)
-                                  .addError(VisitorMessageNumber.REACHABILITY_806)
-                                  .build());
+            PJBugManager.INSTANCE.reportMessage(
+                    new PJMessage.Builder()
+                    .addAST(bs)
+                    .addError(VisitorMessageNumber.REACHABILITY_806)
+                    .build());
             return new Boolean(true); // this break doesn't matter cause it can't be here anyways!
         }
         if (loopConstruct != null && !insideSwitch)
@@ -239,15 +249,17 @@ public class Reachability extends Visitor<Boolean> {
     public Boolean visitContinueStat(ContinueStat cs) {
         Log.log(cs, "Visiting a continue-statement.");
         if (inParBlock)
-            PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
-                                  .addAST(cs)
-                                  .addError(VisitorMessageNumber.REACHABILITY_811)
-                                  .build());
+            PJBugManager.INSTANCE.reportMessage(
+                    new PJMessage.Builder()
+                    .addAST(cs)
+                    .addError(VisitorMessageNumber.REACHABILITY_811)
+                    .build());
         if (loopConstruct == null) {
-            PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
-                                  .addAST(cs)
-                                  .addError(VisitorMessageNumber.REACHABILITY_812)
-                                  .build());
+            PJBugManager.INSTANCE.reportMessage(
+                    new PJMessage.Builder()
+                    .addAST(cs)
+                    .addError(VisitorMessageNumber.REACHABILITY_812)
+                    .build());
             return new Boolean(true); // this continue doesn't matter cause it can't be here anyways!
         }
         if (loopConstruct != null)
@@ -267,10 +279,11 @@ public class Reachability extends Visitor<Boolean> {
         boolean oldInParBlock = inParBlock;
         /* Warning generated for having an empty par-block */
         if (pb.stats().size() == 0)
-            PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
-                                .addAST(pb)
-                                .addError(VisitorMessageNumber.REACHABILITY_813)
-                                .build());
+            PJBugManager.INSTANCE.reportMessage(
+                    new PJMessage.Builder()
+                    .addAST(pb)
+                    .addError(VisitorMessageNumber.REACHABILITY_813)
+                    .build());
         inParBlock = true;
         pb.stats().visit(this);
         inParBlock = oldInParBlock;
@@ -281,10 +294,11 @@ public class Reachability extends Visitor<Boolean> {
     public Boolean visitReturnStat(ReturnStat rs) {
         Log.log(rs, "Visiting a return-statement.");
         if (inParBlock)
-            PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
-                                  .addAST(rs)
-                                  .addError(VisitorMessageNumber.REACHABILITY_807)
-                                  .build());
+            PJBugManager.INSTANCE.reportMessage(
+                    new PJMessage.Builder()
+                    .addAST(rs)
+                    .addError(VisitorMessageNumber.REACHABILITY_807)
+                    .build());
         if (loopConstruct != null)
             loopConstruct.hasReturn = true;
         return new Boolean(false);

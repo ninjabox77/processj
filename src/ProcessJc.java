@@ -1,6 +1,7 @@
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import ast.AST;
@@ -13,6 +14,7 @@ import parser.parser;
 import printers.ParseTreePrinter;
 import rewriters.CastRewrite;
 import scanner.Scanner;
+import syntaxchecker.ASTStringCompiler;
 import utilities.PJBugManager;
 import utilities.ConfigFileReader;
 import utilities.Language;
@@ -59,7 +61,7 @@ public class ProcessJc {
             new Option("showColor", "-showColor", "Use color on terminals that support ansi espace codes"),
             new Option("help", "-help", "Show this help message and exit"),
             new Option("include", "-include", OptionType.STRING, "Override the default include directory"),
-            new Option("showMessage", "-showMessage", "Show info of error and warning messages when available"),
+            new Option("showMessage", "-showMessage", "Show all error and warning messages when available"),
             new Option("target", "-target", OptionType.STRING, "Specify the target language -- C++, Java (default)"),
             new Option("version", "-version", "Print version information and exit"),
             new Option("visitAll", "-visitAll", "Generate all parse tree visitors"),
@@ -78,7 +80,7 @@ public class ProcessJc {
     public boolean showTree = false;
     // -->
     
-    private ArrayList<String> inputFiles = new ArrayList<>();
+    private List<String> inputFiles = new ArrayList<>();
     private String[] args = null;
     private Properties config = ConfigFileReader.openConfiguration();
     
@@ -90,15 +92,14 @@ public class ProcessJc {
      */
     public static void main(String[] args) {
         ProcessJc pJc = new ProcessJc(args);
-        // Do we have any arguments?
-        if (args.length == 0 && !pJc.help) {
-            // At least one file must be provided. Throw an error if no
-            // file is given, or if the file does not exists
-            System.out.println(new PJMessage.Builder()
-                                   .addError(VisitorMessageNumber.RESOLVE_IMPORTS_100)
-                                   .build()
-                                   .getST()
-                                   .render());
+        // Do we have any arguments??
+        if (args.length == 2) { // @0: -include, @1: path
+            System.out.print(new PJMessage.Builder()
+                    .addError(VisitorMessageNumber.RESOLVE_IMPORTS_100)
+                    .build()
+                    .getST()
+                    .render());
+            System.out.println("...");
             pJc.printUsageAndExit();
         }
         
@@ -120,24 +121,25 @@ public class ProcessJc {
                 // Set the package and filename
                 PJBugManager.INSTANCE.setFileName(absoluteFilePath);
                 PJBugManager.INSTANCE.setPackageName(absoluteFilePath);
+                ASTStringCompiler.INSTANCE.addPJFile(absoluteFilePath);
                 s = new Scanner(new java.io.FileReader(absoluteFilePath));
                 p = new parser(s);
-            } catch (java.io.FileNotFoundException e) {
-                // This won't execute! The error is handled above by the command
             } catch (Exception e) {
-                // TODO: Handled syntax-error here using the 'ASTSyntaxNode'
-                e.printStackTrace();
+                System.err.println(e.getMessage());
                 System.exit(1);
             }
             
             try {
                 java_cup.runtime.Symbol r = ((parser) p).parse();
                 root = (AST) r.value;
+                System.out.println("--------------------------------=================");
+                ASTStringCompiler.INSTANCE.printSyntaxError();
+                System.out.println("--------------------------------=================");
             } catch (java.io.IOException e) {
-                e.printStackTrace();
+                System.err.println(e.getMessage());
                 System.exit(1);
             } catch (Exception e) {
-                e.printStackTrace();
+                System.err.println(e.getMessage()); // Handle error!!
                 System.exit(1);
             }
 
@@ -146,8 +148,7 @@ public class ProcessJc {
             Compilation c = (Compilation) root;
             // Set the absolute path, file, and package name from where this
             // compilation is created
-            System.out.println("-- Setting absolute path, file and package name for '" +
-                    inFile.getName() + "'.");
+            System.out.println("-- Setting absolute path, file and package name for '" + inFile.getName() + "'.");
             c.fileName = inFile.getName();
             // The parent's path of the compiled file
             String parentPath = inFile.getAbsolutePath();
@@ -163,7 +164,7 @@ public class ProcessJc {
             Library.generateLibraries(c);
 
             // This table will hold all the top level types
-            SymbolTable globalTypeTable = new SymbolTable("Main file: " + PJBugManager.INSTANCE.fileName);
+            SymbolTable globalTypeTable = new SymbolTable("Main file: " + PJBugManager.INSTANCE.getFileName());
 
             // Dump log messages if true
             if (pJc.visitAll)
@@ -363,7 +364,7 @@ public class ProcessJc {
     
     public void printUsageAndExit() {
         for (Option o : OPTIONS)
-            System.err.println(String.format("%-20s %s", o.optionName, o.description));
+            System.out.println(String.format("%-20s %s", o.optionName, o.description));
         exit(0);
     }
     

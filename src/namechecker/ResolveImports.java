@@ -22,7 +22,7 @@ import utilities.VisitorMessageNumber;
 
 public class ResolveImports<T extends AST> extends Visitor<T> {
     
-    public static String currentFileName = PJBugManager.INSTANCE.fileName;
+    public static String currentFileName = PJBugManager.INSTANCE.getFileName();
     private SymbolTable importChild = null;
     
     public ResolveImports(SymbolTable importChild) {
@@ -30,7 +30,7 @@ public class ResolveImports<T extends AST> extends Visitor<T> {
         Log.logHeader("****************************************");
         Log.logHeader("*    R E S O L V E   I M P O R T S     *");
         Log.logHeader("****************************************");
-        Log.logHeader("> File: " + PJBugManager.INSTANCE.fileName);
+        Log.logHeader("> File: " + PJBugManager.INSTANCE.getFileName());
     }
     
     public static String packageNameToString(Sequence<Name> packageName) {

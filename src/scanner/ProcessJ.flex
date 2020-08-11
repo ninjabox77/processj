@@ -2,6 +2,8 @@ package scanner;
 
 import ast.*;
 import parser.*;
+import syntaxchecker.ASTStringCompiler;
+import syntaxchecker.Types;
 
 %%
 
@@ -28,11 +30,26 @@ import parser.*;
     lineCount = line;
   }
 
+  public void addLineComment() {
+    String line = "Comment @ line " + (yyline+1) + " [" + (yycolumn+1)  + ".." + (yycolumn+yylength()) + "]";
+    String str = yytext();
+    Token t = null;
+    if (str.startsWith("/*"))
+      t = new Token(Types.INSTANCE.MULTILINE_COMMENT, line, yyline+1, yycolumn+1, yycolumn + yylength());
+    else
+      t = new Token(Types.INSTANCE.SINGLELINE_COMMENT, line, yyline+1, yycolumn+1, yycolumn + yylength());
+    ASTStringCompiler.INSTANCE.add(t);
+  }
+  
+  //public void addComment() {
+  //  ASTStringCompiler.INSTANCE.add(new Token(-1, yytext(), yyline+1, yycolumn+1, yycolumn + yylength()));
+  //}
 
   private java_cup.runtime.Symbol token(int kind) {
     Token t;
     addToLine(yytext(), yyline+1);
     t = new Token(kind, yytext(), yyline+1, yycolumn+1, yycolumn + yylength());
+    ASTStringCompiler.INSTANCE.add(t);
     if (debug)
       System.out.println(t);
     return new java_cup.runtime.Symbol(kind, t);
@@ -273,11 +290,11 @@ StringEscape  =   \\([btnfr\"\'\\]|[0-3]?{OctDigit}?{OctDigit}|u{HexDigit}{HexDi
                                  { throw new RuntimeException("Unterminated character at end-of-line \""+yytext()+"\" at line "+(yyline+1)+", column "+(yycolumn+1)); }   
 
   /* Comments */
-  {Comment}                      { addToLine(yytext(), yyline+1); }
+  {Comment}                      { addToLine(yytext(), yyline+1); addLineComment(); }
   {UnterminatedComment}	         { throw new RuntimeException("Unterminated comment at EOF at line "+(yyline+1)+", column "+(yycolumn+1)); }
 
   /* Whitespace */
-  {WhiteSpace}                 { addToLine(yytext(), yyline+1); 
+  {WhiteSpace}                 { addToLine(yytext(), yyline+1); //addComment();
 	//if (yytext().equals("\t")) yycolumn += 6; System.out.println(":::'" + yytext()+"'"); 
 	}
 //  {tab}                          { addToLine("    ", yyline+1);  yycolumn += 5; }

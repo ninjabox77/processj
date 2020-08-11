@@ -19,6 +19,5 @@ public enum MessageType {
     
     PRINT_CONTINUE,
     PRINT_STOP,
-    DONT_PRINT_CONTINUE
-    ;
+    DONT_PRINT_CONTINUE;
 }

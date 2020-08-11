@@ -98,12 +98,6 @@ fi
 
 ############################################################################
 
-## display usage
-if [ "$#" -lt 1 ] ; then
-    echo "Illegal number of parameters"
-    exit 1
-fi
-
 ## run the processj compiler
 PROCESSJC=`java -cp $installdir/bin:$installdir/resources/jars/java_cup_runtime.jar:$installdir/resources/jars/ST-4.0.7.jar:$installdir/resources/jars/asm-all-5.2.jar:$installdir:$installdir/bin:. ProcessJc -include $installdir/include $@`
 
@@ -113,7 +107,7 @@ ERRORS=`echo "${PROCESSJC}" | awk -v n=1 '{if(NR>n) print a[NR%n]; a[NR%n]=$0}'`
 STATUS=`echo "${PROCESSJC}" | awk '/./{line=$0} END{print line}'`
 
 if [ "$STATUS" = "** COMPILATION COMPLITED SUCCESSFULLY **" ] ; then
-  echo "$ERRORS"
+  echo "$PROCESSJC"
   echo "ProcessJ compilation successful"
 else
   echo "$ERRORS"

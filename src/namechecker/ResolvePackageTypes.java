@@ -23,7 +23,7 @@ public class ResolvePackageTypes extends Visitor<AST> {
         Log.logHeader("***************************************************");
         Log.logHeader("* P A C K A G E D   T Y P E   R E S O L U T I O N *");
         Log.logHeader("***************************************************");
-        Log.logHeader("> File: " + PJBugManager.INSTANCE.fileName);
+        Log.logHeader("> File: " + PJBugManager.INSTANCE.getFileName());
     }
 
     // X.Y.Z::f, pa is X.Y.Z and we get that turned into X/Y/Z.pj
@@ -50,7 +50,7 @@ public class ResolvePackageTypes extends Visitor<AST> {
         // name declared locally or in an imported file - both will
         // be correctly resolved at name checking time.
         if (pa.size() > 0) {
-            oldCurrentFileName = PJBugManager.INSTANCE.fileName;
+            oldCurrentFileName = PJBugManager.INSTANCE.getFileName();
             // Turn X.Y.Z::f into X/Y/Z.pj
             fileName = Settings.absolutePath + makeImportFileName(pa);
             // Does X/Y/Z.pj exist?

@@ -24,60 +24,45 @@ import ast.AST;
 public abstract class PJBugMessage {
     
     private static final Object[] EMPTY_ARGUMENTS = new Object[0];
-    private static final String EMPTY_STRING = "";
 
-    /* String template file locator */
+    /** String template file locator */
     protected static final String ERROR_FILE = "resources/stringtemplates/messages/errorTemplate.stg";
     
-    /* Template for error messages */
+    /** Template for error messages */
     protected static final STGroup stGroup = new STGroupFile(ERROR_FILE);
     
-    /* Current running AST */
+    /** Current running AST */
     protected final AST ast;
     
-    /* Type of error message */
+    /** Type of error message */
     protected final MessageNumber errorNumber;
     
-    /* Attributes used in templates */
+    /** Attributes used in templates */
     protected final Object[] arguments;
     
-    /* Reason for the error message */
+    /** Reason for the error message */
     protected final Throwable throwable;
     
-    /* Source of the message */
+    /** Source of the message */
     protected final String fileName;
     
-    /* Location of the input file */
+    /** Location of the input file */
     protected final String packageName;
     
-    /* Line in file */
+    /** Line in file */
     protected int rowNum;
     
-    /* Character that generated the error/warning */
+    /** Character that generated the error/warning */
     protected int colNum;
     
     public PJBugMessage(Builder<?> builder) {
         ast = builder.ast;
         arguments = builder.arguments;
-        // This is not ideal!!
-        errorNumber = builder.error == null? new MessageNumber() {
-            @Override
-            public String getMessage() {
-                StringBuilder sb = new StringBuilder();
-                Object[] args = builder.arguments;
-                if (args != null) {
-                    for (int i = 0; i < args.length; ++i) {
-                        sb.append(args[i]);
-                        sb.append("\n");
-                    }
-                    return sb.toString().trim();
-                }
-                return "EMPTY MESSAGE!"; }
-            } : builder.error;
+        errorNumber = builder.error;
         throwable = builder.throwable;
-        fileName = builder.fileName == null? new File(PJBugManager.INSTANCE.fileName).getAbsolutePath() :
+        fileName = builder.fileName == null? new File(PJBugManager.INSTANCE.getFileName()).getAbsolutePath() :
                                              new File(builder.fileName).getAbsolutePath();
-        packageName = builder.packageName == null? PJBugManager.INSTANCE.fileName : builder.packageName;
+        packageName = builder.packageName == null? PJBugManager.INSTANCE.getFileName() : builder.packageName;
         rowNum = builder.rowNum;
         colNum = builder.colNum;
     }
@@ -119,19 +104,20 @@ public abstract class PJBugMessage {
     
     public ST getST() {
         int argCount = 0;
-        ST message = null;
+        ST message = new ST(stGroup.getInstanceOf("Report"));
         if (errorNumber != null)
             message = new ST(errorNumber.getMessage());
-        else
-            message = new ST(EMPTY_STRING);
         if (arguments != null && arguments.length > 0)
             argCount = arguments.length;
-        for (int i = 0; i < argCount; ++i)
-            message.add("arg" + i, arguments[i]);
+        if (errorNumber != null)
+            for (int i = 0; i < argCount; ++i)
+                message.add("arg" + i, arguments[i]);
+        else
+            message.add("messages", arguments);
         return message;
     }
     
-    public abstract String getRenderMessage();
+    public abstract String getRenderedMessage();
     
     @Override
     public String toString() {

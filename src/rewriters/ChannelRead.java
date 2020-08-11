@@ -658,7 +658,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
     public Pair<Sequence, Expression> visitAltCase(AltCase ac) {
         System.out.println("Visiting an AltCase");
         Pair<Sequence, Expression> p = null;
-        // Rewrite the guard stat if needed
+        // Rewrite the guard statement if needed
         p = ac.guard().visit(this);
         // Rewrite the statement if needed
         p = ac.stat().visit(this);
@@ -686,7 +686,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
                     gu.children[0] = p.getFirst().child(0);
             }
         }
-        return p;
+        return (Pair<Sequence, Expression>) null;
     }
     
     // TODO: Record

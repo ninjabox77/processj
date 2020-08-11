@@ -38,7 +38,7 @@ parser code  {:
     this();
     lexer=l;
   }
-
+/*
   public void syntax_error(java_cup.runtime.Symbol current) {
     if(current.value == null) {
       System.out.println("Unexpected end of file." + Scanner.curLine);
@@ -46,15 +46,14 @@ parser code  {:
     }   
     else {
       Token t = (Token)current.value;
-    //System.out.println(Error.fileName + ":" + Scanner.lineCount + ": Syntax error:\n\n" + Scanner.curLine);
-    System.out.println(PJBugManager.INSTANCE.fileName + ":" + Scanner.lineCount + ": Syntax error:\n\n" + Scanner.curLine);
-    for (int i=1; i<Scanner.curLine.length()+1-t.lexeme.length(); i++) 
-      System.out.print(" ");
+      System.out.println(PJBugManager.INSTANCE.getFileName() + ":" + Scanner.lineCount + ": Syntax error:\n\n" + Scanner.curLine);
+      for (int i=1; i<Scanner.curLine.length()+1-t.lexeme.length(); i++) 
+        System.out.print(" ");
       System.out.println("^");
-	  /* TODO: Handled syntax-error here using the abstract class AstNode */
       System.exit(1);
     }
   }
+*/
 :};
 
 scan with {: return lexer.next_token(); :};
@@ -67,7 +66,7 @@ scan with {: return lexer.next_token(); :};
 terminal Token BOOLEAN;     // "boolean"
 terminal Token BYTE;        // "byte"
 terminal Token SHORT;       // "short"
-terminal Token INT;     // "int"
+terminal Token INT;         // "int"
 terminal Token LONG;        // "long"
 terminal Token FLOAT;       // "float"
 terminal Token DOUBLE;      // "double"
@@ -97,13 +96,13 @@ terminal Token STOP;        // "stop"
 terminal Token IS;			// instanceof
 
 /* Control flow related keywords */
-terminal Token IF;      // "if"
+terminal Token IF;          // "if"
 terminal Token ELSE;        // "else"
-terminal Token FOR;     // "for"
+terminal Token FOR;         // "for"
 terminal Token WHILE;       // "while"
 terminal Token SWITCH;      // "switch"
 terminal Token CASE;        // "case"
-terminal Token DO;      // "do"
+terminal Token DO;          // "do"
 terminal Token DEFAULT;     // "default"
 terminal Token BREAK;       // "break"
 terminal Token CONTINUE;    // "continue"
@@ -141,7 +140,7 @@ terminal Token PUBLIC;      // "public"
 terminal Token PRIVATE;     // "private"
 terminal Token PROTECTED;   // "protected"
 terminal Token CONST;       // "const"
-terminal Token EXTERN;          // "extern"
+terminal Token EXTERN;      // "extern"
 
 /* Boolean Literals */
 terminal Token BOOLEAN_LITERAL; // "true" or "false"
@@ -165,7 +164,7 @@ terminal Token SEMICOLON;   // ";"
 terminal Token COMMA;       // ","
 
 /* Assignment Operators */  
-terminal Token EQ;      // "="
+terminal Token EQ;          // "="
 terminal Token MULTEQ;      // "*="
 terminal Token DIVEQ;       // "/="
 terminal Token MODEQ;       // "%="
@@ -179,8 +178,8 @@ terminal Token XOREQ;       // "^="
 terminal Token OREQ;        // "|="
 
 /* Relational Operators */
-terminal Token GT;      // ">"
-terminal Token LT;      // "<"
+terminal Token GT;          // ">"
+terminal Token LT;          // "<"
 terminal Token EQEQ;        // "=="
 terminal Token LTEQ;        // "<="
 terminal Token GTEQ;        // ">="
@@ -195,14 +194,14 @@ terminal Token OROR;        // "||"
 terminal Token PLUS;        // "+"
 terminal Token MINUS;       // "-"
 terminal Token MULT;        // "*"
-terminal Token DIV;     // "/"
-terminal Token AND;     // "&"
-terminal Token OR;      // "|"
-terminal Token XOR;     // "^"
-terminal Token MOD;     // "%"
+terminal Token DIV;         // "/"
+terminal Token AND;         // "&"
+terminal Token OR;          // "|"
+terminal Token XOR;         // "^"
+terminal Token MOD;         // "%"
 
 /* Unary Operators */
-terminal Token NOT;     // "!"
+terminal Token NOT;         // "!"
 terminal Token COMP;        // "~"
 terminal Token PLUSPLUS;    // "++"
 terminal Token MINUSMINUS;  // "--"
@@ -210,8 +209,8 @@ terminal Token MINUSMINUS;  // "--"
 /* Other stuff */
 terminal Token QUEST;       // "?"
 terminal Token COLON;       // ":"
-terminal Token COLONCOLON;      // "::"
-terminal Token DOT;     // "."
+terminal Token COLONCOLON;  // "::"
+terminal Token DOT;         // "."
 
 /* Numeric literals */
 terminal Token INTEGER_LITERAL;
@@ -302,12 +301,12 @@ non terminal IfStat     if_then_statement, if_then_else_statement, if_then_else_
 non terminal WhileStat      while_statement, while_statement_no_short_if;
 non terminal ForStat        for_statement, for_statement_no_short_if;
 non terminal Sequence       for_init_opt, for_init, for_update_opt, for_update, statement_expressions, enroll_opt;
-non terminal DoStat     do_statement;
+non terminal DoStat         do_statement;
 
 // 9.3 Claim Statement
 non terminal ClaimStat      claim_statement, claim_statement_no_short_if;
 non terminal Sequence       channels;
-non terminal AST        channel;
+non terminal AST            channel;
 
 // 9.4 Empty Statement
 non terminal Statement      empty_statement;
@@ -327,7 +326,7 @@ non terminal Statement      labeled_statement;
 // 9.8 Break/Continue/Return Statements
 non terminal BreakStat      break_statement;
 non terminal ContinueStat   continue_statement;
-non terminal Name       identifier_opt;
+non terminal Name           identifier_opt;
 non terminal ReturnStat     return_statement;
 
 // 9.9 Switch Statement
@@ -345,7 +344,7 @@ non terminal SkipStat       skip_statement;
 non terminal AltStat        alt_statement;
 non terminal Sequence       alt_body;
 non terminal AltCase        alt_case;
-non terminal Guard      guard;
+non terminal Guard          guard;
 
 // 10.0 Expressions
 non terminal Expression     primary, primary_no_new_array_or_mobile;
@@ -360,7 +359,7 @@ non terminal Sequence       dims_opt, dims;
 non terminal NewMobile      mobile_creation;
 
 // 10.3 Channel Expression/Channel Read Expression
-non terminal ChannelEndExpr chan_expression;
+non terminal ChannelEndExpr     chan_expression;
 non terminal ChannelReadExpr    chan_read_expression;
 
 // 10.4 Structure Access
@@ -387,8 +386,8 @@ non terminal Integer        assignment_operator;
 non terminal Expression     left_hand_side, expression_opt, expression, constant_expression;
 
 // 11.0 Literals (See 8.0 for Array Literals) 
-non terminal Literal        literal;
-non terminal RecordLiteral  record_literal;
+non terminal Literal            literal;
+non terminal RecordLiteral      record_literal;
 non terminal Sequence           record_literal_argument_list_opt;
 non terminal Sequence           record_literal_argument_list;
 non terminal ProtocolLiteral    protocol_literal;
@@ -429,11 +428,11 @@ type_declarations ::=
 
 //- Sequence[Type :> AST] :> AST // Error.packageName
 type_declaration ::= 
-          procedure_type_declaration:p     {: p.myPackage = PJBugManager.INSTANCE.packageName; RESULT = new Sequence<Type>(p); :}
-        | record_type_declaration:r        {: r.myPackage = PJBugManager.INSTANCE.packageName; RESULT = new Sequence<Type>(r); :}
-        | protocol_type_declaration:p      {: p.myPackage = PJBugManager.INSTANCE.packageName; RESULT = new Sequence<Type>(p); :}
-        | constant_declaration:c           {: c.myPackage = PJBugManager.INSTANCE.packageName; RESULT = c; :}       
-        | EXTERN extern_type:e IDENTIFIER:n  {: e.myPackage = PJBugManager.INSTANCE.packageName; RESULT = new Sequence<Type>(new NamedType(new Name(n), new ExternType(e))); :}
+          procedure_type_declaration:p     {: p.myPackage = PJBugManager.INSTANCE.getPackageName(); RESULT = new Sequence<Type>(p); :}
+        | record_type_declaration:r        {: r.myPackage = PJBugManager.INSTANCE.getPackageName(); RESULT = new Sequence<Type>(r); :}
+        | protocol_type_declaration:p      {: p.myPackage = PJBugManager.INSTANCE.getPackageName(); RESULT = new Sequence<Type>(p); :}
+        | constant_declaration:c           {: c.myPackage = PJBugManager.INSTANCE.getPackageName(); RESULT = c; :}       
+        | EXTERN extern_type:e IDENTIFIER:n  {: e.myPackage = PJBugManager.INSTANCE.getPackageName(); RESULT = new Sequence<Type>(new NamedType(new Name(n), new ExternType(e))); :}
         ;
 
 // Name :> AST
