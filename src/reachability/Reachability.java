@@ -86,8 +86,9 @@ public class Reachability extends Visitor<Boolean> {
                 || !b)) {
             PJBugManager.INSTANCE.reportMessage(
                     new PJMessage.Builder()
-                    .addAST(ws)
+                    .addAST(ws.expr())
                     .addError(VisitorMessageNumber.REACHABILITY_802)
+                    .addCodeAnalysis("statement may not run to completion")
                     .build());
             ws.foreverLoop = true;
             loopConstruct = oldLoopConstruct;

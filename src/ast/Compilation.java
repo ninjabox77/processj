@@ -41,6 +41,10 @@ public class Compilation extends AST {
         return v.visitCompilation(this);
     }
     
+    public String absolutePath() {
+        return path + "/" + fileName;
+    }
+    
     public String fileAndExtension() {
         return fileName;
     }

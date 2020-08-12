@@ -2,8 +2,8 @@ package scanner;
 
 import ast.*;
 import parser.*;
-import syntaxchecker.ASTStringCompiler;
-import syntaxchecker.Types;
+import analysischecker.ASTStringCompiler;
+import analysischecker.Types;
 
 %%
 
@@ -21,6 +21,7 @@ import syntaxchecker.Types;
   public static String curLine = "";
   public static int lineCount = 0;	
   public static boolean debug = false;
+  public static int incrspaces = 0;
 
   public void addToLine(String s, int line) {
     if (line != lineCount) 
@@ -31,7 +32,7 @@ import syntaxchecker.Types;
   }
 
   public void addLineComment() {
-    String line = "Comment @ line " + (yyline+1) + " [" + (yycolumn+1)  + ".." + (yycolumn+yylength()) + "]";
+    String line = "Comment @ line " + (yyline+1) + " [" + (yycolumn+1+incrspaces)  + ".." + (yycolumn+yylength()) + "]";
     String str = yytext();
     Token t = null;
     if (str.startsWith("/*"))
@@ -40,10 +41,10 @@ import syntaxchecker.Types;
       t = new Token(Types.INSTANCE.SINGLELINE_COMMENT, line, yyline+1, yycolumn+1, yycolumn + yylength());
     ASTStringCompiler.INSTANCE.add(t);
   }
-  
-  //public void addComment() {
-  //  ASTStringCompiler.INSTANCE.add(new Token(-1, yytext(), yyline+1, yycolumn+1, yycolumn + yylength()));
-  //}
+
+  public void countSpaces(int line) {
+    incrspaces = line;
+  }
 
   private java_cup.runtime.Symbol token(int kind) {
     Token t;
@@ -294,7 +295,7 @@ StringEscape  =   \\([btnfr\"\'\\]|[0-3]?{OctDigit}?{OctDigit}|u{HexDigit}{HexDi
   {UnterminatedComment}	         { throw new RuntimeException("Unterminated comment at EOF at line "+(yyline+1)+", column "+(yycolumn+1)); }
 
   /* Whitespace */
-  {WhiteSpace}                 { addToLine(yytext(), yyline+1); //addComment();
+  {WhiteSpace}                 { addToLine(yytext(), yyline+1); countSpaces(yycolumn+1);
 	//if (yytext().equals("\t")) yycolumn += 6; System.out.println(":::'" + yytext()+"'"); 
 	}
 //  {tab}                          { addToLine("    ", yyline+1);  yycolumn += 5; }

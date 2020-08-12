@@ -71,7 +71,6 @@ public enum PJBugManager {
         bug = Assert.nonNull(bug, "Compiler error message cannot be null");
         boolean stop = false;
         addMessageAndExit(bug, bug.getMessageNumber());
-        
         switch(type) {
         case PRINT_STOP:
             stop = true;

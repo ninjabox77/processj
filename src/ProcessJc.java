@@ -14,7 +14,7 @@ import parser.parser;
 import printers.ParseTreePrinter;
 import rewriters.CastRewrite;
 import scanner.Scanner;
-import syntaxchecker.ASTStringCompiler;
+import analysischecker.ASTStringCompiler;
 import utilities.PJBugManager;
 import utilities.ConfigFileReader;
 import utilities.Language;
@@ -121,7 +121,7 @@ public class ProcessJc {
                 // Set the package and filename
                 PJBugManager.INSTANCE.setFileName(absoluteFilePath);
                 PJBugManager.INSTANCE.setPackageName(absoluteFilePath);
-                ASTStringCompiler.INSTANCE.addPJFile(absoluteFilePath);
+                ASTStringCompiler.INSTANCE.setFile(absoluteFilePath);
                 s = new Scanner(new java.io.FileReader(absoluteFilePath));
                 p = new parser(s);
             } catch (Exception e) {
@@ -132,9 +132,9 @@ public class ProcessJc {
             try {
                 java_cup.runtime.Symbol r = ((parser) p).parse();
                 root = (AST) r.value;
-                System.out.println("--------------------------------=================");
-                ASTStringCompiler.INSTANCE.printSyntaxError();
-                System.out.println("--------------------------------=================");
+//                System.out.println("--------------------------------=================");
+//                ASTStringCompiler.INSTANCE.printSyntaxError();
+//                System.out.println("--------------------------------=================");
             } catch (java.io.IOException e) {
                 System.err.println(e.getMessage());
                 System.exit(1);
@@ -203,6 +203,11 @@ public class ProcessJc {
             // Visit and resolve types from imported packages
             System.out.println("-- Resolving imported types.");
             c.visit(new namechecker.ResolvePackageTypes());
+            
+            // <--
+            System.out.println("-- Resolving scope for names in files.");
+            c.visit(new namechecker.ScopeResolution());
+            // -->
             
             // Visit name checker
             System.out.println("-- Checking name usage.");

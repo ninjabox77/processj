@@ -1,4 +1,4 @@
-package syntax;
+package analysischecker;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,6 +14,8 @@ public enum Types {
     // ESPECIAL TOKENS
     public final int EOF = 0;        // End of file
     public final int UNKNOWN = 1;    // Unknown token
+    public final int SINGLELINE_COMMENT = 115;
+    public final int MULTILINE_COMMENT = 116;
     
     // --------------------------------------------------
     // LINE FEED TOKEN
@@ -102,8 +104,9 @@ public enum Types {
     public final int KEYWORD_EXTERN = 57;
     
     // Boolean Literals
+    public final int BOOLEAN_LITERAL = 58;
     public final int KEYWORD_TRUE = 581;  // BOOLEAN_LITERAL
-    public final int KEYWORD_FALSE = 582;  // BOOLEAN_LITERAL
+    public final int KEYWORD_FALSE = 582; // BOOLEAN_LITERAL
     
     // NULL Literal
     public final int KEYWORD_NULL = 59;
@@ -207,7 +210,13 @@ public enum Types {
     private void addKeywords(String text, int sym) {
         KEYWORDS.add(text);
         addSymbols(text, sym);
-        
+    }
+    
+    public String getText(int type) {
+        String text = "";
+        if (TEXT.containsKey(type))
+            text = TEXT.get(type);
+        return text;
     }
     
     private Types() {
@@ -343,5 +352,8 @@ public enum Types {
         addSymbols("::",            COLONCOLON);
         addSymbols(":",             COLON);
         addSymbols(".",             DOT);
+        
+        addSymbols("indentifier",    IDENTIFIER);
+        addSymbols("boolean value",  BOOLEAN_LITERAL);
     }
 }

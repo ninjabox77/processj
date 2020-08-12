@@ -1,6 +1,8 @@
 package utilities;
 
 import org.stringtemplate.v4.ST;
+import analysischecker.ASTStringCompiler;
+import ast.BinaryExpr;
 
 /**
  * This class is used to create generic messages for the ProcessJ compiler.
@@ -10,11 +12,15 @@ import org.stringtemplate.v4.ST;
  */
 public class PJMessage extends PJBugMessage {
     
-    private boolean doTrace = false;
+    private boolean doTrace;
+    private String info;
+    private String link;
     
     public PJMessage(Builder builder) {
         super(builder);
         doTrace = builder.doTrace;
+        info = builder.info;
+        link = builder.link;
     }
     
     @Override
@@ -24,6 +30,7 @@ public class PJMessage extends PJBugMessage {
         ST stTag = stGroup.getInstanceOf("Tag");
         ST stStackInfo = stGroup.getInstanceOf("StackInfo");
         ST stMessage = stGroup.getInstanceOf("Message");
+        ST stInfoMessage = stGroup.getInstanceOf("InfoMessage");
         
         if (ast != null) {
             stFile.add("fileName", fileName);
@@ -38,19 +45,25 @@ public class PJMessage extends PJBugMessage {
             stStackInfo.add("reason", throwable);
             stStackInfo.add("stack", throwable.getStackTrace());
         }
+        if (ast != null) {
+            stInfoMessage.add("token", ast.token);
+            stInfoMessage.add("info", ASTStringCompiler.INSTANCE.codeAnalysis(ast, info, link, errno));
+        }
         // Apply color code if allowed on terminal
         String tag = stTag.render();
         if (Settings.showColor)
-            tag = ANSICode.setColor(stTag.render(), errno);
+            tag = ANSICode.setColor(tag, errno);
         
         stMessage.add("tag", tag);
         stMessage.add("message", super.getST().render());
+        stMessage.add("info", stInfoMessage.render());
         stMessage.add("location", stFile.render());
         stMessage.add("stack", stStackInfo.render());
         
         return stMessage;
     }
     
+    @Override
     public String getRenderedMessage() {
         ST stResult = getST();
         StringBuilder stringBuilder = new StringBuilder();
@@ -77,6 +90,8 @@ public class PJMessage extends PJBugMessage {
     public static final class Builder extends PJBugMessage.Builder<Builder> {
         
         protected boolean doTrace;
+        protected String info;
+        protected String link;
         
         public Builder() {
             doTrace = false;
@@ -96,6 +111,16 @@ public class PJMessage extends PJBugMessage {
         
         public Builder addStackTrace(boolean doTrace) {
             this.doTrace = doTrace;
+            return builder();
+        }
+        
+        public Builder addCodeAnalysis(String info) {
+            this.info = info;
+            return builder();
+        }
+        
+        public Builder addErrorLink(String link) {
+            this.link = link;
             return builder();
         }
     }

@@ -24,6 +24,8 @@ import ast.RecordLiteral;
 import ast.RecordTypeDecl;
 import ast.SwitchLabel;
 import ast.DefineTopLevelDecl;
+import analysischecker.ASTStringCompiler;
+import analysischecker.ASTTree;
 import utilities.PJMessage;
 import utilities.PJBugManager;
 import utilities.Log;
@@ -245,9 +247,10 @@ public class NameChecker<T extends Object> extends Visitor<T> {
         Object o = resolveName(ne.name());
         if (o == null)
             PJBugManager.INSTANCE.reportMessage(new PJMessage.Builder()
-                        .addAST(ne)
+                        .addAST(ne.name())
                         .addError(VisitorMessageNumber.NAME_CHECKER_405)
                         .addArguments(ne.name().getname())
+                        .addCodeAnalysis("undefined or not in scope")
                         .build());
         else
             ne.myDecl = (AST) o;

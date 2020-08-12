@@ -1,8 +1,8 @@
 package ast;
 
-import syntaxchecker.ASTNode;
-import syntaxchecker.ReductionNode;
-import syntaxchecker.Types;
+import analysischecker.ASTNode;
+import analysischecker.ReductionNode;
+import analysischecker.Types;
 
 /**
  * @author ben
@@ -72,11 +72,23 @@ public class Token extends ASTNode {
     public Token getRoot() {
         return this;
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Token))
+            return false;
+        Token that = (Token) o;
+        return this.kind == that.kind &&
+                this.meaning == that.meaning &&
+                this.lexeme.equals(that.lexeme);
+    }
 
     @Override
     public String toString() {
         return "Token '" + lexeme + "' @ line: " + line
-            + "[" + charBegin + ".." + charEnd + "] (kind: " + kind + ")";
+            + " [" + charBegin + ".." + charEnd + "] (kind: " + Types.INSTANCE.getText(kind) + ")";
     }
 
     @Override
