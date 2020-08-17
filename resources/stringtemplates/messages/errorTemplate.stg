@@ -44,8 +44,7 @@ Message(tag, message, location, info, stack) ::= <<
 // 3.) link: An URL to the error message.
 InfoMessage(token, info, link) ::= <<
 <if(token)> --> <token>
- <info>
-<endif>
+ <info><endif>
 >>
 
 //========================================================================================

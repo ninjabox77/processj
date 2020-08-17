@@ -175,6 +175,11 @@ public class ProcessJc {
             
             SymbolTable.hook = null;
             
+            // <--
+            System.out.println("-- Resolving scope for names in files.");
+            c.visit(new namechecker.ScopeResolution());
+            // -->
+            
             // Visit import declarations
             System.out.println("-- Resolving imports.");
             c.visit(new namechecker.ResolveImports<AST>(globalTypeTable));
@@ -203,11 +208,6 @@ public class ProcessJc {
             // Visit and resolve types from imported packages
             System.out.println("-- Resolving imported types.");
             c.visit(new namechecker.ResolvePackageTypes());
-            
-            // <--
-            System.out.println("-- Resolving scope for names in files.");
-            c.visit(new namechecker.ScopeResolution());
-            // -->
             
             // Visit name checker
             System.out.println("-- Checking name usage.");

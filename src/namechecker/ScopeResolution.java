@@ -104,19 +104,17 @@ public class ScopeResolution extends Visitor<AST> {
     public AST visitAltCase(AltCase ac) {
         ac.myCompilation = currentCompilation;
         if (ac.precondition() != null)
-            ac.precondition().myCompilation = currentCompilation;
-        ac.guard().guard().myCompilation = currentCompilation;
-        if (ac.stat() != null) {
-            ac.stat().myCompilation = currentCompilation;
+            ac.precondition().visit(this);
+        ac.guard().visit(this);
+        if (ac.stat() != null)
             ac.stat().visit(this);
-        }
         return null;
     }
 
     public AST visitAltStat(AltStat as) {
         as.myCompilation = currentCompilation;
         as.body().visit(this);
-        return as.visitChildren(this);
+        return null;
     }
 
     public AST visitArrayAccessExpr(ArrayAccessExpr ae) {
@@ -199,7 +197,10 @@ public class ScopeResolution extends Visitor<AST> {
     }
 
     public AST visitConstantDecl(ConstantDecl cd) {
-        return cd.visitChildren(this);
+        cd.myCompilation = currentCompilation;
+        cd.type().visit(this);
+        cd.var().visit(this);
+        return null;
     }
 
     public AST visitContinueStat(ContinueStat cs) {
@@ -207,6 +208,10 @@ public class ScopeResolution extends Visitor<AST> {
     }
 
     public AST visitDoStat(DoStat ds) {
+        ds.myCompilation = currentCompilation;
+        ds.expr().visit(this);
+        if (ds.stat() != null)
+            ds.stat().visit(this);
         return null;
     }
 
@@ -223,14 +228,31 @@ public class ScopeResolution extends Visitor<AST> {
     }
 
     public AST visitForStat(ForStat fs) {
+        fs.myCompilation = currentCompilation;
+        if (fs.init() != null)
+            fs.init().visit(this);
+        if (fs.expr() != null)
+            fs.expr().visit(this);
+        if (fs.incr() != null)
+            fs.incr().visit(this);
+        if (fs.stats() != null)
+            fs.stats().visit(this);
         return null;
     }
 
     public AST visitGuard(Guard gu) {
+        gu.myCompilation = currentCompilation;
+        gu.guard().visit(this);
         return null;
     }
 
     public AST visitIfStat(IfStat is) {
+        is.myCompilation = currentCompilation;
+        is.expr().visit(this);
+        if (is.thenpart() != null)
+            is.thenpart().visit(this);
+        if (is.elsepart() != null)
+            is.elsepart().visit(this);
         return null;
     }
 
@@ -258,10 +280,7 @@ public class ScopeResolution extends Visitor<AST> {
     }
 
     public AST visitName(Name na) {
-        if (na.c != null) // Otherwise it was resolved elsewhere
-            na.myCompilation = na.c;
-        else
-            na.myCompilation = currentCompilation;
+        na.myCompilation = currentCompilation;
         return null;
     }
 

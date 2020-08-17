@@ -138,13 +138,13 @@ public enum ASTStringCompiler {
         System.out.println();
     }
     
-    protected static class ExprStatVisitor extends Visitor<String> {
+    protected static class ExprStatVisitor extends Visitor<ASTNode> {
         
-        public String visitBinaryExpr(BinaryExpr be) {
+        public ASTNode visitBinaryExpr(BinaryExpr be) {
             return super.visitBinaryExpr(be);
         }
         
-        public String visitExprStat(ExprStat es) {
+        public ASTNode visitExprStat(ExprStat es) {
             return super.visitExprStat(es);
         }
     }

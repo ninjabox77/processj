@@ -87,8 +87,8 @@ public class Token extends ASTNode {
 
     @Override
     public String toString() {
-        return "Token '" + lexeme + "' @ line: " + line
-            + " [" + charBegin + ".." + charEnd + "] (kind: " + Types.INSTANCE.getText(kind) + ")";
+        return "Token: '" + lexeme + "' @ line: " + line
+            + " [" + charBegin + ":" + charEnd + "] (kind: " + Types.INSTANCE.getText(kind) + ")";
     }
 
     @Override
