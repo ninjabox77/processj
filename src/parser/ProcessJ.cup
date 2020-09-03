@@ -38,7 +38,7 @@ parser code  {:
     this();
     lexer=l;
   }
-/*
+
   public void syntax_error(java_cup.runtime.Symbol current) {
     if(current.value == null) {
       System.out.println("Unexpected end of file." + Scanner.curLine);
@@ -53,7 +53,7 @@ parser code  {:
       System.exit(1);
     }
   }
-*/
+
 :};
 
 scan with {: return lexer.next_token(); :};

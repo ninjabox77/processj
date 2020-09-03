@@ -2,8 +2,7 @@ package scanner;
 
 import ast.*;
 import parser.*;
-import analysischecker.ASTStringCompiler;
-import analysischecker.Types;
+import syntax.*;
 
 %%
 
@@ -32,14 +31,13 @@ import analysischecker.Types;
   }
 
   public void addLineComment() {
-    String line = "Comment @ line " + (yyline+1) + " [" + (yycolumn+1+incrspaces)  + ".." + (yycolumn+yylength()) + "]";
+    String line = "Comment, line " + (yyline+1) + " [" + (yycolumn+1+incrspaces)  + ":" + (yycolumn+yylength()) + "]";
     String str = yytext();
     Token t = null;
     if (str.startsWith("/*"))
-      t = new Token(Types.INSTANCE.MULTILINE_COMMENT, line, yyline+1, yycolumn+1, yycolumn + yylength());
+      t = new Token(Types.INSTANCE.MULTILINE_COMMENT, "Multi-line " + line, yyline+1, yycolumn+1, yycolumn + yylength());
     else
-      t = new Token(Types.INSTANCE.SINGLELINE_COMMENT, line, yyline+1, yycolumn+1, yycolumn + yylength());
-    ASTStringCompiler.INSTANCE.add(t);
+      t = new Token(Types.INSTANCE.SINGLELINE_COMMENT, "Single-line " + line, yyline+1, yycolumn+1, yycolumn + yylength());
   }
 
   public void countSpaces(int line) {
@@ -50,9 +48,9 @@ import analysischecker.Types;
     Token t;
     addToLine(yytext(), yyline+1);
     t = new Token(kind, yytext(), yyline+1, yycolumn+1, yycolumn + yylength());
-    ASTStringCompiler.INSTANCE.add(t);
     if (debug)
       System.out.println(t);
+    System.out.println(">> " + new java_cup.runtime.Symbol(kind, t).value);
     return new java_cup.runtime.Symbol(kind, t);
   } 
 %}

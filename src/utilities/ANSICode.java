@@ -42,7 +42,7 @@ public class ANSICode {
         WHITE ("37"),
         NONE ("");
         
-        private final String code;
+        private String code;
         
         ANSIForeground(String code) {
             this.code = code;
@@ -73,7 +73,7 @@ public class ANSICode {
         WHITE ("47"),
         NONE ("");
         
-        private final String code;
+        private String code;
         
         ANSIBackground(String code) {
             this.code = code;
@@ -102,7 +102,7 @@ public class ANSICode {
         HIDDEN ("8"),
         NONE ("");
         
-        private final String code;
+        private String code;
         
         Attribute(String code) {
             this.code = code;

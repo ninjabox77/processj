@@ -1,12 +1,13 @@
 package ast;
 
+import syntax.NodeCtx;
 import utilities.Log;
 import utilities.Visitor;
 
 public abstract class AST {
     /*implements java.io.Serializable*/// temporarily removed.
     public Compilation myCompilation = null; // Points to the compilation in which this node is defines. Only used for nodes that implement TopLevelDecl.
-    public Token token = null; // this is used for static and dynamic messages
+    public NodeCtx ctx = null; // this is used for sytanx-error and static code analysis (not all nodes generate a token!)
 
     public String myPackage; // set this field to the name of the package in which the parse tree node lives! (only for top level decls)
     public int line, charBegin;
@@ -27,9 +28,9 @@ public abstract class AST {
     }
 
     public AST(Token t) {
-        token = t;
+        ctx = t;
         line = t.line;
-        charBegin = t.charBegin;
+        charBegin = t.start;
     }
 
     public AST(AST n) {
@@ -84,7 +85,6 @@ public abstract class AST {
     public void print() {
         this.print(System.out);
     }
-
 
     /* *********************************************************** */
     /* **                                                       ** */

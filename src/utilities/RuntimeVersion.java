@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
  * This class checks the current version of the ProcessJ compiler and
  * its runtime system. Starting from version 2.1.x, the runtime system
  * invokes the compare() method to notify the user of any possible
- * mismatch between the 'current' version of the ProcessJ compiler and
+ * mismatch between the `current' version of the ProcessJ compiler and
  * the runtime system being used. Note, the runtime system should be
  * downloaded and manually linked to the ProcessJ compiler.
  * 

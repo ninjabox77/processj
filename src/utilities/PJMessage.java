@@ -1,7 +1,6 @@
 package utilities;
 
 import org.stringtemplate.v4.ST;
-import analysischecker.ASTStringCompiler;
 import ast.BinaryExpr;
 
 /**
@@ -46,8 +45,8 @@ public class PJMessage extends PJBugMessage {
             stStackInfo.add("stack", throwable.getStackTrace());
         }
         if (ast != null) {
-            stInfoMessage.add("token", ast.token);
-            stInfoMessage.add("info", ASTStringCompiler.INSTANCE.codeAnalysis(ast, info, link, errno));
+            stInfoMessage.add("token", ast.ctx);
+//            stInfoMessage.add("info", ASTStringCompiler.INSTANCE.codeAnalysis(ast, info, link, errno));
         }
         // Apply color code if allowed on terminal
         String tag = stTag.render();

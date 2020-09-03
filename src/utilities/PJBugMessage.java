@@ -142,16 +142,16 @@ public abstract class PJBugMessage {
     @Override
     public final int hashCode() {
         final int prime = 31;
-        int result = 1;
-        result = prime + result + ast.hashCode();
-        result = prime + result + errorNumber.hashCode();
-        result = prime + result + Arrays.hashCode(arguments);
-        result = prime + result + throwable.hashCode();
-        result = prime + result + fileName.hashCode();
-        result = prime + result + packageName.hashCode();
-        result = prime + result + rowNum;
-        result = prime + result + colNum;
-        return result;
+        int hash = 1;
+        hash = prime * hash + ast.hashCode();
+        hash = prime * hash + errorNumber.hashCode();
+        hash = prime * hash + Arrays.hashCode(arguments);
+        hash = prime * hash + throwable.hashCode();
+        hash = prime * hash + fileName.hashCode();
+        hash = prime * hash + packageName.hashCode();
+        hash = prime * hash + rowNum;
+        hash = prime * hash + colNum;
+        return hash;
     }
     
     @Override
@@ -174,7 +174,6 @@ public abstract class PJBugMessage {
             return false;
         if (!this.throwable.equals(other.throwable))
             return false;
-        
         return true;
     }
     

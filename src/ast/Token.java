@@ -1,33 +1,32 @@
 package ast;
 
-import analysischecker.ASTNode;
-import analysischecker.ReductionNode;
-import analysischecker.Types;
+import syntax.NodeCtx;
+import syntax.RuleCtx;
+import syntax.TerminalCtx;
+import syntax.Types;
 
 /**
  * @author ben
  */
-public class Token extends ASTNode {
+public class Token extends NodeCtx {
     
     /** Gets its value from sym.java */
     public int kind = Types.INSTANCE.UNKNOWN;
-    /** Some interpretation applied to the token */
-    public int meaning = Types.INSTANCE.UNKNOWN;
     /** The actual text scanned for this token */
     public String lexeme = "";
     /** The line number on which this token appears */
     public int line = -1;
     /** The column number in which the token begins */
-    public int charBegin = -1;
+    public int start = -1;
     /** The column number in which the token ends */
-    public int charEnd = -1;
+    public int stop = -1;
 
-    public Token(int kind, String text, int line, int charBegin, int charEnd) {
+    public Token(int kind, String text, int line, int start, int stop) {
         this.kind = kind;
         this.lexeme = text;
         this.line = line;
-        this.charBegin = charBegin;
-        this.charEnd = charEnd;
+        this.start = start;
+        this.stop = stop;
     }
     
     public Token(String text) {
@@ -49,11 +48,11 @@ public class Token extends ASTNode {
 
     @Override
     public int getStartColumn() {
-        return charBegin;
+        return start;
     }
     
     public int getEndColumn() {
-        return charEnd;
+        return stop;
     }
 
     @Override
@@ -62,8 +61,8 @@ public class Token extends ASTNode {
     }
 
     @Override
-    public ASTNode get(int index) {
-        if (index > 0)
+    public NodeCtx get(int idx) {
+        if (idx > 0)
             throw new AssertionError("Can only access the root node");
         return this;
     }
@@ -72,27 +71,21 @@ public class Token extends ASTNode {
     public Token getRoot() {
         return this;
     }
-    
-    @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof Token))
-            return false;
-        Token that = (Token) o;
-        return this.kind == that.kind &&
-                this.meaning == that.meaning &&
-                this.lexeme.equals(that.lexeme);
-    }
 
     @Override
     public String toString() {
-        return "Token: '" + lexeme + "' @ line: " + line
-            + " [" + charBegin + ":" + charEnd + "] (kind: " + Types.INSTANCE.getText(kind) + ")";
+        // TODO: 'kind' should be a tag, e.g., <identifier> instead of a 114
+        return "Token: '" + lexeme + "', line " + line
+            + " [" + start + ":" + stop + "] (kind: " + kind + ")"; // Types.INSTANCE.getText(kind)
     }
 
     @Override
-    public ReductionNode asReduction() {
-        return new ReductionNode(this);
+    public RuleCtx asRuleContext() {
+        return new RuleCtx(this);
+    }
+    
+    @Override
+    public TerminalCtx asTerminalContext() {
+        return new TerminalCtx(this);
     }
 }

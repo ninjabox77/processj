@@ -1,13 +1,11 @@
 package namechecker;
 
-import java.util.Hashtable;
-
 import ast.AST;
 import ast.Compilation;
 import ast.Import;
 import ast.Pragma;
 import ast.ProcTypeDecl;
-import ast.Type;
+import java.util.HashMap;
 import utilities.Log;
 import utilities.Visitor;
 
@@ -26,7 +24,7 @@ public class ResolveNativeImports extends Visitor<AST> {
     
     // The import currently being resolved
     private Import curImport = null;
-    private Hashtable<String, String> ht = new Hashtable<>();
+    private HashMap<String, String> ht = new HashMap<>();
     
     public ResolveNativeImports() {
         Log.logHeader("***********************************************");
@@ -57,8 +55,8 @@ public class ResolveNativeImports extends Visitor<AST> {
     public AST visitImport(Import im) {
         Log.log(im, "Visiting an import (of file: " + im + ")");
         curImport = im;
-        // For each top-level declaration, determine if this declaration is
-        // part of a PJ native library
+        // For each top-level declaration, determine if this declaration
+        // is part of a PJ native library
         for (Compilation c : im.getCompilations()) {
             if (c == null)
                 continue;
@@ -68,8 +66,8 @@ public class ResolveNativeImports extends Visitor<AST> {
                 p.visit(this);
             // Mark all top-level declarations 'native' if they are part
             // of a PJ native library function
-            for (Type t : c.typeDecls())
-                t.visit(this);
+            for (AST decl : c.typeDecls())
+                decl.visit(this);
             ht.clear();
         }
         return null;
@@ -82,7 +80,7 @@ public class ResolveNativeImports extends Visitor<AST> {
             String path = ResolveImports.makeImportPath(curImport);
             Log.log(pd, "Package path: " + path);
             // TODO: maybe use variables from Library.java instead??
-            if (ht.contains("LIBRARY") && ht.contains("NATIVE")) {
+            if (ht.containsKey("LIBRARY") && ht.containsKey("NATIVE")) {
                 Log.log(pd, "Package file name: " + curImport.file().getname());
                 pd.isNative = true;
                 pd.library = curImport.toString();

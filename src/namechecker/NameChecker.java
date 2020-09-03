@@ -24,8 +24,6 @@ import ast.RecordLiteral;
 import ast.RecordTypeDecl;
 import ast.SwitchLabel;
 import ast.DefineTopLevelDecl;
-import analysischecker.ASTStringCompiler;
-import analysischecker.ASTTree;
 import utilities.PJMessage;
 import utilities.PJBugManager;
 import utilities.Log;

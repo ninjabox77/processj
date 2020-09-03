@@ -14,7 +14,6 @@ import parser.parser;
 import printers.ParseTreePrinter;
 import rewriters.CastRewrite;
 import scanner.Scanner;
-import analysischecker.ASTStringCompiler;
 import utilities.PJBugManager;
 import utilities.ConfigFileReader;
 import utilities.Language;
@@ -121,7 +120,6 @@ public class ProcessJc {
                 // Set the package and filename
                 PJBugManager.INSTANCE.setFileName(absoluteFilePath);
                 PJBugManager.INSTANCE.setPackageName(absoluteFilePath);
-                ASTStringCompiler.INSTANCE.setFile(absoluteFilePath);
                 s = new Scanner(new java.io.FileReader(absoluteFilePath));
                 p = new parser(s);
             } catch (Exception e) {
@@ -132,9 +130,7 @@ public class ProcessJc {
             try {
                 java_cup.runtime.Symbol r = ((parser) p).parse();
                 root = (AST) r.value;
-//                System.out.println("--------------------------------=================");
-//                ASTStringCompiler.INSTANCE.printSyntaxError();
-//                System.out.println("--------------------------------=================");
+                //TODO: handle syntax error!!
             } catch (java.io.IOException e) {
                 System.err.println(e.getMessage());
                 System.exit(1);
@@ -174,11 +170,6 @@ public class ProcessJc {
                 c.visit(new ParseTreePrinter());
             
             SymbolTable.hook = null;
-            
-            // <--
-            System.out.println("-- Resolving scope for names in files.");
-            c.visit(new namechecker.ScopeResolution());
-            // -->
             
             // Visit import declarations
             System.out.println("-- Resolving imports.");
