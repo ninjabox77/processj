@@ -14,6 +14,7 @@ import processj.runtime.PJRecord;
 import processj.runtime.PJTimer;
 import utilities.Assert;
 import utilities.Settings;
+import utilities.Language;
 
 /**
  * This class contains helper methods for the CodeGenerator.
@@ -196,7 +197,17 @@ public class Helper {
                 System.out.println("Missing working directory!");
                 System.exit(1);
             }
-            String outFile = f.getAbsolutePath() + File.separator + filename + ".java";
+            String outFile = "";
+
+            if (Settings.language == Language.JVM) {
+                outFile = f.getAbsolutePath() + File.separator + filename + ".java";
+            } else if (Settings.language == Language.CPLUS) {
+                outFile = f.getAbsolutePath() + File.separator + filename + ".cpp";
+            } else {
+                System.out.println("Bad language set in Settings.java.");
+                System.exit(1);
+            }
+
             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outFile), "utf-8"));
             writer.write(output);
             writer.close();

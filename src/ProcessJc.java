@@ -8,11 +8,13 @@ import ast.AST;
 import ast.Compilation;
 import codegen.Helper;
 import codegen.java.CodeGenJava;
+import codegen.cpp.CodeGenCPP;
 import library.Library;
 import namechecker.ResolveImports;
 import parser.parser;
 import printers.ParseTreePrinter;
 import rewriters.CastRewrite;
+import rewriters.IOCallsRewrite;
 import scanner.Scanner;
 import utilities.PJBugManager;
 import utilities.ConfigFileReader;
@@ -258,11 +260,21 @@ public class ProcessJc {
             
             System.out.println("-- Collecting left-hand sides for par for code generation.");
             c.visit(new rewriters.ParFor());
+
+            // If we're generating C++ code, we need to rewrite print/println statements
+            if (Settings.language == Language.CPLUS) {
+                System.out.println("-- Rewriting calls to print() and println().");
+                c.visit(new IOCallsRewrite());
+            }
             
             // Run the code generator for the known (specified) target language
-            if (Settings.language == pJc.target)
-                pJc.generateCodeJava(c, inFile, globalTypeTable);
-            else {
+            if (Settings.language == pJc.target) {
+                if (Settings.language == Language.JVM) {
+                    pJc.generateCodeJava(c, inFile, globalTypeTable);
+                } else if (Settings.language == Language.CPLUS) {
+                    pJc.generateCodeCPP(c, inFile, globalTypeTable);
+                }
+            } else {
                 // Unknown target language so abort/terminate program
                 System.out.println("Invalid target language!");
                 System.exit(1);
@@ -299,6 +311,18 @@ public class ProcessJc {
         String code = (String) c.visit(codeGen);
         // Write the output to a file
         Helper.writeToFile(code, c.fileNoExtension(), codeGen.workingDir());
+    }
+
+    private void generateCodeCPP(Compilation c, File inFile, SymbolTable s) {
+        Properties p = utilities.ConfigFileReader.getProcessJConfig();
+        CodeGenCPP codeGen = new CodeGenCPP(s);
+
+        codeGen.setWorkingDir(p.getProperty("workingdir"));
+        // codeGen.sourceProgam(c.fileNoExtension());
+
+        String code = (String) c.visit(codeGen);
+
+        Helper.writeToFile(code, c.fileNoExtension(), codeGen.getWorkingDir());
     }
     
     public ProcessJc(String[] args) {
