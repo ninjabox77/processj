@@ -561,20 +561,36 @@ label(<resume2>);
 // 2) writeExpr:
 // 3) resume0:
 // 4) resume1:
-ChannelMany2One(chanName, writeExpr, resume0, resume1) ::= <<
-if (!<chanName>.claimWrite(this)) {
-    this.runLabel = <resume0>;
-    yield();
+ChannelMany2One(chanName, writeExpr, procName, resume0, resume1) ::= <<
+// if (!<chanName>.claimWrite(this)) {
+//     this.runLabel = <resume0>;
+//     yield();
+// }
+// label(<resume0>);
+
+// <chanName>.write(this, <writeExpr>);
+// this.runLabel = <resume1>;
+
+// yield();
+// label(<resume1>);
+
+// <chanName>.unclaimWrite();<\n>
+
+if(!<chanName>->claim_write(this))
+{
+    set_label(<resume0>);
+    // yield();
+    return;
 }
-label(<resume0>);
+<procName>L<resume0>:
 
 <chanName>.write(this, <writeExpr>);
-this.runLabel = <resume1>;
+set_label(<resume1>);
+// yield();
+return;
 
-yield();
-label(<resume1>);
-
-<chanName>.unclaimWrite();<\n>
+<procName>L<resume1>:
+<chanName>->unclaim_write();<\n>
 >>
 
 //========================================================================================
