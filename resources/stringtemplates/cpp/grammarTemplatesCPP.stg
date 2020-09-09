@@ -525,34 +525,64 @@ return;
 // 2) resume0:
 // 3) resume1:
 // 4) resume2:
-ChannelOne2Many(chanName, lhs, op, resume0, resume1, resume2, extendRv) ::= <<
-if (!<chanName>.claimRead(this)) {
-    this.runLabel = <resume0>;
-    yield();
-}
-label(<resume0>);
+ChannelOne2Many(chanName, procName, lhs, op, resume0, resume1, resume2, extendRv) ::= <<
+// if (!<chanName>.claimRead(this)) {
+//     this.runLabel = <resume0>;
+//     yield();
+// }
+// label(<resume0>);
 
-if (!<chanName>.isReadyToRead(this)) {
-    this.runLabel = <resume1>;
-    yield();
+// if (!<chanName>.isReadyToRead(this)) {
+//     this.runLabel = <resume1>;
+//     yield();
+// }
+
+// label(<resume1>);
+// <if(extendRv)> // Do we have a rendezvous?
+// <lhs> <op> <chanName>.preReadRendezvous(this);
+// <extendRv>
+// <chanName>.postReadRendezvous(this);
+// <else>
+// <if(lhs)><lhs> <op> <chanName>.read(this);
+// <else><chanName>.read(this);
+// <endif>
+// <endif>
+// this.runLabel = <resume2>;
+
+// <chanName>.unclaimRead();
+
+// yield();
+
+if(!<chanName>->claim_read(this))
+{
+    set_label(<resume0>);
+    // yield();
+    return;
 }
 
-label(<resume1>);
+<procName>L<resume0>:
+if(!<chanName>->is_ready_to_read(this))
+{
+    set_label(<resume1>);
+    // yield();
+    return;
+}
+
+<procName>L<resume1>:
 <if(extendRv)> // Do we have a rendezvous?
-<lhs> <op> <chanName>.preReadRendezvous(this);
+<lhs> <op> <chanName>.pre_read_rendezvous(this);
 <extendRv>
 <chanName>.postReadRendezvous(this);
 <else>
-<if(lhs)><lhs> <op> <chanName>.read(this);
-<else><chanName>.read(this);
+<if(lhs)><lhs> <op> <chanName>->read(this);
+<else><chanName>->read(this);
 <endif>
 <endif>
-this.runLabel = <resume2>;
+set_label(<resume2>);
 
-<chanName>.unclaimRead();
-
-yield();
-label(<resume2>);
+<chanName>->unclaim_read();
+// yield();
+return;
 >>
 
 //========================================================================================
