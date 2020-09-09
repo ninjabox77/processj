@@ -272,6 +272,7 @@ public class ProcessJc {
                 if (Settings.language == Language.JVM) {
                     pJc.generateCodeJava(c, inFile, globalTypeTable);
                 } else if (Settings.language == Language.CPLUS) {
+                    Log.startLogging();
                     pJc.generateCodeCPP(c, inFile, globalTypeTable);
                 }
             } else {
