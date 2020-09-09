@@ -243,8 +243,10 @@ public class ProcessJc {
             System.out.println("-- Rewriting infinite loops.");
             new rewriters.InfiniteLoopRewrite().go(c);
             
-            System.out.println("-- Rewriting loops.");
-            c.visit(new rewriters.UnrollLoopRewrite());
+            if (Settings.language == Language.JVM) {
+                System.out.println("-- Rewriting loops.");
+                c.visit(new rewriters.UnrollLoopRewrite());
+            }
             
             System.out.println("-- Performing alt statement usage check.");
             c.visit(new rewriters.AltStatRewrite());
