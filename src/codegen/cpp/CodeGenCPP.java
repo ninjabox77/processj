@@ -1782,6 +1782,12 @@ public class CodeGenCPP extends Visitor<Object> {
             else if (ra.isStringLength) // '...'.length for number of characters in a string.
                 stRecordAccess.add("member", "length()");
         }
+
+        if (ra.record().type.isStringType()) {
+            stRecordAccess.add("op", ".");
+        } else {
+            stRecordAccess.add("op", "->");
+        }
         
         return stRecordAccess.render();
     }

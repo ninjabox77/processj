@@ -703,7 +703,7 @@ new <type>(<vals; separator=", ">)
 //
 // 1) name:
 // 2) member:
-RecordAccess(name, member) ::= "<if(name)><name>-><member><endif>"
+RecordAccess(name, op, member) ::= "<if(name)><name><op><member><endif>"
 
 //========================================================================================
 //
