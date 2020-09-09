@@ -1,6 +1,6 @@
 import std.*;
 
-public void longegrate(chan<long>.read in,
+public void integrate(chan<long>.read in,
                            chan<long>.write out) {
   long total = 0;
   while (true) {
@@ -49,7 +49,7 @@ public void prefix(long initVal,
   }
 }
 
-public void longegrateParallel(chan<long>.read in,
+public void integrateParallel(chan<long>.read in,
                                    chan<long>.write out) {
   chan<long> a,b,c;
   par {
@@ -63,7 +63,7 @@ public void consume(chan<long>.read in) {
   while (true) {
     long x;
     x = in.read();
-    prlongln(x);
+    println(x);
   }
 }
 
@@ -79,6 +79,6 @@ public void produce(chan<long>.write out) {
   par {
     produce(in.write);
     consume(out.read);
-    longegrate(in.read, out.write);
+    integrate(in.read, out.write);
   }
 }
