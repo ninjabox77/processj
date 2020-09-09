@@ -44,7 +44,7 @@ santatest.pj (protocols with no fields?)
 sharedchan.pj (infinite loop issues?)
 sharedread.pj (infinite loop issues?)
 sharedwrite.pj (infinite loop issues?)
-silly.pj (more channel read stuff)
+silly.pj (more channel read stuff, no semicolons????)
 test22.pj (probably template stuff)
 
 tests that are untested:
