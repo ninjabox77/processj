@@ -2,6 +2,7 @@ tests that pass (with some exceptions):
 
 Hello.pj
 alttest.pj (will livelock on writer2, expected)
+array.pj (fixed issue with string length() access via wrong operator)
 barrierEx.pj
 bartest.pj (fixed timer read issue and double-free issue)
 binexpr.pj (no output but verified)
@@ -16,8 +17,10 @@ cpptimerreadtest.pj
 iftest.pj
 protocols.pj
 Demo2.pj
+Demo_matt.pj (issue fixed with channel reads + a value)
 fortest.pj
 NetworkProc.pj
+Matt.pj (issue fixed with channel reads + a value again)
 parExp.pj
 protocols.pj
 protocolSwitch.pj
@@ -30,14 +33,12 @@ verySimple.pj
 
 tests that don't pass:
 Demo.pj (problem with inheritance/structure)
-Demo_matt.pj (issue with channel reads + a value)
 enrolledtest.pj (multiple pars, need to add that functionality)
 fullAdder.pj (colliding class overload names for invocation proc types)
-integrate.pj (ask pedersen/ben about this one)
+integrate.pj (ask pedersen/ben about this one -- what's it supposed to do?)
 localDecl.pj (don't need this though, there's just no main)
 mandelbrot.pj (needs pgm library)
 mandelbrot2.pj (needs pgm library)
-Matt.pj (channel reads + a value again)
 santa.pj (probably lots of problems that will be fixed after the above are also fixed)
 santatest.pj (protocols with no fields?)
 sharedchan.pj (infinite loop issues?)
