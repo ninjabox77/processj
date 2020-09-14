@@ -300,10 +300,10 @@ public:
             }
             virtual void finalize()
             {
-                std::cout << "par1 process decrementing par1" << std::endl;
+                std::cout << "par2 process decrementing par1" << std::endl;
                 _proc$Anonymous50__ld$_par1_decrement();
-                std::cout << "par1 process resigning from b" << std::endl;
-                _ld$b1->resign();
+                // std::cout << "par2 process resigning from b" << std::endl;
+                // _ld$b1->resign();
             }
         protected:
             pj_runtime::pj_array<std::string>* _pd$args4;
@@ -337,10 +337,10 @@ public:
             }
             virtual void finalize()
             {
-                std::cout << "method invocation foo1 decrementing par1" << std::endl;
+                std::cout << "method invocation f1 decrementing par1" << std::endl;
                 _proc$Anonymous60__ld$_par1_decrement();
-                std::cout << "method invocation foo1 resigning from b" << std::endl;
-                _ld$b1->resign();
+                // std::cout << "method invocation f1 resigning from b" << std::endl;
+                // _ld$b1->resign();
             }
         protected:
             pj_runtime::pj_array<std::string>* _pd$args4;
@@ -374,10 +374,10 @@ public:
             }
             virtual void finalize()
             {
-                std::cout << "method invocation foo2 decrementing par1" << std::endl;
+                std::cout << "method invocation f2 decrementing par1" << std::endl;
                 _proc$Anonymous70__ld$_par1_decrement();
-                std::cout << "method invocation foo2 resigning from b" << std::endl;
-                _ld$b1->resign();
+                // std::cout << "method invocation f2 resigning from b" << std::endl;
+                // _ld$b1->resign();
             }
         protected:
             pj_runtime::pj_array<std::string>* _pd$args4;
