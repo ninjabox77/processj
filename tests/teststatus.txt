@@ -33,7 +33,7 @@ verySimple.pj
 
 tests that don't pass:
 Demo.pj (problem with inheritance/structure)
-enrolledtest.pj (multiple pars, need to add that functionality)
+enrolledtest.pj (issue with multiple enroll()'s on one barrier)
 fullAdder.pj (colliding class overload names for invocation proc types)
 integrate.pj (ask pedersen/ben about this one -- what's it supposed to do?)
 localDecl.pj (don't need this though, there's just no main)
