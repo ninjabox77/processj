@@ -15,10 +15,14 @@ namespace pj_runtime
         pj_par(int process_count, pj_process* p)
         : process_count(process_count)
         {
+            std::cout << "pj_par constructor called with arg " << process_count << std::endl;
             this->process = p;
         }
 
-        ~pj_par() = default;
+        ~pj_par()
+        {
+            std::cout << "pj_par destructor called\n";
+        }
 
         void set_process_count(int32_t count)
         {

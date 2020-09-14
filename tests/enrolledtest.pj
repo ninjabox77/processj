@@ -26,12 +26,38 @@ public void main(string[] args) {
     par {
         par enroll b {
             foo(b);
-            par enroll b {
+            // par enroll b {
                 bar(b);
                 baz(b);
-            }
+            // }
         }
         f();
         f();
     }
 }
+
+// public void blah() {
+//     println("blah");
+// }
+
+// public void blarg() {
+//     println("blarg");
+// }
+
+// public void blorg() {
+//     println("blorg");
+// }
+
+// public void main(string[] args) {
+//     par {
+//         par {
+//             blah();
+//             par {
+//                 blarg();
+//                 blorg();
+//             }
+//         }
+//         f();
+//         f();
+//     }
+// }
