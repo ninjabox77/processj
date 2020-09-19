@@ -96,8 +96,8 @@ public class Helper {
         if (pd == null)
             return false;
         
-        return pd.yields || (pd.annotations().isDefined("yield") &&
-               Boolean.valueOf(pd.annotations().get("yield")));
+        return pd.yields || (pd.annotations() != null && (pd.annotations().isDefined("yield") &&
+               Boolean.valueOf(pd.annotations().get("yield"))));
     }
     
     /**
