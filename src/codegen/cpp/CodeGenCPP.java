@@ -279,8 +279,12 @@ public class CodeGenCPP extends Visitor<Object> {
             stProcTypeDecl.add("parBlock", currentParBlock);
             stProcTypeDecl.add("syncBody", body);
             // Add the barrier this procedure should resign from.
-            if (!barrierList.isEmpty())
+            if (Helper.doesProcYield(pd) && !barrierList.isEmpty()) {
+                for (int i = 0; i < barrierList.size(); ++i) {
+                    Log.log(pd, "barrier added to anon proc: " + barrierList.get(i));
+                }
                 stProcTypeDecl.add("barrier", barrierList);
+            }
             // Add the switch block.
             if (!switchLabelList.isEmpty()) {
                 ST stSwitchBlock = stGroup.getInstanceOf("SwitchBlock");
@@ -1434,6 +1438,9 @@ public class CodeGenCPP extends Visitor<Object> {
             stInvocation.add("parBlock", currentParBlock);
             // Add the barrier this procedure should resign from.
             if (!barrierList.isEmpty()) {
+                for (int i = 0; i < barrierList.size(); ++i) {
+                    Log.log(pd, "barrier added to invocation: " + barrierList.get(i));
+                }
                 stInvocation.add("barrier", barrierList);
                 // stInvocation.add("vars", barrierList);
                 // stInvocation.add("types", "pj_runtime::pj_barrier*");
@@ -1806,8 +1813,12 @@ public class CodeGenCPP extends Visitor<Object> {
         String prevParBlock = currentParBlock;
         // Save previous barrier expressions.
         ArrayList<String> prevBarrier = barrierList;
-        if (!barrierList.isEmpty())
+        if (!barrierList.isEmpty()) {
+            Log.log(pb, "barrierList not empty");
             barrierList = new ArrayList<String>();
+        } else {
+            Log.log(pb, "barrierList empty");
+        }
         // Create a name for this new par-block.
         currentParBlock = Helper.makeVariableName(Tag.PAR_BLOCK_NAME.toString(), ++parDecId, Tag.LOCAL_NAME);
         // Since this is a new par-block, we need to create a variable inside
@@ -1831,8 +1842,13 @@ public class CodeGenCPP extends Visitor<Object> {
         // Add the barrier this par block enrolls in.
         Sequence<Expression> barriers = pb.barriers();
         if (barriers.size() > 0) {
-            for (Expression ex : barriers)
+            for (Expression ex : barriers) {
                 barrierList.add((String) ex.visit(this));
+            }
+        }
+
+        for (int i = 0; i < barrierList.size(); ++i) {
+            Log.log(pb, "barrierList[" + i + "]: " + barrierList.get(i));
         }
         
         // Visit the sequence of statements in the par-block.
