@@ -31,12 +31,12 @@ SwitchDemo.pj
 timer.pj
 verySimple.pj
 enrolledtest.pj (fixed issue with invocations of f() in outer par decrementing barrier of inner par)
+localDecl.pj (no main -- no worries)
 
 tests that don't pass:
 Demo.pj (problem with inheritance/structure)
 fullAdder.pj (colliding class overload names for invocation proc types)
 integrate.pj (ask pedersen/ben about this one -- what's it supposed to do?)
-localDecl.pj (don't need this though, there's just no main)
 mandelbrot.pj (needs pgm library)
 mandelbrot2.pj (needs pgm library)
 santa.pj (probably lots of problems that will be fixed after the above are also fixed)
