@@ -820,6 +820,8 @@ public class CodeGenCPP extends Visitor<Object> {
         } else {
             if (ld.type() instanceof PrimitiveType && ((PrimitiveType)ld.type()).isStringType()) {
                 localInits.put(name, "\"\"");
+            } else if (ld.type() instanceof RecordTypeDecl && ((RecordTypeDecl)ld.type()).isRecordType()) {
+                val = "static_cast<" + type + ">(0)";
             } else {
                 localInits.put(name, "0");
             }
@@ -1702,6 +1704,14 @@ public class CodeGenCPP extends Visitor<Object> {
         // Grab the type and name of a declared variable.
         String name = (String) rm.name().visit(this);
         String type = (String) rm.type().visit(this);
+
+        Log.log(rm, "type is " + type);
+
+        // If it needs to be a pointer, make it so
+        if(rm.type().isBarrierType() /*|| rm.type().isTimerType() */|| !(rm.type().isPrimitiveType() || rm.type().isArrayType())) {
+            Log.log(rm, "appending a pointer specifier to type of " + name);
+            type += "*";
+        }
         
         // Add this field to the collection of record members for reference.
         recordFields.put(name, type);
@@ -1723,6 +1733,7 @@ public class CodeGenCPP extends Visitor<Object> {
         // are passed to the constructor of the class associated with
         // this record.
         HashMap<String, String> members = new LinkedHashMap<String, String>();
+        ArrayList<String> membersInOrder = new ArrayList<String>();
         RecordTypeDecl rt = (RecordTypeDecl) topLevelDecls.get(type);
         
         if (rt != null) { // This should never be 'null'.
@@ -1739,14 +1750,18 @@ public class CodeGenCPP extends Visitor<Object> {
         for (RecordMemberLiteral rm : rl.members()) {
             String lhs = (String) rm.name().getname();
             String expr = (String) rm.expr().visit(this);
-            if (members.put(lhs, expr) == null)
+            if (members.put(lhs, expr) == null) {
                 Log.log(rl, "> Initializing '" + lhs + "' with '" + expr + "'");
-            else
+                membersInOrder.add(expr);
+            } else {
                 ; // We should never get here.
+            }
         }
         
         stRecordLiteral.add("type", type);
-        stRecordLiteral.add("vals", members.values());
+        // stRecordLiteral.add("vals", members.values());
+        Collections.reverse(membersInOrder);
+        stRecordLiteral.add("vals", membersInOrder);
         
         return stRecordLiteral.render();
     }
