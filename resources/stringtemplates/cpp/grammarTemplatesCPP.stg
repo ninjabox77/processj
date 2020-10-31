@@ -737,8 +737,8 @@ public:
 //
 // 1) type:
 // 2) vals:
-RecordLiteral(type, vals) ::= <<
-new <type>(<vals; separator=", ">)
+RecordLiteral(type, names, vals) ::= <<
+new <type> {<names,vals:{n,v | .<n> = <v>}; separator=", ">}
 >>
 
 //========================================================================================

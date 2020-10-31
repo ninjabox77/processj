@@ -982,6 +982,12 @@ public class CodeGenCPP extends Visitor<Object> {
         // where 'T' is the type to be resolved.
         String type = getChannelType(ct.baseType());
         // String type = getCPPChannelType(ct.baseType());
+
+        // If it needs to be a pointer, make it so
+        if(ct.baseType().isBarrierType() /*|| ct.baseType().isTimerType() */|| !(ct.baseType().isPrimitiveType() || ct.baseType().isArrayType())) {
+            Log.log(ct, "appending a pointer specifier to type of " + ct);
+            type += "*";
+        }
         
         return chantype + "<" + type + ">";
     }
@@ -1017,6 +1023,12 @@ public class CodeGenCPP extends Visitor<Object> {
         // where 'T' is the type to be resolved.
         String type = getChannelType(ct.baseType());
         // STring type = getCPPChannelType(ct.baseType());
+
+        // If it needs to be a pointer, make it so
+        if(ct.baseType().isBarrierType() /*|| ct.baseType().isTimerType() */|| !(ct.baseType().isPrimitiveType() || ct.baseType().isArrayType())) {
+            Log.log(ct, "appending a pointer specifier to type of " + ct);
+            type += "*";
+        }
         
         return chanType + "<" + type + ">";
     }
@@ -1327,6 +1339,12 @@ public class CodeGenCPP extends Visitor<Object> {
         //      ((<type>) (<expr>))
         String type = (String) ce.type().visit(this);
         String expr = (String) ce.expr().visit(this);
+
+        // If it needs to be a pointer, make it so
+        if(ce.type().isBarrierType() /*|| ce.type().isTimerType() */|| !(ce.type().isPrimitiveType() || ce.type().isArrayType())) {
+            Log.log(ce, "appending a pointer specifier to type of " + expr);
+            type += "*";
+        }
         
         stCastExpr.add("type", type);
         stCastExpr.add("expr", expr);
@@ -1733,12 +1751,12 @@ public class CodeGenCPP extends Visitor<Object> {
         // are passed to the constructor of the class associated with
         // this record.
         HashMap<String, String> members = new LinkedHashMap<String, String>();
-        ArrayList<String> membersInOrder = new ArrayList<String>();
         RecordTypeDecl rt = (RecordTypeDecl) topLevelDecls.get(type);
         
         if (rt != null) { // This should never be 'null'.
             for (RecordMember rm : rt.body()) {
-                String name = (String) rm.name().visit(this);
+                String name = (String) rm.name().getname();
+                Log.log(rl, "> got RecordMember " + name);
                 members.put(name, null);
             }
         }
@@ -1752,16 +1770,14 @@ public class CodeGenCPP extends Visitor<Object> {
             String expr = (String) rm.expr().visit(this);
             if (members.put(lhs, expr) == null) {
                 Log.log(rl, "> Initializing '" + lhs + "' with '" + expr + "'");
-                membersInOrder.add(expr);
             } else {
                 ; // We should never get here.
             }
         }
         
         stRecordLiteral.add("type", type);
-        // stRecordLiteral.add("vals", members.values());
-        Collections.reverse(membersInOrder);
-        stRecordLiteral.add("vals", membersInOrder);
+        stRecordLiteral.add("vals", members.values());
+        stRecordLiteral.add("names", members.keySet());
         
         return stRecordLiteral.render();
     }
@@ -1779,6 +1795,7 @@ public class CodeGenCPP extends Visitor<Object> {
             
             stRecordAccess.add("name", name);
             stRecordAccess.add("member", field);
+            stRecordAccess.add("op", "->");
         } else if (ra.record().type.isProtocolType()) {
             stRecordAccess = stGroup.getInstanceOf("ProtocolAccess");
             ProtocolTypeDecl pt = (ProtocolTypeDecl) ra.record().type;
@@ -1806,10 +1823,14 @@ public class CodeGenCPP extends Visitor<Object> {
 
             if (ra.record().type.isStringType()) {
                 stRecordAccess.add("op", ".");
+                Log.log(ra, "adding dot operator");
             } else {
+                Log.log(ra, "adding arrow operator");
                 stRecordAccess.add("op", "->");
             }
         }
+
+        Log.log(ra, "Record Access is " + stRecordAccess.render());
         
         return stRecordAccess.render();
     }
