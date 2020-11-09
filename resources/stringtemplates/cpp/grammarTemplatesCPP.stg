@@ -752,15 +752,14 @@ RecordAccess(name, op, member) ::= "<if(name)><name><op><member><endif>"
 // 1) modifier: access level such as public, private, or protected.
 // 2) name: the name that uniquely applies and identifies the protocol.
 // 3) body:
-ProtocolClass(modifiers, name, body) ::= <<
+ProtocolClass(cases, name, body) ::= <<
 <!<if(modifiers)><modifiers; separator=" "> <else>protected <endif>static class <name> {
     <body; separator="\n\n">
 }!>
-struct <name> : pj_runtime::pj_protocol
-{
-public:
-    <body; separator="\n\n">
-};
+
+<body; separator="\n\n">
+
+using <name> = std::variant\<<cases; separator=", ">\>;
 >>
 
 //========================================================================================
@@ -782,7 +781,7 @@ ProtocolCaseOld(modifier, name, types, vars) ::= <<
 }
 >>
 
-ProtocolCase(modifier, name, types, vars, index) ::= <<
+ProtocolCase(modifier, name, types, vars) ::= <<
 struct <name> : public pj_runtime::pj_protocol_case
 {
 public:
@@ -791,7 +790,6 @@ public:
     <name>(<if(vars)><types,vars:{t,v | <t> <v>}; separator=", "><endif>)
     {
         <if(vars)><vars:{v | this-><v> = <v>;}; separator="\n"><endif>
-        this->tag = <index>;
     }
 
     <if(vars)><types,vars:{t,v | <t> <v>;}; separator="\n"><endif>
@@ -804,7 +802,7 @@ public:
 // 2) tag:
 // 3) vals:
 ProtocolLiteral(type, protocolType, tag, vals) ::= <<
-new <type>::<tag>(<if(vals)><vals; separator=", "><endif>)
+new <tag>(<if(vals)><vals; separator=", "><endif>)
 >>
 
 //========================================================================================
@@ -814,7 +812,7 @@ new <type>::<tag>(<if(vals)><vals; separator=", "><endif>)
 // 3) var:
 // 4) member:
 ProtocolAccess(protocName, tag, var, member) ::= <<
-<if(protocName)>reinterpret_cast\<<protocName>::<tag>*>(<var>)-><member><endif>
+<if(protocName)>reinterpret_cast\<<tag>*>(<var>)-><member><endif>
 >>
 
 //========================================================================================

@@ -1560,39 +1560,64 @@ public class CodeGenCPP extends Visitor<Object> {
         // return stImport.render();
     }
     
+    // @Override
+    // public Object visitProtocolTypeDecl(ProtocolTypeDecl pd) {
+    //     Log.log(pd, "Visiting a ProtocolTypeDecl (" + pd.name().getname() + ")");
+        
+    //     // Generated template after evaluating this visitor.
+    //     ST stProtocolClass = stGroup.getInstanceOf("ProtocolClass");
+    //     String name = (String) pd.name().visit(this);
+    //     ArrayList<String> modifiers = new ArrayList<String>();
+    //     ArrayList<String> body = new ArrayList<String>();
+        
+    //     for (Modifier m : pd.modifiers())
+    //         modifiers.add((String) m.visit(this));
+        
+    //     // Add extended protocols (if any).
+    //     if (pd.extend().size() > 0) {
+    //         for (Name n : pd.extend()) {
+    //             ProtocolTypeDecl ptd = (ProtocolTypeDecl) topLevelDecls.get(n.getname());
+    //             for (ProtocolCase pc : ptd.body())
+    //                 protocolTagsSwitchedOn.put(pd.name().getname() + "." + pc.name().getname(),
+    //                         ptd.name().getname());
+    //         }
+    //     }
+        
+    //     // The scope in which all members appear in a protocol.
+    //     if (pd.body() != null) {
+    //         for (ProtocolCase pc : pd.body())
+    //             body.add((String) pc.visit(this));
+    //     }
+        
+    //     stProtocolClass.add("name", name);
+    //     stProtocolClass.add("modifiers", modifiers);
+    //     stProtocolClass.add("body", body);
+        
+    //     return stProtocolClass.render();
+    // }
+
     @Override
     public Object visitProtocolTypeDecl(ProtocolTypeDecl pd) {
         Log.log(pd, "Visiting a ProtocolTypeDecl (" + pd.name().getname() + ")");
-        
-        // Generated template after evaluating this visitor.
+
         ST stProtocolClass = stGroup.getInstanceOf("ProtocolClass");
         String name = (String) pd.name().visit(this);
-        ArrayList<String> modifiers = new ArrayList<String>();
         ArrayList<String> body = new ArrayList<String>();
-        
-        for (Modifier m : pd.modifiers())
-            modifiers.add((String) m.visit(this));
-        
-        // Add extended protocols (if any).
-        if (pd.extend().size() > 0) {
-            for (Name n : pd.extend()) {
-                ProtocolTypeDecl ptd = (ProtocolTypeDecl) topLevelDecls.get(n.getname());
-                for (ProtocolCase pc : ptd.body())
-                    protocolTagsSwitchedOn.put(pd.name().getname() + "." + pc.name().getname(),
-                            ptd.name().getname());
+        ArrayList<String> cases = new ArrayList<String>();
+
+        // TODO: need to add cases from extended protocols
+
+        if (pd.body() != null) {
+            for (ProtocolCase pc: pd.body()) {
+                cases.add(pc.name().getname());
+                body.add((String) pc.visit(this));
             }
         }
-        
-        // The scope in which all members appear in a protocol.
-        if (pd.body() != null) {
-            for (ProtocolCase pc : pd.body())
-                body.add((String) pc.visit(this));
-        }
-        
+
         stProtocolClass.add("name", name);
-        stProtocolClass.add("modifiers", modifiers);
         stProtocolClass.add("body", body);
-        
+        stProtocolClass.add("cases", cases);
+
         return stProtocolClass.render();
     }
     
@@ -1622,8 +1647,8 @@ public class CodeGenCPP extends Visitor<Object> {
         }
 
         stProtocolCase.add("name", protocName);
-        stProtocolCase.add("index", protocolCaseIndex);
-        protocolCaseNameIndices.put(protocName, protocolCaseIndex++);
+        // stProtocolCase.add("index", protocolCaseIndex);
+        // protocolCaseNameIndices.put(protocName, protocolCaseIndex++);
         
         return stProtocolCase.render();
     }
