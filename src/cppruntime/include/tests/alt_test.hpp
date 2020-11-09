@@ -240,7 +240,6 @@ namespace pj_tests
             std::cout << "END (process " << this->id
                       << " on cpu " << sched_getcpu() << ")\n";
 
-            delete timer;
             terminate();
             return;
         }
@@ -387,10 +386,10 @@ namespace pj_tests
             alt_skip_process* as_process = new alt_skip_process(3, &sched);
 
             std::cout << "\n *** SCHEDULING PROCESSES *** \n\n";
-            // sched.insert(a_process);
-            // sched.insert(process);
+            sched.insert(a_process);
+            sched.insert(process);
             sched.insert(at_process);
-            // sched.insert(as_process);
+            sched.insert(as_process);
 
             std::cout << "\n *** STARTING SCHEDULER *** \n\n";
             sched.start();
