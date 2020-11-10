@@ -239,10 +239,7 @@ namespace pj_tests
             }
             std::cout << "END (process " << this->id
                       << " on cpu " << sched_getcpu() << ")\n";
-<<<<<<< HEAD
 
-=======
->>>>>>> added new runtime with better protocols, need to add codegen
             terminate();
             return;
         }
