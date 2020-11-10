@@ -1267,13 +1267,13 @@ public class CodeGenCPP extends Visitor<Object> {
         String label = null;
         if (!sl.isDefault())
             label = (String) sl.expr().visit(this);
-        if (isProtocolCase) {
+        // if (isProtocolCase) {
             // Silly way to keep track of a protocol tag, however, this
             // should (in theory) _always_ work.
-            currentProtocolTag = label;
+            // currentProtocolTag = label;
             // label = "\"" + label + "\"";
-            label = Integer.toString(protocolCaseNameIndices.get(sl.expr().toString()));
-        }
+            // label = Integer.toString(protocolCaseNameIndices.get(sl.expr().toString()));
+        // }
         stSwitchLabel.add("label", label);
         
         return stSwitchLabel.render();
@@ -1307,11 +1307,12 @@ public class CodeGenCPP extends Visitor<Object> {
     public Object visitSwitchStat(SwitchStat st) {
         Log.log(st, "Visiting a SwitchStat");
         
-        // Generated template after evaluating this visitor.
-        ST stSwitchStat = stGroup.getInstanceOf("SwitchStat");
         // Is this a protocol tag?
         if (st.expr().type.isProtocolType())
-            isProtocolCase = true;
+            return generateProtocolChoice(st);
+
+        // Generated template after evaluating this visitor.
+        ST stSwitchStat = stGroup.getInstanceOf("SwitchStat");
         
         String expr = (String) st.expr().visit(this);
         ArrayList<String> switchGroup = new ArrayList<String>();
@@ -1327,6 +1328,15 @@ public class CodeGenCPP extends Visitor<Object> {
         isProtocolCase = false;
         
         return stSwitchStat.render();
+    }
+
+    private String getProtocolChoice(SwitchStat st) {
+        Log.log("Generating protocol choice sructure");
+        NameExpr protocolExpr = st.expr();
+        ProtocolTypeDecl ptd = protocolExpr.myDecl;
+        
+
+        return null;
     }
     
     @Override

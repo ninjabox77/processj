@@ -815,6 +815,14 @@ ProtocolAccess(protocName, tag, var, member) ::= <<
 <if(protocName)>reinterpret_cast\<<tag>*>(<var>)-><member><endif>
 >>
 
+ProtocolChoiceCase(caseType, body) ::= <<
+
+>>
+
+ProtocolChoice(protocName, cases) ::= <<
+
+>>
+
 //========================================================================================
 // TODO: this needs the proc name to build the label correctly
 // 1) barrier:
