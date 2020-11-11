@@ -215,15 +215,15 @@ InvocationProcType(name, vars, argvars, types, parBlock, barrier, anonCounter) :
         <if(barrier)><barrier:{b | <b>.resign()}; separator=";\n">;<endif>
     }
 }).schedule();!>
-class <name>_overload_finalize : public <name>
+class <name>_overload_finalize_<anonCounter> : public <name>
 {
 public:
-    <!<name>_overload_finalize(int32_t id, pj_runtime::pj_scheduler* sched<if(barrier)>, pj_runtime::pj_barrier* <barrier><endif>)
+    <!<name>_overload_finalize_<anonCounter>(int32_t id, pj_runtime::pj_scheduler* sched<if(barrier)>, pj_runtime::pj_barrier* <barrier><endif>)
     : <name>{id, sched<if(barrier)>, <barrier><endif>}
     {
 
     }!>
-    <name>_overload_finalize(int32_t id, pj_runtime::pj_scheduler* sched<if(vars)>, <types,vars:{t,v | <t> <v>}; separator=", "><endif>)
+    <name>_overload_finalize_<anonCounter>(int32_t id, pj_runtime::pj_scheduler* sched<if(vars)>, <types,vars:{t,v | <t> <v>}; separator=", "><endif>)
     : <name>{id, sched<if(vars)>, <vars; separator=", "><endif>}
     {
 
@@ -239,7 +239,7 @@ public:
 <!this->sched->insert(new <name>_overload_finalize(this->id + <anonCounter>, this->sched<if(barrier)>, <
 barrier><endif>));!>
 
-this->sched->insert(new <name>_overload_finalize(this->id + <anonCounter>, this->sched<if(argvars)>, <argvars; separator=", "><endif>));
+this->sched->insert(new <name>_overload_finalize_<anonCounter>(this->id + <anonCounter>, this->sched<if(argvars)>, <argvars; separator=", "><endif>));
 >>
 
 //========================================================================================

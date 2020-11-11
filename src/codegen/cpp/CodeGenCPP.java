@@ -684,7 +684,7 @@ public class CodeGenCPP extends Visitor<Object> {
         }
 
         // If it needs to be a pointer, make it so
-        if(/*pd.type().isTimerType() ||*/ pd.type().isBarrierType() || !(pd.type().isPrimitiveType() || pd.type().isArrayType())) {
+        if(!(pd.type() instanceof NamedType && ((NamedType)pd.type()).type().isProtocolType()) &&  (pd.type().isBarrierType() || !(pd.type().isPrimitiveType() || pd.type().isArrayType()))) {
             Log.log(pd, "appending a pointer specifier to type of " + name);
             type += "*";
         }
@@ -988,7 +988,7 @@ public class CodeGenCPP extends Visitor<Object> {
         // String type = getCPPChannelType(ct.baseType());
 
         // If it needs to be a pointer, make it so
-        if(ct.baseType().isBarrierType() /*|| ct.baseType().isTimerType() */|| !(ct.baseType().isPrimitiveType() || ct.baseType().isArrayType())) {
+        if(!(ct.baseType() instanceof NamedType && ((NamedType)ct.baseType()).type().isProtocolType()) && (ct.baseType().isBarrierType() /*|| ct.baseType().isTimerType() */|| !(ct.baseType().isPrimitiveType() || ct.baseType().isArrayType()))) {
             Log.log(ct, "appending a pointer specifier to type of " + ct);
             type += "*";
         }
@@ -1029,7 +1029,7 @@ public class CodeGenCPP extends Visitor<Object> {
         // STring type = getCPPChannelType(ct.baseType());
 
         // If it needs to be a pointer, make it so
-        if(ct.baseType().isBarrierType() /*|| ct.baseType().isTimerType() */|| !(ct.baseType().isPrimitiveType() || ct.baseType().isArrayType())) {
+        if(!(ct.baseType() instanceof NamedType && ((NamedType)ct.baseType()).type().isProtocolType()) && (ct.baseType().isBarrierType() /*|| ct.baseType().isTimerType() */|| !(ct.baseType().isPrimitiveType() || ct.baseType().isArrayType()))) {
             Log.log(ct, "appending a pointer specifier to type of " + ct);
             type += "*";
         }
@@ -1384,7 +1384,7 @@ public class CodeGenCPP extends Visitor<Object> {
         String expr = (String) ce.expr().visit(this);
 
         // If it needs to be a pointer, make it so
-        if(ce.type().isBarrierType() /*|| ce.type().isTimerType() */|| !(ce.type().isPrimitiveType() || ce.type().isArrayType())) {
+        if(!(ce.type() instanceof NamedType && ((NamedType)ce.type()).type().isProtocolType()) && (ce.type().isBarrierType() /*|| ce.type().isTimerType() */|| !(ce.type().isPrimitiveType() || ce.type().isArrayType()))) {
             Log.log(ce, "appending a pointer specifier to type of " + expr);
             type += "*";
         }
@@ -1470,7 +1470,7 @@ public class CodeGenCPP extends Visitor<Object> {
             Type t = (Type) ((ParamDecl)formalParams.child(i)).type();
             typesList[i] = (String)t.visit(this);
 
-            if(t.isBarrierType() || !(t.isPrimitiveType() || t.isArrayType())) {
+            if(!(t instanceof NamedType && ((NamedType)t).type().isProtocolType()) && (t.isBarrierType() || !(t.isPrimitiveType() || t.isArrayType()))) {
                 Log.log(pd, "appending a pointer specifier to type of " + ((ParamDecl)formalParams.child(i)).name());
                 typesList[i] += "*";
             }
@@ -1657,6 +1657,15 @@ public class CodeGenCPP extends Visitor<Object> {
             }
         }
 
+        if (pd.extend().size() > 0) {
+            for (Name n : pd.extend()) {
+                ProtocolTypeDecl ptd = (ProtocolTypeDecl) topLevelDecls.get(n.getname());
+                for (ProtocolCase pc : ptd.body()) {
+                    cases.add(pc.name().getname());
+                }
+            }
+        }
+
         stProtocolClass.add("name", name);
         stProtocolClass.add("body", body);
         stProtocolClass.add("cases", cases);
@@ -1794,7 +1803,7 @@ public class CodeGenCPP extends Visitor<Object> {
         Log.log(rm, "type is " + type);
 
         // If it needs to be a pointer, make it so
-        if(rm.type().isBarrierType() /*|| rm.type().isTimerType() */|| !(rm.type().isPrimitiveType() || rm.type().isArrayType())) {
+        if(!(rm.type() instanceof NamedType && ((NamedType)rm.type()).type().isProtocolType()) && (rm.type().isBarrierType() /*|| rm.type().isTimerType() */|| !(rm.type().isPrimitiveType() || rm.type().isArrayType()))) {
             Log.log(rm, "appending a pointer specifier to type of " + name);
             type += "*";
         }
