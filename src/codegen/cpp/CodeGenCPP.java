@@ -729,7 +729,7 @@ public class CodeGenCPP extends Visitor<Object> {
         Expression expr = ld.var().init();
 
         // If it needs to be a pointer, make it so
-        if(!ld.type().isProtocolType() && (ld.type().isBarrierType() /*|| ld.type().isTimerType() */|| !(ld.type().isPrimitiveType() || ld.type().isArrayType()))) {
+        if(!(ld.type() instanceof NamedType && ((NamedType)ld.type()).type().isProtocolType()) && (ld.type().isBarrierType() /*|| ld.type().isTimerType() */|| !(ld.type().isPrimitiveType() || ld.type().isArrayType()))) {
             Log.log(ld, "appending a pointer specifier to type of " + name);
             type += "*";
         }
