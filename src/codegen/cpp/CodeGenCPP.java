@@ -729,7 +729,7 @@ public class CodeGenCPP extends Visitor<Object> {
         Expression expr = ld.var().init();
 
         // If it needs to be a pointer, make it so
-        if(ld.type().isBarrierType() /*|| ld.type().isTimerType() */|| !(ld.type().isPrimitiveType() || ld.type().isArrayType())) {
+        if(ld.type().isProtocolType() && (ld.type().isBarrierType() /*|| ld.type().isTimerType() */|| !(ld.type().isPrimitiveType() || ld.type().isArrayType()))) {
             Log.log(ld, "appending a pointer specifier to type of " + name);
             type += "*";
         }
@@ -822,6 +822,10 @@ public class CodeGenCPP extends Visitor<Object> {
                 localInits.put(name, "\"\"");
             } else if (ld.type() instanceof RecordTypeDecl && ((RecordTypeDecl)ld.type()).isRecordType()) {
                 val = "static_cast<" + type + ">(0)";
+            } else if (ld.type().isProtocolType()) {
+                // TODO: find out how to fix this problem, variants cannot
+                // have null initializers. need to rework this so that we
+                // don't have two inits. ugh.
             } else {
                 localInits.put(name, "0");
             }
@@ -904,7 +908,7 @@ public class CodeGenCPP extends Visitor<Object> {
         // This is for protocol inheritance.
         if (nt.type() != null && nt.type().isProtocolType()) {
             // type = PJProtocolCase.class.getSimpleName();
-            type = "pj_runtime::pj_protocol_case";
+            // type = "pj_runtime::pj_protocol_case";
         }
 
         return type;
@@ -1267,13 +1271,14 @@ public class CodeGenCPP extends Visitor<Object> {
         String label = null;
         if (!sl.isDefault())
             label = (String) sl.expr().visit(this);
-        // if (isProtocolCase) {
+        if (isProtocolCase) {
             // Silly way to keep track of a protocol tag, however, this
             // should (in theory) _always_ work.
-            // currentProtocolTag = label;
+            currentProtocolTag = label;
             // label = "\"" + label + "\"";
             // label = Integer.toString(protocolCaseNameIndices.get(sl.expr().toString()));
-        // }
+            return label;
+        }
         stSwitchLabel.add("label", label);
         
         return stSwitchLabel.render();
@@ -1285,6 +1290,7 @@ public class CodeGenCPP extends Visitor<Object> {
         
         // Generated template after evaluating this visitor.
         ST stSwitchGroup = stGroup.getInstanceOf("SwitchGroup");
+        String breakCheck = null;
 
         ArrayList<String> labels = new ArrayList<String>();
         for (SwitchLabel sl : sg.labels())
@@ -1294,10 +1300,15 @@ public class CodeGenCPP extends Visitor<Object> {
         for (Statement st : sg.statements()) {
             if (st == null)
                 continue;
-            stats.add((String) st.visit(this));
+            breakCheck = (String) st.visit(this);
+            if(isProtocolCase && breakCheck.equals("break;"))
+                continue;
+            stats.add(breakCheck);
         }
         
-        stSwitchGroup.add("labels", labels);
+        if (!isProtocolCase) {
+            stSwitchGroup.add("labels", labels);
+        }
         stSwitchGroup.add("stats", stats);
         
         return stSwitchGroup.render();
@@ -1308,8 +1319,11 @@ public class CodeGenCPP extends Visitor<Object> {
         Log.log(st, "Visiting a SwitchStat");
         
         // Is this a protocol tag?
-        if (st.expr().type.isProtocolType())
+        if (st.expr().type.isProtocolType()) {
+            isProtocolCase = true;
+            Log.log(st, "Generating protocol choice for type " + st.expr().type);
             return generateProtocolChoice(st);
+        }
 
         // Generated template after evaluating this visitor.
         ST stSwitchStat = stGroup.getInstanceOf("SwitchStat");
@@ -1330,13 +1344,32 @@ public class CodeGenCPP extends Visitor<Object> {
         return stSwitchStat.render();
     }
 
-    private String getProtocolChoice(SwitchStat st) {
+    // TODO: this should convert a SwitchStat for a protocol
+    // into the appropriate ProtocolChoice and ProtocolChoiceCase
+    // structures from the grammar file
+    private String generateProtocolChoice(SwitchStat st) {
         Log.log("Generating protocol choice sructure");
-        NameExpr protocolExpr = st.expr();
-        ProtocolTypeDecl ptd = protocolExpr.myDecl;
         
+        ST stProtocolChoice = stGroup.getInstanceOf("ProtocolChoice");
+        ArrayList<String> choiceBody = new ArrayList<String>();
+        ArrayList<String> labels = new ArrayList<String>();
+        ST stProtocolChoiceCase = null;
+        String caseBody = null;
 
-        return null;
+        for (SwitchGroup sg : st.switchBlocks()) {
+            caseBody = (String) sg.visit(this);
+            Log.log("getProtocolChoice: caseBody is " + caseBody);
+            stProtocolChoiceCase = stGroup.getInstanceOf("ProtocolChoiceCase");
+            stProtocolChoiceCase.add("body", caseBody);
+            // add protocol variable name
+            // add protocol variable type (not the parent type somehow)
+            stProtocolChoiceCase.add("protocName", st.expr().visit(this));
+            stProtocolChoiceCase.add("caseType", sg.labels().visit(this));
+            choiceBody.add(stProtocolChoiceCase.render());
+        }
+
+        stProtocolChoice.add("cases", choiceBody);
+        return stProtocolChoice.render();
     }
     
     @Override

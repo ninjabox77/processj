@@ -759,7 +759,7 @@ ProtocolClass(cases, name, body) ::= <<
 
 <body; separator="\n\n">
 
-using <name> = std::variant\<<cases; separator=", ">\>;
+using <name> = std::variant\<<cases:{c | <c>*}; separator=", ">\>;
 >>
 
 //========================================================================================
@@ -812,15 +812,18 @@ new <tag>(<if(vals)><vals; separator=", "><endif>)
 // 3) var:
 // 4) member:
 ProtocolAccess(protocName, tag, var, member) ::= <<
-<if(protocName)>reinterpret_cast\<<tag>*>(<var>)-><member><endif>
+<if(protocName)>std::get\<<tag>*>(<var>)-><member><endif>
 >>
 
-ProtocolChoiceCase(caseType, body) ::= <<
-
+ProtocolChoiceCase(protocName, caseType, body) ::= <<
+if(std::holds_alternative\<<caseType>*>(<protocName>))
+{
+    <body; separator="\n">
+}
 >>
 
-ProtocolChoice(protocName, cases) ::= <<
-
+ProtocolChoice(cases) ::= <<
+<cases; separator="\n">
 >>
 
 //========================================================================================
