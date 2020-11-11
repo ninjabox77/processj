@@ -32,6 +32,7 @@ timer.pj
 verySimple.pj
 enrolledtest.pj (fixed issue with invocations of f() in outer par decrementing barrier of inner par)
 localDecl.pj (no main -- no worries)
+cppprotocoltest.pj
 
 tests that don't pass:
 Demo.pj (problem with inheritance/structure)
