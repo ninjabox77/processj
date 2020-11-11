@@ -1,0 +1,48 @@
+import std.io;
+
+public protocol P {
+    request: { int number; double amount; }
+    reply: { boolean status; }
+}
+
+public protocol P1 extends P {
+    deny: { int code; }
+}
+
+public void asker(chan<P>.write out, chan<P1>.read in) {
+	P myP = new P{ request: number = 60, amount = 4.20};
+	out.write(myP);
+	P1 response = in.read();
+	switch(response) {
+		case reply:
+			println("reply: " + response.status);
+			break;
+		case deny:
+			println("denied: " + response.code);
+			break;
+	}
+}
+
+public void teller(chan<P>.read in, chan<P1>.write out) {
+	P msg = in.read();
+	switch(msg) {
+		case request:
+			println("request: " + msg.number + ", " + msg.amount);
+			break;
+		case reply:
+			println("reply: " + msg.status);
+			break;
+	}
+	P1 response = new P1{ deny: code = 8008135 };
+	out.write(response);
+}
+
+public void main(string args[]) {
+	chan<P> a2b;
+	chan<P1> b2a;
+
+	par {
+		asker(a2b.write, b2a.read);
+		teller(a2b.read, b2a.write);
+	}	
+}
