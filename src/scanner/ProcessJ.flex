@@ -50,7 +50,7 @@ import syntax.*;
     t = new Token(kind, yytext(), yyline+1, yycolumn+1, yycolumn + yylength());
     if (debug)
       System.out.println(t);
-    System.out.println(">> " + new java_cup.runtime.Symbol(kind, t).value);
+    //System.out.println(">> " + new java_cup.runtime.Symbol(kind, t).value);
     return new java_cup.runtime.Symbol(kind, t);
   } 
 %}
