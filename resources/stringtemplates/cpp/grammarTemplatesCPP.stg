@@ -151,10 +151,10 @@ public:
         <!TODO: LocalDecls go here as static variables!>
         <! -------- Instance variables for local parameters -------- !>
 
-        // local variables
+        <!// local variables!>
         <if(lvars)><ltypes,lvars:{t,v | static <t> <v>}; separator=";\n">;<\n><endif>
         <if(switchBlock)><switchBlock; separator="\n"><endif>
-        <if(linits)><lvars,linits:{v,i | <v> = <i>}; separator=";\n">;<\n><endif>
+        <!<if(linits)><lvars,linits:{v,i | <v> = <i>}; separator=";\n">;<\n><endif>!>
         <if(syncBody)><syncBody; separator="\n"><endif>
         <if(ldeletes)><ldeletes; separator="\n"><endif>
         terminate();
@@ -285,7 +285,7 @@ Field(modifier, type, name) ::= "<if(modifier)><modifier><else>public<endif> <ty
 // 2) name: a qualified name for the variable.
 // 3) val: the value to be assigned to the variable.
 // 4) op: a build-in operator used to manipulate data and variables.
-Var(type, name, val, op) ::= "<Type(type)><name><Init(val, op)>"
+Var(type, name, val, op) ::= "<name><Init(val, op)>"
 Type(type) ::= "<if(type)><type> <endif>"
 Init(val, op) ::= "<if(val)> <if(op)><op><else>=<endif> <val>;<else>;<endif>"
 
@@ -330,7 +330,7 @@ ParBlock(name, count, process, body, jump, barrier, procName) ::= <<
 <! TODO: is this where the first label should go? !>
 <!<procName>L0:!>
 <! TODO: yet to be evaluated and adjusted !>
-<name> = new pj_runtime::pj_par(<count>, this);
+static pj_runtime::pj_par* <name> = new pj_runtime::pj_par(<count>, this);
 <if(barrier)><barrier:{b | <b>->enroll(<count>)}; separator=";\n">;<endif>
 
 <if(body)><body; separator="\n\n"><endif>
@@ -458,7 +458,7 @@ ArrayAccessExpr(name, index) ::= "(*<name>)[<index>]"
 // 3) resume0:
 TimeoutStat(name, delay, resume0, procName) ::= <<
 <!<name> = new PJTimer(this, <delay>);!>
-// <name> = new pj_runtime::pj_timer(this, <delay>);
+<name> = new pj_runtime::pj_timer(this, <delay>);
 <name>->set_process(this);
 <name>->timeout(<delay>);
 <name>->start();
@@ -929,8 +929,13 @@ case <number>:
 // 7) jump:
 // 8) cases:
 // 9) index:
-AltStat(alt, count, bguards, guards, procName, jump, cases, index) ::= <<
-alt_ready = <alt>->set_guards(boolean_guards, object_guards);
+AltStat(alt, count, initBooleanGuards, initGuards, procName, jump, cases, index) ::= <<
+static pj_runtime::pj_alt* <alt> = new pj_runtime::pj_alt(<count>, this);
+static std::vector\<bool> boolean_guards = <initBooleanGuards>;
+static std::vector\<pj_runtime::pj_alt_guard_type> object_guards = <initGuards>;
+static bool alt_ready = <alt>->set_guards(boolean_guards, object_guards);
+static int selected = static_cast\<int>(0);
+static int <index> = static_cast\<int>(0);
 
 if (!alt_ready) {
     std::cout \<\< "RuntimeError: One of the boolean pre-guards must be true!" \<\< std::endl;
@@ -974,7 +979,7 @@ ObjectGuards(guards) ::= <<
 //
 // 1) type:
 // 2) var:
-ConstantDecl(type, var) ::= "static <type> <var>"
+ConstantDecl(type, var) ::= "<type> <var>"
 
 //========================================================================================
 //

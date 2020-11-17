@@ -412,27 +412,27 @@ public class CodeGenCPP extends Visitor<Object> {
             // the member variables of the procedure class.
             if (!localParams.isEmpty()) {
 
-                Log.log(pd, "sizes are " + localParams.values().size() + ", " + localParams.keySet().size() + ", "
-                            + localInits.values().size() + ", " + localDeletes.values().size());
+            //     Log.log(pd, "sizes are " + localParams.values().size() + ", " + localParams.keySet().size() + ", "
+            //                 + localInits.values().size() + ", " + localDeletes.values().size());
 
-                for(int i = 0; i < localParams.values().size(); i++) {
-                    Log.log(pd, ((String)localParams.values().toArray()[i]));
-                }
-                for(int i = 0; i < localParams.keySet().size(); i++) {
-                    Log.log(pd, ((String)localParams.keySet().toArray()[i]));
-                }
-                for(int i = 0; i < localInits.values().size(); i++) {
-                    Log.log(pd, ((String)localInits.values().toArray()[i]));
-                }
-                for(int i = 0; i < localDeletes.values().size(); i++) {
-                    Log.log(pd, ((String)localDeletes.values().toArray()[i]));
-                }
+            //     for(int i = 0; i < localParams.values().size(); i++) {
+            //         Log.log(pd, ((String)localParams.values().toArray()[i]));
+            //     }
+            //     for(int i = 0; i < localParams.keySet().size(); i++) {
+            //         Log.log(pd, ((String)localParams.keySet().toArray()[i]));
+            //     }
+            //     for(int i = 0; i < localInits.values().size(); i++) {
+            //         Log.log(pd, ((String)localInits.values().toArray()[i]));
+            //     }
+            //     for(int i = 0; i < localDeletes.values().size(); i++) {
+            //         Log.log(pd, ((String)localDeletes.values().toArray()[i]));
+            //     }
 
                 stProcTypeDecl.add("ltypes", localParams.values());
                 stProcTypeDecl.add("lvars", localParams.keySet());
-                if (!localInits.isEmpty()) {
-                    stProcTypeDecl.add("linits", localInits.values());
-                }
+            //     if (!localInits.isEmpty()) {
+            //         stProcTypeDecl.add("linits", localInits.values());
+            //     }
 
                 if(!localDeletes.isEmpty()) {
                     stProcTypeDecl.add("ldeletes", localDeletes.values());
@@ -699,9 +699,98 @@ public class CodeGenCPP extends Visitor<Object> {
         // are _always_ resolved elsewhere.
         return null;
     }
-    
+
     @Override
     public Object visitLocalDecl(LocalDecl ld) {
+        Log.log(ld, "Visting a LocalDecl (" + ld.type().typeName() + " " + ld.var().name().getname() + ")");
+        
+        // We could have the following targets:
+        //   1.) T x;                                         // A declaration
+        //   2.) T x = 4;                                     // A simple declaration
+        //   3.) T x = in.read();                             // A single channel read
+        //   4.) T x = a.read() + b.read() + ... + z.read();  // Multiple channel reads
+        //   5.) T x = read();                                // A Java method that returns a value
+        //   6.) T x = a + b;                                 // A binary expression
+        //   7.) T x = a = b ...;                             // A complex assignment statement
+        String name = ld.var().name().getname();
+        String type = (String) ld.type().visit(this);
+        String val = null;
+        String chanType = type;
+        
+        // Create a tag for this local declaration
+        String newName = Helper.makeVariableName(name, ++localDecId, Tag.LOCAL_NAME);
+
+        // If it needs to be a pointer, make it so
+        if(!(ld.type() instanceof NamedType && ((NamedType)ld.type()).type().isProtocolType()) && (ld.type().isBarrierType() /*|| ld.type().isTimerType() */|| !(ld.type().isPrimitiveType() || ld.type().isArrayType()))) {
+            Log.log(ld, "appending a pointer specifier to type of " + name);
+            type += "*";
+        }
+        
+        localParams.put(newName, type);
+        paramDeclNames.put(name, newName);
+        
+        // This variable could be initialized, e.g. through an assignment operator
+        Expression expr = ld.var().init();
+        if (expr == null &&/* ld.type().isTimerType() ||*/ ld.type().isBarrierType()/* || !(ld.type().isPrimitiveType())*/) {
+            Log.log(ld, "creating delete statement for " + name);
+            String deleteStmt = "delete " + newName + ";";
+            localDeletes.put(name, deleteStmt);
+        }
+
+        // Visit the expressions associated with this variable
+        if (expr != null) {
+            if (ld.type() instanceof PrimitiveType)
+                val = (String) expr.visit(this);
+            else if (ld.type() instanceof NamedType) // Must be a record or protocol
+                val = (String) expr.visit(this);
+            else if (ld.type() instanceof ArrayType)
+                val = (String) expr.visit(this);
+        }
+        
+        // Is it a barrier declaration? If so, we must generate code that
+        // creates a barrier object
+        if (ld.type().isBarrierType() && expr == null) {
+            ST stBarrierDecl = stGroup.getInstanceOf("BarrierDecl");
+            val = stBarrierDecl.render();
+        }
+        // Is it a simple declaration for a channel type? If so, and since
+        // channels cannot be created using the operator 'new', we generate
+        // code to create a channel object
+        if (ld.type().isChannelType() && expr == null) {
+            ST stChannelDecl = stGroup.getInstanceOf("ChannelDecl");
+            stChannelDecl.add("type", chanType);
+            val = stChannelDecl.render();
+        }
+        // After making this local declaration a field of the procedure
+        // in which it was declared, we return iff this local variable
+        // is not initialized
+        if (expr == null) {
+            Log.log(ld, "LocalDecl " + name + " is not initialized.");
+            if (!ld.type().isBarrierType() && (ld.type().isPrimitiveType() ||
+                ld.type().isArrayType() ||  // Could be an uninitialized array declaration
+                ld.type().isNamedType()))   // Could be a record or protocol declaration
+                //return null;                // The 'null' value is used to removed empty
+                                            // sequences in the generated code
+                val = "static_cast<" + type + ">(0)";
+        }
+        
+        // If we reach this section of code, then we have a variable
+        // declaration with some initial value
+        if (val != null)
+            val = val.replace(DELIMITER, "");
+        
+        ST stVar = stGroup.getInstanceOf("Var");
+        stVar.add("type", type);
+        stVar.add("name", newName);
+        stVar.add("val", val);
+
+        Log.log(ld, "stVarStr is " + stVar.render());
+        
+        return stVar.render();
+    }
+    
+    // @Override
+    public Object visitLocalDeclOld(LocalDecl ld) {
         Log.log(ld, "Visting a LocalDecl (" + ld.type().typeName() + " " + ld.var().name().getname() + ")");
 
         // We could have the following targets:
@@ -1943,9 +2032,9 @@ public class CodeGenCPP extends Visitor<Object> {
 
         // we should also add a pj_runtime::pj_par to the locals of whatever
         // process we're in
-        localParams.put(currentParBlock, "pj_runtime::pj_par*");
+        // localParams.put(currentParBlock, "pj_runtime::pj_par*");
         // TODO: do we need this as an init? probably not...
-        localInits.put(currentParBlock, "static_cast<pj_runtime::pj_par*>(0)");
+        // localInits.put(currentParBlock, "static_cast<pj_runtime::pj_par*>(0)");
         // localDeletes.put(currentParBlock, "delete " + currentParBlock + ";");
         
         // Increment the jump label.
@@ -2003,6 +2092,8 @@ public class CodeGenCPP extends Visitor<Object> {
         currentParBlock = prevParBlock;
         // Restore barrier expressions.
         barrierList = prevBarrier;
+
+        // Log.log(pb, "ParBlock is " + stParBlock.render());
         
         return stParBlock.render();
     }
@@ -2104,7 +2195,11 @@ public class CodeGenCPP extends Visitor<Object> {
         // Generated template after evaluating this visitor.
         ST stConstantDecl = stGroup.getInstanceOf("ConstantDecl");
         stConstantDecl.add("type", cd.type().visit(this));
+
+        Log.log(cd, "ConstantDecl ST is " + stConstantDecl.render());
         stConstantDecl.add("var", cd.var().visit(this));
+
+        Log.log(cd, "Second ConstantDecl ST is " + stConstantDecl.render());
         
         return stConstantDecl.render();
     }
@@ -2188,19 +2283,19 @@ public class CodeGenCPP extends Visitor<Object> {
         
         stAltStat.add("alt", newName);
         stAltStat.add("count", cases.size());
-        // stAltStat.add("initBooleanGuards", stBooleanGuards.render());
-        // stAltStat.add("initGuards", stObjectGuards.render());
+        stAltStat.add("initBooleanGuards", stBooleanGuards.render());
+        stAltStat.add("initGuards", stObjectGuards.render());
         // stAltStat.add("bguards", "booleanGuards");
         // stAltStat.add("guards", "objectGuards");
         // need to reroute these to be declared/initialized before the switch-case
-        localParams.put("boolean_guards", "std::vector<bool>");
-        localInits.put("boolean_guards", stBooleanGuards.render());
-        localParams.put("object_guards", "std::vector<pj_runtime::pj_alt_guard_type>");
-        localInits.put("object_guards", stObjectGuards.render());
-        localParams.put("alt_ready", "bool");
-        localInits.put("alt_ready", "false");
-        localParams.put("selected", "int");
-        localInits.put("selected", "-1");
+        // localParams.put("boolean_guards", "std::vector<bool>");
+        // localInits.put("boolean_guards", stBooleanGuards.render());
+        // localParams.put("object_guards", "std::vector<pj_runtime::pj_alt_guard_type>");
+        // localInits.put("object_guards", stObjectGuards.render());
+        // localParams.put("alt_ready", "bool");
+        // localInits.put("alt_ready", "false");
+        // localParams.put("selected", "int");
+        // localInits.put("selected", "-1");
         stAltStat.add("procName", generatedProcNames.get(currentProcName));
         stAltStat.add("jump", ++jumpLabel);
         stAltStat.add("cases", altCases);
