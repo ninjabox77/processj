@@ -330,7 +330,7 @@ ParBlock(name, count, process, body, jump, barrier, procName) ::= <<
 <! TODO: is this where the first label should go? !>
 <!<procName>L0:!>
 <! TODO: yet to be evaluated and adjusted !>
-static pj_runtime::pj_par* <name> = new pj_runtime::pj_par(<count>, this);
+<name> = new pj_runtime::pj_par(<count>, this);
 <if(barrier)><barrier:{b | <b>->enroll(<count>)}; separator=";\n">;<endif>
 
 <if(body)><body; separator="\n\n"><endif>
@@ -785,8 +785,6 @@ ProtocolCase(modifier, name, types, vars) ::= <<
 struct <name> : public pj_runtime::pj_protocol_case
 {
 public:
-    <name>() = default;
-
     <name>(<if(vars)><types,vars:{t,v | <t> <v>}; separator=", "><endif>)
     {
         <if(vars)><vars:{v | this-><v> = <v>;}; separator="\n"><endif>
@@ -930,12 +928,12 @@ case <number>:
 // 8) cases:
 // 9) index:
 AltStat(alt, count, initBooleanGuards, initGuards, procName, jump, cases, index) ::= <<
-static pj_runtime::pj_alt* <alt> = new pj_runtime::pj_alt(<count>, this);
+<alt> = new pj_runtime::pj_alt(<count>, this);
 static std::vector\<bool> boolean_guards = <initBooleanGuards>;
 static std::vector\<pj_runtime::pj_alt_guard_type> object_guards = <initGuards>;
 static bool alt_ready = <alt>->set_guards(boolean_guards, object_guards);
 static int selected = static_cast\<int>(0);
-static int <index> = static_cast\<int>(0);
+<index> = static_cast\<int>(0);
 
 if (!alt_ready) {
     std::cout \<\< "RuntimeError: One of the boolean pre-guards must be true!" \<\< std::endl;
@@ -957,6 +955,7 @@ switch(selected)
     default:
         break;
 }
+delete <alt>;
 >>
 
 //========================================================================================
