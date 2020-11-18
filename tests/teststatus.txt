@@ -19,10 +19,8 @@ protocols.pj
 Demo2.pj
 Demo_matt.pj (issue fixed with channel reads + a value)
 fortest.pj
-NetworkProc.pj
 Matt.pj (issue fixed with channel reads + a value again)
 parExp.pj
-protocols.pj
 protocolSwitch.pj
 readEx.pj
 simple.pj (livelocks on read call, expected)
@@ -33,18 +31,19 @@ verySimple.pj
 enrolledtest.pj (fixed issue with invocations of f() in outer par decrementing barrier of inner par)
 localDecl.pj (no main -- no worries)
 cppprotocoltest.pj
+integrate.pj (infinite counting upwards)
+santatest.pj (protocols with no fields fixed)
 
 tests that don't pass:
 Demo.pj (problem with inheritance/structure)
-fullAdder.pj (colliding class overload names for invocation proc types)
-integrate.pj (ask pedersen/ben about this one -- what's it supposed to do?)
+fullAdder.pj (par deletes are bad (heap use after free according to asan, also deadlock eventually?)
 mandelbrot.pj (needs pgm library)
 mandelbrot2.pj (needs pgm library)
-santa.pj (probably lots of problems that will be fixed after the above are also fixed)
-santatest.pj (protocols with no fields?)
+santa.pj (probably lots of problems that will be fixed after the above are also fixed, needs shared chan stuff fixed first for sure)
 sharedchan.pj (infinite loop issues?)
 sharedread.pj (infinite loop issues?)
 sharedwrite.pj (infinite loop issues?)
+NetworkProc.pj (issue with alts and deadlock)
 
 these have no main:
 silly.pj (more channel read stuff, no semicolons????)
