@@ -1,89 +1,5 @@
 import std.*;
 
-public void main(string args[]) {
-
-    chan<boolean> a0, a1, a2, a3, a4, a5, a6, a7;
-    chan<boolean> b0, b1, b2, b3, b4, b5, b6, b7;
-    chan<boolean> r0, r1, r2, r3, r4, r5, r6, r7;
-    chan<boolean> inCarry, outCarry;
-
-    boolean p0, p1, p2, p3, p4, p5, p6, p7;
-    boolean q0, q1, q2, q3, q4, q5, q6, q7;
-
-    // Addition results
-    boolean f0, f1, f2, f3, f4, f5, f6, f7;
-    boolean c, inC;
-
-    // Selected numbers
-    p0 = false;
-    p1 = false;
-    p2 = true;
-    p3 = false;
-    p4 = false;
-    p5 = false;
-    p6 = true;
-    p7 = false;
-
-    q0 = true;
-    q1 = true;
-    q2 = false;
-    q3 = true;
-    q4 = false;
-    q5 = true;
-    q6 = false;
-    q7 = true;
-
-    par {
-        // First number
-        a7.write(p7);
-        a6.write(p6);
-        a5.write(p5);
-        a4.write(p4);
-        a3.write(p3);
-        a2.write(p2);
-        a1.write(p1);
-        a0.write(p0);
-
-        // Second number
-        b7.write(q7);
-        b6.write(q6);
-        b5.write(q5);
-        b4.write(q4);
-        b3.write(q3);
-        b2.write(q2);
-        b1.write(q1);
-        b0.write(q0);
-
-        // Initial carry
-        inCarry.write(inC);
-
-        eightBitAdder(a0.read, a1.read, a2.read, a3.read,
-                      a4.read, a5.read, a6.read, a7.read,
-                      b0.read, b1.read, b2.read, b3.read,
-                      b4.read, b5.read, b6.read, b7.read,
-                      inCarry.read, r0.write, r1.write,
-                      r2.write, r3.write, r4.write, r5.write,
-                      r6.write, r7.write, outCarry.write);
-
-        f0 = r0.read();
-        f1 = r1.read();
-        f2 = r2.read();
-        f3 = r3.read();
-        f4 = r4.read();
-        f5 = r5.read();
-        f6 = r6.read();
-        f7 = r7.read();
-
-        c = outCarry.read();
-    }
-
-    println("  " + p7 + " " + p6 + " " + p5 + " " + p4 + " " + p3 + " " + p2 + " " + p1 + " " + p0 + " (InCarry:"  + inC + ")");
-    println("+ " + q7 + " " + q6 + " " + q5 + " " + q4 + " " + q3 + " " + q2 + " " + q1 + " " + q0);
-    println("----------");
-    println(" " + f7 + " " + f6 + " " + f5 + " " + f4 + " " + f3 + " " + f2 + " " + f1 + " " + f0);
-    println("Carry was: " + c);
-}
-
 public void notGate(chan<boolean>.read in, chan<boolean>.write out) {
     boolean x = false;
     x = in.read();
@@ -200,4 +116,88 @@ public void eightBitAdder(chan<boolean>.read inA0, chan<boolean>.read inA1,
                      result4, result5, result6,
                      result7, outCarry);
     }
+}
+
+public void main(string args[]) {
+
+    chan<boolean> a0, a1, a2, a3, a4, a5, a6, a7;
+    chan<boolean> b0, b1, b2, b3, b4, b5, b6, b7;
+    chan<boolean> r0, r1, r2, r3, r4, r5, r6, r7;
+    chan<boolean> inCarry, outCarry;
+
+    boolean p0, p1, p2, p3, p4, p5, p6, p7;
+    boolean q0, q1, q2, q3, q4, q5, q6, q7;
+
+    // Addition results
+    boolean f0, f1, f2, f3, f4, f5, f6, f7;
+    boolean c, inC;
+
+    // Selected numbers
+    p0 = false;
+    p1 = false;
+    p2 = true;
+    p3 = false;
+    p4 = false;
+    p5 = false;
+    p6 = true;
+    p7 = false;
+
+    q0 = true;
+    q1 = true;
+    q2 = false;
+    q3 = true;
+    q4 = false;
+    q5 = true;
+    q6 = false;
+    q7 = true;
+
+    par {
+        // First number
+        a7.write(p7);
+        a6.write(p6);
+        a5.write(p5);
+        a4.write(p4);
+        a3.write(p3);
+        a2.write(p2);
+        a1.write(p1);
+        a0.write(p0);
+
+        // Second number
+        b7.write(q7);
+        b6.write(q6);
+        b5.write(q5);
+        b4.write(q4);
+        b3.write(q3);
+        b2.write(q2);
+        b1.write(q1);
+        b0.write(q0);
+
+        // Initial carry
+        inCarry.write(inC);
+
+        eightBitAdder(a0.read, a1.read, a2.read, a3.read,
+                      a4.read, a5.read, a6.read, a7.read,
+                      b0.read, b1.read, b2.read, b3.read,
+                      b4.read, b5.read, b6.read, b7.read,
+                      inCarry.read, r0.write, r1.write,
+                      r2.write, r3.write, r4.write, r5.write,
+                      r6.write, r7.write, outCarry.write);
+
+        f0 = r0.read();
+        f1 = r1.read();
+        f2 = r2.read();
+        f3 = r3.read();
+        f4 = r4.read();
+        f5 = r5.read();
+        f6 = r6.read();
+        f7 = r7.read();
+
+        c = outCarry.read();
+    }
+
+    println("  " + p7 + " " + p6 + " " + p5 + " " + p4 + " " + p3 + " " + p2 + " " + p1 + " " + p0 + " (InCarry:"  + inC + ")");
+    println("+ " + q7 + " " + q6 + " " + q5 + " " + q4 + " " + q3 + " " + q2 + " " + q1 + " " + q0);
+    println("----------");
+    println(" " + f7 + " " + f6 + " " + f5 + " " + f4 + " " + f3 + " " + f2 + " " + f1 + " " + f0);
+    println("Carry was: " + c);
 }
