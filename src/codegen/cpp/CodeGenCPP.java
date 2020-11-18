@@ -77,6 +77,8 @@ public class CodeGenCPP extends Visitor<Object> {
     // Counter for anonymous processes generated in a par
     private int procCount = 0;
 
+    private int anonProcCount = 0;
+
     private int protocolCaseIndex = 0;
     
     // All imports are kept in this table.
@@ -737,6 +739,11 @@ public class CodeGenCPP extends Visitor<Object> {
             localDeletes.put(name, deleteStmt);
         }
 
+        if (ld.type().isArrayType()) {
+            currentArrayTypeString = type;
+            currentArrayDepth = ((ArrayType)ld.type()).getActualDepth() - 1;
+        }
+
         // Visit the expressions associated with this variable
         if (expr != null) {
             if (ld.type() instanceof PrimitiveType)
@@ -771,7 +778,13 @@ public class CodeGenCPP extends Visitor<Object> {
                 ld.type().isNamedType()))   // Could be a record or protocol declaration
                 //return null;                // The 'null' value is used to removed empty
                                             // sequences in the generated code
-                val = "static_cast<" + type + ">(0)";
+                
+                // if it's a protocol, it can't have a null initializer
+                if (ld.type() instanceof NamedType && ((NamedType)ld.type()).type().isProtocolType()) {
+                    return null;
+                } else {
+                    val = "static_cast<" + type + ">(0)";
+                }
         }
         
         // If we reach this section of code, then we have a variable
@@ -1609,7 +1622,7 @@ public class CodeGenCPP extends Visitor<Object> {
                 stInvocation.add("argvars", paramsList);
             }
             // Add the proc count that we'll need for id generation
-            stInvocation.add("anonCounter", procCount);
+            stInvocation.add("anonCounter", anonProcCount++);
         } else {
             // Must be an invocation made through a static Java method.
             stInvocation = stGroup.getInstanceOf("Invocation");
@@ -2032,9 +2045,9 @@ public class CodeGenCPP extends Visitor<Object> {
 
         // we should also add a pj_runtime::pj_par to the locals of whatever
         // process we're in
-        // localParams.put(currentParBlock, "pj_runtime::pj_par*");
+        localParams.put(currentParBlock, "pj_runtime::pj_par*");
         // TODO: do we need this as an init? probably not...
-        // localInits.put(currentParBlock, "static_cast<pj_runtime::pj_par*>(0)");
+        localInits.put(currentParBlock, "static_cast<pj_runtime::pj_par*>(0)");
         // localDeletes.put(currentParBlock, "delete " + currentParBlock + ";");
         
         // Increment the jump label.
@@ -2276,8 +2289,8 @@ public class CodeGenCPP extends Visitor<Object> {
         // Create a tag for this local alt declaration.
         String newName = Helper.makeVariableName("alt", ++localDecId, Tag.LOCAL_NAME);
         localParams.put(newName, "pj_runtime::pj_alt*");
-        localInits.put(newName, "new pj_runtime::pj_alt(" + cases.size() + ", this)");
-        localDeletes.put(newName, "delete " + newName + ";");
+        // localInits.put(newName, "new pj_runtime::pj_alt(" + cases.size() + ", this)");
+        // localDeletes.put(newName, "delete " + newName + ";");
         paramDeclNames.put(newName, newName);
         // -->
         
