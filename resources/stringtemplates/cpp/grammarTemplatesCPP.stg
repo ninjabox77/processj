@@ -355,7 +355,7 @@ if (<name>->should_yield()) {
 }</n>
 
 <procName>L<jump>:
-delete <name>;
+delete <if(parent)><parent><endif><name>;
 >>
 
 //========================================================================================
@@ -392,7 +392,7 @@ class <name> : public pj_runtime::pj_process
 public:
     <name>() = delete;
     <name>(int32_t id,
-<\t>pj_runtime::pj_scheduler* sched<if(vars)>,<\n><\t><types,vars:{t,v | <t> <v>}; separator=",<\n>"><endif>,
+<\t>pj_runtime::pj_scheduler* sched<if(vars)>,<\n><\t><types,vars:{t,v | <t> <v>}; separator=",\n"><endif>,
 <\t><parentClass>* parent)
     : id(id)
     {

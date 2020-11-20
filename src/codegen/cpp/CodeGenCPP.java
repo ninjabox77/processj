@@ -142,6 +142,9 @@ public class CodeGenCPP extends Visitor<Object> {
     
     // Access to protocol tag.
     private String currentProtocolTag = null;
+
+    // access to protocol name
+    private String currentProtocolName = null;
     
     // This is used for arrays of N-dimensions.
     private boolean isArrayLiteral = false;
@@ -476,10 +479,22 @@ public class CodeGenCPP extends Visitor<Object> {
         String op = be.opString();
         String lhs = (String) be.left().visit(this);
         lhs = lhs.replace(DELIMITER, "");
+        Log.log(be, "lhs is " + lhs);
+        if (be.left() instanceof NameExpr) {
+            if (insideAnonymousProcess) {
+                // lhs = "parent->" + lhs;
+            }
+        }
         lhs = be.left().hasParens ? "(" + lhs + ")" : lhs;
         String rhs = (String) be.right().visit(this);
         rhs = be.right().hasParens ? "(" + rhs + ")" : rhs;
         rhs = rhs.replace(DELIMITER, "");
+
+        if (be.right() instanceof NameExpr) {
+            if (insideAnonymousProcess) {
+                // rhs = "parent->" + rhs;
+            }
+        }
         
         stBinaryExpr.add("lhs", lhs);
         stBinaryExpr.add("rhs", rhs);
@@ -673,9 +688,9 @@ public class CodeGenCPP extends Visitor<Object> {
             }
         }
         
-        if (insideAnonymousProcess == true) {
-            lhs = "parent->"+lhs;
-        }
+        // if (insideAnonymousProcess == true) {
+        //     lhs = "parent->"+lhs;
+        // }
         stVar.add("name", lhs);
 
         stVar.add("val", rhs);
@@ -747,29 +762,38 @@ public class CodeGenCPP extends Visitor<Object> {
         
         // This variable could be initialized, e.g. through an assignment operator
         Expression expr = ld.var().init();
-        if (expr == null && (/* ld.type().isTimerType() ||*/ ld.type().isBarrierType() || ld.type().isChannelType() /* || !(ld.type().isPrimitiveType())*/)) {
+
+
+        if (/*expr == null && */ /* ld.type().isTimerType() ||*/
+            ld.type().isBarrierType() ||
+            ld.type().isChannelType() ||
+            ld.type() instanceof NamedType && ((NamedType)ld.type()).type().isRecordType() ||
+            ld.type().isArrayType()
+             /* || !(ld.type().isPrimitiveType())*/) {
         // if(expr != null && !(ld.type() instanceof NamedType && ((NamedType)ld.type()).type().isProtocolType()) && (ld.type().isBarrierType() /*|| ld.type().isTimerType() */|| !(ld.type().isPrimitiveType() || ld.type().isArrayType()))) {
             Log.log(ld, "creating delete statement for " + name);
-            String deleteStmt = "delete " + newName + ";";
+            String deleteStmt = "";
+            deleteStmt = "if (" + newName + ") { delete " + newName + "; }";
             localDeletes.put(name, deleteStmt);
         }
 
         if (ld.type().isArrayType()) {
             currentArrayTypeString = type;
             currentArrayDepth = ((ArrayType)ld.type()).getActualDepth() - 1;
-            Log.log(ld, "creating delete statement for " + name);
-            String deleteStmt = "delete " + newName + ";";
-            localDeletes.put(name, deleteStmt);
         }
 
         // Visit the expressions associated with this variable
         if (expr != null) {
-            if (ld.type() instanceof PrimitiveType)
+            if (ld.type() instanceof PrimitiveType) {
                 val = (String) expr.visit(this);
-            else if (ld.type() instanceof NamedType) // Must be a record or protocol
+            }
+            else if (ld.type() instanceof NamedType) {// Must be a record or protocol
+                currentProtocolName = newName;
                 val = (String) expr.visit(this);
-            else if (ld.type() instanceof ArrayType)
+            }
+            else if (ld.type() instanceof ArrayType) {
                 val = (String) expr.visit(this);
+            }
         }
         
         // Is it a barrier declaration? If so, we must generate code that
@@ -813,7 +837,7 @@ public class CodeGenCPP extends Visitor<Object> {
         ST stVar = stGroup.getInstanceOf("Var");
         stVar.add("type", type);
 
-        if (insideAnonymousProcess == true) {
+        if (insideAnonymousProcess) {
             newName = "parent->" + newName;
         }
         stVar.add("name", newName);
@@ -1021,6 +1045,9 @@ public class CodeGenCPP extends Visitor<Object> {
         Log.log(ne, "Visiting a NameExpr (" + ne.name().getname() + ")");
         
         // NameExpr always points to 'myDecl'.
+        if (insideAnonymousProcess) {
+            return "parent->" + ne.name().visit(this);
+        }
         return ne.name().visit(this);
     }
     
@@ -1592,15 +1619,6 @@ public class CodeGenCPP extends Visitor<Object> {
             for (int i = 0; i < paramsList.length; ++i) {
                 paramsList[i] = paramsList[i].replace(DELIMITER, "");
             }
-
-            if (insideAnonymousProcess) {
-                for (int i = 0; i < paramsList.length; ++i) {
-                    if (parameters.child(i) instanceof NameExpr &&
-                        ((NameExpr)parameters.child(i)).myDecl instanceof LocalDecl) {
-                        paramsList[i] = "parent->" + paramsList[i];
-                }
-                }
-            }
         }
 
         // We need to extract the types of the original proc we're
@@ -1893,6 +1911,12 @@ public class CodeGenCPP extends Visitor<Object> {
         stProtocolLiteral.add("protocolType", pl.myTypeDecl.name().getname());
         stProtocolLiteral.add("tag", tag);
         stProtocolLiteral.add("vals", members.values());
+
+        Log.log(pl, "Creating delete statement for " + pl.name().getname());
+        String getString = "std::get<" + tag +
+            "*>(" + currentProtocolName + ")";
+        localDeletes.put(paramDeclNames.get(pl.name().getname()),
+            "if (" + getString + " != nullptr) { delete " + getString + "; }");
         
         return stProtocolLiteral.render();
     }
@@ -2145,6 +2169,10 @@ public class CodeGenCPP extends Visitor<Object> {
         // Add the barrier to the par-block.
         if (!barrierList.isEmpty() && pb.barriers().size() > 0)
             stParBlock.add("barrier", barrierList);
+
+        if (insideAnonymousProcess) {
+            stParBlock.add("parent", "parent->");
+        }
         
         // Restore the par-block.
         currentParBlock = prevParBlock;
@@ -2519,6 +2547,11 @@ public class CodeGenCPP extends Visitor<Object> {
         if (chanExpr.type instanceof PrimitiveType && chanExpr.type.isTimerType()) {
             Log.log(cr, "THIS IS A TIMER READ INSTEAD");
             ST stTimerRedExpr = stGroup.getInstanceOf("TimerRedExpr");
+
+            if (insideAnonymousProcess) {
+                lhs = "parent->" + lhs;
+            }
+
             stTimerRedExpr.add("name", lhs);
             return stTimerRedExpr.render();
         }
@@ -2545,7 +2578,6 @@ public class CodeGenCPP extends Visitor<Object> {
             switchLabelList.add(renderSwitchLabel(jumpLabel));
         }
 
-        // TODO: insideAnonProcess check here?
         if (insideAnonymousProcess == true) {
             lhs = "parent->" + lhs;
         }
