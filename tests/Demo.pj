@@ -22,7 +22,7 @@ protected record X extends T {
     string b;
 }
 
-protected record P extends K, X, T {
+protected record P extends K, X {
     int x;
     int y;
 }
@@ -93,10 +93,11 @@ public void main(string args[]) {
   chan<XX> x;
   int a = 2;
   barrier b1, b2;
-  par {
+  par enroll b1 {
     writer(c.write, b1);
     reader(c.read, b1);
-
+  }
+  par enroll b2 {
     writeXX(x.write, b2);
     readXX(x.read, b2);
   }
