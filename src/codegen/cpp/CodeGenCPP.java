@@ -659,8 +659,9 @@ public class CodeGenCPP extends Visitor<Object> {
         if (as.left() != null)
             lhs =  (String) as.left().visit(this);
         
-        if (as.right() instanceof NewArray)
+        if (as.right() instanceof NewArray) {
             return createNewArray(lhs, ((NewArray) as.right()));
+        }
         else if (as.right() instanceof ChannelReadExpr) {
             Log.log("visitAssignment: returning createChannelReadExpr");
             return createChannelReadExpr(lhs, op, ((ChannelReadExpr) as.right()));
@@ -676,6 +677,7 @@ public class CodeGenCPP extends Visitor<Object> {
             lhs = "parent->"+lhs;
         }
         stVar.add("name", lhs);
+
         stVar.add("val", rhs);
         stVar.add("op", op);
         
@@ -745,7 +747,7 @@ public class CodeGenCPP extends Visitor<Object> {
         
         // This variable could be initialized, e.g. through an assignment operator
         Expression expr = ld.var().init();
-        if (expr == null && (/* ld.type().isTimerType() ||*/ ld.type().isBarrierType() || ld.type().isChannelType()/* || !(ld.type().isPrimitiveType())*/)) {
+        if (expr == null && (/* ld.type().isTimerType() ||*/ ld.type().isBarrierType() || ld.type().isChannelType() /* || !(ld.type().isPrimitiveType())*/)) {
         // if(expr != null && !(ld.type() instanceof NamedType && ((NamedType)ld.type()).type().isProtocolType()) && (ld.type().isBarrierType() /*|| ld.type().isTimerType() */|| !(ld.type().isPrimitiveType() || ld.type().isArrayType()))) {
             Log.log(ld, "creating delete statement for " + name);
             String deleteStmt = "delete " + newName + ";";
@@ -755,6 +757,9 @@ public class CodeGenCPP extends Visitor<Object> {
         if (ld.type().isArrayType()) {
             currentArrayTypeString = type;
             currentArrayDepth = ((ArrayType)ld.type()).getActualDepth() - 1;
+            Log.log(ld, "creating delete statement for " + name);
+            String deleteStmt = "delete " + newName + ";";
+            localDeletes.put(name, deleteStmt);
         }
 
         // Visit the expressions associated with this variable
