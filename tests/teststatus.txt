@@ -16,7 +16,6 @@ cpprecordtest.pj
 cpptimerreadtest.pj
 iftest.pj
 protocols.pj
-Demo2.pj
 Demo_matt.pj (issue fixed with channel reads + a value)
 fortest.pj
 Matt.pj (issue fixed with channel reads + a value again)
@@ -44,6 +43,7 @@ sharedchan.pj (infinite loop issues?)
 sharedread.pj (infinite loop issues?)
 sharedwrite.pj (infinite loop issues?)
 NetworkProc.pj (issue with alts and deadlock)
+Demo2.pj (issue with previousProcNames for parent classes)
 
 these have no main:
 silly.pj (more channel read stuff, no semicolons????)
