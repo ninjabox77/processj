@@ -58,6 +58,9 @@ public class CodeGenCPP extends Visitor<Object> {
 
     // Current procedure call.
     private String currentProcName = null;
+
+    // Previous procedure call.
+    private String prevProcName = null;
     
     // Current par-block.
     private String currentParBlock = null;
@@ -134,6 +137,8 @@ public class CodeGenCPP extends Visitor<Object> {
     
     // Access to protocol case.
     private boolean isProtocolCase = false;
+
+    private boolean insideAnonymousProcess = false;
     
     // Access to protocol tag.
     private String currentProtocolTag = null;
@@ -253,7 +258,7 @@ public class CodeGenCPP extends Visitor<Object> {
         // Generated template after evaluating this visitor.
         ST stProcTypeDecl = null;
         // Save previous procedure.
-        String prevProcName = currentProcName;
+        prevProcName = currentProcName;
         // Save previous jump labels.
         ArrayList<String> prevLabels = switchLabelList;
         if (!switchLabelList.isEmpty())
@@ -266,6 +271,7 @@ public class CodeGenCPP extends Visitor<Object> {
         // For non-invocations, that is, for anything other than a procedure
         // that yields, we need to extends the PJProcess class anonymously.
         if ("Anonymous".equals(currentProcName)) {
+            insideAnonymousProcess = true;
             // Generate a name
             procName = Helper.makeVariableName(currentProcName + Integer.toString(procCount) + signature(pd), 0, Tag.PROCEDURE_NAME);                          
             // Store generated name for labels of a possible ChannelReadExpr
@@ -276,6 +282,7 @@ public class CodeGenCPP extends Visitor<Object> {
             // Grab the instance for an anonymous procedure.
             stProcTypeDecl = stGroup.getInstanceOf("AnonymousProcess");
             // Statements that appear in the procedure.
+
             String[] body = (String[]) pd.body().visit(this);
 
             stProcTypeDecl.add("parBlock", currentParBlock);
@@ -296,6 +303,7 @@ public class CodeGenCPP extends Visitor<Object> {
             }
             // add a generated name of the process
             stProcTypeDecl.add("name", Helper.makeVariableName("Anonymous" + Integer.toString(procCount) + signature(pd), 0, Tag.PROCEDURE_NAME));
+            stProcTypeDecl.add("parentClass", generatedProcNames.get(prevProcName));
             stProcTypeDecl.add("anonCounter", procCount);
             procCount++;
 
@@ -307,6 +315,7 @@ public class CodeGenCPP extends Visitor<Object> {
 
             // Restore jump label.
             jumpLabel = prevJumLabel;
+            insideAnonymousProcess = false;
         } else {
             // Restore global variables for a new PJProcess class.
             resetGlobals();
@@ -663,6 +672,9 @@ public class CodeGenCPP extends Visitor<Object> {
             }
         }
         
+        if (insideAnonymousProcess == true) {
+            lhs = "parent->"+lhs;
+        }
         stVar.add("name", lhs);
         stVar.add("val", rhs);
         stVar.add("op", op);
@@ -733,7 +745,8 @@ public class CodeGenCPP extends Visitor<Object> {
         
         // This variable could be initialized, e.g. through an assignment operator
         Expression expr = ld.var().init();
-        if (expr == null &&/* ld.type().isTimerType() ||*/ ld.type().isBarrierType()/* || !(ld.type().isPrimitiveType())*/) {
+        if (expr == null && (/* ld.type().isTimerType() ||*/ ld.type().isBarrierType() || ld.type().isChannelType()/* || !(ld.type().isPrimitiveType())*/)) {
+        // if(expr != null && !(ld.type() instanceof NamedType && ((NamedType)ld.type()).type().isProtocolType()) && (ld.type().isBarrierType() /*|| ld.type().isTimerType() */|| !(ld.type().isPrimitiveType() || ld.type().isArrayType()))) {
             Log.log(ld, "creating delete statement for " + name);
             String deleteStmt = "delete " + newName + ";";
             localDeletes.put(name, deleteStmt);
@@ -794,6 +807,10 @@ public class CodeGenCPP extends Visitor<Object> {
         
         ST stVar = stGroup.getInstanceOf("Var");
         stVar.add("type", type);
+
+        if (insideAnonymousProcess == true) {
+            newName = "parent->" + newName;
+        }
         stVar.add("name", newName);
         stVar.add("val", val);
 
@@ -1094,7 +1111,7 @@ public class CodeGenCPP extends Visitor<Object> {
             Log.log(ct, "appending a pointer specifier to type of " + ct);
             type += "*";
         }
-        
+
         return chantype + "<" + type + ">";
     }
     
@@ -1218,6 +1235,7 @@ public class CodeGenCPP extends Visitor<Object> {
         ST stVar = stGroup.getInstanceOf("Var");
         // Returned values for name and expression (if any).
         String name = (String) va.name().visit(this);
+
         String exprStr = null;
         // This variable could be initialized, e.g., through an assignment
         // operator.
@@ -1506,7 +1524,20 @@ public class CodeGenCPP extends Visitor<Object> {
     		
     		ST stIgnore = stGroup.getInstanceOf("InvocationIgnore");
     		stIgnore.add("name", in.procedureName().visit(this));
-    		stIgnore.add("var", in.params().visit(this));
+            stIgnore.add("var", in.params().visit(this));
+
+            // TODO: might need this, but might not. check!!!
+            // String[] params = (String[]) in.params().visit(this);
+
+            // if(params != null) {
+            //     if (insideAnonymousProcess == true) {
+            //         for (int i = 0; i < params.length; i++) {
+            //             params[i] = "parent->" + params[i];
+            //         }
+            //     }
+            // }
+                
+            // stIgnore.add("var", params);
     		
     		return stIgnore.render();
     	}
@@ -1555,6 +1586,15 @@ public class CodeGenCPP extends Visitor<Object> {
         if (paramsList != null) {
             for (int i = 0; i < paramsList.length; ++i) {
                 paramsList[i] = paramsList[i].replace(DELIMITER, "");
+            }
+
+            if (insideAnonymousProcess) {
+                for (int i = 0; i < paramsList.length; ++i) {
+                    if (parameters.child(i) instanceof NameExpr &&
+                        ((NameExpr)parameters.child(i)).myDecl instanceof LocalDecl) {
+                        paramsList[i] = "parent->" + paramsList[i];
+                }
+                }
             }
         }
 
@@ -2498,6 +2538,11 @@ public class CodeGenCPP extends Visitor<Object> {
             stChannelReadExpr.add("resume" + label, ++jumpLabel);
             // Add jump label to the switch list.
             switchLabelList.add(renderSwitchLabel(jumpLabel));
+        }
+
+        // TODO: insideAnonProcess check here?
+        if (insideAnonymousProcess == true) {
+            lhs = "parent->" + lhs;
         }
         
         stChannelReadExpr.add("lhs", lhs);

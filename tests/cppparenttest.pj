@@ -1,0 +1,31 @@
+import std.io;
+
+public void foo(chan<int>.read c) {
+	par {
+		int x = c.read();
+		println("x is " + x);
+	}
+}
+
+public void bar(chan<int>.write c) {
+	c.write(69);
+}
+
+public void main(string[] args) {
+	chan<int> c;
+
+	par {
+		foo(c.read);
+		bar(c.write);
+	}
+}
+
+// public void main(string[] args) {
+// 	int x = 69;
+
+// 	par {
+// 		x = 420;
+// 	}
+
+// 	println("x is " + x);
+// }
