@@ -139,7 +139,7 @@ public:
     <! -------- Constructors -------- !>
     <name>() = delete;
     <name>(int32_t id,
-<\t>pj_runtime::pj_scheduler* sched<if(vars)>,<\n><\t><types,vars:{t,v | <t> <v>}; separator=",<\n><\t>"><endif>)
+<\t>pj_runtime::pj_scheduler* sched<if(vars)>,<\n><\t><types,vars:{t,v | <t> <v>}; separator=",\n\t"><endif>)
     : id(id)
     {
         this->sched = sched;
