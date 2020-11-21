@@ -116,7 +116,7 @@ int main(int argc, char* argv[])
 // 8) switchBlock: switch statement to jump through blocks to resume points.
 // 9) syncBody: the body (content) of synchronized method that runs/starts a process.
 // TODO: add altDecl/altSize to this
-ProcClass(name, types, vars, ltypes, lvars, linits, ldeletes, methods, main, switchBlock, syncBody) ::= <<
+ProcClass(name, types, vars, ltypes, lvars, linits, ldeletes, lnulls, methods, main, switchBlock, syncBody) ::= <<
 class <name> : public pj_runtime::pj_process
 {
 
@@ -157,6 +157,7 @@ public:
         <if(switchBlock)><switchBlock; separator="\n"><endif>
         <!<if(linits)><lvars,linits:{v,i | <v> = <i>}; separator=";\n">;<\n><endif>!>
         <if(syncBody)><syncBody; separator="\n"><endif>
+        <if(lnulls)><lnulls; separator="\n"><endif>
         <if(ldeletes)><ldeletes; separator="\n"><endif>
         terminate();
         return;
@@ -751,7 +752,7 @@ RecordClass(modifiers, name, types, vars) ::= <<
 }
 >>
 
-RecordStruct(modifiers, name, extend, types, vars) ::= <<
+RecordStruct(modifiers, name, extend, types, vars, deletes) ::= <<
 <if(extend)>// extends records <extend:{e | <e>}; separator=", "><endif>
 <if(extend)>struct <name> : <extend:{e | public <e>}; separator=", "><else>struct <name> : public pj_runtime::pj_record<endif>
 {
@@ -760,6 +761,12 @@ public:
     <name>(<types,vars:{t,v | <t> <v>}; separator=", ">)
     {
         <if(vars)><vars:{v | this-><v> = <v>}; separator=";\n">;<endif>
+    }
+
+    ~<name>()
+    {
+        <! destructor should delete any pointer variables !>
+        <if(deletes)><deletes:{d | delete <d>}; separator="\n">;<endif>
     }
     <if(vars)><types,vars:{t,v | <t> <v>}; separator=";\n">;<\n><endif>
 };

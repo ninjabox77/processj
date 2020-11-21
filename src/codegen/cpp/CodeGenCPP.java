@@ -104,6 +104,9 @@ public class CodeGenCPP extends Visitor<Object> {
 
     // Contains local param delete statements
     private HashMap<String, String> localDeletes = new LinkedHashMap<String, String>();
+
+    // Contains local param names to be deleted
+    private ArrayList<String> localNulls = new ArrayList<String>();
     
     // Contains record members transformed to fields.
     private HashMap<String, String> recordFields = new LinkedHashMap<String, String>();
@@ -443,7 +446,7 @@ public class CodeGenCPP extends Visitor<Object> {
                 //     stProcTypeDecl.add("types", formalParams.values());
                 //     stProcTypeDecl.add("vars", formalParams.keySet());   
                 // }
-                
+
                     stProcTypeDecl.add("types", formalParams.values());
                     stProcTypeDecl.add("vars", formalParams.keySet());
             }
@@ -475,6 +478,10 @@ public class CodeGenCPP extends Visitor<Object> {
 
                 if(!localDeletes.isEmpty()) {
                     stProcTypeDecl.add("ldeletes", localDeletes.values());
+                }
+
+                if(!localNulls.isEmpty()) {
+                    stProcTypeDecl.add("lnulls", localNulls);
                 }
             }
             // Add the switch block for resumption.
@@ -1234,6 +1241,15 @@ public class CodeGenCPP extends Visitor<Object> {
             stChanWriteStat = stGroup.getInstanceOf("ChannelMany2One");
             ++countLabel;
         }
+
+        if (cw.expr() instanceof CastExpr &&
+            ((CastExpr)cw.expr()).expr() instanceof NameExpr &&
+            ((NameExpr)((CastExpr)cw.expr()).expr()).myDecl instanceof LocalDecl &&
+            ((LocalDecl)((NameExpr)((CastExpr)cw.expr()).expr()).myDecl).type() instanceof NamedType &&
+            ((NamedType)((LocalDecl)((NameExpr)((CastExpr)cw.expr()).expr()).myDecl).type()).type().isRecordType()) {
+            Log.log(cw, "adding null for sent pointer");
+            localNulls.add(paramDeclNames.get(((NameExpr)((CastExpr)cw.expr()).expr()).name().getname()) + "= nullptr;");
+        }
         
         stChanWriteStat.add("chanName", chanWriteName);
         stChanWriteStat.add("writeExpr", expr);
@@ -1983,6 +1999,14 @@ public class CodeGenCPP extends Visitor<Object> {
         // The list of fields that should be passed to the constructor
         // of the static class that the record belongs to.
         if (!recordFields.isEmpty()) {
+            Object[] types = recordFields.values().toArray();
+            Object[] names = recordFields.keySet().toArray();
+            for (int i = 0; i < types.length; ++i) {
+                if (((String)types[i]).contains("*")) {
+                    Log.log("adding destructor for member " + names[i]);
+                    stRecordStruct.add("deletes", names[i]);
+                }
+            }
             stRecordStruct.add("types", recordFields.values());
             stRecordStruct.add("vars", recordFields.keySet());
         }
@@ -2476,6 +2500,7 @@ public class CodeGenCPP extends Visitor<Object> {
         localParams.clear();
         localInits.clear();
         localDeletes.clear();
+        localNulls.clear();
         switchLabelList.clear();
         barrierList.clear();
         
