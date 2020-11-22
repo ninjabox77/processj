@@ -19,6 +19,18 @@ for test in *.pj; do
 	if [ $test == "localDecl.pj" ]; then
 		continue
 	fi
+	# infinite loop, tested to work
+	if [ $test == "sharedchan.pj" ]; then
+		continue
+	fi
+	# infinite loop, tested to work
+	if [ $test == "sharedread.pj" ]; then
+		continue
+	fi
+	# infinite loop, tested to work
+	if [ $test == "sharedwrite.pj" ]; then
+		continue
+	fi
 	# breaks on read call
 	if [ $test == "simple.pj" ]; then
 		continue
@@ -43,18 +55,6 @@ for test in *.pj; do
 	fi
 	# TODO: figure this one out
 	if [ $test == "santa.pj" ]; then
-		continue
-	fi
-	# not fixed yet
-	if [ $test == "sharedchan.pj" ]; then
-		continue
-	fi
-	# not fixed yet
-	if [ $test == "sharedread.pj" ]; then
-		continue
-	fi
-	# not fixed yet
-	if [ $test == "sharedwrite.pj" ]; then
 		continue
 	fi
 	# channel read in for loop issue
@@ -84,6 +84,18 @@ for test in ./tests/*.pj; do
 	if [ $test == "./tests/localDecl.pj" ]; then
 		continue
 	fi
+	# infinite loop, tested to work
+	if [ $test == "./tests/sharedchan.pj" ]; then
+		continue
+	fi
+	# infinite loop, tested to work
+	if [ $test == "./tests/sharedread.pj" ]; then
+		continue
+	fi
+	# infinite loop, tested to work
+	if [ $test == "./tests/sharedwrite.pj" ]; then
+		continue
+	fi
 	# not needed, breaks on read call
 	if [ $test == "./tests/simple.pj" ]; then
 		continue
@@ -108,18 +120,6 @@ for test in ./tests/*.pj; do
 	fi
 	# TODO: figure this one out
 	if [ $test == "./tests/santa.pj" ]; then
-		continue
-	fi
-	# not fixed yet
-	if [ $test == "./tests/sharedchan.pj" ]; then
-		continue
-	fi
-	# not fixed yet
-	if [ $test == "./tests/sharedread.pj" ]; then
-		continue
-	fi
-	# not fixed yet
-	if [ $test == "./tests/sharedwrite.pj" ]; then
 		continue
 	fi
 	# channel read in for loop issue
