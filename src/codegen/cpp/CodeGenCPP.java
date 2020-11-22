@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Stack;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -61,6 +62,9 @@ public class CodeGenCPP extends Visitor<Object> {
 
     // Previous procedure call.
     private String prevProcName = null;
+
+    // Stack of anon proc names
+    private Stack<String> anonProcStack = new Stack<String>();
     
     // Current par-block.
     private String currentParBlock = null;
@@ -280,21 +284,20 @@ public class CodeGenCPP extends Visitor<Object> {
         // that yields, we need to extends the PJProcess class anonymously.
         if ("Anonymous".equals(currentProcName)) {
             Log.log(pd, "Creating anonymous process within " + prevProcName);
-            String thisAnonProcParent = generatedProcNames.get(prevProcName);
+            // String thisAnonProcParent = generatedProcNames.get(prevProcName);
+            String thisAnonProcParent = !anonProcStack.empty() ? anonProcStack.peek() : generatedProcNames.get(prevProcName);
             String savePrevProcName = prevProcName;
+
             // Grab the instance for an anonymous procedure.
             stProcTypeDecl = stGroup.getInstanceOf("AnonymousProcess");
-            if (insideAnonymousProcess) {
-                Log.log(pd, "already nested in anon process");
-                
-                stProcTypeDecl.add("parent", getParentString());
-            }
-            insideAnonymousProcess = true;
             nestedAnonymousProcesses++;
+            stProcTypeDecl.add("parent", getParentString());
+            insideAnonymousProcess = true;
             // Generate a name
             procName = Helper.makeVariableName(currentProcName + Integer.toString(procCount++) + signature(pd), 0, Tag.PROCEDURE_NAME);                          
             Log.log(pd, "Generated Proc Name " + procName);
             Log.log(pd, "My previous Proc is " + prevProcName);
+            anonProcStack.push(procName);
             // Store generated name for labels of a possible ChannelReadExpr
             generatedProcNames.put(currentProcName, procName);
             // Preserve current jump label.
@@ -324,13 +327,12 @@ public class CodeGenCPP extends Visitor<Object> {
                 ST stSwitchBlock = stGroup.getInstanceOf("SwitchBlock");
                 stSwitchBlock.add("jumps", switchLabelList);
                 // stSwitchBlock.add("name", generatedProcNames.get(currentProcName));
-                stSwitchBlock.add("name", thisAnonProcName);
+                stSwitchBlock.add("name", procName);
                 stProcTypeDecl.add("switchBlock", stSwitchBlock.render());
             }
             // add a generated name of the process
             // stProcTypeDecl.add("name", Helper.makeVariableName("Anonymous" + Integer.toString(procCount) + signature(pd), 0, Tag.PROCEDURE_NAME));
-            stProcTypeDecl.add("name", thisAnonProcName);
-            Log.log(pd, "Parent Class of " + procName + " is " + prevProcName + ", which gets us " + thisAnonProcParent);
+            stProcTypeDecl.add("name", procName);
             stProcTypeDecl.add("parentClass", thisAnonProcParent);
             stProcTypeDecl.add("anonCounter", procCount);
 
@@ -344,6 +346,7 @@ public class CodeGenCPP extends Visitor<Object> {
             jumpLabel = prevJumLabel;
             insideAnonymousProcess = false;
             nestedAnonymousProcesses--;
+            anonProcStack.pop();
         } else {
             // Restore global variables for a new PJProcess class.
             resetGlobals();
@@ -405,7 +408,9 @@ public class CodeGenCPP extends Visitor<Object> {
             }
             // Create an entry point for the ProcessJ program, which is just
             // a Java main method that is called by the JVM.
+            Log.log(pd, "CHECKING FOR MAIN");
             if ("main".equals(currentProcName) && pd.signature().equals(Tag.MAIN_NAME.toString())) {
+                Log.log(pd, "FOUND MAIN");
                 // Create an instance of a Java main method template.
                 ST stMain = stGroup.getInstanceOf("Main");
                 stMain.add("class", currentCompilation.fileNoExtension());
@@ -792,7 +797,7 @@ public class CodeGenCPP extends Visitor<Object> {
         localParams.put(newName, type);
         paramDeclNames.put(name, newName);
 
-        if (insideAnonymousProcess) {
+        if (nestedAnonymousProcesses > 0) {
             newName = getParentString() + newName;
         }
         
@@ -1077,7 +1082,7 @@ public class CodeGenCPP extends Visitor<Object> {
         Log.log(ne, "Visiting a NameExpr (" + ne.name().getname() + ")");
         
         // NameExpr always points to 'myDecl'.
-        if (insideAnonymousProcess) {
+        if (nestedAnonymousProcesses > 0) {
             return getParentString() + ne.name().visit(this);
         }
         return ne.name().visit(this);
@@ -1711,10 +1716,6 @@ public class CodeGenCPP extends Visitor<Object> {
                     Log.log(pd, "barrier added to invocation: " + barrierList.get(i));
                 }
                 stInvocation.add("barrier", barrierList);
-
-                if (insideAnonymousProcess) {
-                    stInvocation.add("parent", getParentString());
-                }
                 // stInvocation.add("vars", barrierList);
                 // stInvocation.add("types", "pj_runtime::pj_barrier*");
             }
@@ -1730,7 +1731,11 @@ public class CodeGenCPP extends Visitor<Object> {
                 stInvocation.add("argvars", paramsList);
             }
             // Add the proc count that we'll need for id generation
+            nestedAnonymousProcesses++;
             stInvocation.add("anonCounter", anonProcCount++);
+            stInvocation.add("parent", getParentString());
+            stInvocation.add("parentClass", generatedProcNames.get(currentProcName));
+            nestedAnonymousProcesses--;
         } else {
             // Must be an invocation made through a static Java method.
             stInvocation = stGroup.getInstanceOf("Invocation");
@@ -2603,9 +2608,9 @@ public class CodeGenCPP extends Visitor<Object> {
             ST stTimerRedExpr = stGroup.getInstanceOf("TimerRedExpr");
 
             // TODO: this might not be needed if timers are NameExprs
-            if (insideAnonymousProcess) {
-                lhs = getParentString() + lhs;
-            }
+            // if (insideAnonymousProcess) {
+            //     lhs = getParentString() + lhs;
+            // }
 
             stTimerRedExpr.add("name", lhs);
             return stTimerRedExpr.render();
