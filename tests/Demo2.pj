@@ -23,7 +23,7 @@ public void yeah() {
     }
 }
 
-public void main(string args[]) {
+public void main(string[] args) {
     par {
         println("Hello");
         println("World");
