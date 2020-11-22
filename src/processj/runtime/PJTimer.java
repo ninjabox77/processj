@@ -35,11 +35,11 @@ public class PJTimer implements Delayed {
         started = true;
     }
 
-    public void expire() {
+    public synchronized void expire() {
         expired = true;
     }
     
-    public boolean isExpired() {
+    public synchronized boolean isExpired() {
         return expired;
     }
 
@@ -51,11 +51,11 @@ public class PJTimer implements Delayed {
         return delay;
     }
 
-    public void kill() {
+    public synchronized void kill() {
         killed = true;
     }
 
-    public PJProcess getProcess() {
+    public synchronized PJProcess getProcess() {
         if (killed) {
             return null;
         } else {

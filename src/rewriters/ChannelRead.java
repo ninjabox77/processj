@@ -65,6 +65,8 @@ import utilities.Visitor;
 public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
 
     int temp;
+    
+    boolean log = false;
 
     private String nextTemp() {
         return "tmp" + temp++ + "$";
@@ -79,14 +81,14 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
     }
     
     public ChannelRead() {
-        System.out.println("*****************************************");
-        System.out.println("* C H A N N E L - E N D   R E W R I T E *");
-        System.out.println("*****************************************");
+        Log.logHeader("*****************************************");
+        Log.logHeader("* C H A N N E L - E N D   R E W R I T E *");
+        Log.logHeader("*****************************************");
     }
 
     @Override
     public Pair<Sequence, Expression> visitCompilation(Compilation co) {
-        System.out.println("Visiting Compilation");
+        Log.log(co, "Visiting Compilation");
         // TODO: Don't wee need to traverse everything else??
         for (AST decl : co.typeDecls()) {
             if (decl instanceof Type && decl != null) {
@@ -100,28 +102,32 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
 
     @Override
     public Pair<Sequence, Expression> visitProcTypeDecl(ProcTypeDecl pd) {
-        System.out.println("Visiting a ProcTypeDecl");
+        Log.log(pd, "Visiting a ProcTypeDecl");
         Pair<Sequence, Expression> p = pd.body().visit(this);
         if (p != null)
             pd.children[6] = p.getFirst().child(0);
-        pd.visit(new PrettyPrinter());
+        if (log)
+            pd.visit(new PrettyPrinter());
         return (Pair<Sequence, Expression>) null;
     }
 
     @Override
     public Pair<Sequence, Expression> visitSequence(Sequence se) {
-        System.out.println("Visiting a Sequence");
+        Log.log(se, "Visiting a Sequence");
         Sequence s = new Sequence();
         for (int i = 0; i < se.size(); ++i) {
             Pair<Sequence, Expression> p = se.child(i).visit(this);
             if (p != null) {
                 if (p.getFirst().size() > 1) {
                     s.merge(new Block(p.getFirst()));
-                    System.out.println(">>>>>>>>>>>>>> Sequence");
-                    p.getFirst().child(0).visit(new PrettyPrinter());
-                    System.out.println("<<<<<<<<<<<<<< Sequence");
+                    if (log) {
+                        System.out.println("------------- Sequence");
+                        p.getFirst().child(0).visit(new PrettyPrinter());
+                        System.out.println("Sequence --------------");
+                    }
                 } else {
-                    System.out.println("We have an expression in Sequence!!!!!");
+                    if (log)
+                        System.out.println("We have an expression in Sequence!");
                     s.merge(p.getFirst().child(0));
                 }
             } else {
@@ -137,7 +143,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
     
     @Override
     public Pair<Sequence, Expression> visitBlock(Block bl) {
-        System.out.println("Visiting a Block");
+        Log.log(bl, "Visiting a Block");
         Pair<Sequence, Expression> p = bl.stats().visit(this);
         Sequence se = new Sequence(new Block(p.getFirst()));
         return new Pair<Sequence, Expression>(se, null);
@@ -145,18 +151,21 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
 
     @Override
     public Pair<Sequence, Expression> visitParBlock(ParBlock pb) {
-        System.out.println("Visiting a ParBlock");
+        Log.log(pb, "Visiting a ParBlock");
         Sequence se = pb.stats();
         for (int i = 0; i < se.size(); ++i) {
             Pair<Sequence, Expression> p = se.child(i).visit(this);
             if (p != null) {
                 if (p.getFirst().size() > 1) {
                     se.set(i, new Block(p.getFirst()));
-                    System.out.println(">>>>>>>>>>>>>> ParBlock");
-                    p.getFirst().visit(new PrettyPrinter());
-                    System.out.println("<<<<<<<<<<<<<< ParBlock");
+                    if (log) {
+                        System.out.println("-------------- ParBlock");
+                        p.getFirst().visit(new PrettyPrinter());
+                        System.out.println("ParBlock --------------");
+                    }
                 } else {
-                    System.out.println("We have an expression in ParBlock!!!!!");
+                    if (log)
+                        System.out.println("We have an expression in ParBlock!");
                     se.set(i, p.getFirst().child(0));
                 }
             }
@@ -167,14 +176,14 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
 
     @Override
     public Pair<Sequence, Expression> visitAssignment(Assignment as) {
-        System.out.println("Visiting an Assignment");
+        Log.log(as, "Visiting an Assignment");
         Pair<Sequence, Expression> p = null;
         if (as.right().doesYield()) {
-            System.out.println("---- Case #1 Assignment");
+            Log.log("---- Case #1 Assignment");
             Pair<Sequence, Expression> t = as.right().visit(this);
             p = new Pair<>(t.getFirst(), new Assignment(as.left(), t.getSecond(), as.op()));
         } else {
-            System.out.println("---- Case #2 Assignment");
+            Log.log("---- Case #2 Assignment");
             p = new Pair<>(new Sequence(), as);
         }
         return p;
@@ -182,24 +191,26 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
 
     @Override
     public Pair<Sequence, Expression> visitExprStat(ExprStat es) {
-        System.out.println("Visiting an ExprStat");
+        Log.log(es, "Visiting an ExprStat");
         Pair<Sequence, Expression> p = es.expr().visit(this);
         Sequence se = p.getFirst();
         se.append((Statement) new ExprStat(p.getSecond()));
-        System.out.println(">>>>>>>>>>>>>>>>>>> ExprStat");
-        se.visit(new PrettyPrinter());
-        System.out.println("------->");
-        p.getSecond().visit(new PrettyPrinter());
-        System.out.println("<<<<<<<<<<<<<<<<<<< ExprStat");
+        if (log) {
+            System.out.println("------------ ExprStat");
+            se.visit(new PrettyPrinter());
+            System.out.println("-------");
+            p.getSecond().visit(new PrettyPrinter());
+            System.out.println("ExprStat ------------");
+        }
         return new Pair<Sequence, Expression>(se, null);
     }
 
     @Override
     public Pair<Sequence, Expression> visitBinaryExpr(BinaryExpr be) {
-        System.out.println("Visiting a BinaryExpr");
+        Log.log(be, "Visiting a BinaryExpr");
         Pair<Sequence, Expression> p = null;
         if (be.left().doesYield() && !be.right().doesYield()) {
-            System.out.println("---- Case #1 BinaryExpr");
+            Log.log("---- Case #1 BinaryExpr");
             String name = nextTemp();
             // T t; where T represents the type of e
             LocalDecl ld = createLocalDecl(name, be.left().type);
@@ -211,7 +222,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
             se.merge(t.getFirst());
             p = new Pair<>(se, newExpr);
         } else if (be.right().doesYield()) {
-            System.out.println("---- Case #2 BinaryExpr");
+            Log.log("---- Case #2 BinaryExpr");
             String name1 = nextTemp();
             String name2 = nextTemp();
             // T t1; where T represents the type of e1
@@ -234,7 +245,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
             se.merge(t2.getFirst());
             p = new Pair<>(se, newExpr);
         } else {
-            System.out.println("---- Case #2 BinaryExpr");
+            Log.log("---- Case #2 BinaryExpr");
             p = new Pair<>(new Sequence(), be);
         }
         return p;
@@ -242,10 +253,10 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
     
     @Override
     public Pair<Sequence, Expression> visitChannelReadExpr(ChannelReadExpr cr) {
-        System.out.println("Visiting a ChannelReadExpr");
+        Log.log(cr, "Visiting a ChannelReadExpr");
         Pair<Sequence, Expression> p = null;
         if (cr.channel().doesYield()) {
-            System.out.println("---- Case #1 ChannelReadExpr");
+            Log.log("---- Case #1 ChannelReadExpr");
             String name = nextTemp();
             // T t; where T represents the type of e
             LocalDecl ld = createLocalDecl(name, cr.channel().type);
@@ -263,7 +274,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
             ne.type = ld.type();
             p = new Pair<>(se, new ChannelReadExpr(ne, extRV));
         } else {
-            System.out.println("---- Case #2 ChannelReadExpr");
+            Log.log("---- Case #2 ChannelReadExpr");
             p = new Pair<>(new Sequence(), cr);
         }
         return p;
@@ -271,10 +282,10 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
     
     @Override
     public Pair<Sequence, Expression> visitChannelWriteStat(ChannelWriteStat cw) {
-        System.out.println("Visiting a ChannelWriteStat");
+        Log.log(cw, "Visiting a ChannelWriteStat");
         Pair<Sequence, Expression> p = null;
         if (cw.channel().doesYield() && !cw.expr().doesYield()) {
-            System.out.println("---- Case #1 ChannelWriteStat");
+            Log.log("---- Case #1 ChannelWriteStat");
             String name = nextTemp();
             // T t; where T represents the type of e
             LocalDecl ld = createLocalDecl(name, cw.channel().type);
@@ -284,7 +295,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
             se.merge(t.getFirst());
             p = new Pair<>(se, null);
         } else if (cw.expr().doesYield()) {
-            System.out.println("---- Case #2 ChannelWriteStat");
+            Log.log("---- Case #2 ChannelWriteStat");
             String name1 = nextTemp();
             String name2 = nextTemp();
             // T t1; where T represents the type of e1
@@ -305,12 +316,14 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
             NameExpr ne2 = new NameExpr(new Name(name2));
             ne2.type = ld2.type();
             se.append(new ChannelWriteStat(ne1, ne2));
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            se.visit(new PrettyPrinter());
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            if (log) {
+                System.out.println("<>");
+                se.visit(new PrettyPrinter());
+                System.out.println("<>");
+            }
             p = new Pair<>(se, null);
         } else {
-            System.out.println("---- Case #3 ChannelWriteStat");
+            Log.log("---- Case #3 ChannelWriteStat");
             p = new Pair<>(new Sequence(cw), null);
         }
         return p;
@@ -318,13 +331,13 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
     
     @Override
     public Pair<Sequence, Expression> visitLocalDecl(LocalDecl ld) {
-        System.out.println("Visiting a LocalDecl");
+        Log.log(ld, "Visiting a LocalDecl");
         Pair<Sequence, Expression> p = null;
         if (ld.var().init() == null || (ld.var().init() != null && !ld.var().init().doesYield())) {
-            System.out.println("---- Case #1 LocalDecl");
+            Log.log("---- Case #1 LocalDecl");
             p = new Pair<>(new Sequence(ld), null);
         } else {
-            System.out.println("---- Case #2 LocalDecl");
+            Log.log("---- Case #2 LocalDecl");
             LocalDecl ld1 = createLocalDecl(ld.var().name().getname(), ld.type());
             Pair<Sequence, Expression> t = new ExprStat(createAssignment(ld.var().name().getname(), ld.var().init())).visit(this);
             Sequence se = new Sequence(ld1);
@@ -336,10 +349,10 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
     
     @Override
     public Pair<Sequence, Expression> visitCastExpr(CastExpr ce) {
-        System.out.println("Visiting a CastExpr");
+        Log.log(ce, "Visiting a CastExpr");
         Pair<Sequence, Expression> p = null;
         if (ce.expr().doesYield()) {
-            System.out.println("---- Case #1 CastExpr");
+            Log.log("---- Case #1 CastExpr");
             String name = nextTemp();
             // T t; where T represents the type of e
             LocalDecl ld = createLocalDecl(name, ce.expr().type);
@@ -351,7 +364,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
             ne.type = ld.type();
             p = new Pair<>(se, new CastExpr(ce.type(), ne));
         } else {
-            System.out.println("---- Case #2 CastExpr");
+            Log.log("---- Case #2 CastExpr");
             p = new Pair<>(new Sequence(), ce);
         }
         return p;
@@ -359,11 +372,11 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
     
     @Override
     public Pair<Sequence, Expression> visitIfStat(IfStat is) {
-        System.out.println("Visiting an IfStat");
+        Log.log(is, "Visiting an IfStat");
         Pair<Sequence, Expression> p = null;
         Sequence se = new Sequence();
         if (is.expr().doesYield()) {
-            System.out.println("---- Case #1 IfStat: then-part");
+            Log.log("---- Case #1 IfStat: then-part");
             String name = nextTemp();
             // T t; where T represents the type of e
             LocalDecl ld = createLocalDecl(name, is.expr().type);
@@ -379,12 +392,14 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
         // Now check the else-part which it is already a Block
         Pair<Sequence, Expression> elsepart = null;
         if (is.elsepart() != null) {
-            System.out.println("---- Case #2 IfStat: else-part");
+            Log.log("---- Case #2 IfStat: else-part");
             elsepart = is.elsepart().visit(this);
             Sequence stmt = elsepart.getFirst();
-            System.out.println(">>>>>>>> IfState - else");
-            stmt.visit(new PrettyPrinter());
-            System.out.println("<<<<<<<< IfState - else");
+            if (log) {
+                System.out.println("-------- IfState - else");
+                stmt.visit(new PrettyPrinter());
+                System.out.println("IfState - else --------");
+            }
             if (stmt.size() > 1)
                 is.children[2] = new Block(stmt);
             else
@@ -397,7 +412,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
     
     @Override
     public Pair<Sequence, Expression> visitInvocation(Invocation in) {
-        System.out.println("Visiting an Invocation");
+        Log.log(in, "Visiting an Invocation");
         // TODO: remember to handle mobiles!!
         Pair<Sequence, Expression> p = null;
         Sequence<Expression> params = in.params();
@@ -406,7 +421,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
             if (params.child(i).doesYield())
                 yieldPos = Math.max(yieldPos, i);
         if (in.doesYield() && yieldPos >= 0){
-            System.out.println("---- Case #2 Invocation");
+            Log.log("---- Case #2 Invocation");
             Sequence se = new Sequence();
             for (int i = 0; i <= yieldPos; ++i) {
                 Expression e = params.child(i);
@@ -423,7 +438,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
             }
             p = new Pair<>(se, in);
         } else {
-            System.out.println("---- Case #3 Invocation");
+            Log.log("---- Case #3 Invocation");
             p = new Pair<>(new Sequence(), in);
         }
         return p;
@@ -431,10 +446,10 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
     
     @Override
     public Pair<Sequence, Expression> visitArrayAccessExpr(ArrayAccessExpr ae) {
-        System.out.println("Visiting an ArrayAccessExpr");
+        Log.log(ae, "Visiting an ArrayAccessExpr");
         Pair<Sequence, Expression> p = null;
         if (ae.target().doesYield() && !ae.index().doesYield()) {
-            System.out.println("---- Case #1 ArrayAccessExpr");
+            Log.log("---- Case #1 ArrayAccessExpr");
             String name = nextTemp();
             // T t; where T represents the type of e
             LocalDecl ld = createLocalDecl(name, ae.target().type);
@@ -444,7 +459,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
             se.merge(t.getFirst());
             p = new Pair<>(se, new ArrayAccessExpr(new NameExpr(new Name(name)), ae.index()));
         } else if (ae.index().doesYield()) {
-            System.out.println("---- Case #2 ArrayAccessExpr");
+            Log.log("---- Case #2 ArrayAccessExpr");
             String name1 = nextTemp();
             String name2 = nextTemp();
             // T t1; where T represents the type of e1
@@ -465,7 +480,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
             ne2.type = ld2.type();
             p = new Pair<>(se, new ArrayAccessExpr(ne1, ne2));
         } else {
-            System.out.println("---- Case #3 ArrayAccessExpr");
+            Log.log("---- Case #3 ArrayAccessExpr");
             p = new Pair<>(new Sequence(), ae);
         }
         return p;
@@ -473,10 +488,10 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
     
     @Override
     public Pair<Sequence, Expression> visitChannelEndExpr(ChannelEndExpr ce) {
-        System.out.println("Visiting a ChannelEndExpr");
+        Log.log(ce, "Visiting a ChannelEndExpr");
         Pair<Sequence, Expression> p = null;
         if (ce.channel().doesYield()) {
-            System.out.println("---- Case #1");
+            Log.log("---- Case #1");
             String name = nextTemp();
             // T t; where T represents the type of e
             LocalDecl ld = createLocalDecl(name, ce.channel().type);
@@ -488,7 +503,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
             ne.type = ld.type();
             p = new Pair<>(se, new ChannelEndExpr(ne, ce.endType()));
         } else {
-            System.out.println("---- Case #1");
+            Log.log("---- Case #1");
             p = new Pair<>(new Sequence(), ce);
         }
         return p;
@@ -496,11 +511,11 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
     
     @Override
     public Pair<Sequence, Expression> visitSwitchStat(SwitchStat st) {
-        System.out.println("Visiting a SwitchStat");
+        Log.log(st, "Visiting a SwitchStat");
         Pair<Sequence, Expression> p = null;
         Sequence se = new Sequence();
         if (st.expr().doesYield()) {
-            System.out.println("---- Case #1 SwitchStat: expr");
+            Log.log("---- Case #1 SwitchStat: expr");
             String name = nextTemp();
             // T t; where T represents the type of e
             LocalDecl ld = createLocalDecl(name, st.expr().type);
@@ -515,7 +530,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
         // If we skip the first part, then expr() does not yield!
         // Now check the else-part which it is already a Block
         if (st.switchBlocks().size() > 0) {
-            System.out.println("---- Case #2 SwitchStat: switch-block");
+            Log.log("---- Case #2 SwitchStat: switch-block");
             Sequence<SwitchGroup> sg = st.switchBlocks();
             for (int i = 0; i < sg.size(); ++i)
                 sg.child(i).visit(this);
@@ -527,7 +542,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
     
     @Override
     public Pair<Sequence, Expression> visitSwitchGroup(SwitchGroup sg) {
-        System.out.println("Visiting a SwitchGroup");
+        Log.log(sg, "Visiting a SwitchGroup");
         Sequence<Statement> se = sg.statements();
         for (int i = 0; i < se.size(); ++i) {
             Pair<Sequence, Expression> p = se.child(i).visit(this);
@@ -543,12 +558,12 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
     
     @Override
     public Pair<Sequence, Expression> visitTernary(Ternary te) {
-        System.out.println("Visiting a Ternary");
+        Log.log(te, "Visiting a Ternary");
         if (te.trueBranch().doesYield() || te.falseBranch().doesYield())
-            ; // TODO: Throw error message
+            ; // TODO: Throw error message??
         Pair<Sequence, Expression> p = null;
         if (te.expr().doesYield()) {
-            System.out.println("---- Case #1 Ternary");
+            Log.log("---- Case #1 Ternary");
             String name = nextTemp();
             // T t; where T represents the type of e
             LocalDecl ld = createLocalDecl(name, te.expr().type);
@@ -560,7 +575,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
             ne.type = ld.type();
             p = new Pair<>(se, new Ternary(ne, te.trueBranch(), te.falseBranch()));
         } else {
-            System.out.println("---- Case #1 Ternary");
+            Log.log("---- Case #1 Ternary");
             p = new Pair<>(new Sequence(), te);
         }
         return p;
@@ -568,10 +583,10 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
     
     @Override
     public Pair<Sequence, Expression> visitTimeoutStat(TimeoutStat ts) {
-        System.out.println("Visiting a TimeoutStat");
+        Log.log(ts, "Visiting a TimeoutStat");
         Pair<Sequence, Expression> p = null;
         if (ts.timer().doesYield() && !ts.delay().doesYield()) {
-            System.out.println("---- Case #1 TimeoutStat");
+            Log.log("---- Case #1 TimeoutStat");
             String name = nextTemp();
             // T t; where T represents the type of e
             LocalDecl ld = createLocalDecl(name, ts.timer().type);
@@ -584,7 +599,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
             se.append(new TimeoutStat(ne, ts.delay()));
             p = new Pair<>(se, null);
         } else if (ts.delay().doesYield()) {
-            System.out.println("---- Case #2 TimeoutStat");
+            Log.log("---- Case #2 TimeoutStat");
             String name1 = nextTemp();
             String name2 = nextTemp();
             // T t1; where T represents the type of e1
@@ -606,7 +621,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
             se.append(new TimeoutStat(ne1, ne2));
             p = new Pair<>(se, null);
         } else {
-            System.out.println("---- Case #3 TimeoutStat");
+            Log.log("---- Case #3 TimeoutStat");
             p = new Pair<>(new Sequence(ts), null);
         }
         return p;
@@ -614,20 +629,20 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
     
     @Override
     public Pair<Sequence, Expression> visitUnaryPostExpr(UnaryPostExpr up) {
-        System.out.println("Visiting a UnaryPostExpr");
+        Log.log(up, "Visiting a UnaryPostExpr");
         if (up.expr().doesYield())
-            ; // TODO: Throw error message
+            ; // TODO: Throw error message??
         return new Pair<>(new Sequence(), up);
     }
     
     @Override
     public Pair<Sequence, Expression> visitUnaryPreExpr(UnaryPreExpr up) {
-        System.out.println("Visitng a UnaryPreExpr");
+        Log.log(up, "Visitng a UnaryPreExpr");
         if (UnaryPreExpr.PLUSPLUS == up.op() || UnaryPreExpr.MINUSMINUS == up.op())
-            ; // TODO: Throw error message
+            ; // TODO: Throw error message??
         Pair<Sequence, Expression> p = null;
         if (up.doesYield()) {
-            System.out.println("---- Case #1 UnaryPreExpr");
+            Log.log("---- Case #1 UnaryPreExpr");
             String name = nextTemp();
             // T t; where T represents the type of e
             LocalDecl ld = createLocalDecl(name, up.expr().type);
@@ -639,7 +654,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
             ne.type = ld.type();
             p = new Pair<>(se, new UnaryPreExpr(ne, up.op()));
         } else {
-            System.out.println("---- Case #2 UnaryPreExpr");
+            Log.log("---- Case #2 UnaryPreExpr");
             p = new Pair<>(new Sequence(), up);
         }
         return p;
@@ -647,7 +662,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
     
     @Override
     public Pair<Sequence, Expression> visitAltStat(AltStat as) {
-        System.out.println("Visiting an AltStat");
+        Log.log(as, "Visiting an AltStat");
         Sequence<AltCase> body = as.body();
         for (int i = 0; i < body.size(); ++i)
             body.child(i).visit(this);
@@ -656,7 +671,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
     
     @Override
     public Pair<Sequence, Expression> visitAltCase(AltCase ac) {
-        System.out.println("Visiting an AltCase");
+        Log.log(ac, "Visiting an AltCase");
         Pair<Sequence, Expression> p = null;
         // Rewrite the guard statement if needed
         p = ac.guard().visit(this);
@@ -673,7 +688,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
     
     @Override
     public Pair<Sequence, Expression> visitGuard(Guard gu) {
-        System.out.println("Visiting a Guard");
+        Log.log(gu, "Visiting a Guard");
         Pair<Sequence, Expression> p = null;
         Statement stat = gu.guard();
         if (stat instanceof ExprStat) {

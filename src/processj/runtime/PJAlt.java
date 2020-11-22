@@ -23,10 +23,9 @@ public class PJAlt {
         this.guards = guards;
         this.bguards = bguards;
         
-        for (boolean b : bguards) {
+        for (boolean b : bguards)
             if (b)
                 return true;
-        }
         
         return false;
     }
@@ -83,7 +82,11 @@ public class PJAlt {
             if (guards[j] == PJAlt.SKIP)
                 selected = j;
             // A channel?
-            if (guards[j] instanceof PJChannel) {
+            if (guards[j] instanceof PJChannel) { 
+                // No race condition on this channel as it is a one-to-one and only THIS
+                // process has access to it. This simply means that we are de-registering
+                // from the channel for now, but may still read from it if selected is not
+                // updated with a value < j.
                 PJChannel chan = (PJChannel) guards[j];
                 if (chan.setReaderGetWriter(null) != null)
                     selected = j;
@@ -92,18 +95,10 @@ public class PJAlt {
             if (guards[j] instanceof PJTimer) {
                 // TODO: Shouldn't this be formally verified??
                 PJTimer timer = (PJTimer) guards[j];
-                if (timer.isExpired() || timer.getDelay() <= 0L) {
-                    if (selected == -1) {
-                        if (guards[j] instanceof PJChannel) {
-                            PJChannel chan = (PJChannel) guards[j];
-                            if (chan.setReaderGetWriter(null) != null)
-                                selected = j;
-                        } else if (guards[j] instanceof PJTimer) {
-                            PJTimer t = (PJTimer) guards[j];
-                            t.kill();
-                        }
-                    }
-                }
+                if (timer.isExpired())
+                    selected = j;
+                else
+                    timer.kill();
             }
         }
         return selected;
