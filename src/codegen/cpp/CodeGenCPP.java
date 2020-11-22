@@ -1161,10 +1161,12 @@ public class CodeGenCPP extends Visitor<Object> {
             chantype = "pj_runtime::pj_one2one_channel";
             break;
         case ChannelType.SHARED_READ:
-            chantype = "pj_runtime::pj_one2many_channel";
+            // chantype = "pj_runtime::pj_one2many_channel";
+            chantype = "pj_runtime::pj_many2many_channel";
             break;
         case ChannelType.SHARED_WRITE:
-            chantype = "pj_runtime::pj_many2one_channel";
+            // chantype = "pj_runtime::pj_many2one_channel";
+            chantype = "pj_runtime::pj_many2many_channel";
             break;
         case ChannelType.SHARED_READ_WRITE:
             chantype = "pj_runtime::pj_many2many_channel";
@@ -1203,10 +1205,12 @@ public class CodeGenCPP extends Visitor<Object> {
         if (ct.isShared()) {  // Is it a shared channel?
             if (ct.isRead())  // One-2-many channel.
                 // chanType = PJOne2ManyChannel.class.getSimpleName();
-                chanType = "pj_runtime::pj_one2many_channel";
+                // chanType = "pj_runtime::pj_one2many_channel";
+                chanType = "pj_runtime::pj_many2many_channel";
             else if (ct.isWrite()) // Many-2-one channel.
                 // chanType = PJMany2OneChannel.class.getSimpleName();
-                chanType = "pj_runtime::pj_many2one_channel";
+                // chanType = "pj_runtime::pj_many2one_channel";
+                chanType = "pj_runtime::pj_many2many_channel";
             else // Many-2-many channel.
                 // chanType = PJMany2ManyChannel.class.getSimpleName();
                 chanType = "pj_runtime::pj_many2many_channel";

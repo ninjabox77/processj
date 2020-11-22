@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
         args[i] = argv[i];
     }
 
-    <name>* main_proc = new <name>(0, &sched, &args);
+    <name>* main_proc = new <name>(&sched, &args);
 
     std::cout \<\< "\n *** SCHEDULING MAIN PROCESS *** \n\n";
     sched.insert(main_proc);
@@ -138,9 +138,7 @@ public:
 
     <! -------- Constructors -------- !>
     <name>() = delete;
-    <name>(int32_t id,
-<\t>pj_runtime::pj_scheduler* sched<if(vars)>,<\n><\t><types,vars:{t,v | <t> <v>}; separator=",\n\t"><endif>)
-    : id(id)
+    <name>(pj_runtime::pj_scheduler* sched<if(vars)>,<\n><\t><types,vars:{t,v | <t> <v>}; separator=",\n\t"><endif>)
     {
         this->sched = sched;
         <if(vars)>
@@ -169,7 +167,6 @@ protected:
     <if(vars)><types,vars:{t,v | <t> <v>}; separator=";\n">;<endif>
 <! every process has these 2 things in common, so just put them here !>
 private:
-    int32_t id;
     pj_runtime::pj_scheduler* sched;
 };
 <! Entry point of the program, e.g.,
@@ -222,13 +219,13 @@ class <name>_overload_finalize_<anonCounter> : public <name>
 public:
     <parentClass>* parent;
 
-    <!<name>_overload_finalize_<anonCounter>(int32_t id, pj_runtime::pj_scheduler* sched<if(barrier)>, pj_runtime::pj_barrier* <barrier><endif>)
+    <!<name>_overload_finalize_<anonCounter>(pj_runtime::pj_scheduler* sched<if(barrier)>, pj_runtime::pj_barrier* <barrier><endif>)
     : <name>{id, sched<if(barrier)>, <barrier><endif>}
     {
 
     }!>
-    <name>_overload_finalize_<anonCounter>(int32_t id, pj_runtime::pj_scheduler* sched<if(vars)>, <types,vars:{t,v | <t> <v>}; separator=", "><endif>, <parentClass>* parent)
-    : <name>{id, sched<if(vars)>, <vars; separator=", "><endif>}, parent(parent)
+    <name>_overload_finalize_<anonCounter>(pj_runtime::pj_scheduler* sched<if(vars)>, <types,vars:{t,v | <t> <v>}; separator=", "><endif>, <parentClass>* parent)
+    : <name>{sched<if(vars)>, <vars; separator=", "><endif>}, parent(parent)
     {
     }
 
@@ -239,10 +236,9 @@ public:
         <if(barrier)><barrier:{b | <if(parent)>parent-><endif><b>->resign()}; separator=";\n">;<endif>
     }
 };
-<!this->sched->insert(new <name>_overload_finalize(this->id + <anonCounter>, this->sched<if(barrier)>, <
-barrier><endif>));!>
+<!this->sched->insert(new <name>_overload_finalize(this->sched<if(barrier)>, <barrier><endif>));!>
 
-this->sched->insert(new <name>_overload_finalize_<anonCounter>(this->id + <anonCounter>, this->sched<if(argvars)>, <argvars; separator=", "><endif>, this));
+this->sched->insert(new <name>_overload_finalize_<anonCounter>(this->sched<if(argvars)>, <argvars; separator=", "><endif>, this));
 >>
 
 //========================================================================================
@@ -371,10 +367,8 @@ public:
     <parentClass>* parent;
 
     <name>() = delete;
-    <name>(int32_t id,
-<\t>pj_runtime::pj_scheduler* sched<if(vars)>,<\n><\t><types,vars:{t,v | <t> <v>}; separator=",\n"><endif>,
+    <name>(pj_runtime::pj_scheduler* sched<if(vars)>,<\n><\t><types,vars:{t,v | <t> <v>}; separator=",\n"><endif>,
 <\t><parentClass>* parent)
-    : id(id)
     {
         this->sched = sched;
         this->parent = parent;
@@ -404,11 +398,10 @@ protected:
     <if(vars)><types,vars:{t,v | <t> <v>;}; separator="\n"><endif>
 
 private:
-    int32_t id;
     pj_runtime::pj_scheduler* sched;
 };
 
-this->sched->insert(new <name>(this->id + <anonCounter>, this->sched<if(vars)>, <vars; separator=", "><endif>, this));
+this->sched->insert(new <name>(this->sched<if(vars)>, <vars; separator=", "><endif>, this));
 >>
 
 //========================================================================================
@@ -576,9 +569,9 @@ if(!<chanName>->is_ready_to_read(this))
 
 <procName>L<resume1>:
 <if(extendRv)> // Do we have a rendezvous?
-<lhs> <op> <chanName>.pre_read_rendezvous(this);
+<lhs> <op> <chanName>->pre_read_rendezvous(this);
 <extendRv>
-<chanName>.postReadRendezvous(this);
+<chanName>->postReadRendezvous(this);
 <else>
 <if(lhs)><lhs> <op> <chanName>->read(this);
 <else><chanName>->read(this);
@@ -589,6 +582,7 @@ set_label(<resume2>);
 <chanName>->unclaim_read();
 // yield();
 return;
+<procName>L<resume2>:
 >>
 
 //========================================================================================
@@ -620,7 +614,7 @@ if(!<chanName>->claim_write(this))
 }
 <procName>L<resume0>:
 
-<chanName>.write(this, <writeExpr>);
+<chanName>->write(this, <writeExpr>);
 set_label(<resume1>);
 // yield();
 return;
