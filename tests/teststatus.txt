@@ -32,10 +32,11 @@ localDecl.pj (no main -- no worries)
 cppprotocoltest.pj
 integrate.pj (infinite counting upwards)
 santatest.pj (protocols with no fields fixed)
+Demo.pj (problem with inheritance/structure fixed)
+Demo2.pj (issue with previousProcNames for parent classes fixed)
+fullAdder.pj (par deletes are bad (heap use after free according to asan, also deadlock eventually?) fixed!)
 
 tests that don't pass:
-Demo.pj (problem with inheritance/structure)
-fullAdder.pj (par deletes are bad (heap use after free according to asan, also deadlock eventually?)
 mandelbrot.pj (needs pgm library)
 mandelbrot2.pj (needs pgm library)
 santa.pj (probably lots of problems that will be fixed after the above are also fixed, needs shared chan stuff fixed first for sure)
@@ -43,7 +44,6 @@ sharedchan.pj (infinite loop issues?)
 sharedread.pj (infinite loop issues?)
 sharedwrite.pj (infinite loop issues?)
 NetworkProc.pj (issue with alts and deadlock)
-Demo2.pj (issue with previousProcNames for parent classes)
 
 these have no main:
 silly.pj (more channel read stuff, no semicolons????)
