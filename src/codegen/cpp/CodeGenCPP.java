@@ -809,12 +809,20 @@ public class CodeGenCPP extends Visitor<Object> {
             ld.type().isBarrierType() ||
             ld.type().isChannelType() ||
             ld.type() instanceof NamedType && ((NamedType)ld.type()).type().isRecordType() ||
-            ld.type().isArrayType()
-             /* || !(ld.type().isPrimitiveType())*/) {
+            ld.type().isArrayType() ||
+            ld.type() instanceof NamedType && ((NamedType)ld.type()).type().isProtocolType()) {
         // if(expr != null && !(ld.type() instanceof NamedType && ((NamedType)ld.type()).type().isProtocolType()) && (ld.type().isBarrierType() /*|| ld.type().isTimerType() */|| !(ld.type().isPrimitiveType() || ld.type().isArrayType()))) {
             Log.log(ld, "creating delete statement for " + name);
             String deleteStmt = "";
-            deleteStmt = "if (" + newName + ") { delete " + newName + "; }";
+            if (expr != null && expr instanceof ProtocolLiteral) {
+                Log.log("Should create delete stmt for protocol literal");
+                String protoType = ((ProtocolLiteral)expr).name().getname();
+                String protoTag = ((ProtocolLiteral)expr).tag().getname();
+                // deleteStmt = "if (" + newName + ") { delete reinterpret_cast<" +
+                //     protoType + "::" + protoTag + "*>(" + newName + "); }";
+            } else if (expr == null) {
+                deleteStmt = "if (" + newName + ") { delete " + newName + "; }";
+            }
             localDeletes.put(name, deleteStmt);
         }
 
@@ -1082,7 +1090,8 @@ public class CodeGenCPP extends Visitor<Object> {
         Log.log(ne, "Visiting a NameExpr (" + ne.name().getname() + ")");
         
         // NameExpr always points to 'myDecl'.
-        if (nestedAnonymousProcesses > 0) {
+        if (nestedAnonymousProcesses > 0 &&
+            !(ne.myDecl instanceof ConstantDecl)) {
             return getParentString() + ne.name().visit(this);
         }
         return ne.name().visit(this);
@@ -1096,7 +1105,7 @@ public class CodeGenCPP extends Visitor<Object> {
         // This is for protocol inheritance.
         if (nt.type() != null && nt.type().isProtocolType()) {
             // type = PJProtocolCase.class.getSimpleName();
-            // type = "pj_runtime::pj_protocol_case";
+            type = "pj_runtime::pj_protocol_case*";
         }
 
         return type;
@@ -1476,9 +1485,9 @@ public class CodeGenCPP extends Visitor<Object> {
         if (isProtocolCase) {
             // Silly way to keep track of a protocol tag, however, this
             // should (in theory) _always_ work.
-            currentProtocolTag = label;
             // label = "\"" + label + "\"";
-            // label = Integer.toString(protocolCaseNameIndices.get(sl.expr().toString()));
+            label = "case " + Integer.toString(protocolCaseNameIndices.get(sl.expr().toString()));
+            currentProtocolTag = sl.expr().toString();
             return label;
         }
         stSwitchLabel.add("label", label);
@@ -1492,7 +1501,6 @@ public class CodeGenCPP extends Visitor<Object> {
         
         // Generated template after evaluating this visitor.
         ST stSwitchGroup = stGroup.getInstanceOf("SwitchGroup");
-        String breakCheck = null;
 
         ArrayList<String> labels = new ArrayList<String>();
         for (SwitchLabel sl : sg.labels())
@@ -1502,15 +1510,10 @@ public class CodeGenCPP extends Visitor<Object> {
         for (Statement st : sg.statements()) {
             if (st == null)
                 continue;
-            breakCheck = (String) st.visit(this);
-            if(isProtocolCase && breakCheck.equals("break;"))
-                continue;
-            stats.add(breakCheck);
+            stats.add((String) st.visit(this));
         }
         
-        if (!isProtocolCase) {
-            stSwitchGroup.add("labels", labels);
-        }
+        stSwitchGroup.add("labels", labels);
         stSwitchGroup.add("stats", stats);
         
         return stSwitchGroup.render();
@@ -1523,8 +1526,8 @@ public class CodeGenCPP extends Visitor<Object> {
         // Is this a protocol tag?
         if (st.expr().type.isProtocolType()) {
             isProtocolCase = true;
-            Log.log(st, "Generating protocol choice for type " + st.expr().type);
-            return generateProtocolChoice(st);
+            // Log.log(st, "Generating protocol choice for type " + st.expr().type);
+            // return generateProtocolChoice(st);
         }
 
         // Generated template after evaluating this visitor.
@@ -1546,34 +1549,6 @@ public class CodeGenCPP extends Visitor<Object> {
         return stSwitchStat.render();
     }
 
-    // TODO: this should convert a SwitchStat for a protocol
-    // into the appropriate ProtocolChoice and ProtocolChoiceCase
-    // structures from the grammar file
-    private String generateProtocolChoice(SwitchStat st) {
-        Log.log("Generating protocol choice sructure");
-        
-        ST stProtocolChoice = stGroup.getInstanceOf("ProtocolChoice");
-        ArrayList<String> choiceBody = new ArrayList<String>();
-        ArrayList<String> labels = new ArrayList<String>();
-        ST stProtocolChoiceCase = null;
-        String caseBody = null;
-
-        for (SwitchGroup sg : st.switchBlocks()) {
-            caseBody = (String) sg.visit(this);
-            Log.log("getProtocolChoice: caseBody is " + caseBody);
-            stProtocolChoiceCase = stGroup.getInstanceOf("ProtocolChoiceCase");
-            stProtocolChoiceCase.add("body", caseBody);
-            // add protocol variable name
-            // add protocol variable type (not the parent type somehow)
-            stProtocolChoiceCase.add("protocName", st.expr().visit(this));
-            stProtocolChoiceCase.add("caseType", sg.labels().visit(this));
-            choiceBody.add(stProtocolChoiceCase.render());
-        }
-
-        stProtocolChoice.add("cases", choiceBody);
-        return stProtocolChoice.render();
-    }
-    
     @Override
     public Object visitCastExpr(CastExpr ce) {
         Log.log(ce, "Visiting a CastExpr");
@@ -1822,75 +1797,75 @@ public class CodeGenCPP extends Visitor<Object> {
         // return stImport.render();
     }
     
-    // @Override
-    // public Object visitProtocolTypeDecl(ProtocolTypeDecl pd) {
-    //     Log.log(pd, "Visiting a ProtocolTypeDecl (" + pd.name().getname() + ")");
-        
-    //     // Generated template after evaluating this visitor.
-    //     ST stProtocolClass = stGroup.getInstanceOf("ProtocolClass");
-    //     String name = (String) pd.name().visit(this);
-    //     ArrayList<String> modifiers = new ArrayList<String>();
-    //     ArrayList<String> body = new ArrayList<String>();
-        
-    //     for (Modifier m : pd.modifiers())
-    //         modifiers.add((String) m.visit(this));
-        
-    //     // Add extended protocols (if any).
-    //     if (pd.extend().size() > 0) {
-    //         for (Name n : pd.extend()) {
-    //             ProtocolTypeDecl ptd = (ProtocolTypeDecl) topLevelDecls.get(n.getname());
-    //             for (ProtocolCase pc : ptd.body())
-    //                 protocolTagsSwitchedOn.put(pd.name().getname() + "." + pc.name().getname(),
-    //                         ptd.name().getname());
-    //         }
-    //     }
-        
-    //     // The scope in which all members appear in a protocol.
-    //     if (pd.body() != null) {
-    //         for (ProtocolCase pc : pd.body())
-    //             body.add((String) pc.visit(this));
-    //     }
-        
-    //     stProtocolClass.add("name", name);
-    //     stProtocolClass.add("modifiers", modifiers);
-    //     stProtocolClass.add("body", body);
-        
-    //     return stProtocolClass.render();
-    // }
-
     @Override
     public Object visitProtocolTypeDecl(ProtocolTypeDecl pd) {
         Log.log(pd, "Visiting a ProtocolTypeDecl (" + pd.name().getname() + ")");
-
+        
+        // Generated template after evaluating this visitor.
         ST stProtocolClass = stGroup.getInstanceOf("ProtocolClass");
         String name = (String) pd.name().visit(this);
+        ArrayList<String> modifiers = new ArrayList<String>();
         ArrayList<String> body = new ArrayList<String>();
-        ArrayList<String> cases = new ArrayList<String>();
-
-        // TODO: need to add cases from extended protocols
-
-        if (pd.body() != null) {
-            for (ProtocolCase pc: pd.body()) {
-                cases.add(pc.name().getname());
-                body.add((String) pc.visit(this));
-            }
-        }
-
+        
+        for (Modifier m : pd.modifiers())
+            modifiers.add((String) m.visit(this));
+        
+        // Add extended protocols (if any).
         if (pd.extend().size() > 0) {
             for (Name n : pd.extend()) {
                 ProtocolTypeDecl ptd = (ProtocolTypeDecl) topLevelDecls.get(n.getname());
-                for (ProtocolCase pc : ptd.body()) {
-                    cases.add(pc.name().getname());
-                }
+                for (ProtocolCase pc : ptd.body())
+                    protocolTagsSwitchedOn.put(pd.name().getname() + "->" + pc.name().getname(),
+                            ptd.name().getname());
             }
         }
-
+        
+        // The scope in which all members appear in a protocol.
+        if (pd.body() != null) {
+            for (ProtocolCase pc : pd.body())
+                body.add((String) pc.visit(this));
+        }
+        
         stProtocolClass.add("name", name);
+        // stProtocolClass.add("modifiers", modifiers);
         stProtocolClass.add("body", body);
-        stProtocolClass.add("cases", cases);
-
+        
         return stProtocolClass.render();
     }
+
+    // @Override
+    // public Object visitProtocolTypeDecl(ProtocolTypeDecl pd) {
+    //     Log.log(pd, "Visiting a ProtocolTypeDecl (" + pd.name().getname() + ")");
+
+    //     ST stProtocolClass = stGroup.getInstanceOf("ProtocolClass");
+    //     String name = (String) pd.name().visit(this);
+    //     ArrayList<String> body = new ArrayList<String>();
+    //     ArrayList<String> cases = new ArrayList<String>();
+
+    //     // TODO: need to add cases from extended protocols
+
+    //     if (pd.body() != null) {
+    //         for (ProtocolCase pc: pd.body()) {
+    //             cases.add(pc.name().getname());
+    //             body.add((String) pc.visit(this));
+    //         }
+    //     }
+
+    //     if (pd.extend().size() > 0) {
+    //         for (Name n : pd.extend()) {
+    //             ProtocolTypeDecl ptd = (ProtocolTypeDecl) topLevelDecls.get(n.getname());
+    //             for (ProtocolCase pc : ptd.body()) {
+    //                 cases.add(pc.name().getname());
+    //             }
+    //         }
+    //     }
+
+    //     stProtocolClass.add("name", name);
+    //     stProtocolClass.add("body", body);
+    //     stProtocolClass.add("cases", cases);
+
+    //     return stProtocolClass.render();
+    // }
     
     @Override
     public Object visitProtocolCase(ProtocolCase pc) {
@@ -1918,8 +1893,8 @@ public class CodeGenCPP extends Visitor<Object> {
         }
 
         stProtocolCase.add("name", protocName);
-        // stProtocolCase.add("index", protocolCaseIndex);
-        // protocolCaseNameIndices.put(protocName, protocolCaseIndex++);
+        stProtocolCase.add("index", protocolCaseIndex);
+        protocolCaseNameIndices.put(protocName, protocolCaseIndex++);
         
         return stProtocolCase.render();
     }
@@ -1965,12 +1940,6 @@ public class CodeGenCPP extends Visitor<Object> {
         stProtocolLiteral.add("protocolType", pl.myTypeDecl.name().getname());
         stProtocolLiteral.add("tag", tag);
         stProtocolLiteral.add("vals", members.values());
-
-        Log.log(pl, "Creating delete statement for " + pl.name().getname());
-        String getString = "std::get<" + tag +
-            "*>(" + currentProtocolName + ")";
-        localDeletes.put(paramDeclNames.get(pl.name().getname()),
-            "if (" + getString + " != nullptr) { delete " + getString + "; }");
         
         return stProtocolLiteral.render();
     }
@@ -2112,7 +2081,7 @@ public class CodeGenCPP extends Visitor<Object> {
             String protocName = (String) pt.name().visit(this); // Wrapper class.
             String name = (String) ra.record().visit(this);     // Reference to inner class type.
             String field = (String) ra.field().getname();       // Field in inner class.
-            
+
             // Cast a protocol to a supertype if needed.
             if (protocolTagsSwitchedOn.containsKey(protocName + "->" + currentProtocolTag))
                 protocName = protocolTagsSwitchedOn.get(protocName + "->" + currentProtocolTag);

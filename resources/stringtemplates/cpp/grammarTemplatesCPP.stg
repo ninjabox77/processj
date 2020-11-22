@@ -767,9 +767,12 @@ ProtocolClass(cases, name, body) ::= <<
     <body; separator="\n\n">
 }!>
 
-<body; separator="\n\n">
+class <name>
+{
+public:
+    <body; separator="\n\n">
+};
 
-using <name> = std::variant\<<cases:{c | <c>*}; separator=", ">\>;
 >>
 
 //========================================================================================
@@ -791,16 +794,17 @@ ProtocolCaseOld(modifier, name, types, vars) ::= <<
 }
 >>
 
-ProtocolCase(modifier, name, types, vars) ::= <<
-struct <name> : public pj_runtime::pj_protocol_case
+ProtocolCase(modifier, name, types, vars, index) ::= <<
+class <name> : public pj_runtime::pj_protocol_case
 {
 public:
+    <if(vars)><types,vars:{t,v | <t> <v>;}; separator="\n"><endif>
+
     <name>(<if(vars)><types,vars:{t,v | <t> <v>}; separator=", "><endif>)
     {
         <if(vars)><vars:{v | this-><v> = <v>;}; separator="\n"><endif>
+        this->tag = <index>;
     }
-
-    <if(vars)><types,vars:{t,v | <t> <v>;}; separator="\n"><endif>
 };
 >>
 
@@ -810,7 +814,7 @@ public:
 // 2) tag:
 // 3) vals:
 ProtocolLiteral(type, protocolType, tag, vals) ::= <<
-new <tag>(<if(vals)><vals; separator=", "><endif>)
+new <protocolType>::<tag>(<if(vals)><vals; separator=", "><endif>)
 >>
 
 //========================================================================================
@@ -820,18 +824,8 @@ new <tag>(<if(vals)><vals; separator=", "><endif>)
 // 3) var:
 // 4) member:
 ProtocolAccess(protocName, tag, var, member) ::= <<
-<if(protocName)>std::get\<<tag>*>(<var>)-><member><endif>
->>
-
-ProtocolChoiceCase(protocName, caseType, body) ::= <<
-if(std::holds_alternative\<<caseType>*>(<protocName>))
-{
-    <body; separator="\n">
-}
->>
-
-ProtocolChoice(cases) ::= <<
-<cases; separator="\n">
+<!<if(protocName)>std::get\<<tag>*>(<var>)-><member><endif>!>
+<if(protocName)>reinterpret_cast\<<protocName>::<tag>*>(<var>)-><member><endif>
 >>
 
 //========================================================================================
@@ -988,7 +982,7 @@ ObjectGuards(guards) ::= <<
 //
 // 1) type:
 // 2) var:
-ConstantDecl(type, var) ::= "<type> <var>"
+ConstantDecl(type, var) ::= "static const <type> <var>"
 
 //========================================================================================
 //

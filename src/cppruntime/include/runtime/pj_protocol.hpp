@@ -6,7 +6,7 @@ namespace pj_runtime
     // Every protocol case inherits from this struct
     struct pj_protocol_case
     {
-
+        int tag;
     };
 
     /* If we have some protocol case Foo, then
