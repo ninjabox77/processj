@@ -475,6 +475,14 @@ return;
 
 //========================================================================================
 //
+// 1.) name:
+// 2.) delay:
+TimeoutStatCase(name, delay) ::= <<
+<name> = new pj_runtime::pj_timer(this, <delay>);
+>>
+
+//========================================================================================
+//
 // 1) chaName: name of the write channel-end.
 // 2) resume0:
 // 3) resume1:
@@ -931,8 +939,9 @@ case <number>:
 // 7) jump:
 // 8) cases:
 // 9) index:
-AltStat(alt, count, initBooleanGuards, initGuards, procName, jump, cases, index) ::= <<
+AltStat(alt, count, initBooleanGuards, initGuards, procName, jump, cases, index, timerLocals) ::= <<
 <alt> = new pj_runtime::pj_alt(<count>, this);
+<timerLocals>
 static std::vector\<bool> boolean_guards = <initBooleanGuards>;
 static std::vector\<pj_runtime::pj_alt_guard_type> object_guards = <initGuards>;
 static bool alt_ready = <alt>->set_guards(boolean_guards, object_guards);

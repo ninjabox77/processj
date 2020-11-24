@@ -2373,9 +2373,19 @@ public class CodeGenCPP extends Visitor<Object> {
                 if (e instanceof Assignment)
                     cr = (ChannelReadExpr) ((Assignment) e).right();
                 guards.add((String) cr.channel().visit(this));
-            } else if (stat instanceof SkipStat)
+            } else if (stat instanceof SkipStat) {
                 // guards.add(PJAlt.class.getSimpleName() + ".SKIP");
                 guards.add("pj_runtime::pj_alt::SKIP");
+            } else if (stat instanceof TimeoutStat) {
+                TimeoutStat ts = (TimeoutStat)stat;
+                ST stTimeout = stGroup.getInstanceOf("TimeoutStatCase");
+                stTimeout.add("name", ts.timer().visit(this));
+                stTimeout.add("delay", ts.delay().visit(this));
+                // add to timer locals of alt
+                stAltStat.add("timerLocals", stTimeout.render());
+                // add the timer to the guards
+                guards.add((String)ts.timer().visit(this));
+            }
             
             altCases.add((String) ac.visit(this));
         }
