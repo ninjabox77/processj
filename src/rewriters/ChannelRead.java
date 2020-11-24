@@ -66,7 +66,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
 
     int temp;
     
-    boolean log = false;
+    boolean log = true;
 
     private String nextTemp() {
         return "tmp" + temp++ + "$";
@@ -384,6 +384,13 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
             Pair<Sequence, Expression> t = new ExprStat(createAssignment(name, is.expr())).visit(this);
             se = new Sequence(ld);
             se.merge(t.getFirst());
+            // <-- 
+            // Apply the rewrite to 'then-part'
+            if (is.thenpart() != null) {
+                Sequence thenpart = is.thenpart().visit(this).getFirst();
+                is.children[1] = new Block(thenpart);
+            }
+            // -->
             NameExpr ne = new NameExpr(new Name(name));
             ne.type = ld.type();
             is.children[0] = ne;

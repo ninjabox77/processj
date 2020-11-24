@@ -247,8 +247,10 @@ public class ProcessJc {
             System.out.println("-- Performing alt statement usage check.");
             c.visit(new rewriters.AltStatRewrite());
             
+            Log.doLog = true;
             System.out.println("-- Rewriting yielding expressions.");
             c.visit(new rewriters.ChannelRead());
+            Log.doLog = false;
             
             //System.out.println("Lets reprint it all");
             //c.visit(new printers.ParseTreePrinter());
