@@ -96,12 +96,13 @@ namespace pj_runtime
                     {
                         std::cout << "timer timed out\n";
                         this->process->set_ready();
+                        std::get<pj_runtime::pj_timer*>(this->guards[i])->expire();
                         return static_cast<int32_t>(i);
                     }
                     else
                     {
                         std::cout << "timer not timed out\n";
-                        // std::get<pj_runtime::pj_timer*>(this->guards[i])->start();
+                        std::get<pj_runtime::pj_timer*>(this->guards[i])->start();
                     }
                 }
             }
@@ -120,6 +121,11 @@ namespace pj_runtime
 
             for(int32_t j = i; j >= 0; --j)
             {
+                if(!this->b_guards[i])
+                {
+                    continue;
+                }
+
                 if(std::holds_alternative<std::string>(this->guards[j]))
                 {
                     std::cout << "guard is a SKIP\n";
@@ -131,7 +137,7 @@ namespace pj_runtime
                 else if(std::holds_alternative<pj_runtime::pj_channel*>(this->guards[j]))
                 {
                     std::cout << "guard is a channel\n";
-                    if(std::get<pj_runtime::pj_channel*>(this->guards[j])->alt_get_writer(this->process) != nullptr)
+                    if(std::get<pj_runtime::pj_channel*>(this->guards[j])->set_reader_get_writer(nullptr) != nullptr)
                     {
                         std::cout << "alt_get_writer not null\n";
                         selected = j;
@@ -141,12 +147,16 @@ namespace pj_runtime
                 else if(std::holds_alternative<pj_runtime::pj_timer*>(this->guards[j]))
                 {
                     std::cout << "guard is a timer\n";
-                    if(std::get<pj_runtime::pj_timer*>(this->guards[j])->get_process() != nullptr)
+                    if(std::get<pj_runtime::pj_timer*>(this->guards[j])->expired())
                     {
-                        std::cout << "timer not killed yet\n";
+                        std::cout << "timer expired\n";
                         selected = j;
                     }
-                    else { std::cout << "timer killed\n"; }
+                    else
+                    {
+                        std::cout << "timer not expired\n";
+                        std::get<pj_runtime::pj_timer*>(this->guards[j])->kill();
+                    }
                 }
             }
             return selected;

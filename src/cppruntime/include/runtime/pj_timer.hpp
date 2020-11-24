@@ -89,10 +89,20 @@ namespace pj_runtime
             m_killed = true;
         }
 
+        bool killed()
+        {
+            return m_killed;
+        }
+
         void expire()
         {
             std::cout << "pj_timer expired\n";
             m_expired = true;
+        }
+
+        bool expired()
+        {
+            return m_expired;
         }
 
         long get_delay()
