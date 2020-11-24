@@ -1,0 +1,25 @@
+import std.io;
+
+public void writer(chan<int>.write c) {
+	timer t;
+	t.timeout(5);
+	// c.write(420);
+}
+
+public void reader(chan<int>.read c, timer t) {
+	int v;
+	alt {
+		v = c.read()  : { println("reader got " + v);        }
+		t.timeout(1)  : { println("timer alt guard choice"); }
+		skip          : { println("skip selected");          }
+	}
+}
+
+public void main(string[] args) {
+	chan<int> c;
+	timer t;
+	par {
+		writer(c.write);
+		reader(c.read, t);
+	}
+}
