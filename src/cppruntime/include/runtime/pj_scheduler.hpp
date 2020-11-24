@@ -25,18 +25,18 @@ namespace pj_runtime
         pj_scheduler()
         : cpu(0), cpus(std::thread::hardware_concurrency())
         {
-            std::cout << "pj_scheduler constructor called\n";
+            pj_logger::log("pj_scheduler constructor called");
         }
 
         pj_scheduler(uint32_t cpu)
         : cpu(cpu), cpus(std::thread::hardware_concurrency())
         {
-            std::cout << "pj_scheduler constructor called with arguments\n";
+            pj_logger::log("pj_scheduler constructor called with arguments");
         }
 
         ~pj_scheduler()
         {
-            std::cout << "pj_scheduler destructor called\n";
+            pj_logger::log("pj_scheduler destructor called");
             if(this->sched_thread.joinable())
             {
                 this->sched_thread.join();
@@ -55,10 +55,10 @@ namespace pj_runtime
         void insert(pj_process* p)
         {
             std::lock_guard<std::mutex> lk(mutex);
-            std::cout << "inserting process " << p
-                      << " into scheduler run queue\n";
+            pj_logger::log("inserting process ", p
+                      , " into scheduler run queue");
             rq.insert(p);
-            std::cout << "process " << p << " inserted\n";
+            pj_logger::log("process ", p, " inserted");
         }
 
         void insert(pj_timer* t)
@@ -127,7 +127,7 @@ namespace pj_runtime
                    static_cast<size_t>(rq.size()) > 0            &&
                    tq.size() == 0)
                 {
-                    std::cerr << "No processes ready to run. System is deadlocked.\n";
+                    pj_logger::log("No processes ready to run. System is deadlocked.");
                     tq.kill();
 
                     log_execution_time();
@@ -190,8 +190,8 @@ namespace pj_runtime
             std::thread::id th_id = this->sched_thread.get_id();
 
             lock.lock();
-            std::cout << "isolating thread " << th_id << " to cpu "
-                      << cpu << std::endl;
+            pj_logger::log("isolating thread ", th_id, " to cpu "
+                      , cpu);
             lock.unlock();
 
             cpu_set_t cur_set;
@@ -220,7 +220,7 @@ namespace pj_runtime
 
             p_th = this->sched_thread.native_handle();
             lock.lock();
-            std::cout << "the native_handle is " << p_th << std::endl;
+            pj_logger::log("the native_handle is ", p_th);
             lock.unlock();
 
             if(!p_th)
@@ -232,7 +232,7 @@ namespace pj_runtime
             }
 
             lock.lock();
-            std::cout << "getting thread cpu_set...\n";
+            pj_logger::log("getting thread cpu_set...");
             lock.unlock();
 
             CPU_ZERO(&cur_set);
@@ -252,31 +252,28 @@ namespace pj_runtime
             {
                 if(CPU_ISSET(i, &cur_set))
                 {
-                    std::cout << "cpu " << i 
-                              << " is in thread " << th_id
-                              << "'s current cpu set\n";
+                    pj_logger::log("cpu ", i, " is in thread ", th_id, "'s current cpu set");
                 }
             }
 
-            std::cout << "now setting thread " << th_id << "'s cpu_set to "
-                      << cpu << std::endl;
+            pj_logger::log("now setting thread ", th_id, "'s cpu_set to ", cpu);
             lock.unlock();
 
             CPU_SET(cpu, &new_set);
             arr_new_set[cpu] = 1;
 
             lock.lock();
-            std::cout << "new cpu_set is:\n";
+            pj_logger::log("new cpu_set is:");
             for(i = 0; i < cpus; ++i)
             {
                 std::cout << static_cast<uint32_t>(arr_new_set[i]) << " ";
             }
-            std::cout << "\nwhich implies:\n";
+            pj_logger::log("which implies:");
             for(i = 0; i < cpus; ++i)
             {
                 if(CPU_ISSET(i, &new_set))
                 {
-                    std::cout << i << " ";
+                    pj_logger::log(i);
                 }
             }
             std::cout << std::endl;
@@ -293,7 +290,7 @@ namespace pj_runtime
             }
 
             lock.lock();
-            std::cout << "verifying thread " << th_id << "'s cpu_set...\n";
+            pj_logger::log("verifying thread ", th_id, "'s cpu_set...");
             lock.unlock();
 
             CPU_ZERO(&cur_set);
@@ -312,7 +309,7 @@ namespace pj_runtime
             {
                 if(CPU_ISSET(i, &cur_set))
                 {
-                    std::cout << "cpu " << i << " is in new current cpu set\n";
+                    pj_logger::log("cpu ", i, " is in new current cpu set");
                     arr_cur_set[i] = 1;
                 }
             }
@@ -330,8 +327,7 @@ namespace pj_runtime
             lock.unlock();
 
             lock.lock();
-            std::cout << "thread " << th_id
-                      << "'s cpu_set successfully modified\n\n";
+            pj_logger::log("thread ", th_id, "'s cpu_set successfully modified\n");
             lock.unlock();
         }
 

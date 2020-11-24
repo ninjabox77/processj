@@ -2,6 +2,7 @@
 #define PJ_RUNTIME_HPP
 
 /* include guards for the runtime types */
+#include <runtime/pj_logger.hpp>
 #include <runtime/pj_process.hpp>
 #include <runtime/pj_timer.hpp>
 #include <runtime/pj_timer_queue.hpp>

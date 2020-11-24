@@ -18,39 +18,39 @@ namespace pj_runtime
         pj_timer_queue()
         : exit_value(1)
         {
-            std::cout << "timerqueue constructor called\n";
+            pj_logger::log("timerqueue constructor called");
         }
 
         ~pj_timer_queue()
         {
-            std::cout << "timerqueue destructor called\n";
+            pj_logger::log("timerqueue destructor called");
             if(timer_thread.joinable())
             {
-                std::cout << "attempting to join timer_thread\n";
+                pj_logger::log("attempting to join timer_thread");
                 timer_thread.join();
             }
 
             /* make sure we delete our kill_timer sanely */
             if(kill_timer)
             {
-                std::cout << "kill_timer populated, deleting\n";
+                pj_logger::log("kill_timer populated, deleting");
                 delete kill_timer;
             }
 
-            std::cout << "timer_thread joined, end of timerqueue constructor\n";
+            pj_logger::log("timer_thread joined, end of timerqueue constructor");
         }
 
         void insert(pj_timer* timer)
         {
             std::lock_guard<std::mutex> lock(this->mtx);
-            std::cout << "inserting timer " << *timer << " into timerqueue\n";
+            pj_logger::log("inserting timer ", *timer, " into timerqueue");
             dq.enqueue(timer, timer->get_real_delay());
-            std::cout << "done inserting\n";
+            pj_logger::log("done inserting");
         }
 
         void start()
         {
-            std::cout << "starting timer_thread\n";
+            pj_logger::log("starting timer_thread");
             /* kick off a thread running our timer algorithm
              * ---
              * should use the overloaded operator()
@@ -61,27 +61,27 @@ namespace pj_runtime
                 {
                     pj_timer* timer = dq.dequeue();
 
-                    std::cout << "grabbed a timer: " << *timer << std::endl;
+                    pj_logger::log("grabbed a timer: ", *timer);
 
                     timer->expire();
 
                     pj_process* p = timer->get_process();
 
-                    std::cout << "DEBUG: process of timer is: " << timer->get_process() << std::endl;
+                    pj_logger::log("DEBUG: process of timer is: ", timer->get_process());
 
                     if(!p)
                     {
-                        std::cout << "this timer has no process associated with it\n";
+                        pj_logger::log("this timer has no process associated with it");
                     }
                     else
                     {
-                        std::cout << "this timer should not cause the thread to exit\n";
+                        pj_logger::log("this timer should not cause the thread to exit");
                     }
 
                     /* check if we can safely exit as a thread */
                     if(!p && exit_value)
                     {
-                        std::cout << "timer_thread exiting\n";
+                        pj_logger::log("timer_thread exiting");
                         return;
                     }
 
@@ -94,12 +94,12 @@ namespace pj_runtime
                 }
             });
 
-            std::cout << "timer_thread started\n";
+            pj_logger::log("timer_thread started");
         }
 
         void kill()
         {
-            std::cout << "timer_thread, it's time to die\n";
+            pj_logger::log("timer_thread, it's time to die");
 
             /* we're ready to die */
             kill_flag.exchange(true);
@@ -110,12 +110,12 @@ namespace pj_runtime
             /* drop the bomb */
             this->insert(kill_timer);
 
-            std::cout << "timer_thread told to die\n";
+            pj_logger::log("timer_thread told to die");
         }
 
         size_t size()
         {
-            std::cout << "size() called on timerqueue\n";
+            pj_logger::log("size() called on timerqueue");
             return dq.size();
         }
 

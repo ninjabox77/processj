@@ -18,12 +18,12 @@ namespace pj_runtime
         
         pj_run_queue()
         {
-            std::cout << "pj_run_queue constructor called\n";
+            pj_logger::log("pj_run_queue constructor called");
         }
 
         ~pj_run_queue()
         {
-            std::cout << "pj_run_queue destructor called\n";
+            pj_logger::log("pj_run_queue destructor called");
         }
 
         /* synchronized in java */

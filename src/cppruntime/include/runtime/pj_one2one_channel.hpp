@@ -11,13 +11,13 @@ namespace pj_runtime
 	public:
 		pj_one2one_channel()
 		{
-			std::cout << "pj_one2one_channel constructor called\n";
+			pj_logger::log("pj_one2one_channel constructor called");
 			this->type = pj_channel_types::ONE2ONE;
 		}
 
 		~pj_one2one_channel()
 		{
-			std::cout << "pj_one2one_channel destructor called\n";
+			pj_logger::log("pj_one2one_channel destructor called");
 		}
 
 		void write(pj_process* p, T data)

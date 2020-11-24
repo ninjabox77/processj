@@ -14,12 +14,12 @@ namespace pj_runtime
     public:
         pj_process()
         {
-            std::cout << "pj_process constructor called\n";
+            pj_logger::log("pj_process constructor called");
         }
 
         virtual ~pj_process()
         {
-            std::cout << "pj_process destructor called\n";
+            pj_logger::log("pj_process destructor called");
         }
 
         bool is_ready()
@@ -62,7 +62,7 @@ namespace pj_runtime
         /* method to be overwritten by specialization */
         virtual void run()
         {
-            std::cout << "pj_process base method (nothing overwritten)\n";
+            pj_logger::log("pj_process base method (nothing overwritten)");
         }
 
         /* put process into scheduler's run queue */

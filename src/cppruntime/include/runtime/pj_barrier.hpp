@@ -34,12 +34,12 @@ namespace pj_runtime
         pj_barrier()
         : enrolled(1)
         {
-            std::cout << "pj_barrier constructor called\n";
+            pj_logger::log("pj_barrier constructor called");
         }
 
         ~pj_barrier()
         {
-            std::cout << "pj_barrier destructor called\n";
+            pj_logger::log("pj_barrier destructor called");
         }
 
         void enroll(uint32_t proc_count)

@@ -15,13 +15,13 @@ namespace pj_runtime
 		pj_one2many_channel()
 		: read_claim(nullptr)
 		{
-			std::cout << "pj_one2many_channel constructor called\n";
+			pj_logger::log("pj_one2many_channel constructor called");
 			this->type = pj_channel_types::ONE2MANY;
 		}
 
 		~pj_one2many_channel()
 		{
-			std::cout << "pj_one2many_channel destructor called\n";
+			pj_logger::log("pj_one2many_channel destructor called");
 			read_claim = nullptr;
 		}
 
