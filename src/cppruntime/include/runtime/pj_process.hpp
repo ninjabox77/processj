@@ -14,12 +14,12 @@ namespace pj_runtime
     public:
         pj_process()
         {
-            pj_logger::log("pj_process ", this, " constructor called");
+            
         }
 
         virtual ~pj_process()
         {
-            pj_logger::log("pj_process ", this, " destructor called");
+
         }
 
         bool is_ready()
@@ -27,27 +27,21 @@ namespace pj_runtime
             return ready;
         }
 
-        /* TODO: this should also call scheduler's inactivepool() to be decr'd */
         void set_ready()
         {
             std::unique_lock<std::mutex> lock(this->mtx);
             if(!ready)
             {
-                // pj_logger::log("setting ", this, " ready");
                 ready = true;
-                // (PJScheduler*)scheduler)->ip.decrement();
             }
         }
 
-        /* TODO: this should also call scheduler's inactivepool() to be incr'd */
         void set_not_ready()
         {
             std::unique_lock<std::mutex> lock(this->mtx);
             if(ready)
             {
-                // pj_logger::log("setting ", this, " not ready");
                 ready = false;
-                // ((PJScheduler*)scheduler)->ip.increment();
             }
         }
 
@@ -61,56 +55,24 @@ namespace pj_runtime
             return terminated;
         }
 
-        /* method to be overwritten by specialization */
         virtual void run()
         {
-            pj_logger::log("pj_process base method (nothing overwritten)");
+
         }
 
-        /* put process into scheduler's run queue */
-        /* TODO: not possible w/o circular ref'ing PJScheduler.hpp */
-        // void schedule();
-
-        /* method called at end of a process' lifetime */
         virtual void finalize()
         {
 
         }
-
-        /* instrumenter method to be replaced
-         * ---
-         * TODO: might not need this, we can insert ASM manually
-         */
-        virtual void yield()
-        {
-
-        }
-
-        /* instrumenter method to be replaced
-         * ---
-         * TODO: might not need this, we can insert ASM manually
-         */
+        
         virtual void set_label(uint32_t label)
         {
             run_label = label;
         }
 
-        /* TODO: in the future, we could potentially move this stuff
-         * back to the protected section of pj_process and remove
-         * the necessity of set/get_label(), as well as terminate()
-         */
         virtual uint32_t get_label()
         {
             return run_label;
-        }
-
-        /* instrumenter method to be replaced
-         * ---
-         * TODO: might not need this, we can insert ASM manually
-         */        
-        virtual void resume(uint32_t label)
-        {
-
         }
 
         friend std::ostream& operator<<(std::ostream& o, pj_process& p)
@@ -119,22 +81,12 @@ namespace pj_runtime
         }
 
     protected:
-        /* NOTE: in the future this scheduler will be removed
-         * instead of commented out, because for now, when
-         * we extend pj_process we will add a reference to the
-         * scheduler from the runtime itself. this is a
-         * workaround, and hopefully isn't the _last_ way this
-         * will be handled, but it will work one way or another
-         */
-        // static pjscheduler_pjprocess_internal_t* scheduler;
         std::mutex mtx;
 
     private:
         uint32_t run_label      = 0;
         bool     ready       = true;
         bool     terminated = false;
-
-    // friend class pj_timer;
     };
 }
 

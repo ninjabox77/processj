@@ -19,10 +19,6 @@ namespace pj_runtime
 			const char* c_str_iter = c_str;
 
 			// count the characters up to the null character
-
-			// TODO: string literals in c++ are always null-terminated,
-			// but are we guaranteed to always accept a string
-			// literal?
 			while(*c_str_iter++ != '\0')
 			{
 				++m_size;

@@ -11,13 +11,12 @@ namespace pj_runtime
 	public:
 		pj_one2one_channel()
 		{
-			pj_logger::log("pj_one2one_channel constructor called");
 			this->type = pj_channel_types::ONE2ONE;
 		}
 
 		~pj_one2one_channel()
 		{
-			pj_logger::log("pj_one2one_channel destructor called");
+
 		}
 
 		void write(pj_process* p, T data)
@@ -75,26 +74,7 @@ namespace pj_runtime
 			reader = nullptr;
 		}
 
-		// pj_process* alt_get_writer(pj_process* p)
-		// {
-		// 	std::lock_guard<std::mutex> lock(this->mtx);
-		// 	if(!writer)
-		// 	{
-		// 		reader = p;
-		// 	}
-
-		// 	return writer;
-		// }
-
-		// pj_process* set_reader_get_writer(pj_process* p)
-		// {
-		// 	reader = p;
-		// 	return writer;
-		// }
-
 	protected:
-	// 	pj_process* writer = nullptr;
-	// 	pj_process* reader = nullptr;
 	T data;
 	};
 }

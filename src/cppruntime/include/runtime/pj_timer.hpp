@@ -35,7 +35,7 @@ namespace pj_runtime
           m_killed(false),
           m_process(static_cast<pj_process*>(0))
         {
-            pj_logger::log("pj_timer constructor called with immediate timeout");
+
         }
 
         pj_timer(long timeout)
@@ -46,7 +46,7 @@ namespace pj_runtime
           m_killed(false),
           m_process(static_cast<pj_process*>(0))
         {
-            pj_logger::log("pj_timer constructor called with timeout of ", m_delay);
+
         }
 
         pj_timer(pj_process* process, long timeout)
@@ -57,7 +57,7 @@ namespace pj_runtime
           m_killed(false),
           m_process(process)
         {
-            pj_logger::log("pj_timer constructor called with process ptr and timeout of ", m_delay);
+
         }
 
         ~pj_timer() = default;
@@ -65,7 +65,6 @@ namespace pj_runtime
         void start()
         {
             m_real_delay = std::chrono::system_clock::time_point(std::chrono::milliseconds(pj_timer::read() + this->get_delay()));
-            pj_logger::log("pj_timer started");
             m_started = true;
         }
 
@@ -85,7 +84,6 @@ namespace pj_runtime
 
         void kill()
         {
-            pj_logger::log("pj_timer killed");
             m_killed = true;
         }
 
@@ -96,7 +94,6 @@ namespace pj_runtime
 
         void expire()
         {
-            pj_logger::log("pj_timer expired");
             m_expired = true;
         }
 
@@ -107,7 +104,6 @@ namespace pj_runtime
 
         long get_delay()
         {
-            pj_logger::log("getting delay of ", m_delay);
             return m_delay;
         }
 

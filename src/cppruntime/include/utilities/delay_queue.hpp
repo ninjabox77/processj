@@ -28,7 +28,7 @@ namespace pj_utilities
     public:
         delay_queue()
         {
-            std::cout << "delay_queue constructor called\n";
+
         }
 
         delay_queue(std::size_t size)
@@ -40,7 +40,7 @@ namespace pj_utilities
 
         ~delay_queue()
         {
-            std::cout << "delay_queue destructor called\n";
+            
         }
 
         delay_queue& operator=(const delay_queue&) = delete;

@@ -14,19 +14,19 @@ namespace pj_runtime
 		pj_channel()
 		: type(pj_channel_types::NONE)
 		{
-            pj_logger::log("pj_channel constructor called");
+
 		}
 
 		pj_channel(pj_channel_types t)
 		: type(pj_channel_type(t))
 		{
-            pj_logger::log("pj_channel constructor called with arguments");
+
 		}
 
 		pj_channel(pj_channel_type t)
 		: type(t)
 		{
-            pj_logger::log("pj_channel constructor called with arguments");
+
 		}
 
         /* TODO: copy and move constructors/assignment operators 
@@ -47,7 +47,6 @@ namespace pj_runtime
 
 		virtual ~pj_channel()
 		{
-            pj_logger::log("pj_channel destructor called");
             reader = nullptr;
             writer = nullptr;
 		}

@@ -19,8 +19,6 @@ namespace pj_runtime
     class pj_alt
     {
     public:
-        /* TODO: find out if we really need this/as a string */
-        /* TODO: need to make this work */
         inline static const std::string SKIP = "skip";
 
         pj_alt() = delete;
@@ -30,14 +28,11 @@ namespace pj_runtime
             this->process = p;
         }
 
-        /* TODO: specialized ctors */
-
         ~pj_alt()
         {
             pj_logger::log("pj_alt destructor called");
         }
 
-        /* NOTE: if all bool guards are false: runtime_error */
         bool set_guards(std::vector<bool>            b_guards,
                         std::vector<pj_alt_guard_type> guards)
         {
@@ -55,13 +50,8 @@ namespace pj_runtime
             return false;
         }
 
-        /* NOTE: must be int32_t to return a -1 in case nothing
-         * is enabled
-         */
-        /* TODO: remove debug logging */
         int32_t enable(void)
         {
-            pj_logger::log("in enable:");
             for(uint32_t i = 0; i < this->guards.size(); ++i)
             {
                 if(!this->b_guards[i])
@@ -71,7 +61,6 @@ namespace pj_runtime
 
                 if(std::holds_alternative<std::string>(this->guards[i]))
                 {
-                    pj_logger::log("guard is a SKIP");
                     if(std::get<std::string>(this->guards[i]) == SKIP)
                     {
                         this->process->set_ready();
@@ -80,28 +69,22 @@ namespace pj_runtime
                 }
                 else if(std::holds_alternative<pj_runtime::pj_channel*>(this->guards[i]))
                 {
-                    pj_logger::log("guard is a channel");
                     if(std::get<pj_runtime::pj_channel*>(this->guards[i])->alt_get_writer(this->process) != nullptr)
                     {
-                        pj_logger::log("alt_get_writer not null");
                         this->process->set_ready();
                         return static_cast<int32_t>(i);
                     }
-                    else { pj_logger::log("alt_get_writer null"); }
                 }
                 else if(std::holds_alternative<pj_runtime::pj_timer*>(this->guards[i]))
                 {
-                    pj_logger::log("guard is a timer");
                     if(std::get<pj_runtime::pj_timer*>(this->guards[i])->get_real_delay() <= std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()))
                     {
-                        pj_logger::log("timer timed out");
                         this->process->set_ready();
                         std::get<pj_runtime::pj_timer*>(this->guards[i])->expire();
                         return static_cast<int32_t>(i);
                     }
                     else
                     {
-                        pj_logger::log("timer not timed out");
                         std::get<pj_runtime::pj_timer*>(this->guards[i])->start();
                     }
                 }
@@ -109,10 +92,8 @@ namespace pj_runtime
             return -1;
         }
 
-        /* TODO: remove debug logging */
         int32_t disable(int32_t i)
         {
-            pj_logger::log("in disable:");
             int32_t selected = -1;
             if(i == -1)
             {
@@ -128,7 +109,6 @@ namespace pj_runtime
 
                 if(std::holds_alternative<std::string>(this->guards[j]))
                 {
-                    pj_logger::log("guard is a SKIP");
                     if(std::get<std::string>(this->guards[j]) == SKIP)
                     {
                         selected = j;
@@ -136,25 +116,19 @@ namespace pj_runtime
                 }
                 else if(std::holds_alternative<pj_runtime::pj_channel*>(this->guards[j]))
                 {
-                    pj_logger::log("guard is a channel");
                     if(std::get<pj_runtime::pj_channel*>(this->guards[j])->set_reader_get_writer(nullptr) != nullptr)
                     {
-                        pj_logger::log("alt_get_writer not null");
                         selected = j;
                     }
-                    else { pj_logger::log("alt_get_writer null"); }
                 }
                 else if(std::holds_alternative<pj_runtime::pj_timer*>(this->guards[j]))
                 {
-                    pj_logger::log("guard is a timer");
                     if(std::get<pj_runtime::pj_timer*>(this->guards[j])->expired())
                     {
-                        pj_logger::log("timer expired");
                         selected = j;
                     }
                     else
                     {
-                        pj_logger::log("timer not expired");
                         std::get<pj_runtime::pj_timer*>(this->guards[j])->kill();
                     }
                 }
@@ -163,9 +137,6 @@ namespace pj_runtime
         }
 
     private:
-        /* TODO: could make it a vector of std::pairs of something, boolean
-         * instead of two separate vectors if wanted
-         */
         pj_process* process;
         std::vector<pj_alt_guard_type> guards;
         std::vector<bool> b_guards;

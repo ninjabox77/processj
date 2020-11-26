@@ -25,18 +25,17 @@ namespace pj_runtime
         pj_scheduler()
         : cpu(0), cpus(std::thread::hardware_concurrency())
         {
-            pj_logger::log("pj_scheduler constructor called");
+
         }
 
         pj_scheduler(uint32_t cpu)
         : cpu(cpu), cpus(std::thread::hardware_concurrency())
         {
-            pj_logger::log("pj_scheduler constructor called with arguments");
+
         }
 
         ~pj_scheduler()
         {
-            pj_logger::log("pj_scheduler destructor called");
             if(this->sched_thread.joinable())
             {
                 this->sched_thread.join();
@@ -55,10 +54,7 @@ namespace pj_runtime
         void insert(pj_process* p)
         {
             std::lock_guard<std::mutex> lk(mutex);
-            pj_logger::log("inserting process ", p
-                      , " into scheduler run queue");
             rq.insert(p);
-            pj_logger::log("process ", p, " inserted");
         }
 
         void insert(pj_timer* t)
@@ -122,23 +118,7 @@ namespace pj_runtime
                 {
                     rq.insert(p);
                 }
-
-                if(ip.get_count() == static_cast<int>(rq.size()) &&
-                   static_cast<size_t>(rq.size()) > 0            &&
-                   tq.size() == 0)
-                {
-                    pj_logger::log("No processes ready to run. System is deadlocked.");
-                    tq.kill();
-
-                    log_execution_time();
-                    exit(1);
-                }
             }
-        }
-
-        friend std::ostream& operator<<(std::ostream& s, const pj_scheduler& t)
-        {
-            return s << "pj_scheduler operator<< not implemented yet";            
         }
 
     protected:
@@ -174,13 +154,7 @@ namespace pj_runtime
         int32_t  context_switches = 0;
         size_t   max_rq_size      = 0;
 
-        /* NOTE: added for multicore scheduler impl. */
-        // std::vector<std::thread> sched_threads;
         std::thread sched_thread;
-        /* TODO: each scheduler should know about the others,
-         * but _should_ we do that...? do we _need_ to?
-         */
-        // std::vector<pj_scheduler*> schedulers;
         uint32_t             cpu;
         uint32_t            cpus;
 
@@ -329,11 +303,6 @@ namespace pj_runtime
             lock.lock();
             pj_logger::log("thread ", th_id, "'s cpu_set successfully modified\n");
             lock.unlock();
-        }
-
-        void log_execution_time()
-        {
-            /* TODO: add this logging function */
         }
     };
 }

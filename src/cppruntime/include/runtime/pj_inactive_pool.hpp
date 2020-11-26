@@ -17,13 +17,12 @@ namespace pj_runtime
     public:
         pj_inactive_pool()
         {
-            pj_logger::log("pj_inactive_pool constructor called");
             this->count.store(0, std::memory_order_relaxed);
         }
 
         ~pj_inactive_pool()
         {
-            pj_logger::log("pj_inactive_pool destructor called");
+            
         }
 
         void increment()

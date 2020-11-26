@@ -109,7 +109,7 @@ namespace pj_runtime
             std::copy(values.begin(), values.end(), m_array);
         }
 
-        pj_md_array(std::size_t length)
+        pj_md_array(int32_t length)
         : length(length)
         {
             m_array = new T[length];

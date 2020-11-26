@@ -13,12 +13,12 @@ namespace pj_runtime
     public:
         pj_many2many_channel()        
         {
-            pj_logger::log("pj_many2many_channel constructor called");
+
         }
 
         ~pj_many2many_channel()
         {
-            pj_logger::log("pj_many2many_channel destructor called");
+            
         }
 
         bool claim_read(pj_process* p)

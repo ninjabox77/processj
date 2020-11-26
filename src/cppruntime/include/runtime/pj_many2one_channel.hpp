@@ -13,12 +13,12 @@ namespace pj_runtime
 	public:
 		pj_many2one_channel()
 		{
-			pj_logger::log("pj_many2one_channel constructor called");
+
 		}
 
 		~pj_many2one_channel()
 		{
-			pj_logger::log("pj_many2one_channel destructor called");
+			
 		}
 
 		bool claim_write(pj_process* p)

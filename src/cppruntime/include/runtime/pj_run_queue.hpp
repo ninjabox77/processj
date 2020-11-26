@@ -18,22 +18,20 @@ namespace pj_runtime
         
         pj_run_queue()
         {
-            pj_logger::log("pj_run_queue constructor called");
+
         }
 
         ~pj_run_queue()
         {
-            pj_logger::log("pj_run_queue destructor called");
+
         }
 
-        /* synchronized in java */
         void insert(pj_process* p)
         {
             std::lock_guard<std::mutex> lk(rq_mutex);
             queue.push(p);
         }
 
-        /* synchronized in java */
         pj_process* next()
         {
             std::lock_guard<std::mutex> lk(rq_mutex);
@@ -42,7 +40,6 @@ namespace pj_runtime
             return next;
         }
 
-        /* synchronized in java */
         size_t size()
         {
             std::lock_guard<std::mutex> lk(rq_mutex);
