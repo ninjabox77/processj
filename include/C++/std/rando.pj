@@ -1,6 +1,6 @@
 #pragma LIBRARY;
 #pragma NATIVE;
-#pragma FILE "random";
+#pragma FILE "rando";
 #pragma LANGUAGE "JVM";
 package std;
 
