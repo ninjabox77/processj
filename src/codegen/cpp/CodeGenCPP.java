@@ -2191,9 +2191,9 @@ public class CodeGenCPP extends Visitor<Object> {
             for (Statement st : statements) {
                 if (st == null)
                     continue;
-                if (st instanceof ParBlock) {
-                    continue;
-                }
+                // if (st instanceof ParBlock) {
+                //     continue;
+                // }
                 // An expression is any valid unit of code that resolves to a value,
                 // that is, it can be a combination of variables, operations and values
                 // that yield a result. An statement is a line of code that performs
