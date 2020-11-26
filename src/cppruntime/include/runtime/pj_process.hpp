@@ -14,12 +14,12 @@ namespace pj_runtime
     public:
         pj_process()
         {
-            pj_logger::log("pj_process constructor called");
+            pj_logger::log("pj_process ", this, " constructor called");
         }
 
         virtual ~pj_process()
         {
-            pj_logger::log("pj_process destructor called");
+            pj_logger::log("pj_process ", this, " destructor called");
         }
 
         bool is_ready()
@@ -33,6 +33,7 @@ namespace pj_runtime
             std::unique_lock<std::mutex> lock(this->mtx);
             if(!ready)
             {
+                // pj_logger::log("setting ", this, " ready");
                 ready = true;
                 // (PJScheduler*)scheduler)->ip.decrement();
             }
@@ -44,6 +45,7 @@ namespace pj_runtime
             std::unique_lock<std::mutex> lock(this->mtx);
             if(ready)
             {
+                // pj_logger::log("setting ", this, " not ready");
                 ready = false;
                 // ((PJScheduler*)scheduler)->ip.increment();
             }

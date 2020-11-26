@@ -23,7 +23,7 @@ namespace pj_runtime
         pj_array(int32_t length)
         : length(length)
         {
-	  m_array = new T[length];
+	       m_array = new T[length];
         }
 
         pj_array(T* data, T* data_end)
@@ -107,6 +107,12 @@ namespace pj_runtime
             m_array = new T[length];
 
             std::copy(values.begin(), values.end(), m_array);
+        }
+
+        pj_md_array(std::size_t length)
+        : length(length)
+        {
+            m_array = new T[length];
         }
 
         ~pj_md_array()
