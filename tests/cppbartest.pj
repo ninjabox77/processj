@@ -1,0 +1,44 @@
+import std.io;
+
+public void f() {
+
+}
+
+public void g() {
+
+}
+
+public void h() }
+
+}
+
+public void main(string[] args) {
+       barrier a, b, c;
+
+       a.sync();
+
+       par enroll a, b {
+       	   h();
+
+	   par enroll a, c {
+	       f();
+	       g();
+	   }
+      }
+}
+
+
+should be the same as
+
+public void main(string[] args) {
+      barrier a, b, c;
+
+      a.sync();
+
+      par {
+            h(a, b);
+
+            f(a, c);
+	    g(a, c);
+      }
+}
