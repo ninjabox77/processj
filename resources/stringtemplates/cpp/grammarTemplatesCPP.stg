@@ -116,7 +116,7 @@ int main(int argc, char* argv[])
 // 8) switchBlock: switch statement to jump through blocks to resume points.
 // 9) syncBody: the body (content) of synchronized method that runs/starts a process.
 // TODO: add altDecl/altSize to this
-ProcClass(name, types, vars, ltypes, lvars, linits, ldeletes, lnulls, methods, main, switchBlock, syncBody) ::= <<
+ProcClass(name, types, vars, ltypes, lvars, linits, ldeletes, lnulls, methods, main, switchBlock, syncBody, altLocals) ::= <<
 class <name> : public pj_runtime::pj_process
 {
 
@@ -135,6 +135,12 @@ public:
 
     <! -------- locals go here -------- !>
     <if(lvars)><ltypes,lvars:{t,v | <t> <v>}; separator=";\n">;<\n><endif>
+    <if(altLocals)>
+    std::vector\<bool> boolean_guards;
+    std::vector\<pj_runtime::pj_alt_guard_type> object_guards;
+    bool alt_ready;
+    int selected;
+    <endif>
 
     <! -------- Constructors -------- !>
     <name>() = delete;
@@ -942,10 +948,10 @@ case <number>:
 AltStat(alt, count, initBooleanGuards, initGuards, procName, jump, cases, index, timerLocals) ::= <<
 <alt> = new pj_runtime::pj_alt(<count>, this);
 <timerLocals>
-static std::vector\<bool> boolean_guards = <initBooleanGuards>;
-static std::vector\<pj_runtime::pj_alt_guard_type> object_guards = <initGuards>;
-static bool alt_ready = <alt>->set_guards(boolean_guards, object_guards);
-static int selected = static_cast\<int>(0);
+boolean_guards = <initBooleanGuards>;
+object_guards = <initGuards>;
+alt_ready = <alt>->set_guards(boolean_guards, object_guards);
+selected = static_cast\<int>(0);
 <index> = static_cast\<int>(0);
 
 if (!alt_ready) {

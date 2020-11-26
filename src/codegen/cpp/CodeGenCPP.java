@@ -130,6 +130,9 @@ public class CodeGenCPP extends Visitor<Object> {
     // Contains names of classes/procs mapped to their generated names
     private HashMap<String, String> generatedProcNames = new LinkedHashMap<String, String>();
 
+    // boolean flag for including the proper alt fields to a process
+    private boolean needsAltLocals = false;
+
     // Identifier for parameter declaration.
     private int varDecId = 0;
     
@@ -504,6 +507,10 @@ public class CodeGenCPP extends Visitor<Object> {
         // Restore previous jump labels.
         switchLabelList = prevLabels;
 
+        if (needsAltLocals) {
+            stProcTypeDecl.add("altLocals", needsAltLocals);
+        }
+
         return stProcTypeDecl.render();
     }
     
@@ -797,7 +804,12 @@ public class CodeGenCPP extends Visitor<Object> {
         localParams.put(newName, type);
         paramDeclNames.put(name, newName);
 
-        if (nestedAnonymousProcesses > 0) {
+        if (ld.type().isBarrierType()) {
+            Log.log("SHOULD NOT HAVE PARENT APPENDED");
+        }
+
+        if (nestedAnonymousProcesses > 0 &&
+            !ld.type().isBarrierType()) {
             newName = getParentString() + newName;
         }
         
@@ -2173,11 +2185,15 @@ public class CodeGenCPP extends Visitor<Object> {
         // Visit the sequence of statements in the par-block.
         Sequence<Statement> statements = pb.stats();
         if (statements.size() > 0) {
+            // if statement is not a ParBlock, then we don't care about it
             // Rendered value of each statement.
             ArrayList<String> stmts = new ArrayList<String>();
             for (Statement st : statements) {
                 if (st == null)
                     continue;
+                if (st instanceof ParBlock) {
+                    continue;
+                }
                 // An expression is any valid unit of code that resolves to a value,
                 // that is, it can be a combination of variables, operations and values
                 // that yield a result. An statement is a line of code that performs
@@ -2432,6 +2448,8 @@ public class CodeGenCPP extends Visitor<Object> {
         
         // Add the jump label to the switch list.
         switchLabelList.add(renderSwitchLabel(jumpLabel));
+
+        needsAltLocals = true;
         
         return stAltStat.render();
     }
@@ -2484,6 +2502,7 @@ public class CodeGenCPP extends Visitor<Object> {
         // varDecId = 0;
         // localDecId = 0;
         jumpLabel = 0;
+        needsAltLocals = false;
 
         localParams.clear();
         localInits.clear();
@@ -2727,5 +2746,6 @@ public class CodeGenCPP extends Visitor<Object> {
             parents += "parent->";
         }
         return parents;
+        // return "";
     }
 }
