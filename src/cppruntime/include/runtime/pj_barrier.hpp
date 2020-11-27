@@ -67,7 +67,8 @@ namespace pj_runtime
                 for(uint32_t i = 0; i < this->synced.size(); ++i)
                 {
                     this->synced[i]->set_ready();
-                }
+                }   
+                synced.clear();
             }
         }
 
