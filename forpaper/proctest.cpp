@@ -414,17 +414,18 @@ public:
              }
          };
 
-        for (_ld$i3 = 0; _ld$i3 < 100000000; ++_ld$i3) {
+        for (_ld$i3 = 0; _ld$i3 < 10000000; ++_ld$i3) {
              _ld$c14 = new pj_runtime::pj_one2one_channel<int32_t>();
              _ld$c25 = new pj_runtime::pj_one2one_channel<int32_t>();
              ++count;
              par_procs.push_back(new _proc$foo0$682474553_overload_finalize_0(this->sched, _ld$c14, _ld$c25, this));
+             ++count;
              par_procs.push_back(new _proc$bar3$539328953_overload_finalize_1(this->sched, _ld$c14, _ld$c25, this));
          }
 
          _ld$_par3->set_process_count(count);
 
-         for(_ld$i3 = 0; _ld$i3 <100000000; ++_ld$i3) {
+         for(_ld$i3 = 0; _ld$i3 < count; ++_ld$i3) {
             sched->insert(par_procs[_ld$i3]);
          }
 
