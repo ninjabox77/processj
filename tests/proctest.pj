@@ -8,11 +8,11 @@ public void foo(chan<int>.read c1, chan<int>.write c2) {
     }
 }
 
-public void foo(chan<int>.write c1, chan<int>.read c2) {
+public void bar(chan<int>.write c1, chan<int>.read c2) {
     int y;
     par {
         y = c2.read();
-	c1.write(20);
+		c1.write(20);
     }
 }
    
