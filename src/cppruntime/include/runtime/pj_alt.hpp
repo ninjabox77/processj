@@ -30,7 +30,7 @@ namespace pj_runtime
 
         ~pj_alt()
         {
-            pj_logger::log("pj_alt destructor called");
+            
         }
 
         bool set_guards(std::vector<bool>            b_guards,
