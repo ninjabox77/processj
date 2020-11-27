@@ -1,0 +1,28 @@
+import std.io;
+
+public void foo(chan<int>.read c1, chan<int>.write c2) {
+    int x;
+    par {
+        x = c1.read();
+	c2.write(10);
+    }
+}
+
+public void foo(chan<int>.write c1, chan<int>.read c2) {
+    int y;
+    par {
+        y = c2.read();
+	c1.write(20);
+    }
+}
+   
+
+public void main(string[] args) {
+    for(int i = 0; i < 100; ++i) {
+        chan<int> c1, c2;
+	par {
+	    foo(c1.read, c2.write);
+	    bar(c1.write, c2.read);
+        }
+    }
+}
