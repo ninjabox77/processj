@@ -1,0 +1,35 @@
+
+ *** CREATING SCHEDULER *** 
+
+
+ *** CREATING MAIN PROCESS *** 
+
+
+ *** SCHEDULING MAIN PROCESS *** 
+
+
+ *** STARTING SCHEDULER *** 
+
+isolating thread 140094213613312 to cpu 0
+the native_handle is 140094213613312
+getting thread cpu_set...
+cpu 0 is in thread 140094213613312's current cpu set
+cpu 1 is in thread 140094213613312's current cpu set
+cpu 2 is in thread 140094213613312's current cpu set
+cpu 3 is in thread 140094213613312's current cpu set
+cpu 4 is in thread 140094213613312's current cpu set
+cpu 5 is in thread 140094213613312's current cpu set
+now setting thread 140094213613312's cpu_set to 0
+new cpu_set is:
+1 0 0 0 0 0 which implies:
+0
+
+verifying thread 140094213613312's cpu_set...
+cpu 0 is in new current cpu set
+thread 140094213613312's cpu_set successfully modified
+
+  0 1 0 0 0 1 0 0 (InCarry:0)
++ 1 0 1 0 1 0 1 1
+----------
+ 1 1 1 0 1 1 1 1
+Carry was: 0
