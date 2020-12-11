@@ -247,10 +247,15 @@ public class ProcessJc {
             System.out.println("-- Performing alt statement usage check.");
             c.visit(new rewriters.AltStatRewrite());
             
-            Log.doLog = true;
+//            Log.doLog = true;
             System.out.println("-- Rewriting yielding expressions.");
             c.visit(new rewriters.ChannelRead());
-            Log.doLog = false;
+//            Log.doLog = false;
+            
+            // <--
+            System.out.println("-- Rewriting parblocks statements");
+            c.visit(new rewriters.ParBlockRewrite());
+            // -->
             
             //System.out.println("Lets reprint it all");
             //c.visit(new printers.ParseTreePrinter());
@@ -260,7 +265,6 @@ public class ProcessJc {
             
             System.out.println("-- Collecting left-hand sides for par for code generation.");
             c.visit(new rewriters.ParFor());
-            
             // Run the code generator for the known (specified) target language
             if (Settings.language == pJc.target)
                 pJc.generateCodeJava(c, inFile, globalTypeTable);

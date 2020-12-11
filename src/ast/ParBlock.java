@@ -1,8 +1,13 @@
 package ast;
 
+import java.util.HashMap;
+
 import utilities.Visitor;
 
 public class ParBlock extends Statement {
+    
+    public HashMap<String, Integer> enrolls;
+    
     public ParBlock(Sequence<Statement> stats, Sequence<Expression> barriers) {
         super(stats);
         nchildren = 2;

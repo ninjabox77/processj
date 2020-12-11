@@ -113,6 +113,10 @@ public class CodeGenJava extends Visitor<Object> {
     /** Currently executing par-block */
     private String currParBlock = null;
     
+    /** This is used to prevent calling the resign() method in the
+     * generated code of a par enrolled on a barrier */
+    private boolean shouldResign = true;
+    
     /** Currently executing protocol */
     private String currProtocol = null;
     
@@ -315,7 +319,7 @@ public class CodeGenJava extends Visitor<Object> {
             stProcTypeDecl.add("parBlock", currParBlock);
             stProcTypeDecl.add("syncBody", body);
             // Add the barrier this procedure should resign from
-            if (!barriers.isEmpty())
+            if (!barriers.isEmpty()) //&& shouldResign)
                 stProcTypeDecl.add("barrier", barriers);
             // Add the switch block for yield and resumption
             if (!switchCases.isEmpty()) {
@@ -431,7 +435,7 @@ public class CodeGenJava extends Visitor<Object> {
         
         // <--
         // Silly rewrite for comparing two strings in ProcessJ using the
-        // 'Xxx'.equals(...) method from Java
+        // equals(...) method from Java
         if ("==".equals(op) && (be.left() instanceof NameExpr && be.right() instanceof NameExpr) &&
             ((((NameExpr) be.left()).myDecl instanceof LocalDecl) && ((NameExpr) be.right()).myDecl instanceof LocalDecl)) {
             LocalDecl ld1 = (LocalDecl) ((NameExpr) be.left()).myDecl;
@@ -443,12 +447,12 @@ public class CodeGenJava extends Visitor<Object> {
                return stBinaryExpr.render();
             }
         }
-        // A rewrite for the 'instanceof' operator in Java happens when <op>
-        // in a binary expression represents the token 'IS'. Thus, to render
-        // the correct code, we look for the name of the 'lhs' operand, which
-        // is a record or protocol variable, and then use the NameType of the
-        // 'rhs' operand as the type to check if the 'lhs' operand is an
-        // instanceof the 'rhs' operand
+        // A rewrite for the 'instanceof' operator in Java happens when the
+        // token <op> in a binary expression represents the token 'IS'. Thus,
+        // to render the correct code, we look for the name of the 'lhs'
+        // operand, which is a record or protocol variable, and then use the
+        // NameType of the 'rhs' operand as the type to check if the 'lhs'
+        // operand is indeed an instanceof the 'rhs' operand
         if ("instanceof".equals(op) && localToFields.containsKey(lhs)) {
             String namedType = localToFields.get(lhs);
             Object o = topLvlDecls.get(namedType);
@@ -1082,6 +1086,7 @@ public class CodeGenJava extends Visitor<Object> {
     @Override
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public Object visitInvocation(Invocation in) {
+        
         // We ignore any GOTO or LABEL invocation since they are only needed
         // for the __asm__ bytecode rewrite
         if (in.ignore) {
@@ -1411,13 +1416,12 @@ public class CodeGenJava extends Visitor<Object> {
         // Don't generate code for an empty par statement
         if (pb.stats().size() == 0)
             return null;
+        boolean prevResign = shouldResign;
         ST stParBlock = stGroup.getInstanceOf("ParBlock");
         // Save the previous par-block
         String prevParBlock = currParBlock;
         // Save previous barrier expressions
         ArrayList<String> prevBarrier = barriers;
-        if (!barriers.isEmpty())
-            barriers = new ArrayList<>();
         // Create a name for this new par-block
         currParBlock = Helper.makeVariableName(Tag.PAR_BLOCK_NAME.toString(), ++parDecID, Tag.LOCAL_NAME);
         // Since this is a new par-block, we need to create a variable
@@ -1430,49 +1434,60 @@ public class CodeGenJava extends Visitor<Object> {
         stParBlock.add("jump", ++jumpLabel);
         switchCases.add(renderSwitchCase(jumpLabel));
         // Add the barrier this par-block enrolls in
-        Sequence<Expression> barrierSeq = pb.barriers();
-        if (barrierSeq.size() > 0)
-            for (Expression ex : barrierSeq)
-                barriers.add((String) ex.visit(this));
-            
+        if (pb.barriers().size() > 0) {
+            HashMap<String, Integer> parBarries = new HashMap<>();
+            for (Expression e : pb.barriers()) {
+                String name = (String) e.visit(this);
+                parBarries.put(name, pb.enrolls.get(((NameExpr) e).name().getname()));
+            }
+            stParBlock.add("barrier", parBarries.keySet());
+            stParBlock.add("enrollees", parBarries.values());
+        }
         // Visit the sequence of statements in the par-block
         Sequence<Statement> statements = pb.stats();
-        if (statements.size() > 0) {
-            // Rendered the value of each statement
-            ArrayList<String> stmts = new ArrayList<String>();
-            for (Statement st : statements) {
-                if (st == null)
-                    continue;
-                // An expression is any valid unit of code that resolves to a value,
-                // that is, it can be a combination of variables, operations and values
-                // that yield a result. An statement is a line of code that performs
-                // some action, e.g. print statements, an assignment statement, etc.
-                if (st instanceof ExprStat && ((ExprStat) st).expr() instanceof Invocation) {
-                    ExprStat es = (ExprStat) st;
-                    Invocation in = (Invocation) es.expr();
-                    // If this invocation is made on a process, then visit the
-                    // invocation and return a string representing the wrapper
-                    // class for this procedure; e.g.
-                    //    (new <classType>(...) {
-                    //        @Override public synchronized void run() { ... }
-                    //        @Override public finalize() { ... }
-                    //    }.schedule();
-                    if (Helper.doesProcYield(in.targetProc))
-                        stmts.add((String) in.visit(this));
-                    else // Otherwise, the invocation is made through a static Java method
-                        stmts.add((String) createAnonymousProcTypeDecl(st).visit(this));
-                } else
-                    stmts.add((String) createAnonymousProcTypeDecl(st).visit(this));
+        // Rendered the value of each statement
+        ArrayList<String> stmts = new ArrayList<String>();
+        for (Statement st : statements) {
+            if (st == null)
+                continue;
+            // Resign only when necessary
+            shouldResign = !(st instanceof ParBlock);
+            // <--
+            Sequence<Expression> se = st.barrierNames;
+            if (se != null) {
+                barriers = new ArrayList<>();
+                for (Expression e : se)
+                    barriers.add((String) e.visit(this));
             }
-            stParBlock.add("body", stmts);
+            // -->
+            // An expression is any valid unit of code that resolves to a value,
+            // that is, it can be a combination of variables, operations and values
+            // that yield a result. An statement is a line of code that performs
+            // some action, e.g. print statements, an assignment statement, etc.
+            if (st instanceof ExprStat && ((ExprStat) st).expr() instanceof Invocation) {
+                ExprStat es = (ExprStat) st;
+                Invocation in = (Invocation) es.expr();
+                // If this invocation is made on a process, then visit the
+                // invocation and return a string representing the wrapper
+                // class for this procedure; e.g.
+                //    (new <classType>(...) {
+                //        @Override public synchronized void run() { ... }
+                //        @Override public finalize() { ... }
+                //    }.schedule();
+                if (Helper.doesProcYield(in.targetProc))
+                    stmts.add((String) in.visit(this));
+                else // Otherwise, the invocation is made through a static Java method
+                    stmts.add((String) createAnonymousProcTypeDecl(st).visit(this));
+            } else
+                stmts.add((String) createAnonymousProcTypeDecl(st).visit(this));
         }
-        // Add the barrier to the par-block
-        if (!barriers.isEmpty() && pb.barriers().size() > 0)
-            stParBlock.add("barrier", barriers);
+        stParBlock.add("body", stmts);
         // Restore the par-block
         currParBlock = prevParBlock;
         // Restore barrier expressions
         barriers = prevBarrier;
+        // Restore resign
+        shouldResign = prevResign;
         
         return stParBlock.render();
     }
@@ -1716,6 +1731,8 @@ public class CodeGenJava extends Visitor<Object> {
         
         paramToFields.clear();
         paramToVarNames.clear();
+        
+        shouldResign = true;
     }
     
     // Returns a string representation of a jump label

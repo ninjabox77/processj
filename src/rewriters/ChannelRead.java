@@ -66,7 +66,7 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
 
     int temp;
     
-    boolean log = true;
+    boolean log = false;
 
     private String nextTemp() {
         return "tmp" + temp++ + "$";
@@ -121,13 +121,13 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
                 if (p.getFirst().size() > 1) {
                     s.merge(new Block(p.getFirst()));
                     if (log) {
-                        System.out.println("------------- Sequence");
+                        System.out.println("====== BEGIN Sequence ======");
                         p.getFirst().child(0).visit(new PrettyPrinter());
-                        System.out.println("Sequence --------------");
+                        System.out.println("====== END Sequence ======");
                     }
                 } else {
                     if (log)
-                        System.out.println("We have an expression in Sequence!");
+                        System.out.println("We have an expression in a Sequence!");
                     s.merge(p.getFirst().child(0));
                 }
             } else {
@@ -159,9 +159,9 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
                 if (p.getFirst().size() > 1) {
                     se.set(i, new Block(p.getFirst()));
                     if (log) {
-                        System.out.println("-------------- ParBlock");
+                        System.out.println("====== BEGIN ParBlock ======");
                         p.getFirst().visit(new PrettyPrinter());
-                        System.out.println("ParBlock --------------");
+                        System.out.println("====== END ParBlock ======");
                     }
                 } else {
                     if (log)
@@ -196,11 +196,11 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
         Sequence se = p.getFirst();
         se.append((Statement) new ExprStat(p.getSecond()));
         if (log) {
-            System.out.println("------------ ExprStat");
+            System.out.println("====== BEGIN ExprStat ======");
             se.visit(new PrettyPrinter());
-            System.out.println("-------");
             p.getSecond().visit(new PrettyPrinter());
-            System.out.println("ExprStat ------------");
+            System.out.println();
+            System.out.println("====== END ExprStat ======");
         }
         return new Pair<Sequence, Expression>(se, null);
     }
@@ -310,16 +310,15 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
             se.merge(t1.getFirst());
             se.append(ld2);
             se.merge(t2.getFirst());
-            // TODO: THIS BREAKS!!!!!!
             NameExpr ne1 = new NameExpr(new Name(name1));
             ne1.type = ld1.type();
             NameExpr ne2 = new NameExpr(new Name(name2));
             ne2.type = ld2.type();
             se.append(new ChannelWriteStat(ne1, ne2));
             if (log) {
-                System.out.println("<>");
+                System.out.println("====== BEGIN ChannelWriteStat ======");
                 se.visit(new PrettyPrinter());
-                System.out.println("<>");
+                System.out.println("====== END ChannelWriteStat ======");
             }
             p = new Pair<>(se, null);
         } else {
@@ -403,9 +402,9 @@ public class ChannelRead extends Visitor<Pair<Sequence, Expression>> {
             elsepart = is.elsepart().visit(this);
             Sequence stmt = elsepart.getFirst();
             if (log) {
-                System.out.println("-------- IfState - else");
+                System.out.println("====== BEGIN IfState::elsepart() ======");
                 stmt.visit(new PrettyPrinter());
-                System.out.println("IfState - else --------");
+                System.out.println("====== END IfState::elsepart() ======");
             }
             if (stmt.size() > 1)
                 is.children[2] = new Block(stmt);

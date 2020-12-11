@@ -325,7 +325,10 @@ public class Yield extends Visitor<Boolean> {
 
     public Boolean visitParamDecl(ParamDecl pd) {
         Log.log("visiting a ParamDecl");
-        return FALSE;
+        // If a formal parameter is a channel-end type, then
+        // the procedure must yield
+        boolean b = pd.type().isChannelEndType();
+        return new Boolean(b);
     }
 
     public Boolean visitParBlock(ParBlock pb) {
@@ -351,6 +354,13 @@ public class Yield extends Visitor<Boolean> {
     public Boolean visitProcTypeDecl(ProcTypeDecl pd) {
         Log.log("visiting a ProcTypeDecl");
         boolean b = pd.body().visit(this);
+        for (int i = 0; i < pd.formalParams().size(); ++i) {
+            boolean yield = pd.formalParams().child(i).visit(this);
+            if (yield) {
+                b = b || yield;
+                break;
+            }
+        }
         if (!pd.annotations().isDefined("yield") && b) {
             pd.annotations().add("yield", "true");
             Log.log("  Setting [yield=true] for " + pd.name() + ".");
