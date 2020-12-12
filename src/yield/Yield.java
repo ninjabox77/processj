@@ -325,10 +325,9 @@ public class Yield extends Visitor<Boolean> {
 
     public Boolean visitParamDecl(ParamDecl pd) {
         Log.log("visiting a ParamDecl");
-        // If a formal parameter is a channel-end type, then
-        // the procedure must yield
-        boolean b = pd.type().isChannelEndType();
-        return new Boolean(b);
+        // If a formal parameter is a channel-end type, a barrier, or a timer,
+        // then the procedure must yield
+        return new Boolean(pd.type().isChannelEndType() || pd.type().isBarrierType() || pd.type().isTimerType());
     }
 
     public Boolean visitParBlock(ParBlock pb) {
