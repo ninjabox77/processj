@@ -31,8 +31,10 @@ import ast.ChannelWriteStat;
 import ast.Compilation;
 import ast.ConstantDecl;
 import ast.ContinueStat;
+import ast.DoStat;
 import ast.ExprStat;
 import ast.Expression;
+import ast.ForStat;
 import ast.IfStat;
 import ast.Import;
 import ast.Invocation;
@@ -70,6 +72,7 @@ import ast.Type;
 import ast.UnaryPostExpr;
 import ast.UnaryPreExpr;
 import ast.Var;
+import ast.WhileStat;
 import codegen.Helper;
 import codegen.Tag;
 import processj.runtime.*;
@@ -115,7 +118,12 @@ public class CodeGenJava extends Visitor<Object> {
     
     /** This is used to prevent calling the resign() method in the
      * generated code of a par enrolled on a barrier */
-    private boolean shouldResign = true;
+//    private boolean shouldResign = true;
+    
+    private boolean inParFor = false;
+    
+    private HashMap<String, String> localsForAnon = new LinkedHashMap<>();
+    private HashMap<String, String> paramsForAnon = new LinkedHashMap<>();
     
     /** Currently executing protocol */
     private String currProtocol = null;
@@ -313,11 +321,12 @@ public class CodeGenJava extends Visitor<Object> {
             int prevJumpLabel = jumpLabel;
             jumpLabel = 0;
             // Create an instance for such anonymous procedure
-            stProcTypeDecl = stGroup.getInstanceOf("AnonymousProcess");
+            stProcTypeDecl = stGroup.getInstanceOf("AnonymousProcess2");
             // Statements that appear in the procedure being executed
             String[] body = (String[]) pd.body().visit(this);
             stProcTypeDecl.add("parBlock", currParBlock);
             stProcTypeDecl.add("syncBody", body);
+            stProcTypeDecl.add("isPar", inParFor);
             // Add the barrier this procedure should resign from
             if (!barriers.isEmpty()) //&& shouldResign)
                 stProcTypeDecl.add("barrier", barriers);
@@ -326,6 +335,12 @@ public class CodeGenJava extends Visitor<Object> {
                 ST stSwitchBlock = stGroup.getInstanceOf("SwitchBlock");
                 stSwitchBlock.add("jumps", switchCases);
                 stProcTypeDecl.add("switchBlock", stSwitchBlock.render());
+            }
+            // The list of local variables defined in the body of a procedure
+            // becomes the instance fields of the class
+            if (!localsForAnon.isEmpty()) {
+                stProcTypeDecl.add("ltypes", localsForAnon.values());
+                stProcTypeDecl.add("lvars", localsForAnon.keySet());
             }
             // Restore jump label so it knows where to resume from
             jumpLabel = prevJumpLabel;
@@ -437,7 +452,8 @@ public class CodeGenJava extends Visitor<Object> {
         // Silly rewrite for comparing two strings in ProcessJ using the
         // equals(...) method from Java
         if ("==".equals(op) && (be.left() instanceof NameExpr && be.right() instanceof NameExpr) &&
-            ((((NameExpr) be.left()).myDecl instanceof LocalDecl) && ((NameExpr) be.right()).myDecl instanceof LocalDecl)) {
+            ((((NameExpr) be.left()).myDecl instanceof LocalDecl) &&
+            ((NameExpr) be.right()).myDecl instanceof LocalDecl)) {
             LocalDecl ld1 = (LocalDecl) ((NameExpr) be.left()).myDecl;
             LocalDecl ld2 = (LocalDecl) ((NameExpr) be.right()).myDecl;
             if (ld1.type().isStringType() && ld2.type().isStringType()) {
@@ -478,9 +494,157 @@ public class CodeGenJava extends Visitor<Object> {
         return stBinaryExpr.render();
     }
     
-    // WhileStat -- nothing to do    
-    // DoStat -- nothing to do
-    // ForStat -- nothing to do
+    @Override
+    public Object visitWhileStat(WhileStat ws) {
+        Log.log(ws, "Visiting a WhileStat");
+        
+        ST stWhileStat = stGroup.getInstanceOf("WhileStat");
+        String[] stats = null;
+        String expr = null;
+        
+        if (ws.expr() != null)
+            expr = ((String) ws.expr().visit(this));
+        if (ws.stat() != null) {
+            Object o = ws.stat().visit(this);
+            if (o instanceof String) {
+                stats = new String[] { (String) o };
+            } else {
+                stats = (String[]) o;
+            }
+        }
+        
+        stWhileStat.add("expr", expr);
+        stWhileStat.add("body", stats);
+        
+        return stWhileStat.render();
+    }
+    
+    @Override
+    public Object visitDoStat(DoStat ds) {
+        Log.log(ds, "Visiting a DoStat");
+        
+        ST stDoStat = stGroup.getInstanceOf("DoStat");
+        String[] stats = null;
+        String expr = null;
+        
+        if (ds.expr() != null)
+            expr = ((String) ds.expr().visit(this));
+        if (ds.stat() != null) {
+            Object o = ds.stat().visit(this);
+            if (o instanceof String) {
+                stats = new String[] { (String) o };
+            } else {
+                stats = (String[]) o;
+            }
+        }
+        
+        stDoStat.add("expr", expr);
+        stDoStat.add("body", stats);
+        
+        return stDoStat.render();
+    }
+    
+    @Override
+    public Object visitForStat(ForStat fs) {
+        Log.log(fs, "Visiting a ForStat");
+        
+        ST stForStat = stGroup.getInstanceOf("ParForStat");
+        String expr = null;
+        ArrayList<String> init = null;
+        ArrayList<String> incr = null;
+        String[] stats = null;
+        
+        boolean preParFor = inParFor;
+        inParFor = fs.isPar() || preParFor;
+        
+        if (fs.init() != null) {
+            init = new ArrayList<>();
+            for (Statement st : fs.init()) {
+                init.add(((String) st.visit(this)).replace(DELIMITER, ""));
+            }
+        }
+        if (fs.expr() != null) {
+            expr = (String) fs.expr().visit(this);
+        }
+        if (fs.incr() != null) {
+            incr = new ArrayList<>();
+            for (Statement st: fs.incr()) {
+                incr.add(((String) st.visit(this)).replace(DELIMITER, ""));
+            }
+        }
+        
+        if (!fs.isPar()) {
+            if (fs.stats() != null) {
+                Object o = fs.stats().visit(this);
+                if (o instanceof String) {
+                    stats = new String[] { (String) o };
+                } else {
+                    stats = (String[]) o;
+                }
+            }
+            
+            stForStat = stGroup.getInstanceOf("ForStat");
+            stForStat.add("init", init);
+            stForStat.add("expr", expr);
+            stForStat.add("incr", incr);
+            stForStat.add("stats", stats);
+            
+            return stForStat.render();
+        }
+        
+        // Save the previous par-block
+        String prevParBlock = currParBlock;
+        currParBlock = Helper.makeVariableName(Tag.PAR_BLOCK_NAME.toString(), ++parDecID, Tag.LOCAL_NAME);
+        
+        // Increment the jump label and add it to the switch-stmt list
+        stForStat.add("jump", ++jumpLabel);
+        switchCases.add(renderSwitchCase(jumpLabel));
+        
+        // Rendered the value of each statement
+        ArrayList<String> stmts = new ArrayList<String>();
+        if (fs.stats() != null) {
+            if (fs.stats() instanceof Block) {
+                Block bl = (Block) fs.stats();
+//                stmts.add((String) createAnonymousProcTypeDecl(bl).visit(this));
+                for (Statement st : bl.stats()) {
+                    if (st == null)
+                        continue;
+                    // An expression is any valid unit of code that resolves to a value,
+                    // that is, it can be a combination of variables, operations and values
+                    // that yield a result. An statement is a line of code that performs
+                    // some action, e.g. print statements, an assignment statement, etc.
+                    if (st instanceof ExprStat && ((ExprStat) st).expr() instanceof Invocation) {
+                        ExprStat es = (ExprStat) st;
+                        Invocation in = (Invocation) es.expr();
+                        // If this invocation is made on a process, then visit the
+                        // invocation and return a string representing the wrapper
+                        // class for this procedure; e.g.
+                        //    (new <classType>(...) {
+                        //        @Override public synchronized void run() { ... }
+                        //        @Override public finalize() { ... }
+                        //    }.schedule();
+                        if (Helper.doesProcYield(in.targetProc))
+                            stmts.add((String) in.visit(this));
+                        else // Otherwise, the invocation is made through a static Java method
+                            stmts.add((String) createAnonymousProcTypeDecl(st).visit(this));
+                    } else
+                        stmts.add((String) createAnonymousProcTypeDecl(st).visit(this));
+                }
+            }
+        }
+        
+        stForStat.add("init", init);
+        stForStat.add("expr", expr);
+        stForStat.add("incr", incr);
+        stForStat.add("stats", stmts);
+        stForStat.add("name", currParBlock);
+        
+        inParFor = preParFor;
+        // Restore the par-block
+        currParBlock = prevParBlock;
+        
+        return stForStat.render();
+    }
     
     @Override
     public Object visitTernary(Ternary te) {
@@ -521,7 +685,8 @@ public class CodeGenJava extends Visitor<Object> {
         String[] thenStats = null;
         String[] thenParts = null;
         String condExpr = null;
-        
+        // We either have an if-statement _or_ a loop construct that
+        // has been re-written as an if-statement
         if (is.expr() != null)
             condExpr = (String) is.expr().visit(this);
         if (is.thenpart() != null) {
@@ -619,6 +784,10 @@ public class CodeGenJava extends Visitor<Object> {
         
         // Create a tag for this local declaration
         String newName = Helper.makeVariableName(name, ++localDecID, Tag.LOCAL_NAME);
+        if (inParFor) {
+            localsForAnon.put(newName, type);
+            paramsForAnon.put(name, newName);
+        }
         localToFields.put(newName, type);
         paramToVarNames.put(name, newName);
         
@@ -686,6 +855,9 @@ public class CodeGenJava extends Visitor<Object> {
         
         if (paramToVarNames.containsKey(na.getname()))
             name = paramToVarNames.get(na.getname());
+        
+//        if (paramsForAnon.containsKey(na.getname()))
+//            name = paramsForAnon.get(na.getname());
         
         if (name == null)
             name = na.getname();
@@ -1145,6 +1317,9 @@ public class CodeGenJava extends Visitor<Object> {
         if (Helper.doesProcYield(pd)) {
             stInvocation = stGroup.getInstanceOf("InvocationProcType");
             stInvocation.add("parBlock", currParBlock);
+            // <--
+            stInvocation.add("isPar", inParFor);
+            // -->
             // Add the barrier this procedure should resign from
             if (!barriers.isEmpty())
                 stInvocation.add("barrier", barriers);
@@ -1416,7 +1591,7 @@ public class CodeGenJava extends Visitor<Object> {
         // Don't generate code for an empty par statement
         if (pb.stats().size() == 0)
             return null;
-        boolean prevResign = shouldResign;
+//        boolean prevResign = shouldResign;
         ST stParBlock = stGroup.getInstanceOf("ParBlock");
         // Save the previous par-block
         String prevParBlock = currParBlock;
@@ -1451,7 +1626,7 @@ public class CodeGenJava extends Visitor<Object> {
             if (st == null)
                 continue;
             // Resign only when necessary
-            shouldResign = !(st instanceof ParBlock);
+//            shouldResign = !(st instanceof ParBlock);
             // <--
             Sequence<Expression> se = st.barrierNames;
             if (se != null) {
@@ -1487,7 +1662,7 @@ public class CodeGenJava extends Visitor<Object> {
         // Restore barrier expressions
         barriers = prevBarrier;
         // Restore resign
-        shouldResign = prevResign;
+//        shouldResign = prevResign;
         
         return stParBlock.render();
     }
@@ -1732,7 +1907,10 @@ public class CodeGenJava extends Visitor<Object> {
         paramToFields.clear();
         paramToVarNames.clear();
         
-        shouldResign = true;
+        localsForAnon.clear();
+        paramsForAnon.clear();
+        
+//        shouldResign = true;
     }
     
     // Returns a string representation of a jump label

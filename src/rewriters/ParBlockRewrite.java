@@ -20,19 +20,19 @@ public class ParBlockRewrite extends Visitor<Pair<Sequence, Sequence>> {
     
     HashMap<String, Integer> enrolls = new HashMap<>();
     
-    private void andEnroll(HashMap<String, Integer> hm, Expression n) {
+    private void andEnroll(HashMap<String, Integer> hm, Expression e) {
         if (hm.isEmpty())
-            hm.put(((NameExpr) n).name().getname(), 1);
+            hm.put(((NameExpr) e).name().getname(), 1);
         else {
             Set<String> set = hm.keySet();
             for (String e1 : set) {
-                String e2 = ((NameExpr) n).name().getname();
+                String e2 = ((NameExpr) e).name().getname();
                 if (e1.equals(e2)) {
                     hm.put(e1, hm.get(e1) + 1);
                     return;
                 }
             }
-            hm.put(((NameExpr) n).name().getname(), 1);
+            hm.put(((NameExpr) e).name().getname(), 1);
         }
     }
 
@@ -63,43 +63,6 @@ public class ParBlockRewrite extends Visitor<Pair<Sequence, Sequence>> {
         return null;
     }
     
-//    public Pair<Sequence, Sequence> visitParBlock(ParBlock pb) {
-//        Log.log(pb, "Visiting a ParBlock");
-//        // Don't generate code for an empty par statement
-//        if (pb.stats().size() == 0)
-//            return null;
-//        Sequence<Statement> stmts = new Sequence();
-//        Sequence<Expression> exprs = pb.barriers();
-//        // Rewrite and flatten the par-block
-//        Sequence<Statement> statements = pb.stats();
-//        for (Statement st : statements) {
-//            if (st == null)
-//                continue;
-//            if (st instanceof ParBlock) {
-//                Pair<Sequence, Sequence> p = (Pair<Sequence, Sequence>) st.visit(this);
-//                if (p.getFirst().size() > 0)
-//                    stmts.merge(p.getFirst());
-//                if (p.getSecond().size() > 0) {
-//                    Sequence<Expression> se = p.getSecond();
-//                    for (Expression e : se)
-//                        addBarriers(exprs, e);
-//                }
-//            } else {
-//                if (pb.barriers().size() > 0) {
-//                    Sequence<Expression> se = new Sequence<>();
-//                    for (Expression e : pb.barriers())
-//                        se.append(e);
-//                    st.enroll = se;
-//                }
-//                // No rewrite needed for this section of code :-)
-//                stmts.append(st);
-//            }
-//        }
-//        pb.children[0] = stmts;
-//        pb.children[1] = exprs;
-//        return new Pair<>(stmts, pb.barriers());
-//    }
-    
     public Pair<Sequence, Sequence> visitBlock(Block bl) {
         Log.log(bl, "Visiting a Block");
         Sequence<Statement> se = bl.stats();
@@ -108,10 +71,13 @@ public class ParBlockRewrite extends Visitor<Pair<Sequence, Sequence>> {
                 HashMap<String, Integer> prevEnrolls = enrolls;
                 enrolls = new HashMap<>();
                 Pair<Sequence, Sequence> p = se.child(i).visit(this);
-                ParBlock par = new ParBlock(p.getFirst(), p.getSecond());
-                par.enrolls = enrolls;
-//                par.visit(new PrettyPrinter());
-                se.set(i, par);
+                if (p != null) {
+                    ParBlock par = new ParBlock(p.getFirst(), p.getSecond());
+                    par.enrolls = enrolls;
+                    if (Log.doLog)
+                        par.visit(new PrettyPrinter());
+                    se.set(i, par);
+                }
                 enrolls = prevEnrolls;
             }
         }

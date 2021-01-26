@@ -119,13 +119,14 @@ Invocation(name, vars) ::= <<
 // 2.) vars:
 // 3.) parBlock:
 // 4.) barrier:
-InvocationProcType(name, vars, parBlock, barrier) ::= <<
+// 5.) isPar:
+InvocationProcType(name, vars, parBlock, barrier, isPar) ::= <<
 (new <name>(<if(vars)><vars; separator=", "><endif>) {
     @Override public void finalize() {
         <parBlock>.decrement();
         <if(barrier)><barrier:{b | <b>.resign()}; separator=";\n">;<endif>
     }
-}).schedule();
+})<if(!isPar)>.schedule();<endif>
 >>
 
 //========================================================================================
@@ -234,13 +235,14 @@ if (<name>.shouldYield()) {
 // 4.) barrier:
 // 5.) ltypes: data types for local parameters that are used in a 'par-for'.
 // 6.) lvars: unique names for fields preceded by '_ld' that are used in a 'par-for'.
-AnonymousProcess(switchBlock, syncBody, parBlock, barrier, ltypes, lvars) ::= <<
+AnonymousProcess2(switchBlock, syncBody, parBlock, barrier, ltypes, lvars, isPar) ::= <<
 new PJProcess() {
     <! -------- Instance variables for local parameters -------- !>
-    <if(lvars)><ltypes,lvars:{t,v | protected <t> <v>}; separator=";\n">;<\n>
+    <if(isPar)>
+    <ltypes,lvars:{t,v | protected <t> <v>}; separator=";\n">;<\n>
     PJProcess set(<ltypes,lvars:{t,v | <t> <v>}; separator=", ">) {
-        <lvars:{v | this.<v> = <v>}; separator=";\n">;
-        return this;
+    	<lvars:{v | this.<v> = <v>}; separator=";\n">;
+    	return this;
     }<\n>
     <endif>
     <! Synchronized run method !>
@@ -259,6 +261,25 @@ new PJProcess() {
            later in a separate for-loop. Otherwise, the process should be schedule
            right away. --!>
 }<if(lvars)>.set(<lvars; separator=", ">)<else>.schedule();<endif>
+>>
+
+//========================================================================================
+//========================================================================================
+AnonymousProcess(switchBlock, syncBody, parBlock, barrier, isPar) ::= <<
+new PJProcess() {
+    <! Synchronized run method !>
+    @Override public synchronized void run() {
+        <if(switchBlock)><switchBlock; separator="\n"><endif>
+        <if(syncBody)><syncBody; separator="\n"><endif>
+        terminate();
+    }
+    
+    <! Finalize method !>
+    @Override public void finalize() {
+        <if(parBlock)><parBlock>.decrement();<endif>
+        <if(barrier)><barrier:{b | <b>.resign()}; separator=";\n">;<endif>
+    }
+}<if(!isPar)>.schedule();<endif>
 >>
 
 //========================================================================================
@@ -635,6 +656,38 @@ label(<resume0>);
 
 //========================================================================================
 //
+// 1) expr:
+// 2) body:
+WhileStat(expr, body) ::= <<
+while (<expr>) {
+    <if(body)><body; separator="\n"><endif>
+}
+>>
+
+//========================================================================================
+//
+// 1) expr:
+// 2) stats:
+DoStat(expr, body) ::= <<
+do {
+    <if(body)><body; separator="\n"><endif>
+} while (<expr>);
+>>
+
+//========================================================================================
+//
+// 1) init:
+// 2) expr:
+// 3) incr:
+// 4) stats:
+ForStat(init, expr, incr, stats) ::= <<
+for (<init>; <expr>; <incr>) {
+	<if(stats)><stats; separator="\n"><endif>
+}
+>>
+
+//========================================================================================
+//
 // 1.) init:
 // 2.) expr:
 // 3.) incr:
@@ -642,16 +695,18 @@ label(<resume0>);
 // 5.) name:
 // 6.) count:
 // 7.) jump:
-ParForStat(init, expr, incr, stats, name, count, jump) ::= <<
+ParForStat(init, expr, incr, stats, name, jump) ::= <<
 final PJPar <name> = new PJPar(0, this);
 ArrayList\<PJProcess> processes = new ArrayList\<PJProcess>();
 int count = 0;
 
-for (<init; separator=", ">; <!--!><expr>; <!--!><incr; separator=", ">) {
+for (<init>; <expr>; <incr>) {
     ++count;
+    <!
     processes.add(
-        <stats; separator="\n">
-    );
+        <stats; separator=",\n">
+    );!>
+    <stats:{st | processes.add(<st>)}; separator=";\n">;
 }
 
 <name>.setProcessCount(count);

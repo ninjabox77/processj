@@ -20,6 +20,7 @@ import ast.Sequence;
 import ast.Statement;
 import ast.Token;
 import ast.WhileStat;
+import codegen.Helper;
 import parser.sym;
 import printers.PrettyPrinter;
 import utilities.Log;
@@ -298,7 +299,8 @@ public class UnrollLoopRewrite extends Visitor<AST> {
 
     public AST visitProcTypeDecl(ProcTypeDecl pd) {
         Log.log("LoopRewriter:\tVisiting a ProcTypeDecl");
-        pd.body().visit(this);
+        if (Helper.doesProcYield(pd))
+            pd.body().visit(this);
         return null;
     }
 
@@ -397,6 +399,15 @@ public class UnrollLoopRewrite extends Visitor<AST> {
         bl = bl_;
         cl_old = cl;
         cl = cl_;
+        
+        // <--
+        // Ignore par-for statement
+        if (fs.isPar()) {
+            inside = old_inside;
+            stmts.append(fs);
+            return new Block(stmts);
+        }
+        // -->
 
         // if e1 != null
         if (fs.init() != null) {

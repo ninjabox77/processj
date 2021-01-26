@@ -21,7 +21,7 @@ public enum Tag {
     METHOD_NAME         ("_method$" , "methodType"),
     PARAM_NAME          ("_pd$"     , "parameterType"),
     LOCAL_NAME          ("_ld$"     , "localVariableType"),
-    PAR_BLOCK_NAME      ("_par"     , "parBlockType"),
+    PAR_BLOCK_NAME      ("par$"     , "parBlockType"),
     PROTOCOL_NAME       ("_prot$"   , "protocolType");
 
     private final String tag;
