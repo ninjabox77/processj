@@ -592,6 +592,9 @@ public class CodeGenJava extends Visitor<Object> {
             return stForStat.render();
         }
         
+        // Save previous barrier expressions
+        ArrayList<String> prevBarrier = barriers;
+        
         // Save the previous par-block
         String prevParBlock = currParBlock;
         currParBlock = Helper.makeVariableName(Tag.PAR_BLOCK_NAME.toString(), ++parDecID, Tag.LOCAL_NAME);
@@ -603,34 +606,30 @@ public class CodeGenJava extends Visitor<Object> {
         // Rendered the value of each statement
         ArrayList<String> stmts = new ArrayList<String>();
         if (fs.stats() != null) {
-            if (fs.stats() instanceof Block) {
-                Block bl = (Block) fs.stats();
-//                stmts.add((String) createAnonymousProcTypeDecl(bl).visit(this));
-                for (Statement st : bl.stats()) {
-                    if (st == null)
-                        continue;
-                    // An expression is any valid unit of code that resolves to a value,
-                    // that is, it can be a combination of variables, operations and values
-                    // that yield a result. An statement is a line of code that performs
-                    // some action, e.g. print statements, an assignment statement, etc.
-                    if (st instanceof ExprStat && ((ExprStat) st).expr() instanceof Invocation) {
-                        ExprStat es = (ExprStat) st;
-                        Invocation in = (Invocation) es.expr();
-                        // If this invocation is made on a process, then visit the
-                        // invocation and return a string representing the wrapper
-                        // class for this procedure; e.g.
-                        //    (new <classType>(...) {
-                        //        @Override public synchronized void run() { ... }
-                        //        @Override public finalize() { ... }
-                        //    }.schedule();
-                        if (Helper.doesProcYield(in.targetProc))
-                            stmts.add((String) in.visit(this));
-                        else // Otherwise, the invocation is made through a static Java method
-                            stmts.add((String) createAnonymousProcTypeDecl(st).visit(this));
-                    } else
-                        stmts.add((String) createAnonymousProcTypeDecl(st).visit(this));
+            if (!(fs.stats() instanceof ForStat)) {
+                Sequence<Expression> se = fs.barriers();
+                if (se != null) {
+                    barriers = new ArrayList<>();
+                    for (Expression e : se)
+                        barriers.add((String) e.visit(this));
                 }
-            }
+                if (fs.stats() instanceof Block) {
+                    Block bl = (Block) fs.stats();
+                    if (bl.stats().size() == 1 && bl.stats().child(0) instanceof ExprStat) {
+                        ExprStat es = (ExprStat) bl.stats().child(0);
+                        if (es.expr() instanceof Invocation) {
+                            Invocation in = (Invocation) es.expr();
+                            if (Helper.doesProcYield(in.targetProc))
+                                stmts.add((String) in.visit(this));
+                            else
+                                stmts.add((String) createAnonymousProcTypeDecl(fs.stats()).visit(this));
+                        } else
+                            stmts.add((String) createAnonymousProcTypeDecl(fs.stats()).visit(this));
+                    } else
+                        stmts.add((String) createAnonymousProcTypeDecl(bl).visit(this));
+                }
+            } else
+                stmts.add((String) fs.stats().visit(this));
         }
         
         stForStat.add("init", init);
@@ -638,8 +637,10 @@ public class CodeGenJava extends Visitor<Object> {
         stForStat.add("incr", incr);
         stForStat.add("stats", stmts);
         stForStat.add("name", currParBlock);
+        stForStat.add("barrier", barriers);
         
         inParFor = preParFor;
+        barriers = prevBarrier;
         // Restore the par-block
         currParBlock = prevParBlock;
         

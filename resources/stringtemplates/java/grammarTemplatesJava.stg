@@ -260,7 +260,7 @@ new PJProcess() {
            Such an invocation means that the 'anonymous' process will be scheduled
            later in a separate for-loop. Otherwise, the process should be schedule
            right away. --!>
-}<if(lvars)>.set(<lvars; separator=", ">)<else>.schedule();<endif>
+}<if(isPar)>.set(<lvars; separator=", ">)<else>.schedule();<endif>
 >>
 
 //========================================================================================
@@ -695,21 +695,19 @@ for (<init>; <expr>; <incr>) {
 // 5.) name:
 // 6.) count:
 // 7.) jump:
-ParForStat(init, expr, incr, stats, name, jump) ::= <<
+// 8.) barrier:
+ParForStat(init, expr, incr, stats, name, jump, barrier) ::= <<
 final PJPar <name> = new PJPar(0, this);
 ArrayList\<PJProcess> processes = new ArrayList\<PJProcess>();
 int count = 0;
 
 for (<init>; <expr>; <incr>) {
     ++count;
-    <!
-    processes.add(
-        <stats; separator=",\n">
-    );!>
     <stats:{st | processes.add(<st>)}; separator=";\n">;
 }
 
 <name>.setProcessCount(count);
+<if(barrier)><barrier:{b | <b>.enroll(count)}; separator=";\n">;<endif>
 
 for (PJProcess p : processes)
     p.schedule();

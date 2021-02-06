@@ -226,7 +226,7 @@ public class ProcessJc {
             
             // Visit parallel usage
             System.out.println("-- Performing parallel usage check.");
-            c.visit(new parallel_usage_check.ParallelUsageCheck());
+            //c.visit(new parallel_usage_check.ParallelUsageCheck());
             
             // Visit yield
             System.out.println("-- Annotating procedures that may issue a yield call.");
