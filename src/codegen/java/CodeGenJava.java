@@ -116,12 +116,14 @@ public class CodeGenJava extends Visitor<Object> {
     /** Currently executing par-block */
     private String currParBlock = null;
     
-    /** This is used to prevent calling the resign() method in the
-     * generated code of a par enrolled on a barrier */
-//    private boolean shouldResign = true;
-    
+    /** This is used to store variable the tables below --
+     * 'localsForAnon' and 'paramsForAnon'*/
     private boolean inParFor = false;
     
+    /** These two variables are responsible for holding variables
+     * that are passed to anonymous processes in the generated
+     * code for a par-for 
+     */
     private HashMap<String, String> localsForAnon = new LinkedHashMap<>();
     private HashMap<String, String> paramsForAnon = new LinkedHashMap<>();
     
@@ -328,7 +330,7 @@ public class CodeGenJava extends Visitor<Object> {
             stProcTypeDecl.add("syncBody", body);
             stProcTypeDecl.add("isPar", inParFor);
             // Add the barrier this procedure should resign from
-            if (!barriers.isEmpty()) //&& shouldResign)
+            if (!barriers.isEmpty())
                 stProcTypeDecl.add("barrier", barriers);
             // Add the switch block for yield and resumption
             if (!switchCases.isEmpty()) {
@@ -1592,7 +1594,6 @@ public class CodeGenJava extends Visitor<Object> {
         // Don't generate code for an empty par statement
         if (pb.stats().size() == 0)
             return null;
-//        boolean prevResign = shouldResign;
         ST stParBlock = stGroup.getInstanceOf("ParBlock");
         // Save the previous par-block
         String prevParBlock = currParBlock;
@@ -1626,8 +1627,6 @@ public class CodeGenJava extends Visitor<Object> {
         for (Statement st : statements) {
             if (st == null)
                 continue;
-            // Resign only when necessary
-//            shouldResign = !(st instanceof ParBlock);
             // <--
             Sequence<Expression> se = st.barrierNames;
             if (se != null) {
@@ -1662,8 +1661,6 @@ public class CodeGenJava extends Visitor<Object> {
         currParBlock = prevParBlock;
         // Restore barrier expressions
         barriers = prevBarrier;
-        // Restore resign
-//        shouldResign = prevResign;
         
         return stParBlock.render();
     }
@@ -1910,8 +1907,6 @@ public class CodeGenJava extends Visitor<Object> {
         
         localsForAnon.clear();
         paramsForAnon.clear();
-        
-//        shouldResign = true;
     }
     
     // Returns a string representation of a jump label
