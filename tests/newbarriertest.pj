@@ -1,0 +1,32 @@
+import std.io;
+
+public void f() {}
+public void g() {}
+public void h() {}
+public void i() {}
+public void j() {}
+public void k() {}
+public void l() {}
+public void m() {}
+
+
+public void main(string[] args) {
+	barrier a, b, c, d;
+
+	par enroll a, b {
+		par enroll a, c {
+			par enroll a, d {
+				f();
+				g();
+			}
+			h();
+			i();
+		}
+		par enroll a, d {
+			j();
+			k();
+		}
+		l();
+		m();
+	}
+}
