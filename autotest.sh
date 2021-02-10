@@ -49,20 +49,8 @@ for test in *.pj; do
 	if [ $test == "mandelbrot2.pj" ]; then
 		continue
 	fi
-	# TODO: figure this one out
-	if [ $test == "NetworkProc.pj" ]; then
-		continue
-	fi
-	# barrier resignation issue
-	if [ $test == "santa.pj" ]; then
-		continue
-	fi
 	# channel read in for loop issue
 	if [ $test == "silly.pj" ]; then
-		continue
-	fi
-	# need barrier fix
-	if [ $test == "cppbartest.pj" ]; then
 		continue
 	fi
 
@@ -118,20 +106,8 @@ for test in ./tests/*.pj; do
 	if [ $test == "./tests/mandelbrot2.pj" ]; then
 		continue
 	fi
-	# TODO: figure this one out
-	if [ $test == "./tests/NetworkProc.pj" ]; then
-		continue
-	fi
-	# TODO: barrier resignation issue
-	if [ $test == "./tests/santa.pj" ]; then
-		continue
-	fi
 	# channel read in for loop issue
 	if [ $test == "./tests/silly.pj" ]; then
-		continue
-	fi
-	# need barrier fix
-	if [ $test == "./tests/cppbartest.pj" ]; then
 		continue
 	fi
 
