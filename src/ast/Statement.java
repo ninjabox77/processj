@@ -8,7 +8,8 @@ public abstract class Statement extends AST {
     // T temp_1;                                                                                                                                                                                                   
     // temp_1 = c.read();                                                                                                                                                                                          
     public Sequence<Statement> assignments = null;
-
+    // Barriers from which a process should resign 
+    public Sequence<Expression> barrierNames;
 
     private String label = "";
     public boolean yields = false;
