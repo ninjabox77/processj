@@ -2189,8 +2189,9 @@ public class CodeGenCPP extends Visitor<Object> {
             // Rendered value of each statement.
             ArrayList<String> stmts = new ArrayList<String>();
             for (Statement st : statements) {
-                if (st == null)
+                if (st == null) {
                     continue;
+                }
                 // if (st instanceof ParBlock) {
                 //     continue;
                 // }
@@ -2208,18 +2209,28 @@ public class CodeGenCPP extends Visitor<Object> {
                     //          @Override public synchronized void run() { ... }
                     //          @Override public finalize() { ... }
                     //      }.schedule();
-                    if (Helper.doesProcYield(in.targetProc))
+                    if (Helper.doesProcYield(in.targetProc)) {
                         stmts.add((String) in.visit(this));
-                    else // Otherwise, the invocation is made through a static Java method.
+                    }
+                    else {// Otherwise, the invocation is made through a static Java method.
                         stmts.add((String) createAnonymousProcTypeDecl(st).visit(this));
-                } else
+                    }
+                } else {
                     stmts.add((String) createAnonymousProcTypeDecl(st).visit(this));
+                }
             }
             stParBlock.add("body", stmts);
         }
         // Add the barrier to the par-block.
-        if (!barrierList.isEmpty() && pb.barriers().size() > 0)
-            stParBlock.add("barrier", barrierList);
+        if (!barrierList.isEmpty() && pb.barriers().size() > 0) {
+            HashMap<String, Integer> parBarriers = new HashMap();
+            for (Expression e : pb.barriers()) {
+                String name = (String) e.visit(this);
+                parBarriers.put(name, pb.enrolls.get(((NameExpr)e).name().getname()));
+            }
+            stParBlock.add("barrier", parBarriers.keySet());
+            stParBlock.add("enrollees", parBarriers.values());
+        }
         
         // Restore the par-block.
         currentParBlock = prevParBlock;

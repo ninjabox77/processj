@@ -330,13 +330,13 @@ SwitchCase(name, jump) ::= "case <jump>: goto <name>L<jump>; break;"
 // 4) body: the statements inside the 'par' block.
 // 5) jump: the label to restart from.
 // 6) barrier:
-ParBlock(name, count, process, body, jump, barrier, procName, parent) ::= <<
+ParBlock(name, count, process, body, jump, barrier, enrollees, procName, parent) ::= <<
 
 <! TODO: is this where the first label should go? !>
 <!<procName>L0:!>
 <! TODO: yet to be evaluated and adjusted !>
 <if(parent)><parent><endif><name> = new pj_runtime::pj_par(<count>, this);
-<if(barrier)><barrier:{b | <b>->enroll(<count>)}; separator=";\n">;<endif>
+<if(barrier)><barrier,enrollees:{b,e | <b>->enroll(<e>)}; separator=";\n">;<endif>
 
 <if(body)><body; separator="\n\n"><endif>
 
