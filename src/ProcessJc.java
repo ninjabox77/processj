@@ -253,6 +253,11 @@ public class ProcessJc {
             
             System.out.println("-- Rewriting yielding expressions.");
             c.visit(new rewriters.ChannelRead());
+
+            // <--
+            System.out.println("-- Rewriting parblocks statements");
+            c.visit(new rewriters.ParBlockRewrite());
+            // -->
             
             //System.out.println("Lets reprint it all");
             //c.visit(new printers.ParseTreePrinter());
