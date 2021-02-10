@@ -8,14 +8,12 @@ public void g() {
 
 }
 
-public void h() }
+public void h() {
 
 }
 
 public void main(string[] args) {
        barrier a, b, c;
-
-       a.sync();
 
        par enroll a, b {
        	   h();
@@ -28,17 +26,17 @@ public void main(string[] args) {
 }
 
 
-should be the same as
+// should be the same as
 
-public void main(string[] args) {
-      barrier a, b, c;
+// public void main(string[] args) {
+//       barrier a, b, c;
 
-      a.sync();
+//       a.sync();
 
-      par {
-            h(a, b);
+//       par {
+//             h(a, b);
 
-            f(a, c);
-	    g(a, c);
-      }
-}
+//             f(a, c);
+//    	   g(a, c);
+//       }
+// }

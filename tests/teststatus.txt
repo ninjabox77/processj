@@ -34,16 +34,16 @@ integrate.pj (infinite counting upwards)
 santatest.pj (protocols with no fields fixed)
 Demo.pj (problem with inheritance/structure fixed)
 Demo2.pj (issue with previousProcNames for parent classes fixed)
-fullAdder.pj (par deletes are bad (heap use after free according to asan, also deadlock eventually?) fixed!)
-santa.pj (needs extra fluff on barrier stuff)
+fullAdder.pj (par deletes are bad (heap use after free according to asan, also deadlock fixed!)
+santa.pj (barrier fix really works)
 mandelbrot.pj (has pgm library)
 sharedchan.pj (works, infinite loop)
 sharedread.pj (works, infinite loop)
 sharedwrite.pj (works, infinite loop)
+NetworkProc.pj (issue with alts and deadlock fixed)
 
 tests that don't pass:
 mandelbrot2.pj (par for)
-NetworkProc.pj (issue with alts and deadlock)
 
 these have no main:
 silly.pj (more channel read stuff, no semicolons????)
