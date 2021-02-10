@@ -29,12 +29,12 @@ namespace pj_runtime
     {
     public:
         std::vector<pj_process*> synced;
-        uint32_t enrolled = 0;
+        uint32_t enrolled;
 
         pj_barrier()
-        : enrolled(1)
+        : enrolled(0)
         {
-
+            pj_logger::log("barrier instantiated");
         }
 
         ~pj_barrier()
@@ -45,7 +45,9 @@ namespace pj_runtime
         void enroll(uint32_t proc_count)
         {
             std::lock_guard<std::mutex> lock(this->mtx);
-            this->enrolled += (proc_count - 1);
+            pj_logger::log("enrolled was ", enrolled);
+            this->enrolled += proc_count;
+            pj_logger::log("enrolled is now ", enrolled);
         }
 
         void resign()
@@ -53,17 +55,21 @@ namespace pj_runtime
             std::lock_guard<std::mutex> lock(this->mtx);
             if(this->enrolled > 1)
             {
+                pj_logger::log("enrolled decrementing from ", enrolled);
                 --this->enrolled;
+                pj_logger::log("enrolled is now ", enrolled);
             }
         }
 
         void sync(pj_process* process)
         {
             std::lock_guard<std::mutex> lock(this->mtx);
+            pj_logger::log("process ", process, " called sync()");
             process->set_not_ready();
             this->synced.push_back(process);
             if(this->synced.size() == enrolled)
             {
+                pj_logger::log("firing off processes again");
                 for(uint32_t i = 0; i < this->synced.size(); ++i)
                 {
                     this->synced[i]->set_ready();
