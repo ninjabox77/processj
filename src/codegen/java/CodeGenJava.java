@@ -1888,6 +1888,7 @@ public class CodeGenJava extends Visitor<Object> {
         if (rs.expr() != null)
             expr = (String) rs.expr().visit(this);
         
+        // This removes the extra ";" for invocation calls
         expr = expr.replace(DELIMITER, "");
         stReturnStat.add("expr", expr);
         
@@ -1913,6 +1914,8 @@ public class CodeGenJava extends Visitor<Object> {
         } else if (t.isPrimitiveType()) {
             // This is needed because we can only have wrapper class
             baseType = Helper.getWrapperType(t);
+        } else if (t.isArrayType()) {
+            baseType = (String) t.visit(this);
         }
         
         return baseType;
