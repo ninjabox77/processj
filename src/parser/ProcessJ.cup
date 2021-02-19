@@ -1087,7 +1087,8 @@ timeout_statement ::=
 
 // SuspendStat :> Statement :> AST
 suspend_statement ::=
-          SUSPEND:s RESUME WITH LPAREN formal_parameter_list:l RPAREN SEMICOLON {: RESULT = new SuspendStat(s, l); :}
+          SUSPEND:s SEMICOLON {: RESULT = new SuspendStat(s, new Sequence()); :}
+          //SUSPEND:s RESUME WITH LPAREN formal_parameter_list:l RPAREN SEMICOLON {: RESULT = new SuspendStat(s, l); :}
         ;
 
 // **************************************************

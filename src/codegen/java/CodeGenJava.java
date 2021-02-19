@@ -617,6 +617,7 @@ public class CodeGenJava extends Visitor<Object> {
                 }
                 if (fs.stats() instanceof Block) {
                     Block bl = (Block) fs.stats();
+                    /*
                     if (bl.stats().size() == 1 && bl.stats().child(0) instanceof ExprStat) {
                         ExprStat es = (ExprStat) bl.stats().child(0);
                         if (es.expr() instanceof Invocation) {
@@ -627,8 +628,33 @@ public class CodeGenJava extends Visitor<Object> {
                                 stmts.add((String) createAnonymousProcTypeDecl(fs.stats()).visit(this));
                         } else
                             stmts.add((String) createAnonymousProcTypeDecl(fs.stats()).visit(this));
-                    } else
+                    } else {
                         stmts.add((String) createAnonymousProcTypeDecl(bl).visit(this));
+                    }*/
+
+                    // TODO: This section may need to be removed!!
+                    for (Statement st : bl.stats()) {
+                        // An expression is any valid unit of code that resolves to a value,
+                        // that is, it can be a combination of variables, operations and values
+                        // that yield a result. An statement is a line of code that performs
+                        // some action, e.g. print statements, an assignment statement, etc.
+                        if (st instanceof ExprStat && ((ExprStat) st).expr() instanceof Invocation) {
+                            ExprStat es = (ExprStat) st;
+                            Invocation in = (Invocation) es.expr();
+                            // If this invocation is made on a process, then visit the
+                            // invocation and return a string representing the wrapper
+                            // class for this procedure; e.g.
+                            //    (new <classType>(...) {
+                            //        @Override public synchronized void run() { ... }
+                            //        @Override public finalize() { ... }
+                            //    }.schedule();
+                            if (Helper.doesProcYield(in.targetProc))
+                                stmts.add((String) in.visit(this));
+                            else // Otherwise, the invocation is made through a static Java method
+                                stmts.add((String) createAnonymousProcTypeDecl(st).visit(this));
+                        } else
+                            stmts.add((String) createAnonymousProcTypeDecl(st).visit(this));
+                    }
                 }
             } else
                 stmts.add((String) fs.stats().visit(this));

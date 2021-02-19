@@ -2,6 +2,7 @@
 #pragma NATIVE;
 #pragma FILE "io";
 #pragma LANGUAGE "JVM";
+
 package std;
 
 public native void println();
