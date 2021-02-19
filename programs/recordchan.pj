@@ -6,7 +6,8 @@ record A {
 }
 
 public void reader(chan<A>.read r) {
-	println(r.read());
+	A aa = r.read();
+	println("a=" + aa.a + ", b=" + aa.b);
 }
 
 public void writer(chan<A>.write w) {
