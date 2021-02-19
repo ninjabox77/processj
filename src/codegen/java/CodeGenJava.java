@@ -1888,6 +1888,7 @@ public class CodeGenJava extends Visitor<Object> {
         if (rs.expr() != null)
             expr = (String) rs.expr().visit(this);
         
+        expr = expr.replace(DELIMITER, "");
         stReturnStat.add("expr", expr);
         
         return stReturnStat.render();

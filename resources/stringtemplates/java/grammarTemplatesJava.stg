@@ -801,7 +801,7 @@ ConstantDecl(type, var) ::= "public static final <type> <var>"
 //========================================================================================
 //
 // 1.) expr:
-ReturnStat(expr) ::= "<if(expr)>return <expr><endif>"
+ReturnStat(expr) ::= "<if(expr)>return <expr>;<endif>"
 
 //========================================================================================
 // 1.) name:
