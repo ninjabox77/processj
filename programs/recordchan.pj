@@ -1,0 +1,23 @@
+import std.*;
+
+record A {
+	int a;
+	string b;
+}
+
+public void reader(chan<A>.read r) {
+	println(r.read());
+}
+
+public void writer(chan<A>.write w) {
+	A aa = new A {a=4, b="ben"};
+	w.write(aa);
+}
+
+public void main(string[] args) {
+	chan<A> c;
+	par {
+		reader(c.read);
+		writer(c.write);
+	}
+}
