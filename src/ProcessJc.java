@@ -216,6 +216,10 @@ public class ProcessJc {
             System.out.println("-- Checking types.");
             c.visit(new typechecker.TypeChecker(globalTypeTable));
             
+            // TODO
+            System.out.println("-- Checking break for protocols.");
+            c.visit(new rewriters.SwitchStmt());
+            
             // Visit cast-rewrite
             System.out.println("-- Rewriting cast-expressions.");
             c.visit(new CastRewrite());

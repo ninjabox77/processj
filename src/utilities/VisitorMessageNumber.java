@@ -180,6 +180,8 @@ public enum VisitorMessageNumber implements MessageNumber {
     REWRITE_1001(1001, ErrorSeverity.ERROR, MessageType.PRINT_CONTINUE),
     REWRITE_1002(1002, ErrorSeverity.ERROR, MessageType.PRINT_CONTINUE),
     REWRITE_1003(1003, ErrorSeverity.ERROR, MessageType.PRINT_CONTINUE),
+    REWRITE_1004(1004, ErrorSeverity.ERROR, MessageType.PRINT_CONTINUE),
+    REWRITE_1005(1005, ErrorSeverity.ERROR, MessageType.PRINT_CONTINUE)
     ;
 
     
