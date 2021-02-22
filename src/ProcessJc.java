@@ -216,7 +216,7 @@ public class ProcessJc {
             System.out.println("-- Checking types.");
             c.visit(new typechecker.TypeChecker(globalTypeTable));
             
-            // TODO
+            // Visit a switch statement case
             System.out.println("-- Checking break for protocols.");
             c.visit(new rewriters.SwitchStmt());
             
@@ -256,10 +256,8 @@ public class ProcessJc {
             c.visit(new rewriters.ChannelRead());
 //            Log.doLog = false;
             
-            // <--
             System.out.println("-- Rewriting parblocks statements");
             c.visit(new rewriters.ParBlockRewrite());
-            // -->
             
             //System.out.println("Lets reprint it all");
             //c.visit(new printers.ParseTreePrinter());

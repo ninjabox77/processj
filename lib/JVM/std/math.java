@@ -76,6 +76,10 @@ public class math {
         return StrictMath.sqrt(x);
     }
     
+    public static double cbrt(double x) {
+        return StrictMath.cbrt(x);
+    }
+    
     public static double ceil(double x) {
         return StrictMath.ceil(x);
     }
@@ -94,5 +98,13 @@ public class math {
     
     public static double floor(double x) {
         return StrictMath.floor(x);
+    }
+    
+    public static double toRadians(double ang) {
+        return ang / 180.0 * PI;
+    }
+    
+    public static double toDegrees(double ang) {
+        return ang * 180.0 / PI;
     }
 }
