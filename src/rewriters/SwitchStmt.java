@@ -72,12 +72,12 @@ public class SwitchStmt extends Visitor<Object> {
         return Boolean.FALSE;
     }
     
-    
     @Override
     public Object visitSwitchStat(SwitchStat st) {
         Log.log(st, "Visiting a SwitchStat");
         
         ne = (String) st.expr().visit(this);
+        
         if (ne != null && protocols.contains(ne))
             inProtocol = true;
         
