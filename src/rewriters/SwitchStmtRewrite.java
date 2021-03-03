@@ -25,13 +25,13 @@ import utilities.VisitorMessageNumber;
  * 
  * @author ben
  */
-public class SwitchStmt extends Visitor<Object> {
+public class SwitchStmtRewrite extends Visitor<Object> {
     
     private Set<String> protocols = new HashSet<>();
     private boolean inProtocol = false;
     private String ne = null;
     
-    public SwitchStmt() {
+    public SwitchStmtRewrite() {
         Log.logHeader("*******************************************");
         Log.logHeader("*  S W I T C H - S T M T   R E W R I T E  *");
         Log.logHeader("*******************************************");

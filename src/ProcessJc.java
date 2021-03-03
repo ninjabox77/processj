@@ -218,7 +218,7 @@ public class ProcessJc {
             
             // Visit a switch statement case
             System.out.println("-- Checking break for protocols.");
-            c.visit(new rewriters.SwitchStmt());
+            c.visit(new rewriters.SwitchStmtRewrite());
             
             // Visit cast-rewrite
             System.out.println("-- Rewriting cast-expressions.");
