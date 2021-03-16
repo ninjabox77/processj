@@ -42,7 +42,9 @@ public class SwitchStmtRewrite extends Visitor<Object> {
         Log.log(ld, "Visiting a LocalDecl");
         
         Boolean flag = (Boolean) ld.type().visit(this);
-        if (flag)
+        // A visit to a local declaration might return 'null', so
+        // we must check to avoid throwing an exception at runtime
+        if (flag != null && flag)
             protocols.add(ld.var().name().getname());
         
         return null;
