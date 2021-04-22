@@ -212,6 +212,10 @@ public class ProcessJc {
             System.out.println("-- Reconstructing array literas.");
             c.visit(new rewriters.ArraysRewrite());
             
+            // Visit resolve named type
+            System.out.println("-- Resolving named type.");
+            c.visit(new typechecker.ResolveNamedType(globalTypeTable));
+            
             // Visit type checker
             System.out.println("-- Checking types.");
             c.visit(new typechecker.TypeChecker(globalTypeTable));

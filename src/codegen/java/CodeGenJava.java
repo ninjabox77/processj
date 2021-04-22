@@ -122,8 +122,7 @@ public class CodeGenJava extends Visitor<Object> {
     
     /** These two variables are responsible for holding variables
      * that are passed to anonymous processes in the generated
-     * code for a par-for 
-     */
+     * code for a par-for */
     private HashMap<String, String> localsForAnon = new LinkedHashMap<>();
     private HashMap<String, String> paramsForAnon = new LinkedHashMap<>();
     
@@ -259,21 +258,22 @@ public class CodeGenJava extends Visitor<Object> {
         // Package name for this source file
         String packagename = co.packageNoName();
         
-        for (Import im : co.imports())
-            if (im != null)
+        for (Import im : co.imports()) {
+            if ( im!=null )
                 importFiles.add((String) im.visit(this));
+        }
         
         for (AST decl : typeDecls) {
-            if (decl instanceof Type) {
+            if ( decl instanceof Type ) {
                 // Collect procedures, records, protocols, external types, etc.
                 String t = (String) ((Type) decl).visit(this);
-                if (t != null)
+                if ( t!=null )
                     body.add(t);
-            } else if (decl instanceof ConstantDecl) {
+            } else if ( decl instanceof ConstantDecl ) {
                 // Iterate over remaining declarations, which is anything that
                 // comes after top-level declarations
                 String cd = (String) ((ConstantDecl) decl).visit(this);
-                if (cd != null)
+                if ( cd!=null )
                     body.add(cd);
             }
         }
@@ -285,7 +285,7 @@ public class CodeGenJava extends Visitor<Object> {
         stCompilation.add("version", JVM_RUNTIME);
         
         // Add all import statements to the file (if any)
-        if (importFiles.size() > 0)
+        if ( importFiles.size()>0 )
             stCompilation.add("imports", importFiles);
 
         // This will render the code for debugging
@@ -308,7 +308,7 @@ public class CodeGenJava extends Visitor<Object> {
         String prevProcName = currProcName;
         // Save previous jump labels
         ArrayList<String> prevLabels = switchCases;
-        if (!switchCases.isEmpty())
+        if ( !switchCases.isEmpty() )
             switchCases = new ArrayList<>();
         // Name of the invoked procedure
         currProcName = (String) pd.name().visit(this);
@@ -318,7 +318,7 @@ public class CodeGenJava extends Visitor<Object> {
         String procName = null;
         // For non-invocations, that is, for anything other than a procedure
         // that yields, we need to extends the PJProcess class anonymously
-        if ("Anonymous".equals(currProcName)) {
+        if ( "Anonymous".equals(currProcName) ) {
             // Preserve current jump label for resumption
             int prevJumpLabel = jumpLabel;
             jumpLabel = 0;
@@ -330,17 +330,17 @@ public class CodeGenJava extends Visitor<Object> {
             stProcTypeDecl.add("syncBody", body);
             stProcTypeDecl.add("isPar", inParFor);
             // Add the barrier this procedure should resign from
-            if (!barriers.isEmpty())
+            if ( !barriers.isEmpty() )
                 stProcTypeDecl.add("barrier", barriers);
             // Add the switch block for yield and resumption
-            if (!switchCases.isEmpty()) {
+            if ( !switchCases.isEmpty() ) {
                 ST stSwitchBlock = stGroup.getInstanceOf("SwitchBlock");
                 stSwitchBlock.add("jumps", switchCases);
                 stProcTypeDecl.add("switchBlock", stSwitchBlock.render());
             }
             // The list of local variables defined in the body of a procedure
             // becomes the instance fields of the class
-            if (!localsForAnon.isEmpty()) {
+            if ( !localsForAnon.isEmpty() ) {
                 stProcTypeDecl.add("ltypes", localsForAnon.values());
                 stProcTypeDecl.add("lvars", localsForAnon.keySet());
             }
@@ -352,12 +352,12 @@ public class CodeGenJava extends Visitor<Object> {
             // Formal parameters that must be passed to the procedure
             Sequence<ParamDecl> formals = pd.formalParams();
             // Do we have any parameters?
-            if (formals != null && formals.size() > 0) {
+            if ( formals!=null && formals.size()>0 ) {
                 // Iterate through and visit every parameter declaration.
                 // Retrieve the name and type of each parameter specified in
                 // a list of comma-separated arguments. Note that we ignored
                 // the value returned by this visitor
-                for (int i = 0; i < formals.size(); ++i)
+                for (int i = 0; i<formals.size(); ++i)
                     formals.child(i).visit(this);
             }            
             // Visit all declarations that appear in the procedure
@@ -372,7 +372,7 @@ public class CodeGenJava extends Visitor<Object> {
             boolean doesProcYield = Helper.doesProcYield(pd);
             // Set the template to the correct instance value and then initialize
             // its attributes
-            if (doesProcYield) {
+            if ( doesProcYield ) {
                 // This procedure yields! Grab the instance of a yielding procedure
                 // from the string template in order to define a new class
                 procName = Helper.makeVariableName(currProcName + hashSignature(pd), 0, Tag.PROCEDURE_NAME);
@@ -388,20 +388,20 @@ public class CodeGenJava extends Visitor<Object> {
                 stProcTypeDecl.add("name", procName);
                 stProcTypeDecl.add("type", procType);
                 // Do we have any access modifier? If so, add them
-                if (modifiers != null && modifiers.length > 0)
+                if ( modifiers!=null && modifiers.length>0 )
                     stProcTypeDecl.add("modifier", modifiers);
                 stProcTypeDecl.add("body", body);
             }
             
             // Create an entry point for the ProcessJ program, which is just
             // a Java main method that is called by the JVM
-            if ("main".equals(currProcName) && pd.signature().equals(Tag.MAIN_NAME.toString())) {
+            if ( "main".equals(currProcName) && pd.signature().equals(Tag.MAIN_NAME.toString()) ) {
                 // Create an instance of a Java main method template
                 ST stMain = stGroup.getInstanceOf("Main");
                 stMain.add("class", currCompilation.fileNoExtension());
                 stMain.add("name", procName);
                 // Pass the list of command line arguments to this main method
-                if (!paramToFields.isEmpty()) {
+                if ( !paramToFields.isEmpty() ) {
                     stMain.add("types", paramToFields.values());
                     stMain.add("vars", paramToFields.keySet());
                 }
@@ -411,18 +411,18 @@ public class CodeGenJava extends Visitor<Object> {
             // The list of command-line arguments should be passed to the constructor
             // of the static class that the main method belongs or be passed to the
             // static method
-            if (!paramToFields.isEmpty()) {
+            if ( !paramToFields.isEmpty() ) {
                 stProcTypeDecl.add("types", paramToFields.values());
                 stProcTypeDecl.add("vars", paramToFields.keySet());
             }
             // The list of local variables defined in the body of a procedure
             // becomes the instance fields of the class
-            if (!localToFields.isEmpty()) {
+            if ( !localToFields.isEmpty() ) {
                 stProcTypeDecl.add("ltypes", localToFields.values());
                 stProcTypeDecl.add("lvars", localToFields.keySet());
             }
             // Add the switch block for resumption (if any)
-            if (!switchCases.isEmpty()) {
+            if ( !switchCases.isEmpty() ) {
                 ST stSwitchBlock = stGroup.getInstanceOf("SwitchBlock");
                 stSwitchBlock.add("jumps", switchCases);
                 stProcTypeDecl.add("switchBlock", stSwitchBlock.render());
@@ -453,12 +453,12 @@ public class CodeGenJava extends Visitor<Object> {
         // <--
         // Silly rewrite for comparing two strings in ProcessJ using the
         // equals(...) method from Java
-        if ("==".equals(op) && (be.left() instanceof NameExpr && be.right() instanceof NameExpr) &&
+        if ( "==".equals(op) && (be.left() instanceof NameExpr && be.right() instanceof NameExpr) &&
             ((((NameExpr) be.left()).myDecl instanceof LocalDecl) &&
-            ((NameExpr) be.right()).myDecl instanceof LocalDecl)) {
+            ((NameExpr) be.right()).myDecl instanceof LocalDecl) ) {
             LocalDecl ld1 = (LocalDecl) ((NameExpr) be.left()).myDecl;
             LocalDecl ld2 = (LocalDecl) ((NameExpr) be.right()).myDecl;
-            if (ld1.type().isStringType() && ld2.type().isStringType()) {
+            if ( ld1.type().isStringType() && ld2.type().isStringType() ) {
                stBinaryExpr = stGroup.getInstanceOf("StringCompare");
                stBinaryExpr.add("str1", lhs);
                stBinaryExpr.add("str2", rhs);
@@ -471,16 +471,16 @@ public class CodeGenJava extends Visitor<Object> {
         // operand, which is a record or protocol variable, and then use the
         // NameType of the 'rhs' operand as the type to check if the 'lhs'
         // operand is indeed an instanceof the 'rhs' operand
-        if ("instanceof".equals(op) && localToFields.containsKey(lhs)) {
+        if ( "instanceof".equals(op) && localToFields.containsKey(lhs) ) {
             String namedType = localToFields.get(lhs);
             Object o = topLvlDecls.get(namedType);
-            if (o instanceof RecordTypeDecl) {
+            if ( o instanceof RecordTypeDecl ) {
                 stBinaryExpr = stGroup.getInstanceOf("RecordExtend");
                 stBinaryExpr.add("name", lhs);
                 stBinaryExpr.add("type", String.format("I_%s", rhs));
                 return stBinaryExpr.render();
             }
-            if (namedType.equals(PJProtocolCase.class.getSimpleName())) {
+            if ( namedType.equals(PJProtocolCase.class.getSimpleName()) ) {
                 stBinaryExpr = stGroup.getInstanceOf("RecordExtend");
                 stBinaryExpr.add("name", lhs);
                 stBinaryExpr.add("type", currProtocol);
@@ -504,11 +504,11 @@ public class CodeGenJava extends Visitor<Object> {
         String[] stats = null;
         String expr = null;
         
-        if (ws.expr() != null)
+        if ( ws.expr()!=null )
             expr = ((String) ws.expr().visit(this));
-        if (ws.stat() != null) {
+        if ( ws.stat()!=null ) {
             Object o = ws.stat().visit(this);
-            if (o instanceof String) {
+            if ( o instanceof String ) {
                 stats = new String[] { (String) o };
             } else {
                 stats = (String[]) o;
@@ -529,11 +529,11 @@ public class CodeGenJava extends Visitor<Object> {
         String[] stats = null;
         String expr = null;
         
-        if (ds.expr() != null)
+        if ( ds.expr()!=null )
             expr = ((String) ds.expr().visit(this));
-        if (ds.stat() != null) {
+        if ( ds.stat()!=null ) {
             Object o = ds.stat().visit(this);
-            if (o instanceof String) {
+            if ( o instanceof String ) {
                 stats = new String[] { (String) o };
             } else {
                 stats = (String[]) o;
@@ -559,26 +559,26 @@ public class CodeGenJava extends Visitor<Object> {
         boolean preParFor = inParFor;
         inParFor = fs.isPar() || preParFor;
         
-        if (fs.init() != null) {
+        if ( fs.init()!=null ) {
             init = new ArrayList<>();
             for (Statement st : fs.init()) {
                 init.add(((String) st.visit(this)).replace(DELIMITER, ""));
             }
         }
-        if (fs.expr() != null) {
+        if ( fs.expr()!=null ) {
             expr = (String) fs.expr().visit(this);
         }
-        if (fs.incr() != null) {
+        if ( fs.incr()!=null ) {
             incr = new ArrayList<>();
             for (Statement st: fs.incr()) {
                 incr.add(((String) st.visit(this)).replace(DELIMITER, ""));
             }
         }
         
-        if (!fs.isPar()) {
-            if (fs.stats() != null) {
+        if ( !fs.isPar() ) {
+            if ( fs.stats()!=null ) {
                 Object o = fs.stats().visit(this);
-                if (o instanceof String) {
+                if ( o instanceof String ) {
                     stats = new String[] { (String) o };
                 } else {
                     stats = (String[]) o;
@@ -607,15 +607,15 @@ public class CodeGenJava extends Visitor<Object> {
         
         // Rendered the value of each statement
         ArrayList<String> stmts = new ArrayList<String>();
-        if (fs.stats() != null) {
-            if (!(fs.stats() instanceof ForStat)) {
+        if ( fs.stats()!=null ) {
+            if ( !(fs.stats() instanceof ForStat) ) {
                 Sequence<Expression> se = fs.barriers();
-                if (se != null) {
+                if ( se!=null ) {
                     barriers = new ArrayList<>();
                     for (Expression e : se)
                         barriers.add((String) e.visit(this));
                 }
-                if (fs.stats() instanceof Block) {
+                if ( fs.stats() instanceof Block ) {
                     Block bl = (Block) fs.stats();
                     /*
                     if (bl.stats().size() == 1 && bl.stats().child(0) instanceof ExprStat) {
@@ -638,7 +638,7 @@ public class CodeGenJava extends Visitor<Object> {
                         // that is, it can be a combination of variables, operations and values
                         // that yield a result. An statement is a line of code that performs
                         // some action, e.g. print statements, an assignment statement, etc.
-                        if (st instanceof ExprStat && ((ExprStat) st).expr() instanceof Invocation) {
+                        if ( st instanceof ExprStat && ((ExprStat) st).expr() instanceof Invocation ) {
                             ExprStat es = (ExprStat) st;
                             Invocation in = (Invocation) es.expr();
                             // If this invocation is made on a process, then visit the
@@ -648,7 +648,7 @@ public class CodeGenJava extends Visitor<Object> {
                             //        @Override public synchronized void run() { ... }
                             //        @Override public finalize() { ... }
                             //    }.schedule();
-                            if (Helper.doesProcYield(in.targetProc))
+                            if ( Helper.doesProcYield(in.targetProc) )
                                 stmts.add((String) in.visit(this));
                             else // Otherwise, the invocation is made through a static Java method
                                 stmts.add((String) createAnonymousProcTypeDecl(st).visit(this));
@@ -697,7 +697,7 @@ public class CodeGenJava extends Visitor<Object> {
         ST stContinueStat = stGroup.getInstanceOf("ContinueStat");
         String name = null;
         // If target isn't null, we have a label to jump to
-        if (cs.target() != null) {
+        if ( cs.target()!=null ) {
             name = (String) cs.target().visit(this);
             stContinueStat.add("name", name);
         }
@@ -716,18 +716,18 @@ public class CodeGenJava extends Visitor<Object> {
         String condExpr = null;
         // We either have an if-statement _or_ a loop construct that
         // has been re-written as an if-statement
-        if (is.expr() != null)
+        if ( is.expr()!=null )
             condExpr = (String) is.expr().visit(this);
-        if (is.thenpart() != null) {
-            if (is.thenpart() instanceof Block)
+        if ( is.thenpart()!=null ) {
+            if ( is.thenpart() instanceof Block )
                 thenStats = (String[]) is.thenpart().visit(this);
             else {
                 String stat = (String) is.thenpart().visit(this);
                 thenStats = new String[] { stat };
             }
         }
-        if (is.elsepart() != null) {
-            if (is.elsepart() instanceof Block)
+        if ( is.elsepart()!=null ) {
+            if ( is.elsepart() instanceof Block )
                 thenParts = (String[]) is.elsepart().visit(this);
             else {
                 String stat = (String) is.elsepart().visit(this);
@@ -752,14 +752,14 @@ public class CodeGenJava extends Visitor<Object> {
         String lhs = null;
         String rhs = null;
         
-        if (as.left() != null) // Not a protocol or record
+        if ( as.left()!=null ) // Not a protocol or record
             lhs = (String) as.left().visit(this);
         
-        if (as.right() instanceof NewArray)
+        if ( as.right() instanceof NewArray )
             return createNewArray(lhs, ((NewArray) as.right()));
-        else if (as.right() instanceof ChannelReadExpr)
+        else if ( as.right() instanceof ChannelReadExpr )
             return createChannelReadExpr(lhs, op, ((ChannelReadExpr) as.right()));
-        else if (as.right() != null) {
+        else if ( as.right()!=null ) {
             rhs = (String) as.right().visit(this);
             rhs = rhs.replace(DELIMITER, "");
         }
@@ -780,8 +780,12 @@ public class CodeGenJava extends Visitor<Object> {
         String type = (String) pd.type().visit(this);
         
         // Silly fix for channel types
-        if (pd.type().isChannelType() || pd.type().isChannelEndType())
+        if ( pd.type().isChannelType() || pd.type().isChannelEndType() )
             type = PJChannel.class.getSimpleName() + type.substring(type.indexOf("<"), type.length());
+        else if ( pd.type() instanceof RecordTypeDecl )
+            type = ((RecordTypeDecl) pd.type()).name().getname();
+        else if ( pd.type() instanceof ProtocolTypeDecl )
+            type = ((ProtocolTypeDecl) pd.type()).name().getname();
         
         // Create a tag for this parameter and then add it to the collection
         // of parameters for reference
@@ -789,8 +793,8 @@ public class CodeGenJava extends Visitor<Object> {
         paramToFields.put(newName, type);
         paramToVarNames.put(name, newName);
         
-        // Ignored the value returned by this visitor. The types and variables
-        // are _always_ resolved elsewhere
+        // Ignored the value returned by this visitor. The types and
+        // variables are _always_ resolved elsewhere
         return null;
     }
     
@@ -809,11 +813,18 @@ public class CodeGenJava extends Visitor<Object> {
         String name = ld.var().name().getname();
         String type = (String) ld.type().visit(this);
         String val = null;
-        String chanType = type;
+        
+        // Is it a protocol or a record type?
+        if ( ld.type().isRecordType() )
+            type = ((RecordTypeDecl) ld.type()).name().getname();
+        if ( ld.type().isProtocolType() )
+            type = PJProtocolCase.class.getSimpleName();
+        // Update the type for record and protocol types
+        String chanType = type; // TODO: is this needed?
         
         // Create a tag for this local declaration
         String newName = Helper.makeVariableName(name, ++localDecID, Tag.LOCAL_NAME);
-        if (inParFor) {
+        if ( inParFor ) {
             localsForAnon.put(newName, type);
             paramsForAnon.put(name, newName);
         }
@@ -823,25 +834,25 @@ public class CodeGenJava extends Visitor<Object> {
         // This variable could be initialized, e.g. through an assignment operator
         Expression expr = ld.var().init();
         // Visit the expressions associated with this variable
-        if (expr != null) {
-            if (ld.type() instanceof PrimitiveType)
+        if ( expr!=null ) {
+            if ( ld.type().isPrimitiveType() )
                 val = (String) expr.visit(this);
-            else if (ld.type() instanceof NamedType) // Must be a record or protocol
+            else if ( ld.type().isRecordType() || ld.type().isProtocolType() )
                 val = (String) expr.visit(this);
-            else if (ld.type() instanceof ArrayType)
+            else if ( ld.type().isArrayType() )
                 val = (String) expr.visit(this);
         }
         
-        // Is it a barrier declaration? If so, we must generate code that
-        // creates a barrier object
-        if (ld.type().isBarrierType() && expr == null) {
+        // Is it a barrier declaration? If so, we must generate code
+        // that creates a barrier object
+        if ( ld.type().isBarrierType() && expr==null ) {
             ST stBarrierDecl = stGroup.getInstanceOf("BarrierDecl");
             val = stBarrierDecl.render();
         }
         // Is it a simple declaration for a channel type? If so, and since
         // channels cannot be created using the operator 'new', we generate
         // code to create a channel object
-        if (ld.type().isChannelType() && expr == null) {
+        if ( ld.type().isChannelType() && expr==null ) {
             ST stChannelDecl = stGroup.getInstanceOf("ChannelDecl");
             stChannelDecl.add("type", chanType);
             val = stChannelDecl.render();
@@ -849,17 +860,17 @@ public class CodeGenJava extends Visitor<Object> {
         // After making this local declaration a field of the procedure
         // in which it was declared, we return iff this local variable
         // is not initialized
-        if (expr == null) {
-            if (!ld.type().isBarrierType() && (ld.type().isPrimitiveType() ||
-                ld.type().isArrayType() ||  // Could be an uninitialized array declaration
-                ld.type().isNamedType()))   // Could be a record or protocol declaration
-                return null;                // The 'null' value is used to removed empty
-                                            // sequences in the generated code
+        if ( expr==null ) {
+            if ( !ld.type().isBarrierType() && (ld.type().isPrimitiveType() ||
+                ld.type().isArrayType() ||    // Could be an uninitialized array declaration
+                ld.type().isRecordType() ||   // Could be a record or protocol declaration
+                ld.type().isProtocolType()) ) // The 'null' value is used to removed empty
+                return null;                  // sequences in the generated code
         }
         
         // If we reach this section of code, then we have a variable
         // declaration with some initial value
-        if (val != null)
+        if ( val!=null )
             val = val.replace(DELIMITER, "");
         
         ST stVar = stGroup.getInstanceOf("Var");
@@ -882,13 +893,13 @@ public class CodeGenJava extends Visitor<Object> {
         
         String name = null;
         
-        if (paramToVarNames.containsKey(na.getname()))
+        if ( paramToVarNames.containsKey(na.getname()) )
             name = paramToVarNames.get(na.getname());
         
 //        if (paramsForAnon.containsKey(na.getname()))
 //            name = paramsForAnon.get(na.getname());
         
-        if (name == null)
+        if ( name==null )
             name = na.getname();
         
         return name;
@@ -901,13 +912,15 @@ public class CodeGenJava extends Visitor<Object> {
         return ne.name().visit(this);
     }
     
+    // This visit method is no longer needed. All NamedType are
+    // resolved by the ResolveNamedType visitor.
     @Override
     public Object visitNamedType(NamedType nt) {
         Log.log(nt, "Visiting a NamedType (" + nt.name().getname() + ")");
         
         String type = nt.name().getname();
         // Is this a protocol? Change the type to enable multiple inheritance
-        if (nt.type() != null && nt.type().isProtocolType())
+        if ( nt.type()!=null && nt.type().isProtocolType() )
             type = PJProtocolCase.class.getSimpleName();
         
         return type;
@@ -927,11 +940,11 @@ public class CodeGenJava extends Visitor<Object> {
         // ProcessJ primitive types that do not translate directly
         // to Java primitive types
         String typeStr = py.typeName();
-        if (py.isStringType())
+        if ( py.isStringType() )
             typeStr = "String";
-        else if (py.isTimerType())
+        else if ( py.isTimerType() )
             typeStr = PJTimer.class.getSimpleName();
-        else if (py.isBarrierType())
+        else if ( py.isBarrierType() )
             typeStr = PJBarrier.class.getSimpleName();
         
         return typeStr;
@@ -942,7 +955,7 @@ public class CodeGenJava extends Visitor<Object> {
         Log.log(li, "Visiting a Primitive Literal (" + li.getText() + ")");
         
         ST stPrimitiveLiteral = stGroup.getInstanceOf("PrimitiveLiteral");
-        if (li.isSuffixed())
+        if ( li.isSuffixed() )
             stPrimitiveLiteral.add("type", li.suffix());
         stPrimitiveLiteral.add("value", li.getText());
         
@@ -992,10 +1005,10 @@ public class CodeGenJava extends Visitor<Object> {
         // Channel class type
         String chanType = PJOne2OneChannel.class.getSimpleName();
         // Is it a shared channel?
-        if (ct.isShared()) {
-            if (ct.isRead()) // One-2-Many channel
+        if ( ct.isShared() ) {
+            if ( ct.isRead() ) // One-2-Many channel
                 chanType = PJOne2ManyChannel.class.getSimpleName();
-            else if (ct.isWrite()) // Many-2-One channel
+            else if ( ct.isWrite() ) // Many-2-One channel
                 chanType = PJMany2OneChannel.class.getSimpleName();
             else // Many-2-Many channel
                 chanType = PJMany2ManyChannel.class.getSimpleName();
@@ -1023,7 +1036,7 @@ public class CodeGenJava extends Visitor<Object> {
         // The value one is for the 'runLabel'
         int countLabel = 1;
         // Is the writing end of this channel shared?
-        if (chanExpr.type.isChannelEndType() && ((ChannelEndType) chanExpr.type).isShared()) {
+        if ( chanExpr.type.isChannelEndType() && ((ChannelEndType) chanExpr.type).isShared() ) {
             stChanWriteStat = stGroup.getInstanceOf("ChannelMany2One");
             ++countLabel;
         }
@@ -1032,7 +1045,7 @@ public class CodeGenJava extends Visitor<Object> {
         stChanWriteStat.add("writeExpr", expr);
         
         // Add the switch block for resumption
-        for (int label = 0; label < countLabel; ++label) {
+        for (int label = 0; label<countLabel; ++label) {
             // Increment jump label and it to the switch-stmt list
             stChanWriteStat.add("resume" + label, ++jumpLabel);
             switchCases.add(renderSwitchCase(jumpLabel));
@@ -1055,7 +1068,7 @@ public class CodeGenJava extends Visitor<Object> {
         // One for the 'label' and one for the 'read' operation
         int countLabel = 2;
         // Add the switch block for resumption
-        for (int label = 0; label < countLabel; ++label) {
+        for (int label = 0; label<countLabel; ++label) {
             // Increment jump label and it to the switch-stmt list
             stChannelReadExpr.add("resume" + label, ++jumpLabel);
             switchCases.add(renderSwitchCase(jumpLabel));
@@ -1076,7 +1089,7 @@ public class CodeGenJava extends Visitor<Object> {
         // operator
         Expression expr = va.init();
         // Visit the expressions associated with this variable
-        if (expr != null) {
+        if ( expr!=null ) {
             // This is safe for when our target is not too complicated, e.g.
             // initializing variables with primitives or string literals
             exprStr = (String) expr.visit(this);
@@ -1110,7 +1123,7 @@ public class CodeGenJava extends Visitor<Object> {
         // Is the array initialize at compile time? If so, create a list
         // of values separated by commas and enclosed between braces -- the
         // syntax for array literals in ProcessJ is different to Java's
-        if (al.elements().size() > 1 || isArrayLiteral) {
+        if ( al.elements().size()>1 || isArrayLiteral ) {
             // The following extends naturally to two-dimensional, and
             // even higher-dimensional arrays -- but they are not used
             // very often in practice
@@ -1129,8 +1142,12 @@ public class CodeGenJava extends Visitor<Object> {
         Log.log(at, "Visiting an ArrayType (" + at.typeName() + ")");
         
         String type = (String) at.baseType().visit(this);
-        if (at.baseType().isChannelType() || at.baseType().isChannelEndType())
+        if ( at.baseType().isChannelType() || at.baseType().isChannelEndType() )
             type = type.substring(0, type.indexOf("<")) + "<?>";
+        else if ( at.baseType().isRecordType() )
+            type = ((RecordTypeDecl) at.baseType()).name().getname();
+        else if ( at.baseType().isProtocolType() )
+            type = PJProtocolCase.class.getSimpleName();
         String stArrayType = String.format("%s[]", type);
         
         return stArrayType;
@@ -1165,16 +1182,16 @@ public class CodeGenJava extends Visitor<Object> {
         ArrayList<String> seqs = new ArrayList<>();
         // Iterate through every statement
         for (int i = 0; i < se.size(); ++i) {
-            if (se.child(i) != null) {
+            if ( se.child(i)!=null ) {
                 Object stats = se.child(i).visit(this);
-                if (stats == null)
+                if ( stats==null )
                     continue;
                 // These are either
                 //   1.) a sequence of statements, or
                 //   2.) a single statement
                 // found in a block statement, e.g. local declarations,
                 // variable declarations, invocations, etc.
-                if (stats instanceof String[])
+                if ( stats instanceof String[] )
                     seqs.addAll(Arrays.asList((String[]) stats));
                 else
                     seqs.add((String) stats);
@@ -1190,7 +1207,7 @@ public class CodeGenJava extends Visitor<Object> {
         
         ST stBreakStat = stGroup.getInstanceOf("BreakStat");
         // No parse-tree for 'break'
-        if (bs.target() != null)
+        if ( bs.target()!=null )
             stBreakStat.add("name", bs.target().visit(this));
         
         return stBreakStat.render();
@@ -1204,9 +1221,9 @@ public class CodeGenJava extends Visitor<Object> {
         
         // This could be a default label, in which case, expr() would be null
         String label = null;
-        if (!sl.isDefault())
+        if ( !sl.isDefault() )
             label = (String) sl.expr().visit(this);
-        if (isProtocCase) {
+        if ( isProtocCase ) {
             // The protocol tag currently being used
             curProtocTag = label;
             label = String.format("\"%s\"", label);
@@ -1229,9 +1246,9 @@ public class CodeGenJava extends Visitor<Object> {
         
         ArrayList<String> stats = new ArrayList<>();
         for (Statement st : sg.statements()) {
-            if (st != null) {
+            if ( st!=null ) {
                 Object stmt = st.visit(this);
-                if (stmt instanceof String[])
+                if ( stmt instanceof String[] )
                     stats.addAll(Arrays.asList((String[]) stmt));
                 else
                     stats.add((String) stmt);
@@ -1250,7 +1267,7 @@ public class CodeGenJava extends Visitor<Object> {
         
         ST stSwitchStat = stGroup.getInstanceOf("SwitchStat");
         // Is this a protocol tag?
-        if (st.expr().type.isProtocolType())
+        if ( st.expr().type.isProtocolType() )
             isProtocCase = true;
         
         String expr = (String) st.expr().visit(this);
@@ -1290,13 +1307,21 @@ public class CodeGenJava extends Visitor<Object> {
         
         // We ignore any GOTO or LABEL invocation since they are only needed
         // for the __asm__ bytecode rewrite
-        if (in.ignore) {
+        if ( in.ignore ) {
             Log.log(in, "Visiting a " + in.procedureName().getname());
             ST stIgnore = stGroup.getInstanceOf("InvocationIgnore");
             stIgnore.add("name", in.procedureName().visit(this));
             stIgnore.add("var", in.params().visit(this));
             return stIgnore.render();
         }
+        // <--
+        // Check if the invocation is either a 'sync' or a 'fork'
+        if ( in.procedureName().simplename().equals("sync") ||
+             in.procedureName().simplename().equals("fork")) {
+            Log.log(in, "Visiting Invocation (" + in.procedureName().simplename() + ")");
+            // TODO:
+        }
+        // -->
         
         Log.log(in, "Visiting Invocation (" + in.targetProc.name().getname() + ")");
         
@@ -1305,19 +1330,20 @@ public class CodeGenJava extends Visitor<Object> {
         ProcTypeDecl pd = in.targetProc;
         // Name of invoked procedure
         String pdName = pd.name().getname();
-        // Check local procedures, if none is found then the procedure must come
-        // from a different file and maybe package */
-        if (currCompilation.fileName.equals(pd.myCompilation.fileName)) {
+        // Check local procedures, if none is found then the procedure must
+        // come from a different file and maybe package
+        if ( currCompilation.fileName.equals(pd.myCompilation.fileName) ) {
             String name = pdName + hashSignature(pd);
-            if (Helper.doesProcYield(pd))
+            if ( Helper.doesProcYield(pd) )
                 name = Helper.makeVariableName(name, 0, Tag.PROCEDURE_NAME);
             else
                 name = Helper.makeVariableName(name, 0, Tag.METHOD_NAME);
             pdName = pd.myCompilation.fileNoExtension() + "." + name;
-        } else if (pd.isNative) {
-            // Make the package visible on import by using the qualified name of
-            // the class the procedure belongs to and the name of the directory
-            // the procedure's class belongs to, e.g. std.io.println(), where
+        } else if ( pd.isNative ) {
+            // Make the package visible on import by using the qualified
+            // name of the class the procedure belongs to and the name of
+            // the directory the procedure's class belongs to, e.g.
+            // std.io.println(), where
             //   1.) 'std' is the name of the package,
             //   2.) 'io' is the name of the class/file,
             //   3.) 'println' is the method declared in the class
@@ -1329,13 +1355,13 @@ public class CodeGenJava extends Visitor<Object> {
         // which are specified by a list of comma-separated arguments
         Sequence<Expression> parameters = in.params();
         String[] paramsList = (String[]) parameters.visit(this);
-        if (paramsList != null)
-            for (int i = 0; i < paramsList.length; ++i)
+        if ( paramsList!=null )
+            for (int i = 0; i<paramsList.length; ++i)
                 paramsList[i] = paramsList[i].replace(DELIMITER, "");
         
         // For an invocation of a procedure that yields and one which
         // is not inside par-block, we wrap the procedure in a par-block
-        if (Helper.doesProcYield(pd) && currParBlock == null) {
+        if ( Helper.doesProcYield(pd) && currParBlock==null ) {
             return (new ParBlock(
                     new Sequence(new ExprStat(in)), // Statements
                     new Sequence()))                // Barriers
@@ -1343,14 +1369,14 @@ public class CodeGenJava extends Visitor<Object> {
         }
         
         // Does this procedure yield?
-        if (Helper.doesProcYield(pd)) {
+        if ( Helper.doesProcYield(pd) ) {
             stInvocation = stGroup.getInstanceOf("InvocationProcType");
             stInvocation.add("parBlock", currParBlock);
             // <--
             stInvocation.add("isPar", inParFor);
             // -->
             // Add the barrier this procedure should resign from
-            if (!barriers.isEmpty())
+            if ( !barriers.isEmpty() )
                 stInvocation.add("barrier", barriers);
         } else
             // Must be an invocation made through a static Java method
@@ -1387,7 +1413,7 @@ public class CodeGenJava extends Visitor<Object> {
         
         currProtocol = name;
         // We use tags to associate parent and child protocols
-        if (pd.extend().size() > 0) {
+        if ( pd.extend().size()>0 ) {
             for (Name n : pd.extend()) {
                 ProtocolTypeDecl ptd = (ProtocolTypeDecl) topLvlDecls.get(n.getname());
                 for (ProtocolCase pc : ptd.body())
@@ -1397,7 +1423,7 @@ public class CodeGenJava extends Visitor<Object> {
         }
         
         // The scope in which all protocol members appear
-        if (pd.body() != null)
+        if ( pd.body()!=null )
             for (ProtocolCase pc : pd.body())
                 body.add((String) pc.visit(this));
         
@@ -1426,7 +1452,7 @@ public class CodeGenJava extends Visitor<Object> {
         
         // The list of fields passed to the constructor of the static
         // class that the record belongs to
-        if (!recMemberToField.isEmpty()) {
+        if ( !recMemberToField.isEmpty() ) {
             stProtocolType.add("types", recMemberToField.values());
             stProtocolType.add("vars", recMemberToField.keySet());
         }
@@ -1450,7 +1476,7 @@ public class CodeGenJava extends Visitor<Object> {
         // We need the members of the tag currently being used
         ProtocolTypeDecl pt = (ProtocolTypeDecl) topLvlDecls.get(type);
         
-        if (pt != null) {
+        if ( pt!=null ) {
             ProtocolCase target = pt.getCase(tag);
             // Now that we have the target tag, iterate over all of its members
             for (RecordMember rm : target.body()) {
@@ -1467,7 +1493,7 @@ public class CodeGenJava extends Visitor<Object> {
         for (RecordMemberLiteral rm : pl.expressions()) {
             String lhs = rm.name().getname();
             String expr = (String) rm.expr().visit(this);
-            if (members.put(lhs, expr) == null)
+            if ( members.put(lhs, expr)==null )
                 Log.log(pl, "> Initializing '" + lhs + "' with '" + expr + "'");
         }
         
@@ -1498,14 +1524,14 @@ public class CodeGenJava extends Visitor<Object> {
         
         // The list of fields which should be passed to the constructor
         // of the static class that the record belongs to
-        if (!recMemberToField.isEmpty()) {
+        if ( !recMemberToField.isEmpty() ) {
             stRecordType.add("types", recMemberToField.values());
             stRecordType.add("vars", recMemberToField.keySet());
         }
         
         ArrayList<String> extend = new ArrayList<>();
         extend.add(recName);
-        if (rt.extend().size() > 0)
+        if ( rt.extend().size()>0 )
             for (Name n : rt.extend())
                 extend.add(n.getname());
         
@@ -1522,6 +1548,12 @@ public class CodeGenJava extends Visitor<Object> {
         
         String name = rm.name().getname();
         String type = (String) rm.type().visit(this);
+        
+        // Check if the type is a record or protocol type
+        if ( rm.type().isRecordType() )
+            type = ((RecordTypeDecl) rm.type()).name().getname();
+        else if ( rm.type().isProtocolType() )
+            type = PJProtocolCase.class.getSimpleName();
         
         // Add this field to the collection of record members for reference
         recMemberToField.put(name, type);
@@ -1544,7 +1576,7 @@ public class CodeGenJava extends Visitor<Object> {
         HashMap<String, String> members = new LinkedHashMap<>();
         RecordTypeDecl rt = (RecordTypeDecl) topLvlDecls.get(type);
         
-        if (rt != null)
+        if ( rt!=null )
             for (RecordMember rm : rt.body()) {
                 String name = rm.name().getname();
                 members.put(name, null);
@@ -1558,7 +1590,7 @@ public class CodeGenJava extends Visitor<Object> {
         for (RecordMemberLiteral rm : rl.members()) {
             String lhs = rm.name().getname();
             String expr = (String) rm.expr().visit(this);
-            if (members.put(lhs, expr) == null)
+            if ( members.put(lhs, expr)==null )
                 Log.log(rl, "> Initializing '" + lhs + "' with '" + expr + "'");
         }
         
@@ -1574,12 +1606,12 @@ public class CodeGenJava extends Visitor<Object> {
         
         ST stAccessor = stGroup.getInstanceOf("RecordAccessor");
         
-        if (ra.record().type.isRecordType()) {
+        if ( ra.record().type.isRecordType() ) {
             String name = (String) ra.record().visit(this);
             String field = ra.field().getname();
             stAccessor.add("name", name);
             stAccessor.add("member", field);
-        } else if (ra.record().type.isProtocolType()) {
+        } else if ( ra.record().type.isProtocolType() ) {
             stAccessor = stGroup.getInstanceOf("ProtocolAccess");
             ProtocolTypeDecl pt = (ProtocolTypeDecl) ra.record().type;
             String protocName = (String) pt.name().visit(this); // Wrapper class
@@ -1588,7 +1620,7 @@ public class CodeGenJava extends Visitor<Object> {
             
             // Cast a protocol to a super-type if needed
             String key = String.format("%s.%s", protocName, curProtocTag);
-            if (protNameToProtTag.get(key) != null) 
+            if ( protNameToProtTag.get(key)!=null ) 
                 protocName = protNameToProtTag.get(key);
             
             stAccessor.add("protocName", protocName);
@@ -1604,9 +1636,9 @@ public class CodeGenJava extends Visitor<Object> {
             stAccessor.add("name", name);
             // Call the appropriate method to retrieve the number of characters
             // in a string or the number of elements in an N-dimensional array
-            if (ra.isArraySize) // 'Xxx.size' for N-dimensional array
+            if ( ra.isArraySize ) // 'Xxx.size' for N-dimensional array
                 stAccessor.add("member", "length");
-            else if (ra.isStringLength) // 'Xxx.length' for number of characters in a string
+            else if ( ra.isStringLength ) // 'Xxx.length' for number of characters in a string
                 stAccessor.add("member", "length()");
         }
         
@@ -1618,7 +1650,7 @@ public class CodeGenJava extends Visitor<Object> {
         Log.log(pb, "Visiting a ParBlock with " + pb.stats().size() + " statements.");
         
         // Don't generate code for an empty par statement
-        if (pb.stats().size() == 0)
+        if ( pb.stats().size()==0 )
             return null;
         ST stParBlock = stGroup.getInstanceOf("ParBlock");
         // Save the previous par-block
@@ -1637,7 +1669,7 @@ public class CodeGenJava extends Visitor<Object> {
         stParBlock.add("jump", ++jumpLabel);
         switchCases.add(renderSwitchCase(jumpLabel));
         // Add the barrier this par-block enrolls in
-        if (pb.barriers().size() > 0) {
+        if ( pb.barriers().size()>0 ) {
             HashMap<String, Integer> parBarries = new HashMap<>();
             for (Expression e : pb.barriers()) {
                 String name = (String) e.visit(this);
@@ -1651,11 +1683,11 @@ public class CodeGenJava extends Visitor<Object> {
         // Rendered the value of each statement
         ArrayList<String> stmts = new ArrayList<String>();
         for (Statement st : statements) {
-            if (st == null)
+            if ( st==null )
                 continue;
             // <--
             Sequence<Expression> se = st.barrierNames;
-            if (se != null) {
+            if ( se!=null ) {
                 barriers = new ArrayList<>();
                 for (Expression e : se)
                     barriers.add((String) e.visit(this));
@@ -1665,7 +1697,7 @@ public class CodeGenJava extends Visitor<Object> {
             // that is, it can be a combination of variables, operations and values
             // that yield a result. An statement is a line of code that performs
             // some action, e.g. print statements, an assignment statement, etc.
-            if (st instanceof ExprStat && ((ExprStat) st).expr() instanceof Invocation) {
+            if ( st instanceof ExprStat && ((ExprStat) st).expr() instanceof Invocation ) {
                 ExprStat es = (ExprStat) st;
                 Invocation in = (Invocation) es.expr();
                 // If this invocation is made on a process, then visit the
@@ -1675,7 +1707,7 @@ public class CodeGenJava extends Visitor<Object> {
                 //        @Override public synchronized void run() { ... }
                 //        @Override public finalize() { ... }
                 //    }.schedule();
-                if (Helper.doesProcYield(in.targetProc))
+                if ( Helper.doesProcYield(in.targetProc) )
                     stmts.add((String) in.visit(this));
                 else // Otherwise, the invocation is made through a static Java method
                     stmts.add((String) createAnonymousProcTypeDecl(st).visit(this));
@@ -1797,12 +1829,12 @@ public class CodeGenJava extends Visitor<Object> {
         ArrayList<String> tlocals = new ArrayList<>(); // Timeouts
         
         // Set boolean guards
-        for (int i = 0; i < cases.size(); ++i) {
+        for (int i = 0; i<cases.size(); ++i) {
             AltCase ac = cases.child(i);
-            if (ac.precondition() == null)
+            if ( ac.precondition()==null )
                 bguards.add(String.valueOf(true));
             else {
-                if (ac.precondition() instanceof Literal)
+                if ( ac.precondition() instanceof Literal )
                     bguards.add((String) ac.precondition().visit(this));
                 else { // This is an expression
                     Name n = new Name("btemp");
@@ -1817,25 +1849,25 @@ public class CodeGenJava extends Visitor<Object> {
         stBooleanGuards.add("locals", blocals);
         
         // Set case number for all AltCases
-        for (int i = 0; i < cases.size(); ++i)
+        for (int i = 0; i<cases.size(); ++i)
             cases.child(i).setCaseNumber(i);
         // Visit all guards
-        for (int i = 0; i < cases.size(); ++i) {
+        for (int i = 0; i<cases.size(); ++i) {
             AltCase ac = cases.child(i);
             Statement stat = ac.guard().guard();
             // Channel read expression?
-            if (stat instanceof ExprStat) {
+            if ( stat instanceof ExprStat ) {
                 Expression e = ((ExprStat) stat).expr();
                 ChannelReadExpr cr = null;
-                if (e instanceof Assignment)
+                if ( e instanceof Assignment )
                     cr = (ChannelReadExpr) ((Assignment) e).right();
                 guards.add((String) cr.channel().visit(this));
             }
             // Skip statement?
-            else if (stat instanceof SkipStat)
+            else if ( stat instanceof SkipStat )
                 guards.add(String.format("%s.SKIP", PJAlt.class.getSimpleName()));
             // Timeout statement?
-            else if (stat instanceof TimeoutStat) {
+            else if ( stat instanceof TimeoutStat ) {
                 // Initialize the timeout statement
                 TimeoutStat ts = (TimeoutStat) stat;
                 ST stTimeout = stGroup.getInstanceOf("TimeoutStatCase");
@@ -1885,7 +1917,7 @@ public class CodeGenJava extends Visitor<Object> {
         ST stReturnStat = stGroup.getInstanceOf("ReturnStat");
         String expr = null;
         
-        if (rs.expr() != null)
+        if ( rs.expr()!=null )
             expr = (String) rs.expr().visit(this);
         
         // This removes the extra ";" for invocation calls
@@ -1908,13 +1940,14 @@ public class CodeGenJava extends Visitor<Object> {
      */
     private String getChannelType(Type t) {
         String baseType = null;
-        if (t.isNamedType()) {
-            NamedType nt = (NamedType) t;
-            baseType = (String) nt.visit(this);
-        } else if (t.isPrimitiveType()) {
+        if ( t.isRecordType() ) {
+            baseType = ((RecordTypeDecl) t).name().getname();
+        } else if ( t.isProtocolType() ) {
+            baseType = PJProtocolCase.class.getSimpleName();
+        } else if ( t.isPrimitiveType() ) {
             // This is needed because we can only have wrapper class
             baseType = Helper.getWrapperType(t);
-        } else if (t.isArrayType()) {
+        } else if ( t.isArrayType() ) {
             baseType = (String) t.visit(this);
         }
         
@@ -1978,15 +2011,15 @@ public class CodeGenJava extends Visitor<Object> {
         
         // This is done so that we can instantiate arrays of channel types
         // whose types are generic
-        if (na.baseType().isChannelType() || na.baseType().isChannelEndType())
+        if ( na.baseType().isChannelType() || na.baseType().isChannelEndType() )
             type = type.substring(0, type.indexOf("<")) + "<?>";
         
         ST stNewArrayLiteral = stGroup.getInstanceOf("NewArrayLiteral");
-        if (na.init() != null) {
+        if ( na.init()!=null ) {
             ArrayList<String> inits = new ArrayList<>();
             Sequence<Expression> seq = (Sequence<Expression>) na.init().elements();
             for (Expression e : seq) {
-                if (e instanceof ArrayLiteral)
+                if ( e instanceof ArrayLiteral )
                     isArrayLiteral = true;
                 inits.add((String) e.visit(this));
             }
@@ -2017,7 +2050,7 @@ public class CodeGenJava extends Visitor<Object> {
         String chanEndName = (String) chanExpr.visit(this);
         
         // Is it a timer read expression?
-        if (chanExpr.type.isTimerType()) {
+        if ( chanExpr.type.isTimerType() ) {
             ST stTimerRedExpr = stGroup.getInstanceOf("TimerRedExpr");
             stTimerRedExpr.add("name", lhs);
             return stTimerRedExpr.render();
@@ -2026,13 +2059,13 @@ public class CodeGenJava extends Visitor<Object> {
         // One for the 'label' and one for the 'read' operation
         int countLabel = 2;
         // Is the reading end of this channel shared?
-        if (chanExpr.type.isChannelEndType() && ((ChannelEndType) chanExpr.type).isShared()) {
+        if ( chanExpr.type.isChannelEndType() && ((ChannelEndType) chanExpr.type).isShared() ) {
             stChannelReadExpr = stGroup.getInstanceOf("ChannelOne2Many");
             ++countLabel;
         }
         
         // Do we have an extended rendezvous?
-        if (cr.extRV() != null) {
+        if ( cr.extRV()!=null ) {
             Object o = cr.extRV().visit(this);
             ST stBlockRV = stGroup.getInstanceOf("BlockRV");
             stBlockRV.add("block", o);
@@ -2041,7 +2074,7 @@ public class CodeGenJava extends Visitor<Object> {
         
         stChannelReadExpr.add("chanName", chanEndName);
         // Add the switch block for resumption
-        for (int label = 0; label < countLabel; ++label) {
+        for (int label = 0; label<countLabel; ++label) {
             // Increment jump label and add it to the switch-stmt list
             stChannelReadExpr.add("resume" + label, ++jumpLabel);
             switchCases.add(renderSwitchCase(jumpLabel));

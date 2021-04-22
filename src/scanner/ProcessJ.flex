@@ -159,6 +159,7 @@ StringEscape  =   \\([btnfr\"\'\\]|[0-3]?{OctDigit}?{OctDigit}|u{HexDigit}{HexDi
   "par"       { return token(sym.PAR); }
   "pri"       { return token(sym.PRI); }
   "alt"       { return token(sym.ALT); }
+  "fork"      { return token(sym.FORK); }
 
   /* Other non process oriented programming related keywords */
   "new"       { return token(sym.NEW); }  

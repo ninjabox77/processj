@@ -113,6 +113,7 @@ terminal Token SEQ;     // "seq"
 terminal Token PAR;     // "par"
 terminal Token PRI;     // "pri"
 terminal Token ALT;     // "alt"
+terminal Token FORK;    // "fork"
 
 /* Other non process oriented programming related keywords */
 terminal Token NEW;     // "new"
@@ -1352,7 +1353,8 @@ array_access ::=
 
 // Invocation :> Expression :> AST
 invocation ::=
-          IDENTIFIER:id LPAREN argument_list_opt:l RPAREN   {: RESULT = new Invocation(null, new Name(id), l); :}   
+          IDENTIFIER:id LPAREN argument_list_opt:l RPAREN   {: RESULT = new Invocation(null, new Name(id), l); :}
+        | FORK:f LPAREN argument_list:l RPAREN {: RESULT = new Invocation(null, new Name(f), l); :}
         | primary:p DOT IDENTIFIER:id LPAREN argument_list_opt:l RPAREN   {: RESULT = new Invocation(p, new Name(id), l); :}
         | primary:p COLONCOLON IDENTIFIER:id LPAREN argument_list_opt:l RPAREN  {: RESULT = new Invocation(null, new Name(id, primary2PackageAccess(p)), l); :} 
         | IDENTIFIER:p COLONCOLON IDENTIFIER:id LPAREN argument_list_opt:l RPAREN  {: RESULT = new Invocation(null, new Name(id, primary2PackageAccess(new NameExpr(new Name(p)))), l); :}  

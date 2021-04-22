@@ -24,7 +24,7 @@ public class ResolveNativeImports extends Visitor<AST> {
     
     // The import currently being resolved
     private Import curImport = null;
-    private HashMap<String, String> ht = new HashMap<>();
+    private HashMap<String, String> hm = new HashMap<>();
     
     public ResolveNativeImports() {
         Log.logHeader("***********************************************");
@@ -42,12 +42,12 @@ public class ResolveNativeImports extends Visitor<AST> {
     
     @Override
     public AST visitPragma(Pragma pr) {
-        String str = pr.value() != null ? pr.value() : "";
+        String str = pr.value()!=null? pr.value() : "";
         Log.log(pr, "Visiting a pragma " + pr.pname().getname() + " " + str);
         if (str.isEmpty())
-            ht.put(pr.pname().getname(), pr.pname().getname());
+            hm.put(pr.pname().getname(), pr.pname().getname());
         else
-            ht.put(pr.pname().getname(), str.replace("\"", ""));
+            hm.put(pr.pname().getname(), str.replace("\"", ""));
         return null;
     }
     
@@ -68,7 +68,7 @@ public class ResolveNativeImports extends Visitor<AST> {
             // of a PJ native library function
             for (AST decl : c.typeDecls())
                 decl.visit(this);
-            ht.clear();
+            hm.clear();
         }
         return null;
     }
@@ -76,15 +76,15 @@ public class ResolveNativeImports extends Visitor<AST> {
     @Override
     public AST visitProcTypeDecl(ProcTypeDecl pd) {
         Log.log(pd, "Visiting a ProcTypeDecl (" + pd.name().getname() + " " + pd.signature() + ")");
-        if (!ht.isEmpty() && curImport != null) {
+        if (!hm.isEmpty() && curImport != null) {
             String path = ResolveImports.makeImportPath(curImport);
             Log.log(pd, "Package path: " + path);
             // TODO: maybe use variables from Library.java instead??
-            if (ht.containsKey("LIBRARY") && ht.containsKey("NATIVE")) {
+            if (hm.containsKey("LIBRARY") && hm.containsKey("NATIVE")) {
                 Log.log(pd, "Package file name: " + curImport.file().getname());
                 pd.isNative = true;
                 pd.library = curImport.toString();
-                pd.filename = ht.get("FILE");
+                pd.filename = hm.get("FILE");
                 pd.nativeFunction = pd.name().getname();
             } else {
                 // TODO: Non-native procedure found??
