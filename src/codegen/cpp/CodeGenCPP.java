@@ -69,6 +69,13 @@ public class CodeGenCPP extends Visitor<Object> {
     // Current par-block.
     private String currentParBlock = null;
 
+    // Used to store variable information for passing from par for below
+    private boolean inParFor = false;
+
+    // stored variables passed in from par for
+    private HashMap<String, String> localsForAnon = new LinkedHashMap<>();
+    private HashMap<String, String> paramsForAnon = new LinkedHashMap<>();
+
     // Current array depth reached
     private int currentArrayDepth = 0;
 
@@ -333,6 +340,14 @@ public class CodeGenCPP extends Visitor<Object> {
                 stSwitchBlock.add("name", procName);
                 stProcTypeDecl.add("switchBlock", stSwitchBlock.render());
             }
+
+            // The list of local variables defined in the body of a procedure
+            // becomes the instance fields of the class
+            if (!localsForAnon.isEmpty()) {
+                stProcTypeDecl.add("ltypes", localsForAnon.values());
+                stProcTypeDecl.add("lvars", localsForAnon.keySet());
+            }
+
             // add a generated name of the process
             // stProcTypeDecl.add("name", Helper.makeVariableName("Anonymous" + Integer.toString(procCount) + signature(pd), 0, Tag.PROCEDURE_NAME));
             stProcTypeDecl.add("name", procName);
@@ -344,6 +359,9 @@ public class CodeGenCPP extends Visitor<Object> {
                 stProcTypeDecl.add("types", formalParams.values());
                 stProcTypeDecl.add("vars", formalParams.keySet());    
             }
+
+            // pass inParFor flag in case we don't need to generate the scheduler insert call
+            stProcTypeDecl.add("inPar", inParFor);
 
             // Restore jump label.
             jumpLabel = prevJumLabel;
@@ -607,46 +625,108 @@ public class CodeGenCPP extends Visitor<Object> {
         Log.log(fs, "Visiting a ForStat");
         
         // Generated template after evaluating this visitor.
-        ST stForStat = stGroup.getInstanceOf("ForStat");
-        ArrayList<String> init = new ArrayList<String>();  // Initialization part.
-        ArrayList<String> incr = new ArrayList<String>();  // Increment part.
-        
-        String initStr = null;
-        if (!fs.isPar()) { // Is it a regular for loop?
-            if (fs.init() != null) {
-                for (Statement st : fs.init()) {
-                    if (st != null)
-                        // TODO: why does this break?
-                        initStr = (String)st.visit(this);
-                        if(initStr != null) {
-                            init.add(initStr.replace(";", ""));  // Remove the ';' added in LocalDecl.
-                        }
-                        // init.add((String)st.visit(this));
-                }
-            }
-            
-            if (fs.incr() != null) {
-                for (ExprStat expr : fs.incr())
-                    incr.add(((String) expr.visit(this)).replace(";", ""));
-            }
-            
-            if (fs.expr() != null) {
-                String expr = ((String) fs.expr().visit(this)).replace(";", "");
-                stForStat.add("expr", expr);
-            }
+        ST stForStat = stGroup.getInstanceOf("ParForStat");
 
-            // Sequence of statements enclosed in a block statement.
+        String expr = null;
+        ArrayList<String> init = null;
+        ArrayList<String> incr = null;
+        String[] stats = null;
+
+        boolean preParFor = inParFor;
+        inParFor = fs.isPar() || preParFor;
+
+        if (fs.init() != null) {
+            init = new ArrayList<>();
+            for (Statement st : fs.init()) {
+                init.add(((String) st.visit(this)).replace(DELIMITER, ""));
+            }
+        }
+        
+        if (fs.expr() != null) {
+            expr = ((String) fs.expr().visit(this)).replace(";", "");
+        }
+        
+        if (fs.incr() != null) {
+            incr = new ArrayList<>();
+            for (ExprStat es : fs.incr())
+                incr.add(((String) es.visit(this)).replace(";", ""));
+        }
+
+        if (!fs.isPar()) {
             if (fs.stats() != null) {
                 Object o = fs.stats().visit(this);
-                stForStat.add("stats", o);
+                if (o instanceof String) {
+                    stats = new String[] { (String)o };
+                } else {
+                    stats = (String[])o;
+                }
             }
-        } else // No! then this is a par-for.
-            ;
 
-        if (!init.isEmpty())
+            stForStat = stGroup.getInstanceOf("ForStat");
             stForStat.add("init", init);
-        if (!incr.isEmpty())
+            stForStat.add("expr", expr);
             stForStat.add("incr", incr);
+            stForStat.add("stats", stats);
+
+            return stForStat.render();
+        }
+
+        // Save previous barrier expressions
+        ArrayList<String> prevBarrier = barrierList;
+        
+        // Save the previous par-block
+        String prevParBlock = currentParBlock;
+        currentParBlock = Helper.makeVariableName(Tag.PAR_BLOCK_NAME.toString(), ++parDecId, Tag.LOCAL_NAME);
+        
+        // Increment the jump label and add it to the switch-stmt list
+        stForStat.add("jump", ++jumpLabel);
+        switchLabelList.add(renderSwitchLabel(jumpLabel));
+        
+        // Rendered the value of each statement
+        ArrayList<String> stmts = new ArrayList<String>();
+        if (fs.stats() != null) {
+            if (!(fs.stats() instanceof ForStat)) {
+                Sequence<Expression> se = fs.barriers();
+                if (se != null) {
+                    barrierList = new ArrayList<>();
+                    for (Expression e : se) {
+                        barrierList.add((String) e.visit(this));
+                    }
+                }
+                if (fs.stats() instanceof Block) {
+                    Block bl = (Block) fs.stats();
+                    if (bl.stats().size() == 1 && bl.stats().child(0) instanceof ExprStat) {
+                        ExprStat es = (ExprStat) bl.stats().child(0);
+                        if (es.expr() instanceof Invocation) {
+                            Invocation in = (Invocation) es.expr();
+                            if (Helper.doesProcYield(in.targetProc)) {
+                                stmts.add((String) in.visit(this));
+                            } else {
+                                stmts.add((String) createAnonymousProcTypeDecl(fs.stats()).visit(this));
+                            }
+                        } else {
+                            stmts.add((String) createAnonymousProcTypeDecl(fs.stats()).visit(this));
+                        }
+                    } else {
+                        stmts.add((String) createAnonymousProcTypeDecl(bl).visit(this));
+                    }
+                }
+            } else {
+                stmts.add((String) fs.stats().visit(this));
+            }
+        }
+        
+        stForStat.add("init", init);
+        stForStat.add("expr", expr);
+        stForStat.add("incr", incr);
+        stForStat.add("stats", stmts);
+        stForStat.add("name", currentParBlock);
+        stForStat.add("barrier", barrierList);
+        
+        inParFor = preParFor;
+        barrierList = prevBarrier;
+        // Restore the par-block
+        currentParBlock = prevParBlock;
         
         return stForStat.render();
     }
@@ -801,6 +881,11 @@ public class CodeGenCPP extends Visitor<Object> {
             type += "*";
         }
         
+        if (inParFor) {
+            localsForAnon.put(newName, type);
+            paramsForAnon.put(name, newName);
+        }
+        
         localParams.put(newName, type);
         paramDeclNames.put(name, newName);
 
@@ -809,7 +894,8 @@ public class CodeGenCPP extends Visitor<Object> {
         }
 
         if (nestedAnonymousProcesses > 0 &&
-            !ld.type().isBarrierType()) {
+            !ld.type().isBarrierType() &&
+            !inParFor) {
             newName = getParentString() + newName;
         }
         
@@ -1103,6 +1189,7 @@ public class CodeGenCPP extends Visitor<Object> {
         
         // NameExpr always points to 'myDecl'.
         if (nestedAnonymousProcesses > 0 &&
+            !inParFor &&
             !(ne.myDecl instanceof ConstantDecl)) {
             return getParentString() + ne.name().visit(this);
         }
@@ -2524,6 +2611,9 @@ public class CodeGenCPP extends Visitor<Object> {
         
         formalParams.clear();
         paramDeclNames.clear();
+        
+        localsForAnon.clear();
+        paramsForAnon.clear();
     }
     
     /**
