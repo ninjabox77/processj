@@ -1,0 +1,216 @@
+import std.io;
+
+/* helper print function */
+public void printMatrix(int rank, int M, string name, int[] matrix) {
+	int i, j;
+
+	println("[" + rank + "]: now has following " + M + "-by-"+ M + " array " + name);
+
+	for (i = 0; i < M; i++) {
+		for (j = 0; j < M; j++) {
+			print(name + "[" + i + "][" + j + "]:" + matrix[i * M + j] + " ");
+		}
+		println();
+	}
+}
+
+public void cell(int                 rank,
+				 int                    M,
+	             chan<int>.read      subA,
+	             chan<int>.read      subB,
+	             chan<int>.write    right,
+	             chan<int>.read      left,
+	             chan<int>.write       up,
+	             chan<int>.read      down,
+	             chan<int>.write   result) {
+	int[] myA = new int[M * M];
+	int[] myB = new int[M * M];
+	int i;
+	println("[" + rank + "]: reading in " + M + "-by-" + M + " values to array A");
+	println("[" + rank + "]: reading in " + M + "-by-" + M + " values to array B");
+	for (i = 0; i < M * M; i++) {
+		println("[" + rank + "]: Reading A");
+		myA[i] = subA.read();
+		println("[" + rank + "]: Reading B");
+		myB[i] = subB.read();
+	}
+
+	printMatrix(rank, M, "A", myA);
+	printMatrix(rank, M, "B", myB);
+}
+
+public void main(string[] args) {
+	int M = 3;
+	int N = 9;
+	int _N = 3;
+	int[] A = new int[M * M];
+	int[] B = new int[M * M];
+	int[] C = new int[M * M];
+	int i, j, k, l;
+
+	// inter-cell communication
+	chan<int> oneTwo;     // right
+	chan<int> oneSeven;   // up
+	chan<int> twoThree;   // right
+	chan<int> twoEight;   // up
+	chan<int> threeOne;   // right
+	chan<int> threeNine;  // up
+	chan<int> fourFive;   // right
+	chan<int> fourOne;    // up
+	chan<int> fiveSix;    // right
+	chan<int> fiveTwo;    // up
+	chan<int> sixFour;    // right
+	chan<int> sixThree;   // up
+	chan<int> sevenEight; // right
+	chan<int> sevenFour;  // up
+	chan<int> eightNine;  // right
+	chan<int> eightFive;  // up
+	chan<int> nineSeven;  // right
+	chan<int> nineSix;    // up
+
+	// sending submatrix of A to cells
+	chan<int> subAOne;
+	chan<int> subATwo;
+	chan<int> subAThree;
+	chan<int> subAFour;
+	chan<int> subAFive;
+	chan<int> subASix;
+	chan<int> subASeven;
+	chan<int> subAEight;
+	chan<int> subANine;
+
+	// sending submatrix of B to cells
+	chan<int> subBOne;
+	chan<int> subBTwo;
+	chan<int> subBThree;
+	chan<int> subBFour;
+	chan<int> subBFive;
+	chan<int> subBSix;
+	chan<int> subBSeven;
+	chan<int> subBEight;
+	chan<int> subBNine;
+
+	// returned result from process
+	chan<int> oneRes;
+	chan<int> twoRes;
+	chan<int> threeRes;
+	chan<int> fourRes;
+	chan<int> fiveRes;
+	chan<int> sixRes;
+	chan<int> sevenRes;
+	chan<int> eightRes;
+	chan<int> nineRes;
+
+	// initialize array
+	for (i = 0; i < M; i++) {
+		for (j = 0; j < M; j++) {
+			A[i * M + j] = B[i * M + j] = C[i * M + j] = i * M + j;
+		}
+	}
+
+	// and we're off!
+	par {
+		// fire off the cells
+		cell(1,
+			 M / _N,
+			 subAOne.read,
+			 subBOne.read,
+			 oneTwo.write,
+			 threeOne.read,
+			 oneSeven.write,
+			 fourOne.read,
+			 oneRes.write);
+		cell(2,
+			 M / _N,
+			 subATwo.read,
+			 subBTwo.read,
+			 twoThree.write,
+			 oneTwo.read,
+			 twoEight.write,
+			 fiveTwo.read,
+			 twoRes.write);
+		cell(3,
+			 M / _N,
+			 subAThree.read,
+			 subBThree.read,
+			 threeOne.write,
+			 twoThree.read,
+			 threeNine.write,
+			 sixThree.read,
+			 threeRes.write);
+		cell(4,
+			 M / _N,
+			 subAFour.read,
+			 subBFour.read,
+			 fourFive.write,
+			 sixFour.read,
+			 fourOne.write,
+			 sevenFour.read,
+			 fourRes.write);
+		cell(5,
+			 M / _N,
+			 subAFive.read,
+			 subBFive.read,
+			 fiveSix.write,
+			 fourFive.read,
+			 fiveTwo.write,
+			 eightFive.read,
+			 fiveRes.write);
+		cell(6,
+			 M / _N,
+			 subASix.read,
+			 subBSix.read,
+			 sixFour.write,
+			 fiveSix.read,
+			 sixThree.write,
+			 nineSix.read,
+			 sixRes.write);
+		cell(7,
+			 M / _N,
+			 subASeven.read,
+			 subBSeven.read,
+			 sevenEight.write,
+			 nineSeven.read,
+			 sevenFour.write,
+			 oneSeven.read,
+			 sevenRes.write);
+		cell(8,
+			 M / _N,
+			 subAEight.read,
+			 subBEight.read,
+			 eightNine.write,
+			 sevenEight.read,
+			 eightFive.write,
+			 twoEight.read,
+			 eightRes.write);
+		cell(9,
+			 M / _N,
+			 subANine.read,
+			 subBNine.read,
+			 nineSeven.write,
+			 eightNine.read,
+			 nineSix.write,
+			 threeNine.read,
+			 nineRes.write);
+
+		// send the matrices to the cells
+		subAOne.write(A[0]);
+		subBOne.write(B[0]);
+		subATwo.write(A[1]);
+		subBTwo.write(B[1]);
+		subAThree.write(A[2]);
+		subBThree.write(B[2]);
+		subAFour.write(A[3]);
+		subBFour.write(B[3]);
+		subAFive.write(A[4]);
+		subBFive.write(B[4]);
+		subASix.write(A[5]);
+		subBSix.write(B[5]);
+		subASeven.write(A[6]);
+		subBSeven.write(B[6]);
+		subAEight.write(A[7]);
+		subBEight.write(B[7]);
+		subANine.write(A[8]);
+		subBNine.write(B[8]);
+	}
+}
