@@ -10,7 +10,8 @@ public class Settings {
     
     public static String absolutePath = new File("").getAbsolutePath() + File.separator;
     public static String includeDir = "include";
-    public static Language language = Language.JVM;
+    // public static Language language = Language.JVM;
+    public static Language language = Language.CPLUS;
     public static boolean showColor = false;
     public static final String VERSION = "2.1.1";
     public static final String IMPORT_FILE_EXTENSSION = "pj";
