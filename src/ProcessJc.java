@@ -8,6 +8,7 @@ import ast.AST;
 import ast.Compilation;
 import codegen.Helper;
 import codegen.java.CodeGenJava;
+import codegen.cpp.CodeGenCPP;
 import library.Library;
 import namechecker.ResolveImports;
 import parser.parser;
@@ -170,7 +171,7 @@ public class ProcessJc {
                 c.visit(new ParseTreePrinter());
             
             SymbolTable.hook = null;
-            
+            Log.startLogging();
             // Visit import declarations
             System.out.println("-- Resolving imports.");
             c.visit(new namechecker.ResolveImports<AST>(globalTypeTable));
@@ -249,8 +250,10 @@ public class ProcessJc {
             System.out.println("-- Rewriting infinite loops.");
             new rewriters.InfiniteLoopRewrite().go(c);
             
-            System.out.println("-- Rewriting loops.");
-            c.visit(new rewriters.UnrollLoopRewrite());
+            if (Settings.language == Language.JVM) {
+                System.out.println("-- Rewriting loops.");
+                c.visit(new rewriters.UnrollLoopRewrite());
+            }
             
             System.out.println("-- Performing alt statement usage check.");
             c.visit(new rewriters.AltStatRewrite());
@@ -271,9 +274,23 @@ public class ProcessJc {
             
             System.out.println("-- Collecting left-hand sides for par for code generation.");
             c.visit(new rewriters.ParFor());
+
+             // If we're generating C++ code, we need to rewrite print/println statements
+            if (Settings.language == Language.CPLUS) {
+                System.out.println("-- Rewriting calls to print() and println().");
+                c.visit(new rewriters.IOCallsRewrite());
+            }
             // Run the code generator for the known (specified) target language
-            if (Settings.language == pJc.target)
-                pJc.generateCodeJava(c, inFile, globalTypeTable);
+            if (Settings.language == pJc.target) {
+                if (Settings.language == Language.JVM) {
+                    pJc.generateCodeJava(c, inFile, globalTypeTable);
+                }
+                else if (Settings.language == Language.CPLUS) {
+                    // start the logger for debugging
+                    Log.startLogging();
+                    pJc.generateCodeCPP(c, inFile, globalTypeTable);
+                }
+            }
             else {
                 // Unknown target language so abort/terminate program
                 System.out.println("Invalid target language!");
@@ -310,6 +327,20 @@ public class ProcessJc {
         // after returning strings rendered by the string template
         String code = (String) c.visit(codeGen);
         // Write the output to a file
+        Helper.writeToFile(code, c.fileNoExtension(), codeGen.workingDir());
+    }
+
+    private void generateCodeCPP(Compilation c, File inFile, SymbolTable s) {
+        Properties p = utilities.ConfigFileReader.getProcessJConfig();
+
+        CodeGenCPP codeGen = new CodeGenCPP(s);
+
+        codeGen.workingDir(p.getProperty("workingdir"));
+
+        codeGen.setSourceProgram(c.fileNoExtension());
+
+        String code = (String) c.visit(codeGen);
+
         Helper.writeToFile(code, c.fileNoExtension(), codeGen.workingDir());
     }
     
