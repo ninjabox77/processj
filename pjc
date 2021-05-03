@@ -114,6 +114,8 @@ else
   exit 1
 fi
 
+exit 0
+
 ############################################################################
 
 ## run the generated Java files with the JVM
