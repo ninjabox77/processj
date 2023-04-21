@@ -1,0 +1,13 @@
+Copyright (C) 2017-2023.
+
+This is an experimental version of the original implementation of the
+ProcessJ compiler. The aim is to build a full ProcessJ compliant compiler.
+
+Stages
+------
+ o Lexer (without preprocessing)
+ o Parser (supports basic Java syntax)
+ o Control Flow Graph
+ o Semantics Analysis
+ o Code Generation
+
