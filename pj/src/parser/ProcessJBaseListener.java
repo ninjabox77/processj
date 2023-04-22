@@ -197,18 +197,6 @@ public class ProcessJBaseListener implements ProcessJListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterImplements(ProcessJParser.ImplementsContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitImplements(ProcessJParser.ImplementsContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterRecordBody(ProcessJParser.RecordBodyContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -353,13 +341,13 @@ public class ProcessJBaseListener implements ProcessJListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVariableDeclaratorIdent(ProcessJParser.VariableDeclaratorIdentContext ctx) { }
+	@Override public void enterVariableDeclaratorIdentifier(ProcessJParser.VariableDeclaratorIdentifierContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVariableDeclaratorIdent(ProcessJParser.VariableDeclaratorIdentContext ctx) { }
+	@Override public void exitVariableDeclaratorIdentifier(ProcessJParser.VariableDeclaratorIdentifierContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

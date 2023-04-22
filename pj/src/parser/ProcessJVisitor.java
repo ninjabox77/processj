@@ -106,12 +106,6 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExtends(ProcessJParser.ExtendsContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#implements}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitImplements(ProcessJParser.ImplementsContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link ProcessJParser#recordBody}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -184,11 +178,11 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVariableDeclarator(ProcessJParser.VariableDeclaratorContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#variableDeclaratorIdent}.
+	 * Visit a parse tree produced by {@link ProcessJParser#variableDeclaratorIdentifier}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitVariableDeclaratorIdent(ProcessJParser.VariableDeclaratorIdentContext ctx);
+	T visitVariableDeclaratorIdentifier(ProcessJParser.VariableDeclaratorIdentifierContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ProcessJParser#type_}.
 	 * @param ctx the parse tree

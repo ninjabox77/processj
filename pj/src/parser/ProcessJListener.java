@@ -168,16 +168,6 @@ public interface ProcessJListener extends ParseTreeListener {
 	 */
 	void exitExtends(ProcessJParser.ExtendsContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ProcessJParser#implements}.
-	 * @param ctx the parse tree
-	 */
-	void enterImplements(ProcessJParser.ImplementsContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ProcessJParser#implements}.
-	 * @param ctx the parse tree
-	 */
-	void exitImplements(ProcessJParser.ImplementsContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link ProcessJParser#recordBody}.
 	 * @param ctx the parse tree
 	 */
@@ -298,15 +288,15 @@ public interface ProcessJListener extends ParseTreeListener {
 	 */
 	void exitVariableDeclarator(ProcessJParser.VariableDeclaratorContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ProcessJParser#variableDeclaratorIdent}.
+	 * Enter a parse tree produced by {@link ProcessJParser#variableDeclaratorIdentifier}.
 	 * @param ctx the parse tree
 	 */
-	void enterVariableDeclaratorIdent(ProcessJParser.VariableDeclaratorIdentContext ctx);
+	void enterVariableDeclaratorIdentifier(ProcessJParser.VariableDeclaratorIdentifierContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link ProcessJParser#variableDeclaratorIdent}.
+	 * Exit a parse tree produced by {@link ProcessJParser#variableDeclaratorIdentifier}.
 	 * @param ctx the parse tree
 	 */
-	void exitVariableDeclaratorIdent(ProcessJParser.VariableDeclaratorIdentContext ctx);
+	void exitVariableDeclaratorIdentifier(ProcessJParser.VariableDeclaratorIdentifierContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ProcessJParser#type_}.
 	 * @param ctx the parse tree

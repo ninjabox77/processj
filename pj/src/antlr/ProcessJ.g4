@@ -62,9 +62,9 @@ extends
  : EXTENDS typeVariable (COMMA typeVariable)*
  ;
 
-implements
- : IMPLEMENTS typeVariable (COMMA typeVariable)*
- ;
+//implements
+// : IMPLEMENTS typeVariable (COMMA typeVariable)*
+// ;
 
 recordBody
  : LBRACE recordField* RBRACE
@@ -114,10 +114,10 @@ variableDeclaratorList
  ;
 
 variableDeclarator
- : variableDeclaratorIdent (EQ variableInitializer)?
+ : variableDeclaratorIdentifier (EQ variableInitializer)?
  ;
 
-variableDeclaratorIdent
+variableDeclaratorIdentifier
  : Identifier QUEST? dims?
  ;
 
@@ -233,6 +233,7 @@ expression
  | recordExpression
  | protocolExpression
  | externalExpression
+// | objectExpression
  | expressionWithBlock
  ;
 
@@ -255,7 +256,8 @@ elementValuePair
  ;
 
 elementValue
- : literalExpression
+// : literalExpression
+ : expression
  | annotation
  ;
 
