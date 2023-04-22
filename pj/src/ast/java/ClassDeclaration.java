@@ -1,0 +1,139 @@
+package ast.java;
+
+import ast.Node;
+import ast.Sequence;
+import org.antlr.v4.runtime.Token;
+
+import java.util.Optional;
+
+/**
+ * Represents a class { ... } definition.
+ *
+ * @author Ben
+ */
+public class ClassDeclaration extends TypeDeclaration<ClassDeclaration> {
+
+  private boolean isInterface_;
+  private Sequence<ClassDeclaration> extendedClasses_;
+  private Sequence<ClassDeclaration> implementedClasses_;
+
+  public ClassDeclaration() {
+    this(ACC_PUBLIC, null, null);
+  }
+
+  public ClassDeclaration(final int modifiers, final String name, Sequence<BodyDeclaration<?>> declarations) {
+    this(modifiers, name, declarations, null);
+  }
+
+  public ClassDeclaration(final int modifiers, final String name, Sequence<BodyDeclaration<?>> declarations, Sequence<ClassDeclaration> extendedClasses) {
+    this(modifiers, name, declarations, extendedClasses, null);
+  }
+
+  public ClassDeclaration(final int modifiers, final String name, Sequence<BodyDeclaration<?>> declarations, Sequence<ClassDeclaration> extendedClasses, Sequence<ClassDeclaration> implementedClasses) {
+    this(null, modifiers, name, declarations, extendedClasses, implementedClasses);
+  }
+
+  public ClassDeclaration(Token token, final int modifiers, final String name, Sequence<BodyDeclaration<?>> declarations, Sequence<ClassDeclaration> extendedClasses, Sequence<ClassDeclaration> implementedClasses) {
+    super(token, modifiers, name, declarations);
+    setExtendedClasses(extendedClasses);
+    setImplementedClasses(implementedClasses);
+  }
+
+  public ClassDeclaration setExtendedClasses(Sequence<ClassDeclaration> extendedClasses) {
+    if (extendedClasses == extendedClasses_) {
+      return this;
+    }
+    if (extendedClasses_ != null) {
+      extendedClasses_.setParentNode(null);
+    }
+    extendedClasses_ = extendedClasses;
+    setAsParentNodeOf(extendedClasses);
+    return this;
+  }
+
+  public Optional<Sequence<ClassDeclaration>> getExtendedClasses() {
+    return Optional.ofNullable(extendedClasses_);
+  }
+
+  public ClassDeclaration setImplementedClasses(Sequence<ClassDeclaration> implementedClasses) {
+    if (implementedClasses == implementedClasses_) {
+      return this;
+    }
+    if (implementedClasses_ != null) {
+      implementedClasses_.setParentNode(null);
+    }
+    implementedClasses_ = implementedClasses;
+    setAsParentNodeOf(implementedClasses);
+    return this;
+  }
+
+  public ClassDeclaration setIsInterface(final boolean isInterface) {
+    if (isInterface == isInterface_) {
+      return this;
+    }
+    isInterface_ = isInterface;
+    return this;
+  }
+
+  public boolean isInterface() {
+    return isInterface_;
+  }
+
+  @Override
+  public boolean isClassDeclaration() {
+    return true;
+  }
+
+  @Override
+  public ClassDeclaration asClassDeclaration() {
+    return this;
+  }
+
+  @Override
+  public boolean replace(Node node, Node replaceWith) {
+    if (node == null) {
+      return false;
+    }
+    if (extendedClasses_ != null) {
+      for (int i = 0; i < extendedClasses_.size(); ++i) {
+        if (node == extendedClasses_.get(i)) {
+          extendedClasses_.set(i, (ClassDeclaration) replaceWith);
+          return true;
+        }
+      }
+    }
+    if (implementedClasses_ != null) {
+      for (int i = 0; i < implementedClasses_.size(); ++i) {
+        if (node == implementedClasses_.get(i)) {
+          implementedClasses_.set(i, (ClassDeclaration) replaceWith);
+          return true;
+        }
+      }
+    }
+    return super.replace(node, replaceWith);
+  }
+
+  @Override
+  public boolean remove(Node node) {
+    if (node == null) {
+      return false;
+    }
+    if (extendedClasses_ != null) {
+      for (int i = 0; i < extendedClasses_.size(); ++i) {
+        if (node == extendedClasses_.get(i)) {
+          extendedClasses_.remove(i);
+          return true;
+        }
+      }
+    }
+    if (implementedClasses_ != null) {
+      for (int i = 0; i < implementedClasses_.size(); ++i) {
+        if (node == implementedClasses_.get(i)) {
+          implementedClasses_.remove(i);
+          return true;
+        }
+      }
+    }
+    return super.remove(node);
+  }
+}
