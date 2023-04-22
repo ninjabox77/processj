@@ -1,5 +1,7 @@
 Copyright (C) 2017-2023.
 
+Author: Ben Cisneros <benjcisneros@gmail.com>
+
 This is an experimental version of the original implementation of the
 ProcessJ compiler. The aim is to build a full ProcessJ compliant compiler.
 
@@ -10,4 +12,3 @@ Stages
  o Control Flow Graph
  o Semantics Analysis
  o Code Generation
-

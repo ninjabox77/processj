@@ -339,7 +339,7 @@ expressionWithBlock
  : blockExpression
  | loopExpression
  | ifExpression
- | caseExpression
+ | switchExpression
  | altExpression
  | parBlockExpression
  ;
@@ -418,7 +418,7 @@ ifExpression
  : IF LPAREN expression RPAREN blockExpression (ELSE (blockExpression | ifExpression))?
  ;
 
-caseExpression
+switchExpression
  : SWITCH LPAREN expression RPAREN caseBlockExpression
  ;
 
@@ -472,7 +472,7 @@ barrierExpression
  ;
 
 externDeclaration
- : EXTERN externType Identifier SEMI
+ : EXTERN Identifier EQ externType SEMI
  ;
 
 externType
@@ -494,7 +494,8 @@ typeArgumentList
  ;
 
 typeArgument
- : referenceType
+// : referenceType
+ : classType
  ;
 
 // Keywords
@@ -852,7 +853,7 @@ DMINUS      : '--';
 DMULT       : '**';
 
 // Null Literal
-NullLiteral: 'null'	;
+NullLiteral: 'null';
 
 // Identifiers (must appear after all keywords in the antlr)
 Identifier: JavaLetter JavaLetterOrDigit* ;
