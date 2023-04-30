@@ -833,6 +833,18 @@ public class ProcessJBaseListener implements ProcessJListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterClassExpression_(ProcessJParser.ClassExpression_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitClassExpression_(ProcessJParser.ClassExpression_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterExponentExpression(ProcessJParser.ExponentExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1397,6 +1409,18 @@ public class ProcessJBaseListener implements ProcessJListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterClassExpression(ProcessJParser.ClassExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitClassExpression(ProcessJParser.ClassExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterLoopExpression(ProcessJParser.LoopExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1716,6 +1740,18 @@ public class ProcessJBaseListener implements ProcessJListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitClassDotIdentifierArguments(ProcessJParser.ClassDotIdentifierArgumentsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTypeArgumentsOrDiamond(ProcessJParser.TypeArgumentsOrDiamondContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTypeArgumentsOrDiamond(ProcessJParser.TypeArgumentsOrDiamondContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

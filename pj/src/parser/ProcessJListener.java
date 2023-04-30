@@ -760,6 +760,18 @@ public interface ProcessJListener extends ParseTreeListener {
 	 */
 	void exitCallExpression(ProcessJParser.CallExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code ClassExpression_}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterClassExpression_(ProcessJParser.ClassExpression_Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ClassExpression_}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitClassExpression_(ProcessJParser.ClassExpression_Context ctx);
+	/**
 	 * Enter a parse tree produced by the {@code ExponentExpression}
 	 * labeled alternative in {@link ProcessJParser#expression}.
 	 * @param ctx the parse tree
@@ -1272,6 +1284,16 @@ public interface ProcessJListener extends ParseTreeListener {
 	 */
 	void exitExternalExpression(ProcessJParser.ExternalExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ProcessJParser#classExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterClassExpression(ProcessJParser.ClassExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ProcessJParser#classExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitClassExpression(ProcessJParser.ClassExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ProcessJParser#loopExpression}.
 	 * @param ctx the parse tree
 	 */
@@ -1551,6 +1573,16 @@ public interface ProcessJListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitClassDotIdentifierArguments(ProcessJParser.ClassDotIdentifierArgumentsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ProcessJParser#typeArgumentsOrDiamond}.
+	 * @param ctx the parse tree
+	 */
+	void enterTypeArgumentsOrDiamond(ProcessJParser.TypeArgumentsOrDiamondContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ProcessJParser#typeArgumentsOrDiamond}.
+	 * @param ctx the parse tree
+	 */
+	void exitTypeArgumentsOrDiamond(ProcessJParser.TypeArgumentsOrDiamondContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ProcessJParser#typeArguments}.
 	 * @param ctx the parse tree

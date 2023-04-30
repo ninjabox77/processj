@@ -124,6 +124,7 @@ variableDeclaratorIdentifier
 type_
  : primitiveType
  | referenceType
+ | annotation* classType
  | VOID
  ;
 
@@ -215,7 +216,7 @@ expression
  | LPAREN (expression | primitiveType) RPAREN expression                    # CastExpression
  | expression op=(MULT | DIV | MOD) expression                              # MultiplicativeExpression
  | expression op=(PLUS | MINUS) expression                                  # AdditiveExpression
- | expression op=(LSHIFT | RSHIFT | RRSHIFT) expression                     # ShiftExpression
+ | expression ('<' '<' | '>' '>' | '>' '>' '>') expression                  # ShiftExpression
  | expression AND expression                                                # AndExpression
  | expression XOR expression                                                # ExclusiveOrExpression
  | expression OR expression                                                 # InclusiveOrExpression
@@ -234,7 +235,7 @@ expression
  | recordExpression                                                         # RecordLiteralExpression
  | protocolExpression                                                       # ProtocolLiteralExpression
  | externalExpression                                                       # ExternalLiteralExpression
-// | objectExpression                                                         # ObjectExpression_
+ | classExpression                                                          # ClassExpression_
  | expressionWithBlock                                                      # ExpressionWithBlockExpression
  ;
 
@@ -357,7 +358,7 @@ statements
  ;
 
 recordExpression
- : NEW? typeVariable LBRACE recordExpressionList* RBRACE
+ : NEW typeVariable LBRACE recordExpressionList* RBRACE
  ;
 
 recordExpressionList
@@ -365,7 +366,7 @@ recordExpressionList
  ;
 
 protocolExpression
- : NEW? typeVariable LBRACE? protocolExpressionList RBRACE?
+ : NEW typeVariable LBRACE protocolExpressionList RBRACE
  ;
 
 protocolExpressionList
@@ -373,11 +374,15 @@ protocolExpressionList
  ;
 
 tagExpressionList
- : COLON LBRACE recordExpressionList* RBRACE
+ : COLON LBRACE? recordExpressionList* RBRACE?
  ;
 
 externalExpression
  : NEW typeVariable LPAREN actualDeclarationList? RPAREN
+ ;
+
+classExpression
+ : NEW annotation* Identifier typeArgumentsOrDiamond? LPAREN actualDeclarationList? RPAREN
  ;
 
 loopExpression
@@ -486,6 +491,11 @@ externType
 classType
  : annotation* Identifier typeArguments?                # IdentifierArguments
  | classType DOT annotation* Identifier typeArguments?  # ClassDotIdentifierArguments
+ ;
+
+typeArgumentsOrDiamond
+ : typeArguments
+ | LT GT
  ;
 
 typeArguments
@@ -835,9 +845,9 @@ LTEQ        : '<=';
 GTEQ        : '>=';
 NOTEQ       : '!=';
 
-LSHIFT      : '<<';
-RSHIFT      : '>>';
-RRSHIFT     : '>>>';
+//LSHIFT      : '<<';
+//RSHIFT      : '>>';
+//RRSHIFT     : '>>>';
 ANDAND      : '&&';
 OROR        : '||';
 PLUS        : '+';

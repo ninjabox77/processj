@@ -455,6 +455,13 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitCallExpression(ProcessJParser.CallExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code ClassExpression_}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitClassExpression_(ProcessJParser.ClassExpression_Context ctx);
+	/**
 	 * Visit a parse tree produced by the {@code ExponentExpression}
 	 * labeled alternative in {@link ProcessJParser#expression}.
 	 * @param ctx the parse tree
@@ -758,6 +765,12 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExternalExpression(ProcessJParser.ExternalExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#classExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitClassExpression(ProcessJParser.ClassExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ProcessJParser#loopExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -924,6 +937,12 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitClassDotIdentifierArguments(ProcessJParser.ClassDotIdentifierArgumentsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#typeArgumentsOrDiamond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTypeArgumentsOrDiamond(ProcessJParser.TypeArgumentsOrDiamondContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ProcessJParser#typeArguments}.
 	 * @param ctx the parse tree
