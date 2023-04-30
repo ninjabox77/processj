@@ -15,43 +15,43 @@ import java.util.Map;
  */
 public class AnnotationNode extends Node {
 
-  private Map<String, Expression<?>> members;
+  private Map<String, Expression<?>> members_;
 
   public AnnotationNode(Token token) {
     super(token);
   }
 
   public Map<String, Expression<?>> getMembers() {
-    if (members == null) {
+    if (members_ == null) {
       return Collections.emptyMap();
     }
-    return Collections.unmodifiableMap(members);
+    return Collections.unmodifiableMap(members_);
   }
 
   public Expression<?> getMember(final String name) {
-    if (members == null) {
+    if (members_ == null) {
       return null;
     }
-    return members.get(name);
+    return members_.get(name);
   }
 
   private void check() {
-    if (members == null) {
-      members = new LinkedHashMap<>();
+    if (members_ == null) {
+      members_ = new LinkedHashMap<>();
     }
   }
 
   public AnnotationNode setMember(final String name, Expression<?> value) {
     check();
-    members.put(name, value);
+    members_.put(name, value);
     return this;
   }
 
   public AnnotationNode addMember(final String name, Expression<?> value) {
     check();
-    Expression<?> oldValue = members.get(name);
+    Expression<?> oldValue = members_.get(name);
     if (oldValue == null) {
-      members.put(name, value);
+      members_.put(name, value);
     } else {
       throw new RuntimeException(String.format("Annotation member %s has already been added.", name));
     }

@@ -37,16 +37,16 @@ public class ProcessJc {
   // List of available options for the ProcessJ compiler
   public static final Option[] OPTIONS = {
       new Option("help", "-help", "Show this help message and exit"),
-      new Option("showError", "-showError", "Show all error and warning messages when available"),
+      new Option("errors", "-errors", "Show all error and warning messages when available"),
       new Option("version", "-version", "Print version information and exit"),
-      new Option("visitAll", "-visitAll", "Generate all parse tree visitors"),
+      new Option("debug", "-debug", "Generate all parse tree visitors"),
   };
 
   // Field used by the compiler.
   public boolean help;
   public boolean version;
-  public boolean showError;
-  public boolean visitAll;
+  public boolean errors;
+  public boolean debug;
 
   private List<String> inputFiles_ = new ArrayList<>();
   private Properties config_;
@@ -121,9 +121,6 @@ public class ProcessJc {
     if (args.length == 2) {
       System.out.println();
     }
-    // Prints the usage and terminates the program's execution.
-    if (pj.help) {
-      pj.printUsageAndExit();
-    }
+
   }
 }

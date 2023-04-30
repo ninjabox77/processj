@@ -109,22 +109,4 @@ public class Import extends AnnotatedNode {
     }
     return false;
   }
-
-  @Override
-  public String getText() {
-    if (isStar_) {
-      return "import " + name_.getText() + ".*";
-    }
-    if (fieldName_ != null && !fieldName_.isEmpty()) {
-      if (alias_ != null && !alias_.isEmpty() && !alias_.equals(fieldName_)) {
-        return "import static " + name_.getText() + " as " + alias_;
-      }
-      // This returns the field name as part of the static import.
-      return "import static " + name_.getText();
-    }
-    if (alias_ == null || alias_.isEmpty()) {
-      return "import " + name_.getText();
-    }
-    return "import " + name_.getText() + " as " + alias_;
-  }
 }

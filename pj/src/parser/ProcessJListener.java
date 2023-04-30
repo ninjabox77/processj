@@ -68,65 +68,15 @@ public interface ProcessJListener extends ParseTreeListener {
 	 */
 	void exitMultiImportDeclarationStar(ProcessJParser.MultiImportDeclarationStarContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code ProcedureDeclaration_}
-	 * labeled alternative in {@link ProcessJParser#typeDeclaration}.
+	 * Enter a parse tree produced by {@link ProcessJParser#typeDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterProcedureDeclaration_(ProcessJParser.ProcedureDeclaration_Context ctx);
+	void enterTypeDeclaration(ProcessJParser.TypeDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code ProcedureDeclaration_}
-	 * labeled alternative in {@link ProcessJParser#typeDeclaration}.
+	 * Exit a parse tree produced by {@link ProcessJParser#typeDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitProcedureDeclaration_(ProcessJParser.ProcedureDeclaration_Context ctx);
-	/**
-	 * Enter a parse tree produced by the {@code RecordDeclaration_}
-	 * labeled alternative in {@link ProcessJParser#typeDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void enterRecordDeclaration_(ProcessJParser.RecordDeclaration_Context ctx);
-	/**
-	 * Exit a parse tree produced by the {@code RecordDeclaration_}
-	 * labeled alternative in {@link ProcessJParser#typeDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void exitRecordDeclaration_(ProcessJParser.RecordDeclaration_Context ctx);
-	/**
-	 * Enter a parse tree produced by the {@code ProtocolDeclaration_}
-	 * labeled alternative in {@link ProcessJParser#typeDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void enterProtocolDeclaration_(ProcessJParser.ProtocolDeclaration_Context ctx);
-	/**
-	 * Exit a parse tree produced by the {@code ProtocolDeclaration_}
-	 * labeled alternative in {@link ProcessJParser#typeDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void exitProtocolDeclaration_(ProcessJParser.ProtocolDeclaration_Context ctx);
-	/**
-	 * Enter a parse tree produced by the {@code ConstantDeclaration_}
-	 * labeled alternative in {@link ProcessJParser#typeDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void enterConstantDeclaration_(ProcessJParser.ConstantDeclaration_Context ctx);
-	/**
-	 * Exit a parse tree produced by the {@code ConstantDeclaration_}
-	 * labeled alternative in {@link ProcessJParser#typeDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void exitConstantDeclaration_(ProcessJParser.ConstantDeclaration_Context ctx);
-	/**
-	 * Enter a parse tree produced by the {@code ExternDeclaration_}
-	 * labeled alternative in {@link ProcessJParser#typeDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void enterExternDeclaration_(ProcessJParser.ExternDeclaration_Context ctx);
-	/**
-	 * Exit a parse tree produced by the {@code ExternDeclaration_}
-	 * labeled alternative in {@link ProcessJParser#typeDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void exitExternDeclaration_(ProcessJParser.ExternDeclaration_Context ctx);
+	void exitTypeDeclaration(ProcessJParser.TypeDeclarationContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ProcessJParser#procedureDeclaration}.
 	 * @param ctx the parse tree
@@ -188,15 +138,29 @@ public interface ProcessJListener extends ParseTreeListener {
 	 */
 	void exitRecordField(ProcessJParser.RecordFieldContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ProcessJParser#protocolDeclaration}.
+	 * Enter a parse tree produced by the {@code ProtocolDeclarationWithBody}
+	 * labeled alternative in {@link ProcessJParser#protocolDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterProtocolDeclaration(ProcessJParser.ProtocolDeclarationContext ctx);
+	void enterProtocolDeclarationWithBody(ProcessJParser.ProtocolDeclarationWithBodyContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link ProcessJParser#protocolDeclaration}.
+	 * Exit a parse tree produced by the {@code ProtocolDeclarationWithBody}
+	 * labeled alternative in {@link ProcessJParser#protocolDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitProtocolDeclaration(ProcessJParser.ProtocolDeclarationContext ctx);
+	void exitProtocolDeclarationWithBody(ProcessJParser.ProtocolDeclarationWithBodyContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ProtocolDeclarationSemi}
+	 * labeled alternative in {@link ProcessJParser#protocolDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterProtocolDeclarationSemi(ProcessJParser.ProtocolDeclarationSemiContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ProtocolDeclarationSemi}
+	 * labeled alternative in {@link ProcessJParser#protocolDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitProtocolDeclarationSemi(ProcessJParser.ProtocolDeclarationSemiContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ProcessJParser#protocolBody}.
 	 * @param ctx the parse tree
@@ -368,25 +332,137 @@ public interface ProcessJListener extends ParseTreeListener {
 	 */
 	void exitArrayType(ProcessJParser.ArrayTypeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ProcessJParser#channelType}.
+	 * Enter a parse tree produced by the {@code ChannelSharedReadType}
+	 * labeled alternative in {@link ProcessJParser#channelType}.
 	 * @param ctx the parse tree
 	 */
-	void enterChannelType(ProcessJParser.ChannelTypeContext ctx);
+	void enterChannelSharedReadType(ProcessJParser.ChannelSharedReadTypeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link ProcessJParser#channelType}.
+	 * Exit a parse tree produced by the {@code ChannelSharedReadType}
+	 * labeled alternative in {@link ProcessJParser#channelType}.
 	 * @param ctx the parse tree
 	 */
-	void exitChannelType(ProcessJParser.ChannelTypeContext ctx);
+	void exitChannelSharedReadType(ProcessJParser.ChannelSharedReadTypeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ProcessJParser#typeVariable}.
+	 * Enter a parse tree produced by the {@code ChannelSharedWriteType}
+	 * labeled alternative in {@link ProcessJParser#channelType}.
 	 * @param ctx the parse tree
 	 */
-	void enterTypeVariable(ProcessJParser.TypeVariableContext ctx);
+	void enterChannelSharedWriteType(ProcessJParser.ChannelSharedWriteTypeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link ProcessJParser#typeVariable}.
+	 * Exit a parse tree produced by the {@code ChannelSharedWriteType}
+	 * labeled alternative in {@link ProcessJParser#channelType}.
 	 * @param ctx the parse tree
 	 */
-	void exitTypeVariable(ProcessJParser.TypeVariableContext ctx);
+	void exitChannelSharedWriteType(ProcessJParser.ChannelSharedWriteTypeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ChannelSharedType}
+	 * labeled alternative in {@link ProcessJParser#channelType}.
+	 * @param ctx the parse tree
+	 */
+	void enterChannelSharedType(ProcessJParser.ChannelSharedTypeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ChannelSharedType}
+	 * labeled alternative in {@link ProcessJParser#channelType}.
+	 * @param ctx the parse tree
+	 */
+	void exitChannelSharedType(ProcessJParser.ChannelSharedTypeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ChannelType_}
+	 * labeled alternative in {@link ProcessJParser#channelType}.
+	 * @param ctx the parse tree
+	 */
+	void enterChannelType_(ProcessJParser.ChannelType_Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ChannelType_}
+	 * labeled alternative in {@link ProcessJParser#channelType}.
+	 * @param ctx the parse tree
+	 */
+	void exitChannelType_(ProcessJParser.ChannelType_Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ChannelDotRead}
+	 * labeled alternative in {@link ProcessJParser#channelType}.
+	 * @param ctx the parse tree
+	 */
+	void enterChannelDotRead(ProcessJParser.ChannelDotReadContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ChannelDotRead}
+	 * labeled alternative in {@link ProcessJParser#channelType}.
+	 * @param ctx the parse tree
+	 */
+	void exitChannelDotRead(ProcessJParser.ChannelDotReadContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ChannelDotWrite}
+	 * labeled alternative in {@link ProcessJParser#channelType}.
+	 * @param ctx the parse tree
+	 */
+	void enterChannelDotWrite(ProcessJParser.ChannelDotWriteContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ChannelDotWrite}
+	 * labeled alternative in {@link ProcessJParser#channelType}.
+	 * @param ctx the parse tree
+	 */
+	void exitChannelDotWrite(ProcessJParser.ChannelDotWriteContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ChannelSharedDotRead}
+	 * labeled alternative in {@link ProcessJParser#channelType}.
+	 * @param ctx the parse tree
+	 */
+	void enterChannelSharedDotRead(ProcessJParser.ChannelSharedDotReadContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ChannelSharedDotRead}
+	 * labeled alternative in {@link ProcessJParser#channelType}.
+	 * @param ctx the parse tree
+	 */
+	void exitChannelSharedDotRead(ProcessJParser.ChannelSharedDotReadContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ChannelSharedDotWrite}
+	 * labeled alternative in {@link ProcessJParser#channelType}.
+	 * @param ctx the parse tree
+	 */
+	void enterChannelSharedDotWrite(ProcessJParser.ChannelSharedDotWriteContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ChannelSharedDotWrite}
+	 * labeled alternative in {@link ProcessJParser#channelType}.
+	 * @param ctx the parse tree
+	 */
+	void exitChannelSharedDotWrite(ProcessJParser.ChannelSharedDotWriteContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code TypeVariableIdentifier}
+	 * labeled alternative in {@link ProcessJParser#typeVariable}.
+	 * @param ctx the parse tree
+	 */
+	void enterTypeVariableIdentifier(ProcessJParser.TypeVariableIdentifierContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code TypeVariableIdentifier}
+	 * labeled alternative in {@link ProcessJParser#typeVariable}.
+	 * @param ctx the parse tree
+	 */
+	void exitTypeVariableIdentifier(ProcessJParser.TypeVariableIdentifierContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code TypeVariablePackageDdotIdentifier}
+	 * labeled alternative in {@link ProcessJParser#typeVariable}.
+	 * @param ctx the parse tree
+	 */
+	void enterTypeVariablePackageDdotIdentifier(ProcessJParser.TypeVariablePackageDdotIdentifierContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code TypeVariablePackageDdotIdentifier}
+	 * labeled alternative in {@link ProcessJParser#typeVariable}.
+	 * @param ctx the parse tree
+	 */
+	void exitTypeVariablePackageDdotIdentifier(ProcessJParser.TypeVariablePackageDdotIdentifierContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code TypeVariablePackageDotIdentifier}
+	 * labeled alternative in {@link ProcessJParser#typeVariable}.
+	 * @param ctx the parse tree
+	 */
+	void enterTypeVariablePackageDotIdentifier(ProcessJParser.TypeVariablePackageDotIdentifierContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code TypeVariablePackageDotIdentifier}
+	 * labeled alternative in {@link ProcessJParser#typeVariable}.
+	 * @param ctx the parse tree
+	 */
+	void exitTypeVariablePackageDotIdentifier(ProcessJParser.TypeVariablePackageDotIdentifierContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ProcessJParser#dims}.
 	 * @param ctx the parse tree
@@ -418,15 +494,473 @@ public interface ProcessJListener extends ParseTreeListener {
 	 */
 	void exitExpressionStatement(ProcessJParser.ExpressionStatementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ProcessJParser#expression}.
+	 * Enter a parse tree produced by the {@code TernaryExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpression(ProcessJParser.ExpressionContext ctx);
+	void enterTernaryExpression(ProcessJParser.TernaryExpressionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link ProcessJParser#expression}.
+	 * Exit a parse tree produced by the {@code TernaryExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpression(ProcessJParser.ExpressionContext ctx);
+	void exitTernaryExpression(ProcessJParser.TernaryExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code RecordLiteralExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterRecordLiteralExpression(ProcessJParser.RecordLiteralExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code RecordLiteralExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitRecordLiteralExpression(ProcessJParser.RecordLiteralExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ExpressionWithBlockExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpressionWithBlockExpression(ProcessJParser.ExpressionWithBlockExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ExpressionWithBlockExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpressionWithBlockExpression(ProcessJParser.ExpressionWithBlockExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code PathExpression_}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterPathExpression_(ProcessJParser.PathExpression_Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code PathExpression_}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitPathExpression_(ProcessJParser.PathExpression_Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ReturnExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterReturnExpression(ProcessJParser.ReturnExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ReturnExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitReturnExpression(ProcessJParser.ReturnExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ReadWriteExpressionCall}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterReadWriteExpressionCall(ProcessJParser.ReadWriteExpressionCallContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ReadWriteExpressionCall}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitReadWriteExpressionCall(ProcessJParser.ReadWriteExpressionCallContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code AndExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterAndExpression(ProcessJParser.AndExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code AndExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitAndExpression(ProcessJParser.AndExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ReadWriteExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterReadWriteExpression(ProcessJParser.ReadWriteExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ReadWriteExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitReadWriteExpression(ProcessJParser.ReadWriteExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ContinueExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterContinueExpression(ProcessJParser.ContinueExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ContinueExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitContinueExpression(ProcessJParser.ContinueExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code SuspendExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterSuspendExpression(ProcessJParser.SuspendExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code SuspendExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitSuspendExpression(ProcessJParser.SuspendExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code AssignmentExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssignmentExpression(ProcessJParser.AssignmentExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code AssignmentExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssignmentExpression(ProcessJParser.AssignmentExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code MethodCallExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethodCallExpression(ProcessJParser.MethodCallExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code MethodCallExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethodCallExpression(ProcessJParser.MethodCallExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code TimeoutExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterTimeoutExpression(ProcessJParser.TimeoutExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code TimeoutExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitTimeoutExpression(ProcessJParser.TimeoutExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code LiteralExpression_}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterLiteralExpression_(ProcessJParser.LiteralExpression_Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code LiteralExpression_}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitLiteralExpression_(ProcessJParser.LiteralExpression_Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ProtocolLiteralExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterProtocolLiteralExpression(ProcessJParser.ProtocolLiteralExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ProtocolLiteralExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitProtocolLiteralExpression(ProcessJParser.ProtocolLiteralExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ConditionalAndExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterConditionalAndExpression(ProcessJParser.ConditionalAndExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ConditionalAndExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitConditionalAndExpression(ProcessJParser.ConditionalAndExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code SyncExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterSyncExpression(ProcessJParser.SyncExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code SyncExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitSyncExpression(ProcessJParser.SyncExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code NegationExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterNegationExpression(ProcessJParser.NegationExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code NegationExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitNegationExpression(ProcessJParser.NegationExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code MultiplicativeExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultiplicativeExpression(ProcessJParser.MultiplicativeExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code MultiplicativeExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultiplicativeExpression(ProcessJParser.MultiplicativeExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code CallExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterCallExpression(ProcessJParser.CallExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code CallExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitCallExpression(ProcessJParser.CallExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ExponentExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterExponentExpression(ProcessJParser.ExponentExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ExponentExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitExponentExpression(ProcessJParser.ExponentExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ExternalLiteralExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterExternalLiteralExpression(ProcessJParser.ExternalLiteralExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ExternalLiteralExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitExternalLiteralExpression(ProcessJParser.ExternalLiteralExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code AdditiveExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterAdditiveExpression(ProcessJParser.AdditiveExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code AdditiveExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitAdditiveExpression(ProcessJParser.AdditiveExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code RelationalExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterRelationalExpression(ProcessJParser.RelationalExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code RelationalExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitRelationalExpression(ProcessJParser.RelationalExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code InclusiveOrExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterInclusiveOrExpression(ProcessJParser.InclusiveOrExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code InclusiveOrExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitInclusiveOrExpression(ProcessJParser.InclusiveOrExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ArrayLiteralExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterArrayLiteralExpression(ProcessJParser.ArrayLiteralExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ArrayLiteralExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitArrayLiteralExpression(ProcessJParser.ArrayLiteralExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ExclusiveOrExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterExclusiveOrExpression(ProcessJParser.ExclusiveOrExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ExclusiveOrExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitExclusiveOrExpression(ProcessJParser.ExclusiveOrExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code GroupedExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterGroupedExpression(ProcessJParser.GroupedExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code GroupedExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitGroupedExpression(ProcessJParser.GroupedExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ShiftExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterShiftExpression(ProcessJParser.ShiftExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ShiftExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitShiftExpression(ProcessJParser.ShiftExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code BreakExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterBreakExpression(ProcessJParser.BreakExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code BreakExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitBreakExpression(ProcessJParser.BreakExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code FieldExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterFieldExpression(ProcessJParser.FieldExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code FieldExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitFieldExpression(ProcessJParser.FieldExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code SkipStopExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterSkipStopExpression(ProcessJParser.SkipStopExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code SkipStopExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitSkipStopExpression(ProcessJParser.SkipStopExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code AnnotationExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterAnnotationExpression(ProcessJParser.AnnotationExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code AnnotationExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitAnnotationExpression(ProcessJParser.AnnotationExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code PreUnaryExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterPreUnaryExpression(ProcessJParser.PreUnaryExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code PreUnaryExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitPreUnaryExpression(ProcessJParser.PreUnaryExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code PostUnaryExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterPostUnaryExpression(ProcessJParser.PostUnaryExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code PostUnaryExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitPostUnaryExpression(ProcessJParser.PostUnaryExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code AssignmentOperatorExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssignmentOperatorExpression(ProcessJParser.AssignmentOperatorExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code AssignmentOperatorExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssignmentOperatorExpression(ProcessJParser.AssignmentOperatorExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code CastExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterCastExpression(ProcessJParser.CastExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code CastExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitCastExpression(ProcessJParser.CastExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ArrayAccessExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterArrayAccessExpression(ProcessJParser.ArrayAccessExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ArrayAccessExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitArrayAccessExpression(ProcessJParser.ArrayAccessExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ConditionalOrExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterConditionalOrExpression(ProcessJParser.ConditionalOrExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ConditionalOrExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitConditionalOrExpression(ProcessJParser.ConditionalOrExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ProcessJParser#annotation}.
 	 * @param ctx the parse tree
@@ -872,15 +1406,41 @@ public interface ProcessJListener extends ParseTreeListener {
 	 */
 	void exitAltBlodyExpression(ProcessJParser.AltBlodyExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ProcessJParser#altCase}.
+	 * Enter a parse tree produced by the {@code BooleanGuardExpression}
+	 * labeled alternative in {@link ProcessJParser#altCase}.
 	 * @param ctx the parse tree
 	 */
-	void enterAltCase(ProcessJParser.AltCaseContext ctx);
+	void enterBooleanGuardExpression(ProcessJParser.BooleanGuardExpressionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link ProcessJParser#altCase}.
+	 * Exit a parse tree produced by the {@code BooleanGuardExpression}
+	 * labeled alternative in {@link ProcessJParser#altCase}.
 	 * @param ctx the parse tree
 	 */
-	void exitAltCase(ProcessJParser.AltCaseContext ctx);
+	void exitBooleanGuardExpression(ProcessJParser.BooleanGuardExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code GuardExpression_}
+	 * labeled alternative in {@link ProcessJParser#altCase}.
+	 * @param ctx the parse tree
+	 */
+	void enterGuardExpression_(ProcessJParser.GuardExpression_Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code GuardExpression_}
+	 * labeled alternative in {@link ProcessJParser#altCase}.
+	 * @param ctx the parse tree
+	 */
+	void exitGuardExpression_(ProcessJParser.GuardExpression_Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code AltExpression_}
+	 * labeled alternative in {@link ProcessJParser#altCase}.
+	 * @param ctx the parse tree
+	 */
+	void enterAltExpression_(ProcessJParser.AltExpression_Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code AltExpression_}
+	 * labeled alternative in {@link ProcessJParser#altCase}.
+	 * @param ctx the parse tree
+	 */
+	void exitAltExpression_(ProcessJParser.AltExpression_Context ctx);
 	/**
 	 * Enter a parse tree produced by {@link ProcessJParser#guardExpression}.
 	 * @param ctx the parse tree
@@ -942,15 +1502,29 @@ public interface ProcessJListener extends ParseTreeListener {
 	 */
 	void exitExternType(ProcessJParser.ExternTypeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ProcessJParser#classType}.
+	 * Enter a parse tree produced by the {@code IdentifierArguments}
+	 * labeled alternative in {@link ProcessJParser#classType}.
 	 * @param ctx the parse tree
 	 */
-	void enterClassType(ProcessJParser.ClassTypeContext ctx);
+	void enterIdentifierArguments(ProcessJParser.IdentifierArgumentsContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link ProcessJParser#classType}.
+	 * Exit a parse tree produced by the {@code IdentifierArguments}
+	 * labeled alternative in {@link ProcessJParser#classType}.
 	 * @param ctx the parse tree
 	 */
-	void exitClassType(ProcessJParser.ClassTypeContext ctx);
+	void exitIdentifierArguments(ProcessJParser.IdentifierArgumentsContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ClassDotIdentifierArguments}
+	 * labeled alternative in {@link ProcessJParser#classType}.
+	 * @param ctx the parse tree
+	 */
+	void enterClassDotIdentifierArguments(ProcessJParser.ClassDotIdentifierArgumentsContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ClassDotIdentifierArguments}
+	 * labeled alternative in {@link ProcessJParser#classType}.
+	 * @param ctx the parse tree
+	 */
+	void exitClassDotIdentifierArguments(ProcessJParser.ClassDotIdentifierArgumentsContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ProcessJParser#typeArguments}.
 	 * @param ctx the parse tree

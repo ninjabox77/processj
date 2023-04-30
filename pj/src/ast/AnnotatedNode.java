@@ -50,7 +50,7 @@ public abstract class AnnotatedNode extends Node {
     return (N) this;
   }
 
-  public boolean isFrabricated() {
+  public boolean isFabricated() {
     return fabricated_;
   }
 

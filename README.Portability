@@ -2,16 +2,19 @@ Copyright (C) 2017-2023.
 
 Author: Ben C. <b4ben@gmx.com>
 
+INTRODUCTION
+------------
+
 This is an experimental version of the original implementation of the
 ProcessJ compiler. The aim is to build a full Java compliant compiler.
 
 Stages
 ------
 
- o Lexer (without preprocessor)
- o Parser (supports basic Java syntax)
- o Control Flow Graph
- o Semantics Analysis
- o Intermediate Java Code
- o Code Generation
- o Java Bytecode Manipulation
+ 1. Lexer (without preprocessor)
+ 2. Parser (supports basic Java syntax)
+ 3. Control Flow Graph
+ 4. Semantics Analysis
+ 5. Intermediate Java Code
+ 6. Code Generation
+ 7. Java Bytecode Manipulation

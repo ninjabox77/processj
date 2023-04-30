@@ -89,61 +89,13 @@ public class ProcessJBaseListener implements ProcessJListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterProcedureDeclaration_(ProcessJParser.ProcedureDeclaration_Context ctx) { }
+	@Override public void enterTypeDeclaration(ProcessJParser.TypeDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitProcedureDeclaration_(ProcessJParser.ProcedureDeclaration_Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterRecordDeclaration_(ProcessJParser.RecordDeclaration_Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitRecordDeclaration_(ProcessJParser.RecordDeclaration_Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterProtocolDeclaration_(ProcessJParser.ProtocolDeclaration_Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitProtocolDeclaration_(ProcessJParser.ProtocolDeclaration_Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterConstantDeclaration_(ProcessJParser.ConstantDeclaration_Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitConstantDeclaration_(ProcessJParser.ConstantDeclaration_Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterExternDeclaration_(ProcessJParser.ExternDeclaration_Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitExternDeclaration_(ProcessJParser.ExternDeclaration_Context ctx) { }
+	@Override public void exitTypeDeclaration(ProcessJParser.TypeDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -221,13 +173,25 @@ public class ProcessJBaseListener implements ProcessJListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterProtocolDeclaration(ProcessJParser.ProtocolDeclarationContext ctx) { }
+	@Override public void enterProtocolDeclarationWithBody(ProcessJParser.ProtocolDeclarationWithBodyContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitProtocolDeclaration(ProcessJParser.ProtocolDeclarationContext ctx) { }
+	@Override public void exitProtocolDeclarationWithBody(ProcessJParser.ProtocolDeclarationWithBodyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterProtocolDeclarationSemi(ProcessJParser.ProtocolDeclarationSemiContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitProtocolDeclarationSemi(ProcessJParser.ProtocolDeclarationSemiContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -437,25 +401,133 @@ public class ProcessJBaseListener implements ProcessJListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterChannelType(ProcessJParser.ChannelTypeContext ctx) { }
+	@Override public void enterChannelSharedReadType(ProcessJParser.ChannelSharedReadTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitChannelType(ProcessJParser.ChannelTypeContext ctx) { }
+	@Override public void exitChannelSharedReadType(ProcessJParser.ChannelSharedReadTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTypeVariable(ProcessJParser.TypeVariableContext ctx) { }
+	@Override public void enterChannelSharedWriteType(ProcessJParser.ChannelSharedWriteTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTypeVariable(ProcessJParser.TypeVariableContext ctx) { }
+	@Override public void exitChannelSharedWriteType(ProcessJParser.ChannelSharedWriteTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterChannelSharedType(ProcessJParser.ChannelSharedTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitChannelSharedType(ProcessJParser.ChannelSharedTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterChannelType_(ProcessJParser.ChannelType_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitChannelType_(ProcessJParser.ChannelType_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterChannelDotRead(ProcessJParser.ChannelDotReadContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitChannelDotRead(ProcessJParser.ChannelDotReadContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterChannelDotWrite(ProcessJParser.ChannelDotWriteContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitChannelDotWrite(ProcessJParser.ChannelDotWriteContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterChannelSharedDotRead(ProcessJParser.ChannelSharedDotReadContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitChannelSharedDotRead(ProcessJParser.ChannelSharedDotReadContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterChannelSharedDotWrite(ProcessJParser.ChannelSharedDotWriteContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitChannelSharedDotWrite(ProcessJParser.ChannelSharedDotWriteContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTypeVariableIdentifier(ProcessJParser.TypeVariableIdentifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTypeVariableIdentifier(ProcessJParser.TypeVariableIdentifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTypeVariablePackageDdotIdentifier(ProcessJParser.TypeVariablePackageDdotIdentifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTypeVariablePackageDdotIdentifier(ProcessJParser.TypeVariablePackageDdotIdentifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTypeVariablePackageDotIdentifier(ProcessJParser.TypeVariablePackageDotIdentifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTypeVariablePackageDotIdentifier(ProcessJParser.TypeVariablePackageDotIdentifierContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -497,13 +569,469 @@ public class ProcessJBaseListener implements ProcessJListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpression(ProcessJParser.ExpressionContext ctx) { }
+	@Override public void enterTernaryExpression(ProcessJParser.TernaryExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExpression(ProcessJParser.ExpressionContext ctx) { }
+	@Override public void exitTernaryExpression(ProcessJParser.TernaryExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRecordLiteralExpression(ProcessJParser.RecordLiteralExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRecordLiteralExpression(ProcessJParser.RecordLiteralExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExpressionWithBlockExpression(ProcessJParser.ExpressionWithBlockExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExpressionWithBlockExpression(ProcessJParser.ExpressionWithBlockExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPathExpression_(ProcessJParser.PathExpression_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPathExpression_(ProcessJParser.PathExpression_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterReturnExpression(ProcessJParser.ReturnExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitReturnExpression(ProcessJParser.ReturnExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterReadWriteExpressionCall(ProcessJParser.ReadWriteExpressionCallContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitReadWriteExpressionCall(ProcessJParser.ReadWriteExpressionCallContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAndExpression(ProcessJParser.AndExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAndExpression(ProcessJParser.AndExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterReadWriteExpression(ProcessJParser.ReadWriteExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitReadWriteExpression(ProcessJParser.ReadWriteExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterContinueExpression(ProcessJParser.ContinueExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitContinueExpression(ProcessJParser.ContinueExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSuspendExpression(ProcessJParser.SuspendExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSuspendExpression(ProcessJParser.SuspendExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAssignmentExpression(ProcessJParser.AssignmentExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAssignmentExpression(ProcessJParser.AssignmentExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMethodCallExpression(ProcessJParser.MethodCallExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMethodCallExpression(ProcessJParser.MethodCallExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTimeoutExpression(ProcessJParser.TimeoutExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTimeoutExpression(ProcessJParser.TimeoutExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterLiteralExpression_(ProcessJParser.LiteralExpression_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLiteralExpression_(ProcessJParser.LiteralExpression_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterProtocolLiteralExpression(ProcessJParser.ProtocolLiteralExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitProtocolLiteralExpression(ProcessJParser.ProtocolLiteralExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterConditionalAndExpression(ProcessJParser.ConditionalAndExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitConditionalAndExpression(ProcessJParser.ConditionalAndExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSyncExpression(ProcessJParser.SyncExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSyncExpression(ProcessJParser.SyncExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNegationExpression(ProcessJParser.NegationExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNegationExpression(ProcessJParser.NegationExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMultiplicativeExpression(ProcessJParser.MultiplicativeExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMultiplicativeExpression(ProcessJParser.MultiplicativeExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCallExpression(ProcessJParser.CallExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCallExpression(ProcessJParser.CallExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExponentExpression(ProcessJParser.ExponentExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExponentExpression(ProcessJParser.ExponentExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExternalLiteralExpression(ProcessJParser.ExternalLiteralExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExternalLiteralExpression(ProcessJParser.ExternalLiteralExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAdditiveExpression(ProcessJParser.AdditiveExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAdditiveExpression(ProcessJParser.AdditiveExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRelationalExpression(ProcessJParser.RelationalExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRelationalExpression(ProcessJParser.RelationalExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterInclusiveOrExpression(ProcessJParser.InclusiveOrExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitInclusiveOrExpression(ProcessJParser.InclusiveOrExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterArrayLiteralExpression(ProcessJParser.ArrayLiteralExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArrayLiteralExpression(ProcessJParser.ArrayLiteralExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExclusiveOrExpression(ProcessJParser.ExclusiveOrExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExclusiveOrExpression(ProcessJParser.ExclusiveOrExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterGroupedExpression(ProcessJParser.GroupedExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitGroupedExpression(ProcessJParser.GroupedExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterShiftExpression(ProcessJParser.ShiftExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitShiftExpression(ProcessJParser.ShiftExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBreakExpression(ProcessJParser.BreakExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBreakExpression(ProcessJParser.BreakExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFieldExpression(ProcessJParser.FieldExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFieldExpression(ProcessJParser.FieldExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSkipStopExpression(ProcessJParser.SkipStopExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSkipStopExpression(ProcessJParser.SkipStopExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAnnotationExpression(ProcessJParser.AnnotationExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAnnotationExpression(ProcessJParser.AnnotationExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPreUnaryExpression(ProcessJParser.PreUnaryExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPreUnaryExpression(ProcessJParser.PreUnaryExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPostUnaryExpression(ProcessJParser.PostUnaryExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPostUnaryExpression(ProcessJParser.PostUnaryExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAssignmentOperatorExpression(ProcessJParser.AssignmentOperatorExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAssignmentOperatorExpression(ProcessJParser.AssignmentOperatorExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCastExpression(ProcessJParser.CastExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCastExpression(ProcessJParser.CastExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterArrayAccessExpression(ProcessJParser.ArrayAccessExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArrayAccessExpression(ProcessJParser.ArrayAccessExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterConditionalOrExpression(ProcessJParser.ConditionalOrExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitConditionalOrExpression(ProcessJParser.ConditionalOrExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -1037,13 +1565,37 @@ public class ProcessJBaseListener implements ProcessJListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAltCase(ProcessJParser.AltCaseContext ctx) { }
+	@Override public void enterBooleanGuardExpression(ProcessJParser.BooleanGuardExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAltCase(ProcessJParser.AltCaseContext ctx) { }
+	@Override public void exitBooleanGuardExpression(ProcessJParser.BooleanGuardExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterGuardExpression_(ProcessJParser.GuardExpression_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitGuardExpression_(ProcessJParser.GuardExpression_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAltExpression_(ProcessJParser.AltExpression_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAltExpression_(ProcessJParser.AltExpression_Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -1121,13 +1673,25 @@ public class ProcessJBaseListener implements ProcessJListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterClassType(ProcessJParser.ClassTypeContext ctx) { }
+	@Override public void enterIdentifierArguments(ProcessJParser.IdentifierArgumentsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitClassType(ProcessJParser.ClassTypeContext ctx) { }
+	@Override public void exitIdentifierArguments(ProcessJParser.IdentifierArgumentsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterClassDotIdentifierArguments(ProcessJParser.ClassDotIdentifierArgumentsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitClassDotIdentifierArguments(ProcessJParser.ClassDotIdentifierArgumentsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

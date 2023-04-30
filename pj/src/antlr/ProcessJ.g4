@@ -33,11 +33,11 @@ multiImportDeclarationStar
  ;
 
 typeDeclaration
- : procedureDeclaration     # ProcedureDeclaration_
- | recordDeclaration        # RecordDeclaration_
- | protocolDeclaration      # ProtocolDeclaration_
- | constantDeclaration      # ConstantDeclaration_
- | externDeclaration        # ExternDeclaration_
+ : procedureDeclaration
+ | recordDeclaration
+ | protocolDeclaration
+ | constantDeclaration
+ | externDeclaration
  ;
 
 procedureDeclaration
@@ -75,8 +75,8 @@ recordField
  ;
 
 protocolDeclaration
- : modifier* PROTOCOL Identifier extends? protocolBody
- | modifier* PROTOCOL Identifier extends? SEMI
+ : modifier* PROTOCOL Identifier extends? protocolBody  # ProtocolDeclarationWithBody
+ | modifier* PROTOCOL Identifier extends? SEMI          # ProtocolDeclarationSemi
  ;
 
 protocolBody
@@ -166,20 +166,20 @@ arrayType
  ;
 
 channelType
- : SHARED READ CHAN LT type_ GT
- | SHARED WRITE CHAN LT type_ GT
- | SHARED CHAN LT type_ GT
- | CHAN LT type_ GT
- | CHAN LT type_ GT DOT READ
- | CHAN LT type_ GT DOT WRITE
- | SHARED CHAN LT type_ GT DOT READ
- | SHARED CHAN LT type_ GT DOT WRITE
+ : SHARED READ CHAN LT type_ GT         # ChannelSharedReadType
+ | SHARED WRITE CHAN LT type_ GT        # ChannelSharedWriteType
+ | SHARED CHAN LT type_ GT              # ChannelSharedType
+ | CHAN LT type_ GT                     # ChannelType_
+ | CHAN LT type_ GT DOT READ            # ChannelDotRead
+ | CHAN LT type_ GT DOT WRITE           # ChannelDotWrite
+ | SHARED CHAN LT type_ GT DOT READ     # ChannelSharedDotRead
+ | SHARED CHAN LT type_ GT DOT WRITE    # ChannelSharedDotWrite
  ;
 
 typeVariable
- : annotation* Identifier
- | annotation* packageAccess DCOLON Identifier
- | annotation* packageAccess DOT Identifier
+ : annotation* Identifier                       # TypeVariableIdentifier
+ | annotation* packageAccess DCOLON Identifier  # TypeVariablePackageDdotIdentifier
+ | annotation* packageAccess DOT Identifier     # TypeVariablePackageDotIdentifier
  ;
 
 dims
@@ -196,45 +196,46 @@ expressionStatement
  ;
 
 expression
- : annotation+ expression
- | literalExpression
- | pathExpression
- | expression DOT pathExpression LPAREN actualDeclarationList? RPAREN
- | expression QUEST? DOT Identifier
- | expression DOT SYNC LPAREN RPAREN
- | expression DOT (READ | WRITE) LPAREN expression? RPAREN
- | expression DOT (READ | WRITE)
- | expression DOT TIMEOUT LPAREN actualDeclarationList? RPAREN
- | expression LPAREN actualDeclarationList? RPAREN
- | expression op=(DMINUS | DPLUS)
- | expression LBRACK expression RBRACK
- | expression QUEST expression COLON expression
- | op=(COMP | NOT) expression
- | expression DMULT expression
- | op=(DMINUS | DPLUS) expression
- | LPAREN (expression | primitiveType) RPAREN expression
- | expression op=(MULT | DIV | MOD) expression
- | expression op=(PLUS | MINUS) expression
- | expression op=(LSHIFT | RSHIFT | RRSHIFT) expression
- | expression AND expression
- | expression XOR expression
- | expression OR expression
- | expression comparisonOperator expression
- | expression ANDAND expression
- | expression OROR expression
- | expression EQ expression
- | expression assignmentOperator expression
- | CONTINUE Identifier?
- | BREAK Identifier?
- | RETURN expression?
- | (SKIP_ | STOP)
- | LPAREN expression RPAREN
- | LBRACE arrayElements RBRACE
- | recordExpression
- | protocolExpression
- | externalExpression
-// | objectExpression
- | expressionWithBlock
+ : annotation+ expression                                                   # AnnotationExpression
+ | literalExpression                                                        # LiteralExpression_
+ | pathExpression                                                           # PathExpression_
+ | expression DOT pathExpression LPAREN actualDeclarationList? RPAREN       # MethodCallExpression
+ | expression QUEST? DOT Identifier                                         # FieldExpression
+ | expression DOT SYNC LPAREN RPAREN                                        # SyncExpression
+ | expression DOT (READ | WRITE) LPAREN expression? RPAREN                  # ReadWriteExpressionCall
+ | expression DOT (READ | WRITE)                                            # ReadWriteExpression
+ | expression DOT TIMEOUT LPAREN actualDeclarationList? RPAREN              # TimeoutExpression
+ | expression LPAREN actualDeclarationList? RPAREN                          # CallExpression
+ | expression op=(DMINUS | DPLUS)                                           # PostUnaryExpression
+ | expression LBRACK expression RBRACK                                      # ArrayAccessExpression
+ | expression QUEST expression COLON expression                             # TernaryExpression
+ | op=(COMP | NOT) expression                                               # NegationExpression
+ | expression DMULT expression                                              # ExponentExpression
+ | op=(DMINUS | DPLUS) expression                                           # PreUnaryExpression
+ | LPAREN (expression | primitiveType) RPAREN expression                    # CastExpression
+ | expression op=(MULT | DIV | MOD) expression                              # MultiplicativeExpression
+ | expression op=(PLUS | MINUS) expression                                  # AdditiveExpression
+ | expression op=(LSHIFT | RSHIFT | RRSHIFT) expression                     # ShiftExpression
+ | expression AND expression                                                # AndExpression
+ | expression XOR expression                                                # ExclusiveOrExpression
+ | expression OR expression                                                 # InclusiveOrExpression
+ | expression comparisonOperator expression                                 # RelationalExpression
+ | expression ANDAND expression                                             # ConditionalAndExpression
+ | expression OROR expression                                               # ConditionalOrExpression
+ | expression EQ expression                                                 # AssignmentExpression
+ | expression assignmentOperator expression                                 # AssignmentOperatorExpression
+ | CONTINUE Identifier?                                                     # ContinueExpression
+ | BREAK Identifier?                                                        # BreakExpression
+ | RETURN expression?                                                       # ReturnExpression
+ | SUSPEND WITH? LPAREN expression RPAREN                                   # SuspendExpression
+ | (SKIP_ | STOP)                                                           # SkipStopExpression
+ | LPAREN expression RPAREN                                                 # GroupedExpression
+ | LBRACE arrayElements RBRACE                                              # ArrayLiteralExpression
+ | recordExpression                                                         # RecordLiteralExpression
+ | protocolExpression                                                       # ProtocolLiteralExpression
+ | externalExpression                                                       # ExternalLiteralExpression
+// | objectExpression                                                         # ObjectExpression_
+ | expressionWithBlock                                                      # ExpressionWithBlockExpression
  ;
 
 annotation
@@ -244,7 +245,7 @@ annotation
  ;
 
 normalAnnotation
- : AT Identifier LPAREN elementValuePairList RPAREN
+ : ARROBA Identifier LPAREN elementValuePairList RPAREN
  ;
 
 elementValuePairList
@@ -262,11 +263,11 @@ elementValue
  ;
 
 markerAnnotation
- : AT Identifier
+ : ARROBA Identifier
  ;
 
 singleElementAnnotation
- : AT Identifier LPAREN elementValue RPAREN
+ : ARROBA Identifier LPAREN elementValue RPAREN
  ;
 
 literalExpression
@@ -451,9 +452,9 @@ altBlodyExpression
  ;
 
 altCase
- : expression ANDAND guardExpression COLON statements
- | guardExpression COLON statements
- | altExpression
+ : expression ANDAND guardExpression COLON statements   # BooleanGuardExpression
+ | guardExpression COLON statements                     # GuardExpression_
+ | altExpression                                        # AltExpression_
  ;
 
 guardExpression
@@ -474,7 +475,7 @@ barrierExpression
  ;
 
 externDeclaration
- : EXTERN Identifier EQ externType SEMI
+ : modifier* EXTERN Identifier EQ externType SEMI
  ;
 
 externType
@@ -483,8 +484,8 @@ externType
  ;
 
 classType
- : annotation* Identifier typeArguments?
- | classType DOT annotation* Identifier typeArguments?
+ : annotation* Identifier typeArguments?                # IdentifierArguments
+ | classType DOT annotation* Identifier typeArguments?  # ClassDotIdentifierArguments
  ;
 
 typeArguments
@@ -529,7 +530,7 @@ SKIP_       : 'skip';
 STOP        : 'stop';
 IS          : 'is';
 PRAGMA      : '#pragma';
-AT          : '@';
+ARROBA      : '@';
 
 IF          : 'if';
 ELSE        : 'else';

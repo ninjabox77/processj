@@ -32,9 +32,4 @@ public class Package extends AnnotatedNode {
   public String getName() {
     return name_;
   }
-
-  @Override
-  public String getText() {
-    return "package " + name_;
-  }
 }

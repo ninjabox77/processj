@@ -68,14 +68,6 @@ public class Name extends AnnotatedNode {
   }
 
   @Override
-  public String getText() {
-    if (qualifier_ != null) {
-      return qualifier_.getText() + "." + identifier_;
-    }
-    return identifier_;
-  }
-
-  @Override
   public boolean remove(Node node) {
     if (node == null) {
       return false;

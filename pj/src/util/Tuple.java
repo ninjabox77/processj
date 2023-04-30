@@ -27,7 +27,7 @@ public class Tuple<E> extends AbstractList<E> implements Cloneable, Comparable<T
         : t2 == null
         ? -1
         : t1 instanceof Comparable
-        ? ((Comparable<T>) t1).compareTo(t2)
+        ? ((Comparable) t1).compareTo(t2)
         : t1.getClass() == t2.getClass()
         ? 0
         : 1;
@@ -146,7 +146,7 @@ public class Tuple<E> extends AbstractList<E> implements Cloneable, Comparable<T
       return false;
     }
     for (int i = 0; i < size; ++i) {
-      if (!this.get(i).equals(that.get(i))) { // superstitious equality check
+      if (!compareEqual(get(i), that.get(i))) {
         return false;
       }
     }
@@ -161,5 +161,16 @@ public class Tuple<E> extends AbstractList<E> implements Cloneable, Comparable<T
   @Override
   protected Tuple<E> clone() {
     return new Tuple<>(this);
+  }
+
+  private static boolean compareEqual(final Object left, final Object right) {
+    if (left == right)
+      return true;
+    if (left != null && right != null) {
+      Class<?> leftClass = left.getClass();
+      if (leftClass == right.getClass())
+        return left.equals(right);
+    }
+    return false;
   }
 }
