@@ -23,11 +23,26 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPackageDeclaration(ProcessJParser.PackageDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#importDeclaration}.
+	 * Visit a parse tree produced by the {@code SingleImportDeclaration_}
+	 * labeled alternative in {@link ProcessJParser#importDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitImportDeclaration(ProcessJParser.ImportDeclarationContext ctx);
+	T visitSingleImportDeclaration_(ProcessJParser.SingleImportDeclaration_Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code MultiImportDeclaration_}
+	 * labeled alternative in {@link ProcessJParser#importDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMultiImportDeclaration_(ProcessJParser.MultiImportDeclaration_Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code MultiImportDeclarationStar_}
+	 * labeled alternative in {@link ProcessJParser#importDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMultiImportDeclarationStar_(ProcessJParser.MultiImportDeclarationStar_Context ctx);
 	/**
 	 * Visit a parse tree produced by {@link ProcessJParser#singleImportDeclaration}.
 	 * @param ctx the parse tree

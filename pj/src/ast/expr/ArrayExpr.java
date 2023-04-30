@@ -13,24 +13,24 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public class ArrayLiteral extends ConstantExpr {
+public class ArrayExpr extends Expression<ArrayExpr> {
 
   private Sequence<Expression<?>> values_;
 
-  public ArrayLiteral() {
-    this(null, null);
+  public ArrayExpr() {
+    this(null);
   }
 
-  public ArrayLiteral(Expression<?>... values) {
+  public ArrayExpr(Expression<?>... values) {
     this(null, Sequence.sequenceList(values));
   }
 
-  public ArrayLiteral(Token token, Sequence<Expression<?>> values) {
-    super(token, token.getText());
+  public ArrayExpr(Token token, Sequence<Expression<?>> values) {
+    super(token);
     setValues(values);
   }
 
-  public ArrayLiteral setValues(Sequence<Expression<?>> values) {
+  public ArrayExpr setValues(Sequence<Expression<?>> values) {
     if (values == values_) {
       return this;
     }
@@ -47,12 +47,12 @@ public class ArrayLiteral extends ConstantExpr {
   }
 
   @Override
-  public boolean isArrayLiteral() {
+  public boolean isArrayExpr() {
     return true;
   }
 
   @Override
-  public ArrayLiteral asArrayLiteral() {
+  public ArrayExpr asArrayExpr() {
     return this;
   }
 

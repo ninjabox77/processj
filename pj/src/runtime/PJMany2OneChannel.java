@@ -20,7 +20,7 @@ public class PJMany2OneChannel<T> extends PJOne2OneChannel<T> {
 
   @Override
   public synchronized boolean claimWriter(PJProcess process) {
-    if (writerClaim_ == null | writerClaim_ == process) {
+    if (writerClaim_ == null || writerClaim_ == process) {
       writerClaim_ = process;
       return true;
     }

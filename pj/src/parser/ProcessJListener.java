@@ -28,15 +28,41 @@ public interface ProcessJListener extends ParseTreeListener {
 	 */
 	void exitPackageDeclaration(ProcessJParser.PackageDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ProcessJParser#importDeclaration}.
+	 * Enter a parse tree produced by the {@code SingleImportDeclaration_}
+	 * labeled alternative in {@link ProcessJParser#importDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterImportDeclaration(ProcessJParser.ImportDeclarationContext ctx);
+	void enterSingleImportDeclaration_(ProcessJParser.SingleImportDeclaration_Context ctx);
 	/**
-	 * Exit a parse tree produced by {@link ProcessJParser#importDeclaration}.
+	 * Exit a parse tree produced by the {@code SingleImportDeclaration_}
+	 * labeled alternative in {@link ProcessJParser#importDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitImportDeclaration(ProcessJParser.ImportDeclarationContext ctx);
+	void exitSingleImportDeclaration_(ProcessJParser.SingleImportDeclaration_Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code MultiImportDeclaration_}
+	 * labeled alternative in {@link ProcessJParser#importDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultiImportDeclaration_(ProcessJParser.MultiImportDeclaration_Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code MultiImportDeclaration_}
+	 * labeled alternative in {@link ProcessJParser#importDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultiImportDeclaration_(ProcessJParser.MultiImportDeclaration_Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code MultiImportDeclarationStar_}
+	 * labeled alternative in {@link ProcessJParser#importDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultiImportDeclarationStar_(ProcessJParser.MultiImportDeclarationStar_Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code MultiImportDeclarationStar_}
+	 * labeled alternative in {@link ProcessJParser#importDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultiImportDeclarationStar_(ProcessJParser.MultiImportDeclarationStar_Context ctx);
 	/**
 	 * Enter a parse tree produced by {@link ProcessJParser#singleImportDeclaration}.
 	 * @param ctx the parse tree

@@ -3,7 +3,7 @@ package runtime;
 import java.util.Arrays;
 
 /**
- * Represents a guard in an alt statement.
+ * Represents a guard in an replicated alt statement.
  *
  * @author Ben
  */

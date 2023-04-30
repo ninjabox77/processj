@@ -2,7 +2,6 @@ package ast.expr;
 
 import ast.AnnotatedNode;
 import ast.Node;
-import ast.OptionalType;
 import org.antlr.v4.runtime.Token;
 import typesystem.Type;
 
@@ -52,6 +51,14 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
       return true;
     }
     return false;
+  }
+
+  public boolean isArrayExpr() {
+    return false;
+  }
+
+  public ArrayExpr asArrayExpr() {
+    throw new IllegalStateException(String.format("%s is not an ArrayExpr, it is a %s", this, getClass().getSimpleName()));
   }
 
   public boolean isBinaryExpr() {
@@ -212,5 +219,21 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
 
   public MethodCallExpr asMethodCallExpr() {
     throw new IllegalStateException(String.format("%s is not a MethodCallExpr, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isRecordExpr() {
+    return false;
+  }
+
+  public RecordExpr asRecordExpr() {
+    throw new IllegalStateException(String.format("%s is not a RecordExpr, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isProtocolExpr() {
+    return false;
+  }
+
+  public ProtocolExpr asProtocolExpr() {
+    throw new IllegalStateException(String.format("%s is not a ProtocolExpr, it is a %s", this, getClass().getSimpleName()));
   }
 }

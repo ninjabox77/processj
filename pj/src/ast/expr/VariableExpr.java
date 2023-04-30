@@ -14,13 +14,12 @@ import java.util.Optional;
  * it may or may not have an initial value. For example, if this expression
  * is part of a declaration expression, it will point to that type of
  * expression. Since a declaration may be initialized, we can grab its
- * initial default value from there. However, if the access variable
- * of this expression is a Field or a Parameter, then the type of this
- * expression should be resolved during name resolution, and its initial
- * default value should be obtained from one of these two nodes. In short,
- * the initial default value needs to be looked up! We are NOT evaluating
- * the values of variables during run-time, so there is no reason to keep
- * values around.
+ * initial default value from there. However, if the variable is a Field
+ * or a Parameter, then the type of this expression should be resolved
+ * during name resolution, and its initial default value should be obtained
+ * from one of these two nodes. In short, the default value needs to be
+ * looked up since we are not evaluating the values of variables during
+ * run-time.
  *
  * @author Ben
  */

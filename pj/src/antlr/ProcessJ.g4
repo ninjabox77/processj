@@ -15,9 +15,9 @@ packageDeclaration
  ;
 
 importDeclaration
- : singleImportDeclaration
- | multiImportDeclaration
- | multiImportDeclarationStar
+ : singleImportDeclaration      # SingleImportDeclaration_
+ | multiImportDeclaration       # MultiImportDeclaration_
+ | multiImportDeclarationStar   # MultiImportDeclarationStar_
  ;
 
 singleImportDeclaration
@@ -365,7 +365,7 @@ recordExpressionList
  ;
 
 protocolExpression
- : NEW? typeVariable LBRACE protocolExpressionList RBRACE
+ : NEW? typeVariable LBRACE? protocolExpressionList RBRACE?
  ;
 
 protocolExpressionList
@@ -863,7 +863,7 @@ Identifier: JavaLetter JavaLetterOrDigit* ;
 
 fragment
 JavaLetter
- :	[a-zA-Z$_] // these are the "java letters" below 0x7F
+ : [a-zA-Z$_] // these are the "java letters" below 0x7F
  | // covers all characters above 0x7F which are not a surrogate
    ~[\u0000-\u007F\uD800-\uDBFF]
    { Character.isJavaIdentifierStart(_input.LA(-1)) }?
@@ -874,7 +874,7 @@ JavaLetter
 
 fragment
 JavaLetterOrDigit
- :	[a-zA-Z0-9$_] // these are the "java letters or digits" below 0x7F
+ : [a-zA-Z0-9$_] // these are the "java letters or digits" below 0x7F
  | // covers all characters above 0x7F which are not a surrogate
    ~[\u0000-\u007F\uD800-\uDBFF]
    { Character.isJavaIdentifierPart(_input.LA(-1)) }?
@@ -887,6 +887,6 @@ fragment
 ShCommand:  ~[\r\n\uFFFF]* ;
 
 // Whitespace and ast.comments
-WS:  [ \t\r\n\u000C]+ -> skip ;
-COMMENT:   '/*' .*? '*/' -> channel(2) ; // as CHANNEL_COMMENTS
-LINE_COMMENT:   '//' ~[\r\n]* -> channel(1) ; // as CHANNEL_COMMENT
+WS: [ \t\r\n\u000C]+ -> skip ;
+COMMENT: '/*' .*? '*/' -> channel(2) ; // as CHANNEL_COMMENTS
+LINE_COMMENT: '//' ~[\r\n]* -> channel(1) ; // as CHANNEL_COMMENT

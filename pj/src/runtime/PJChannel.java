@@ -15,6 +15,22 @@ public class PJChannel<T> {
   protected T data_;
   protected int type_;
 
+  public boolean isOne2One() {
+    return (type_ & ONE2ONE) != 0;
+  }
+
+  public boolean isOne2Many() {
+    return (type_ & ONE2MANY) != 0;
+  }
+
+  public boolean isMany2One() {
+    return (type_ & MANY2ONE) != 0;
+  }
+
+  public boolean isMany2Many() {
+    return (type_ & MANY2MANY) != 0;
+  }
+
   // *****************************************************************
   // The methods below must be defined by the appropriate subclass.
   // *****************************************************************
@@ -69,21 +85,5 @@ public class PJChannel<T> {
 
   public PJProcess setReaderGetWriter(PJProcess process) {
     return null;
-  }
-
-  public boolean isOne2One() {
-    return (type_ & ONE2ONE) != 0;
-  }
-
-  public boolean isOne2Many() {
-    return (type_ & ONE2MANY) != 0;
-  }
-
-  public boolean isMany2One() {
-    return (type_ & MANY2ONE) != 0;
-  }
-
-  public boolean isMany2Many() {
-    return (type_ & MANY2MANY) != 0;
   }
 }

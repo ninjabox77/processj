@@ -38,14 +38,6 @@ public abstract class ConstantExpr extends Expression<ConstantExpr> {
     return value_;
   }
 
-  public boolean isArrayLiteral() {
-    return false;
-  }
-
-  public ArrayLiteral asArrayLiteral() {
-    throw new IllegalStateException(String.format("%s is not a ArrayLiteral, it is a %s", this, getClass().getSimpleName()));
-  }
-
   public boolean isBooleanLiteral() {
     return false;
   }

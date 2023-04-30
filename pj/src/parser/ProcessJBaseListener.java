@@ -41,13 +41,37 @@ public class ProcessJBaseListener implements ProcessJListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterImportDeclaration(ProcessJParser.ImportDeclarationContext ctx) { }
+	@Override public void enterSingleImportDeclaration_(ProcessJParser.SingleImportDeclaration_Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitImportDeclaration(ProcessJParser.ImportDeclarationContext ctx) { }
+	@Override public void exitSingleImportDeclaration_(ProcessJParser.SingleImportDeclaration_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMultiImportDeclaration_(ProcessJParser.MultiImportDeclaration_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMultiImportDeclaration_(ProcessJParser.MultiImportDeclaration_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMultiImportDeclarationStar_(ProcessJParser.MultiImportDeclarationStar_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMultiImportDeclarationStar_(ProcessJParser.MultiImportDeclarationStar_Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

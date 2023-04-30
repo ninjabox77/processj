@@ -59,17 +59,8 @@ public abstract class Node extends ASTNode<Node> implements OptionalType<Node, T
     }
   }
 
-  // should be called in every constructor of a specific node.
-  public void customInitialization() {
-  }
-
-//  public <N extends Node> N setType(Type type) {
-//    throw new IllegalStateException(String.format("%s cannot have a type, it is a %s", this, getClass().getSimpleName()));
-//  }
-//
-//  public <T extends Type> T getType() {
-//    throw new IllegalStateException(String.format("%s cannot have a type, it is a %s", this, getClass().getSimpleName()));
-//  }
+  // Should be called in every constructor of a specific node.
+  public void customInitialization() { }
 
   public void addOrphanComment(Comment comment) {
     orphanComments_.add(comment);
@@ -109,7 +100,7 @@ public abstract class Node extends ASTNode<Node> implements OptionalType<Node, T
     if (parentNode_ == node) {
       return this;
     }
-    // removes the parent node from the children.
+    // Removes the parent node from the children.
     if (parentNode_ != null) {
       final var children = parentNode_.children_;
       children.removeIf(n -> n == this);
