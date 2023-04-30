@@ -825,8 +825,8 @@ RRSHIFTEQ   : '>>>=';
 ANDEQ       : '&=';
 XOREQ       : '^=';
 OREQ        : '|=';
-LARROW      : '<-';
-RARROW      : '->';
+//LARROW      : '<-';
+//RARROW      : '->';
 
 GT          : '>';
 LT          : '<';

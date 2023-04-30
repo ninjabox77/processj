@@ -13,7 +13,7 @@ public class PJBarrier {
   /**
    * The list of processes that have synchronized on the barrier.
    */
-  private final List<PJProcess> declaredProcesses_;
+  private final List<PJProcess> enrolledProcesses_;
 
   /**
    * The number of processes enrolled on the barrier.
@@ -25,7 +25,7 @@ public class PJBarrier {
    * so the enrolled count should always start at 1.
    */
   public PJBarrier() {
-    declaredProcesses_ = new ArrayList<>();
+    enrolledProcesses_ = new ArrayList<>();
     enrolledCount_ = 1;
   }
 
@@ -48,12 +48,12 @@ public class PJBarrier {
    */
   public synchronized void sync(final PJProcess process) {
     process.setNotReady();
-    declaredProcesses_.add(process);
-    if (declaredProcesses_.size() == enrolledCount_) {
-      for (PJProcess p : declaredProcesses_) {
+    enrolledProcesses_.add(process);
+    if (enrolledProcesses_.size() == enrolledCount_) {
+      for (PJProcess p : enrolledProcesses_) {
         p.setReady();
       }
-      declaredProcesses_.clear();
+      enrolledProcesses_.clear();
     }
   }
 }

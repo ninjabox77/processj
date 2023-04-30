@@ -7,6 +7,8 @@ import java.util.concurrent.DelayQueue;
  * Represents a queue of timer processes that runs on its own Java
  * thread and handles all timeout statements. Note that both start()
  * and kill() are called once from the Scheduler class.
+ *
+ * @author Ben
  */
 public class TimerQueue {
 
