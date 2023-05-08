@@ -1,9 +1,13 @@
 package build;
 
 import ast.CompileUnit;
-import misc.PJClass;
+import ast.Sequence;
+import ast.ClassNode;
+import org.antlr.v4.runtime.Token;
 
-import java.util.List;
+import java.io.File;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
@@ -17,8 +21,65 @@ import java.util.Queue;
  */
 public class CompilationUnit extends ProcessingUnit {
 
-  private CompileUnit ast;
+  private CompileUnit ast_;
   private Map<String, CompileUnit> otherSources_;
   private Queue<CompileUnit> queueSources_;
-  private List<PJClass> asmClasses;
+  private Sequence<ClassNode> generatedClasses_;
+
+  public CompilationUnit() {
+    this(null);
+  }
+
+  public CompilationUnit(CompileUnit ast) {
+    this(null, ast);
+  }
+
+  public CompilationUnit(Token token, CompileUnit ast) {
+    super(token);
+    setCompileUnit(ast);
+    customInitialization();
+  }
+
+  @Override
+  public void customInitialization() {
+    otherSources_ = new HashMap<>();
+    queueSources_ = new LinkedList<>();
+    generatedClasses_ = Sequence.sequenceList();
+  }
+
+  public CompilationUnit setCompileUnit(CompileUnit ast) {
+    if (ast == ast_) {
+      return this;
+    }
+    if (ast_ != null) {
+      ast_.setParentNode(null);
+    }
+    ast_ = ast;
+    setAsParentNodeOf(ast);
+    return this;
+  }
+
+  public CompileUnit getCompileUnit() {
+    return ast_;
+  }
+
+  public CompilationUnit addSources(final String[] paths) {
+    for (String p : paths) {
+      addSource(new File(p));
+    }
+    return this;
+  }
+
+  public CompilationUnit addSources(final File[] files) {
+    for (File f : files) {
+      addSource(f);
+    }
+    return this;
+  }
+
+  public CompilationUnit addSource(final File file) {
+    final String path = file.getAbsolutePath();
+    // TODO:
+    return this;
+  }
 }

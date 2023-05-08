@@ -18,6 +18,8 @@ public final class Phases {
   public static final int PARSING = 2;
   // Symbol table and scope.
   public static final int SYMBOL_SCOPE = 3;
+  // Control flow graph.
+  public static final int FLOW_GRAPH = 4;
   // Semantic analysis.
   //  * reachability check
   //  * parallel usage check
@@ -25,14 +27,14 @@ public final class Phases {
   //  * label for break and continue check
   //  * literal check
   //  * replicated alt check
-  public static final int SEMANTICS = 4;
+  public static final int SEMANTICS = 5;
   // Name checker and resolution
   //  * array type construction
   //  * resolve native imports
   //  * resolve imports and packages
-  public static final int NAME_CHECKER = 5;
+  public static final int NAME_CHECKER = 6;
   // Type checker.
-  public static final int TYPE_CHECKER = 6;
+  public static final int TYPE_CHECKER = 7;
   // AST node rewriting.
   //  * alt rewrite
   //  * array rewrite
@@ -45,21 +47,22 @@ public final class Phases {
   //  * switch statement rewrite
   //  * loop rewrite
   //  * yield rewrite
-  public static final int REWRITES = 7;
+  public static final int REWRITES = 8;
   // Class generation.
   //  * generate java file
-  public static final int CLASS_GENERATION = 8;
+  public static final int CLASS_GENERATION = 9;
   // Byte code rewrite.
   //  * asm instrumentation
-  public static final int INSTRUMENTATION = 9;
+  public static final int INSTRUMENTATION = 10;
   // Output of class.
-  public static final int OUTPUT = 10;
+  public static final int OUTPUT = 11;
 
   public static final String[] info = {
       "startup",
       "initialization",
       "parsing",
       "table and scope construction",
+      "control flow graph",
       "semantic analysis",
       "name checker analysis",
       "type checker analysis",
