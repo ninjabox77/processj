@@ -1,4 +1,4 @@
-package buildin;
+package build;
 
 /**
  * Phases of the ProcessJ compiler.

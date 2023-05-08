@@ -1,4 +1,4 @@
-package util;
+package misc;
 
 public class Tuple2<T1, T2> extends Tuple {
   private T1 v1;

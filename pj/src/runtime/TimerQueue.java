@@ -32,11 +32,6 @@ public class TimerQueue {
       // If the process is still around, set it ready to run again.
       // time.getProcess() will return null if the process has terminated.
       if (process != null) {
-        // The synchronized is no longer needed because the process
-        // has synchronized methods - Dr. Pedersen's own words
-//        synchronized (process) {
-//          process.setReady();
-//        }
         process.setReady();
       }
       --size_;

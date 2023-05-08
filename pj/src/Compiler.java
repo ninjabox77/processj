@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * ProcessJ compiler.
+ * A simple front-end for getting standard compilations done. Note that
+ * a compilation will generate a java file (or java files) in the working
+ * directory, which should have been specified during installation.
  *
  * @author Ben
  */
-public class ProcessJc {
+public class Compiler {
   // Types of arguments available for the compiler.
   public enum OptionType {
     STRING,
@@ -51,7 +53,7 @@ public class ProcessJc {
   private List<String> inputFiles_ = new ArrayList<>();
   private Properties config_;
 
-  public ProcessJc(String[] args) {
+  public Compiler(String[] args) {
     parseArguments(args);
   }
 
@@ -71,7 +73,7 @@ public class ProcessJc {
             if (o.type_ != OptionType.BOOLEAN)
               optionValue = args[pos++];
             // Same as before with Java reflection.
-            Class<? extends ProcessJc> c = this.getClass();
+            Class<? extends Compiler> c = this.getClass();
             try {
               Field f = c.getField(o.field_);
               if (optionValue != null) {
@@ -111,12 +113,8 @@ public class ProcessJc {
     System.exit(0);
   }
 
-  /*************************************************************************
-   *  Main - compiler execution begins here.
-   ***************************************************************************/
-
   public static void main(String[] args) {
-    ProcessJc pj = new ProcessJc(args);
+    Compiler c = new Compiler(args);
     // Do we have any arguments?
     if (args.length == 2) {
       System.out.println();

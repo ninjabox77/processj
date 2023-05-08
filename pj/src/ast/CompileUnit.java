@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 public class CompileUnit extends AnnotatedNode {
 
-  private Package package_;
+  private Package packet_;
   private Sequence<Import> imports_;
   private Sequence<TopLevelDeclaration<?>> typeDeclarations_;
 
@@ -21,31 +21,31 @@ public class CompileUnit extends AnnotatedNode {
     this(null, null, null);
   }
 
-  public CompileUnit(Package packge, Sequence<Import> imports, Sequence<TopLevelDeclaration<?>> typeDeclarations) {
-    this(null, packge, imports, typeDeclarations);
+  public CompileUnit(Package packet, Sequence<Import> imports, Sequence<TopLevelDeclaration<?>> typeDeclarations) {
+    this(null, packet, imports, typeDeclarations);
   }
 
-  public CompileUnit(Token token, Package packge, Sequence<Import> imports, Sequence<TopLevelDeclaration<?>> typeDeclarations) {
+  public CompileUnit(Token token, Package packet, Sequence<Import> imports, Sequence<TopLevelDeclaration<?>> typeDeclarations) {
     super(token);
-    setPackage(packge);
+    setPackage(packet);
     setImports(imports);
     setTypeDeclarations(typeDeclarations);
   }
 
-  public CompileUnit setPackage(Package packge) {
-    if (packge == package_) {
+  public CompileUnit setPackage(Package packet) {
+    if (packet == packet_) {
       return this;
     }
-    if (package_ != null) {
-      package_.setParentNode(null);
+    if (packet_ != null) {
+      packet_.setParentNode(null);
     }
-    package_ = packge;
-    setAsParentNodeOf(packge);
+    packet_ = packet;
+    setAsParentNodeOf(packet);
     return this;
   }
 
   public Package getPackage() {
-    return package_;
+    return packet_;
   }
 
   public CompileUnit setImports(Sequence<Import> imports) {
@@ -85,7 +85,7 @@ public class CompileUnit extends AnnotatedNode {
     if (node == null) {
       return false;
     }
-    if (node == package_) {
+    if (node == packet_) {
       setPackage((Package) replaceWith);
       return true;
     }
@@ -112,7 +112,7 @@ public class CompileUnit extends AnnotatedNode {
     if (node == null) {
       return false;
     }
-    if (node == package_) {
+    if (node == packet_) {
       setPackage(null);
       return true;
     }

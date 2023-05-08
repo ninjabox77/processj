@@ -3,7 +3,7 @@ package runtime;
 import java.util.Arrays;
 
 /**
- * Represents a guard in an replicated alt statement.
+ * Represents a guard in a replicated alt statement.
  *
  * @author Ben
  */
@@ -27,7 +27,7 @@ public class PJAltGuard {
   /**
    * The current selected index.
    */
-  private int selectedIndex_;
+  private int nextIndex_;
 
   public PJAltGuard(int size) {
     size_ = size;
@@ -49,8 +49,8 @@ public class PJAltGuard {
     return indices_[index];
   }
 
-  public int getIndex() {
-    return indices_[selectedIndex_++];
+  public int nextIndex() {
+    return indices_[nextIndex_++];
   }
 
   public int getSize() {
@@ -79,6 +79,7 @@ public class PJAltGuard {
 
   @Override
   public int hashCode() {
-    return altCase_ * 31 + size_ * 31 + Arrays.deepHashCode(indices_) * 31;
+    final int hash = 31;
+    return altCase_ * hash + size_ * hash + Arrays.deepHashCode(indices_) * hash;
   }
 }

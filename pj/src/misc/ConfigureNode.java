@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @author Ben
  */
-public class ConfigureNodeUtils {
+public class ConfigureNode {
 
   public static <N extends ASTNode<?>> N configureAST(N astNode, ParserRuleContext ctx) {
     Token start = ctx.getStart();

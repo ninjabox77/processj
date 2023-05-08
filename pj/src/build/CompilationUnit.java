@@ -1,7 +1,9 @@
-package buildin;
+package build;
 
 import ast.CompileUnit;
+import misc.PJClass;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
@@ -18,4 +20,5 @@ public class CompilationUnit extends ProcessingUnit {
   private CompileUnit ast;
   private Map<String, CompileUnit> otherSources_;
   private Queue<CompileUnit> queueSources_;
+  private List<PJClass> asmClasses;
 }

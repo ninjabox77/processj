@@ -1,7 +1,6 @@
 package runtime;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Represents an alt statement in ProcessJ.
@@ -13,7 +12,7 @@ public class PJAlt {
   public static final String SKIP = "skip";
 
   /**
-   * Guards may be a skip, a timer, or any type of channel read.
+   * A guard may be a skip, a timer, or any type of channel read.
    */
   private List<Object> declaredGuards_;
 
@@ -27,29 +26,41 @@ public class PJAlt {
    */
   private final PJProcess process_;
 
-  private List<PJAltGuard> dynamicAlts_;
+  /**
+   * Dynamic guards are only used in replicated alts.
+   */
+  private Map<Integer, PJAltGuard> dynamicAlts_;
 
   public PJAlt(PJProcess process) {
     process_ = process;
     declaredGuards_ = new ArrayList<>();
     declaredBooleanGuards_ = new ArrayList<>();
+    dynamicAlts_ = Collections.emptyMap();
   }
 
   public PJAlt(int count, PJProcess process) {
     process_ = process;
     declaredGuards_ = new ArrayList<>(count);
     declaredBooleanGuards_ = new ArrayList<>(count);
+    dynamicAlts_ = Collections.emptyMap();
   }
 
   public boolean setGuards(List<Object> declaredGuards, List<Boolean> declaredBooleanGuards) {
     declaredGuards_ = declaredGuards;
     declaredBooleanGuards_ = declaredBooleanGuards;
 
-    return declaredBooleanGuards_.stream().anyMatch(boolanValue -> boolanValue);
+    return declaredBooleanGuards_.stream().anyMatch(bool -> bool);
   }
 
-  public void setDynamicAlts(List<PJAltGuard> dynamicAlts) {
+  public void setDynamicAlts(Map<Integer, PJAltGuard> dynamicAlts) {
     dynamicAlts_ = dynamicAlts;
+  }
+
+  public void put(Integer index, final PJAltGuard guard) {
+    if (dynamicAlts_ == Collections.EMPTY_MAP) {
+      dynamicAlts_ = HashMap.newHashMap(10);
+    }
+    dynamicAlts_.put(index, guard);
   }
 
   public PJAltGuard getDynamicAlts(int index) {
@@ -69,8 +80,8 @@ public class PJAlt {
       }
       // A channel read guard?
       if (declaredGuards_.get(i) instanceof PJChannel<?>) {
-        final PJChannel<?> chan = (PJChannel<?>) declaredGuards_.get(i);
-        if (chan.altGetWriter(process_) != null) {
+        final PJChannel<?> channel = (PJChannel<?>) declaredGuards_.get(i);
+        if (channel.altGetWriter(process_) != null) {
           process_.setReady();
           return i;
         }
@@ -106,12 +117,12 @@ public class PJAlt {
       }
       // A channel guard?
       if (declaredGuards_.get(j) instanceof PJChannel<?>) {
-        // No race condition on this channel as it is a one-to-one and
-        // only the process has access to it. This simply means that we
-        // are de-registering from the channel for now, but may still read
-        // from it if selected is not updated with a value less than j.
-        final PJChannel<?> chan = (PJChannel<?>) declaredGuards_.get(j);
-        if (chan.setReaderGetWriter(null) != null) {
+        // No race condition should occur on this channel as it is a one-to-one
+        // and only the process has access to it. This simply means that we are
+        // de-registering from the channel for now, but may still read from it
+        // if selected is not updated with a value less than j.
+        final PJChannel<?> channel = (PJChannel<?>) declaredGuards_.get(j);
+        if (channel.setReaderGetWriter(null) != null) {
           selected = j;
         }
       }

@@ -1,4 +1,4 @@
-package util;
+package misc;
 
 public class Tuple0 extends Tuple {
   public static final Tuple0 INSTANCE = new Tuple0();

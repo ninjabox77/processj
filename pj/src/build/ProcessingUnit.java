@@ -1,4 +1,4 @@
-package buildin;
+package build;
 
 import ast.AnnotatedNode;
 
