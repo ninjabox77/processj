@@ -1,4 +1,4 @@
-package util;
+package misc;
 
 import ast.ASTNode;
 import org.antlr.v4.runtime.ParserRuleContext;

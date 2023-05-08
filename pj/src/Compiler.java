@@ -84,13 +84,13 @@ public class ProcessJc {
                 f.set(this, true);
               }
             } catch (Exception e) {
-              System.out.println("Failed to access field '" + o.field_ + "'");
+              System.err.println("Failed to access field '" + o.field_ + "'");
               System.exit(1);
             }
           }
         }
         if (!foundOption) {
-          System.out.println("Invalid option '" + arg + "' found!");
+          System.err.println("Invalid option '" + arg + "' found!");
           System.exit(1);
         }
       }
@@ -121,6 +121,5 @@ public class ProcessJc {
     if (args.length == 2) {
       System.out.println();
     }
-
   }
 }
