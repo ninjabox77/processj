@@ -53,14 +53,6 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
     return false;
   }
 
-  public boolean isArrayExpr() {
-    return false;
-  }
-
-  public ArrayExpr asArrayExpr() {
-    throw new IllegalStateException(String.format("%s is not an ArrayExpr, it is a %s", this, getClass().getSimpleName()));
-  }
-
   public boolean isBinaryExpr() {
     return false;
   }
@@ -235,5 +227,21 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
 
   public ProtocolExpr asProtocolExpr() {
     throw new IllegalStateException(String.format("%s is not a ProtocolExpr, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isListExpression() {
+    return false;
+  }
+
+  public ListExpression<?> asListExpression() {
+    throw new IllegalStateException(String.format("%s is not a ListExpression, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isNewArrayExpr() {
+    return false;
+  }
+
+  public NewArrayExpr asNewArrayExpr() {
+    throw new IllegalStateException(String.format("%s is not a NewArrayExpr, it is a %s", this, getClass().getSimpleName()));
   }
 }

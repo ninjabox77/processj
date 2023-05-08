@@ -5,7 +5,8 @@ import org.antlr.v4.runtime.Token;
 import typesystem.Type;
 
 /**
- * Represents a constructor call or object creation.
+ * Represents a constructor call or an object creation (i.e, this
+ * should be used when creating an object using the keyword new).
  *
  * @author Ben
  */
