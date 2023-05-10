@@ -178,11 +178,11 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVariableDeclaratorIdentifier(ProcessJParser.VariableDeclaratorIdentifierContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#type_}.
+	 * Visit a parse tree produced by {@link ProcessJParser#typeType}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitType_(ProcessJParser.Type_Context ctx);
+	T visitTypeType(ProcessJParser.TypeTypeContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ProcessJParser#primitiveType}.
 	 * @param ctx the parse tree

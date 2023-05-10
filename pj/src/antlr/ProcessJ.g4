@@ -118,7 +118,7 @@ variableDeclarator
  ;
 
 variableDeclaratorIdentifier
- : Identifier QUEST? dims?
+ : Identifier dims?
  ;
 
 typeType
@@ -201,7 +201,7 @@ expression
  | literalExpression                                                        # LiteralExpression_
  | pathExpression                                                           # PathExpression_
  | expression DOT pathExpression LPAREN actualDeclarationList? RPAREN       # MethodCallExpression
- | expression QUEST? DOT Identifier                                         # FieldExpression
+ | expression DOT Identifier                                         # FieldExpression
  | expression DOT SYNC LPAREN RPAREN                                        # SyncExpression
  | expression DOT (READ | WRITE) LPAREN expression? RPAREN                  # ReadWriteExpressionCall
  | expression DOT (READ | WRITE)                                            # ReadWriteExpression
