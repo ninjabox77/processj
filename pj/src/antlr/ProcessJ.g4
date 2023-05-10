@@ -41,7 +41,7 @@ typeDeclaration
  ;
 
 procedureDeclaration
- : modifier* type_ Identifier LPAREN formalDeclarationList? RPAREN blockExpression
+ : modifier* typeType Identifier LPAREN formalDeclarationList? RPAREN blockExpression
  ;
 
 modifier
@@ -71,7 +71,7 @@ recordBody
  ;
 
 recordField
- : type_ variableDeclaratorList SEMI
+ : typeType variableDeclaratorList SEMI
  ;
 
 protocolDeclaration
@@ -88,7 +88,7 @@ protocolCase
  ;
 
 constantDeclaration
- : modifier* type_ variableDeclaratorList SEMI
+ : modifier* typeType variableDeclaratorList SEMI
  ;
 
 packageAccess
@@ -106,7 +106,7 @@ localVariableDeclarationStatement
  ;
 
 localVariableDeclaration
- : variableModifier* type_ variableDeclaratorList
+ : variableModifier* typeType variableDeclaratorList
  ;
 
 variableDeclaratorList
@@ -121,7 +121,7 @@ variableDeclaratorIdentifier
  : Identifier QUEST? dims?
  ;
 
-type_
+typeType
  : primitiveType
  | referenceType
  | annotation* classType
@@ -167,14 +167,14 @@ arrayType
  ;
 
 channelType
- : SHARED READ CHAN LT type_ GT         # ChannelSharedReadType
- | SHARED WRITE CHAN LT type_ GT        # ChannelSharedWriteType
- | SHARED CHAN LT type_ GT              # ChannelSharedType
- | CHAN LT type_ GT                     # ChannelType_
- | CHAN LT type_ GT DOT READ            # ChannelDotRead
- | CHAN LT type_ GT DOT WRITE           # ChannelDotWrite
- | SHARED CHAN LT type_ GT DOT READ     # ChannelSharedDotRead
- | SHARED CHAN LT type_ GT DOT WRITE    # ChannelSharedDotWrite
+ : SHARED READ CHAN LT typeType GT         # ChannelSharedReadType
+ | SHARED WRITE CHAN LT typeType GT        # ChannelSharedWriteType
+ | SHARED CHAN LT typeType GT              # ChannelSharedType
+ | CHAN LT typeType GT                     # ChannelType_
+ | CHAN LT typeType GT DOT READ            # ChannelDotRead
+ | CHAN LT typeType GT DOT WRITE           # ChannelDotWrite
+ | SHARED CHAN LT typeType GT DOT READ     # ChannelSharedDotRead
+ | SHARED CHAN LT typeType GT DOT WRITE    # ChannelSharedDotWrite
  ;
 
 typeVariable
@@ -298,7 +298,7 @@ formalDeclarations
  ;
 
 formalDeclaration
- : variableModifier* type_ variableDeclarator (EQ variableInitializer)?
+ : variableModifier* typeType variableDeclarator (EQ variableInitializer)?
  ;
 
 variableModifier
@@ -307,7 +307,7 @@ variableModifier
  ;
 
 lastFormalDeclaration
- : annotation? type_ ELLIPSIS Identifier
+ : annotation? typeType ELLIPSIS Identifier
  ;
 
 comparisonOperator
@@ -835,8 +835,6 @@ RRSHIFTEQ   : '>>>=';
 ANDEQ       : '&=';
 XOREQ       : '^=';
 OREQ        : '|=';
-//LARROW      : '<-';
-//RARROW      : '->';
 
 GT          : '>';
 LT          : '<';
