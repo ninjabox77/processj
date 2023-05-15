@@ -2,6 +2,9 @@ package ast.expr;
 
 import org.antlr.v4.runtime.Token;
 import typesystem.Type;
+import visitor.DefaultVisitor;
+import visitor.GenericVisitor;
+import visitor.VoidVisitor;
 
 /**
  * Represents an integer literal value.
@@ -22,8 +25,6 @@ public class IntegerLiteral extends ConstantExpr {
     super(token, value);
   }
 
-  // TODO: asInt?
-
   @Override
   public boolean isIntegerLiteral() {
     return true;
@@ -37,5 +38,20 @@ public class IntegerLiteral extends ConstantExpr {
   @Override
   public IntegerLiteral setType(Type type) {
     return (IntegerLiteral) super.setType(type);
+  }
+
+  @Override
+  public <T, A> T accept(GenericVisitor<T, A> v, A arg) {
+    return v.visit(this, arg);
+  }
+
+  @Override
+  public <A> void accept(VoidVisitor<A> v, A arg) {
+    v.visit(this, arg);
+  }
+
+  @Override
+  public <T> T accept(DefaultVisitor<T> v) {
+    return v.visit(this);
   }
 }

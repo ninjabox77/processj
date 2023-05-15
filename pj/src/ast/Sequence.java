@@ -1,5 +1,10 @@
 package ast;
 
+import visitor.CodeVisitor;
+import visitor.DefaultVisitor;
+import visitor.GenericVisitor;
+import visitor.VoidVisitor;
+
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collector;
@@ -11,7 +16,7 @@ import java.util.stream.Collector;
  *
  * @author Ben
  */
-public class Sequence<N extends Node> implements ParentNode<Sequence<N>>, List<N>, Iterable<N> {
+public class Sequence<N extends Node> implements ParentNode<Sequence<N>>, List<N>, Iterable<N>, CodeVisitor {
   protected List<N> arrayList_ = new ArrayList<>();
   protected Node parentNode_;
 
@@ -293,6 +298,21 @@ public class Sequence<N extends Node> implements ParentNode<Sequence<N>>, List<N
   @Override
   public boolean equals(Object object) {
     return arrayList_.equals(object);
+  }
+
+  @Override
+  public <T, A> T accept(GenericVisitor<T, A> v, A arg) {
+    return v.visit(this, arg);
+  }
+
+  @Override
+  public <A> void accept(VoidVisitor<A> v, A arg) {
+    v.visit(this, arg);
+  }
+
+  @Override
+  public <T> T accept(DefaultVisitor<T> v) {
+    return v.visit(this);
   }
 
   protected class SequenceIterator implements ListIterator<N> {

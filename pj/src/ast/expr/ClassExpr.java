@@ -2,6 +2,9 @@ package ast.expr;
 
 import org.antlr.v4.runtime.Token;
 import typesystem.Type;
+import visitor.DefaultVisitor;
+import visitor.GenericVisitor;
+import visitor.VoidVisitor;
 
 /**
  * Represents access to a Java class in an expression, that is, when
@@ -37,5 +40,20 @@ public class ClassExpr extends Expression<ClassExpr> {
   @Override
   public ClassExpr asClassExpr() {
     return this;
+  }
+
+  @Override
+  public <T, A> T accept(GenericVisitor<T, A> v, A arg) {
+    return v.visit(this, arg);
+  }
+
+  @Override
+  public <A> void accept(VoidVisitor<A> v, A arg) {
+    v.visit(this, arg);
+  }
+
+  @Override
+  public <T> T accept(DefaultVisitor<T> v) {
+    return v.visit(this);
   }
 }

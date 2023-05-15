@@ -1,4 +1,4 @@
-package build;
+package control;
 
 import ast.CompileUnit;
 import ast.Sequence;

@@ -3,6 +3,9 @@ package ast.toplevel;
 import ast.*;
 import org.antlr.v4.runtime.Token;
 import typesystem.Type;
+import visitor.DefaultVisitor;
+import visitor.GenericVisitor;
+import visitor.VoidVisitor;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -138,6 +141,21 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
       }
     }
     return false;
+  }
+
+  @Override
+  public <T, A> T accept(GenericVisitor<T, A> v, A arg) {
+    return v.visit(this, arg);
+  }
+
+  @Override
+  public <A> void accept(VoidVisitor<A> v, A arg) {
+    v.visit(this, arg);
+  }
+
+  @Override
+  public <T> T accept(DefaultVisitor<T> v) {
+    return v.visit(this);
   }
 
   public boolean isConstantTopLevel() {

@@ -1,4 +1,4 @@
-package build;
+package control;
 
 /**
  * Phases of the ProcessJ compiler.

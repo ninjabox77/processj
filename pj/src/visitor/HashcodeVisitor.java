@@ -6,5 +6,5 @@ package visitor;
  *
  * @author Ben
  */
-public class HashcodeVisitor implements DefaultVisitor<Integer> {
+public class HashcodeVisitor {
 }

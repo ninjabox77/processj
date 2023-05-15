@@ -3,6 +3,7 @@ package ast;
 import ast.comments.Comment;
 import org.antlr.v4.runtime.Token;
 import typesystem.Type;
+import visitor.CodeVisitor;
 
 import java.util.Optional;
 
@@ -11,7 +12,7 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public abstract class Node extends ASTNode<Node> implements OptionalType<Node, Type> {
+public abstract class Node extends ASTNode<Node> implements OptionalType<Node, Type>, CodeVisitor {
 
   /**
    * The children of this node if it is the root of a subtree.

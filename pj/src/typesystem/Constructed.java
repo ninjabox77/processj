@@ -1,6 +1,9 @@
 package typesystem;
 
 import org.antlr.v4.runtime.Token;
+import visitor.DefaultVisitor;
+import visitor.GenericVisitor;
+import visitor.VoidVisitor;
 
 /**
  * Represents all constructed types.
@@ -81,5 +84,20 @@ public abstract class Constructed extends Type {
 
   public MethodCallType<?> asMethodCallType() {
     throw new IllegalStateException(String.format("%s is not a CallableType, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  @Override
+  public <T, A> T accept(GenericVisitor<T, A> v, A arg) {
+    return v.visit(this, arg);
+  }
+
+  @Override
+  public <A> void accept(VoidVisitor<A> v, A arg) {
+    v.visit(this, arg);
+  }
+
+  @Override
+  public <T> T accept(DefaultVisitor<T> v) {
+    return v.visit(this);
   }
 }

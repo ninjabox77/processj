@@ -1,4 +1,247 @@
 package visitor;
 
-public interface VoidVisitor<T> {
+import ast.*;
+import ast.Package;
+import ast.comments.BlockComment;
+import ast.comments.LineComment;
+import ast.expr.*;
+import ast.java.*;
+import ast.stmt.*;
+import ast.toplevel.*;
+import ast.types.*;
+import typesystem.*;
+
+public interface VoidVisitor<A> {
+
+  /*********************************************************
+   * Ast nodes
+   *********************************************************/
+
+  void visit(final AnnotationNode a, A arg);
+
+  void visit(final ArrayDimension a, A arg);
+
+  void visit(final ClassNode c, A arg);
+
+  void visit(final CompileUnit c, A arg);
+
+  void visit(final Import i, A arg);
+
+  void visit(final Name n, A arg);
+
+  void visit(final Node n, A arg);
+
+  void visit(final Package p, A arg);
+
+  void visit(final Parameter p, A arg);
+
+  void visit(final Sequence<?> s, A arg);
+
+  /*********************************************************
+   * Type nodes
+   *********************************************************/
+
+  void visit(final ArrayNode a, A arg);
+
+  void visit(final BarrierNode b, A arg);
+
+  void visit(final ChannelEndNode c, A arg);
+
+  void visit(final ChannelNode c, A arg);
+
+  void visit(final ExternalNode e, A arg);
+
+  void visit(final PrimitiveNode p, A arg);
+
+  void visit(final TimerNode t, A arg);
+
+  /*********************************************************
+   * Top-level nodes
+   *********************************************************/
+
+  void visit(final ConstantTopLevel c, A arg);
+
+  void visit(final ExternalTopLevel e, A arg);
+
+  void visit(final MethodCallTopLevel<?> m, A arg);
+
+  void visit(final MobileDeclaration m, A arg);
+
+  void visit(final ProcedureTopLevel p, A arg);
+
+  void visit(final ProtocolTagDeclaration p, A arg);
+
+  void visit(final ProtocolTopLevel p, A arg);
+
+  void visit(final RecordTopLevel r, A arg);
+
+  /*********************************************************
+   * Statement nodes
+   *********************************************************/
+
+  void visit(final BlockStmt b, A arg);
+
+  void visit(final BreakStmt b, A arg);
+
+  void visit(final CaseStmt c, A arg);
+
+  void visit(final ContinueStmt c, A arg);
+
+  void visit(final DoWhileStmt d, A arg);
+
+  void visit(final EmptyStmt e, A arg);
+
+  void visit(final ExpressionStmt e, A arg);
+
+  void visit(final ForEachStmt f, A arg);
+
+  void visit(final ForStmt f, A arg);
+
+  void visit(final GuardStmt g, A arg);
+
+  void visit(final IfStmt i, A arg);
+
+  void visit(final RegularAltStmt r, A arg);
+
+  void visit(final ReturnStmt r, A arg);
+
+  void visit(final SwitchStmt s, A arg);
+
+  void visit(final WhileStmt w, A arg);
+
+  /*********************************************************
+   * Java nodes
+   *********************************************************/
+
+  void visit(final BodyDeclaration<?> b, A arg);
+
+  void visit(final ClassDeclaration c, A arg);
+
+  void visit(final ConstructorDeclaration c, A arg);
+
+  void visit(final FieldDeclaration f, A arg);
+
+  void visit(final MethodDeclaration<?> m, A arg);
+
+  /*********************************************************
+   * Expression nodes
+   *********************************************************/
+
+  void visit(final ArrayExpr a, A arg);
+
+  void visit(final BinaryExpr b, A arg);
+
+  void visit(final BooleanExpr b, A arg);
+
+  void visit(final CallableExpr c, A arg);
+
+  void visit(final CastExpr c, A arg);
+
+  void visit(final CharLiteral c, A arg);
+
+  void visit(final ClassExpr c, A arg);
+
+  void visit(final ConstructorCallExpr c, A arg);
+
+  void visit(final DeclarationExpr d, A arg);
+
+  void visit(final DoubleLiteral d, A arg);
+
+  void visit(final EmptyExpr e, A arg);
+
+  void visit(final FieldAccessExpr f, A arg);
+
+  void visit(final IntegerLiteral i, A arg);
+
+  void visit(final ListExpression<?> l, A arg);
+
+  void visit(final LongLiteral l, A arg);
+
+  void visit(final MapEntryExpr m, A arg);
+
+  void visit(final MapExpr m, A arg);
+
+  void visit(final MethodCallExpr m, A arg);
+
+  void visit(final NewArrayExpr n, A arg);
+
+  void visit(final NotExpression n, A arg);
+
+  void visit(final NullLiteral n, A arg);
+
+  void visit(final PostfixExpr p, A arg);
+
+  void visit(final PrefixExpr p, A arg);
+
+  void visit(final ProtocolExpr p, A arg);
+
+  void visit(final RecordExpr r, A arg);
+
+  void visit(final SkipExpr s, A arg);
+
+  void visit(final StopExpr s, A arg);
+
+  void visit(final TernaryExpr t, A arg);
+
+  void visit(final UnaryMinusExpr u, A arg);
+
+  void visit(final UnaryPlusExpr u, A arg);
+
+  /*********************************************************
+   * Comments nodes
+   *********************************************************/
+
+  void visit(final BlockComment b, A arg);
+
+  void visit(final LineComment l, A arg);
+
+  /*********************************************************
+   * Comments nodes
+   *********************************************************/
+
+  void visit(final ArrayType a, A arg);
+
+  void visit(final BarrierType b, A arg);
+
+  void visit(final ByteType b, A arg);
+
+  void visit(final ChannelEndType c, A arg);
+
+  void visit(final ChannelType c, A arg);
+
+  void visit(final CharType c, A arg);
+
+  void visit(final DoubleType d, A arg);
+
+  void visit(final ExternalType e, A arg);
+
+  void visit(final FloatType f, A arg);
+
+  void visit(final IntegerType i, A arg);
+
+  void visit(final LongType l, A arg);
+
+  void visit(final MethodCallType<?> m, A arg);
+
+  void visit(final MobileType m, A arg);
+
+  void visit(final NullType n, A arg);
+
+  void visit(final ProcedureType p, A arg);
+
+  void visit(final ProtocolTagType p, A arg);
+
+  void visit(final ProtocolType p, A arg);
+
+  void visit(final RecordType r, A arg);
+
+  void visit(final ShortType s, A arg);
+
+  void visit(final StringType s, A arg);
+
+  void visit(final TimerType t, A arg);
+
+  void visit(final UnknownType u, A arg);
+
+  void visit(final VoidType v, A arg);
 }

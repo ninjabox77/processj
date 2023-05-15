@@ -5,7 +5,7 @@ package visitor;
  *
  * @author Ben
  */
-public interface Visitor {
+public interface CodeVisitor {
 
   <T, A> T accept(GenericVisitor<T, A> v, A arg);
 
