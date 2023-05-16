@@ -33,7 +33,7 @@ public abstract class Node extends ASTNode<Node> implements OptionalType<Node, T
   /**
    * Main comment attached to this node.
    */
-  protected Comment firstComment_;
+  protected Comment comment_;
 
   public Node(Token token) {
     super(token);
@@ -80,15 +80,19 @@ public abstract class Node extends ASTNode<Node> implements OptionalType<Node, T
   }
 
   public Node setComment(Comment firstComment) {
-    if (firstComment == firstComment_) {
+    if (firstComment == comment_) {
       return this;
     }
-    if (firstComment_ != null) {
-      firstComment_.setParentNode(null);
+    if (comment_ != null) {
+      comment_.setParentNode(null);
     }
-    firstComment_ = firstComment;
+    comment_ = firstComment;
     setAsParentNodeOf(firstComment);
     return this;
+  }
+
+  public Optional<Comment> getComment() {
+    return Optional.ofNullable(comment_);
   }
 
   @Override

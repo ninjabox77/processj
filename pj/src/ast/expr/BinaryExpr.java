@@ -69,6 +69,10 @@ public class BinaryExpr extends Expression<BinaryExpr> {
     return this;
   }
 
+  public Token getOperation() {
+    return operation_;
+  }
+
   @Override
   public BinaryExpr setType(Type type) {
     return super.setType(type);

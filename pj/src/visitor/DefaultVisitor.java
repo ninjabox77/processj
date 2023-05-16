@@ -221,8 +221,6 @@ public interface DefaultVisitor<R> {
 
   R visit(final LongType l);
 
-  R visit(final MethodCallType<?> m);
-
   R visit(final MobileType m);
 
   R visit(final NullType n);

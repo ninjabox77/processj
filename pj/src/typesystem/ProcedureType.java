@@ -15,8 +15,6 @@ import java.util.Optional;
  */
 public class ProcedureType extends MethodCallType<ProcedureType> {
 
-  private boolean yields_;
-
   public ProcedureType() {
     this(null);
   }

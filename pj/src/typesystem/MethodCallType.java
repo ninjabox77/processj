@@ -35,6 +35,7 @@ public abstract class MethodCallType<T extends MethodCallType<?>> extends Constr
     setType(returnType);
     setTypeArguments(typeArguments);
     setImplementedTypes(implementedTypes);
+    setYield(yields);
 
   }
 
@@ -86,6 +87,18 @@ public abstract class MethodCallType<T extends MethodCallType<?>> extends Constr
 
   public Optional<Sequence<Type>> getImplementedTypes() {
     return Optional.ofNullable(implementedTypes_);
+  }
+
+  public T setYield(final boolean yields) {
+    if (yields == yields_) {
+      return (T) this;
+    }
+    yields_ = yields;
+    return (T) this;
+  }
+
+  public boolean doesYield() {
+    return yields_;
   }
 
   public boolean isProcedureType() {

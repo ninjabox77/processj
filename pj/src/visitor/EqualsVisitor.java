@@ -12,6 +12,7 @@ import ast.types.*;
 import typesystem.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Ben
@@ -91,503 +92,642 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
     return o1.equals(o2);
   }
 
-  @Override
-  public Boolean visit(AnnotationNode a, CodeVisitor arg) {
-    return null;
+  private <N extends Node> Boolean objectEquals(final Optional<N> n1, final Optional<N> n2) {
+    return objectEquals(n1.orElse(null), n2.orElse(null));
+  }
+
+  private <N extends Node> Boolean objectsEquals(final Optional<Sequence<N>> n1, final Optional<Sequence<N>> n2) {
+    return objectEquals(n1.orElse(null), n2.orElse(null));
   }
 
   @Override
-  public Boolean visit(ArrayDimension a, CodeVisitor arg) {
+  public Boolean visit(final AnnotationNode a, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(ClassNode c, CodeVisitor arg) {
+  public Boolean visit(final ArrayDimension a, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(CompileUnit c, CodeVisitor arg) {
+  public Boolean visit(final ClassNode c, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(Import i, CodeVisitor arg) {
+  public Boolean visit(final CompileUnit c, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(Name n, CodeVisitor arg) {
+  public Boolean visit(final Import i, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(Node n, CodeVisitor arg) {
+  public Boolean visit(final Name n, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(Package p, CodeVisitor arg) {
+  public Boolean visit(final Node n, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(Parameter p, CodeVisitor arg) {
+  public Boolean visit(final Package p, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(Sequence<?> s, CodeVisitor arg) {
+  public Boolean visit(final Parameter p, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(ArrayNode a, CodeVisitor arg) {
+  public Boolean visit(final Sequence<?> s, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(BarrierNode b, CodeVisitor arg) {
+  public Boolean visit(final ArrayNode a, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(ChannelEndNode c, CodeVisitor arg) {
+  public Boolean visit(final BarrierNode b, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(ChannelNode c, CodeVisitor arg) {
+  public Boolean visit(final ChannelEndNode c, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(ExternalNode e, CodeVisitor arg) {
+  public Boolean visit(final ChannelNode c, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(PrimitiveNode p, CodeVisitor arg) {
+  public Boolean visit(final ExternalNode e, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(TimerNode t, CodeVisitor arg) {
+  public Boolean visit(final PrimitiveNode p, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(ConstantTopLevel c, CodeVisitor arg) {
+  public Boolean visit(final TimerNode t, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(ExternalTopLevel e, CodeVisitor arg) {
+  public Boolean visit(final ConstantTopLevel c, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(MethodCallTopLevel<?> m, CodeVisitor arg) {
+  public Boolean visit(final ExternalTopLevel e, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(MobileDeclaration m, CodeVisitor arg) {
+  public Boolean visit(final MethodCallTopLevel<?> m, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(ProcedureTopLevel p, CodeVisitor arg) {
+  public Boolean visit(final MobileDeclaration m, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(ProtocolTagDeclaration p, CodeVisitor arg) {
+  public Boolean visit(final ProcedureTopLevel p, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(ProtocolTopLevel p, CodeVisitor arg) {
+  public Boolean visit(final ProtocolTagDeclaration p, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(RecordTopLevel r, CodeVisitor arg) {
+  public Boolean visit(final ProtocolTopLevel p, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(BlockStmt b, CodeVisitor arg) {
+  public Boolean visit(final RecordTopLevel r, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(BreakStmt b, CodeVisitor arg) {
+  public Boolean visit(final BlockStmt b, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(CaseStmt c, CodeVisitor arg) {
+  public Boolean visit(final BreakStmt b, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(ContinueStmt c, CodeVisitor arg) {
+  public Boolean visit(final CaseStmt c, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(DoWhileStmt d, CodeVisitor arg) {
+  public Boolean visit(final ContinueStmt c, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(EmptyStmt e, CodeVisitor arg) {
+  public Boolean visit(final DoWhileStmt d, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(ExpressionStmt e, CodeVisitor arg) {
+  public Boolean visit(final EmptyStmt e, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(ForEachStmt f, CodeVisitor arg) {
+  public Boolean visit(final ExpressionStmt e, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(ForStmt f, CodeVisitor arg) {
+  public Boolean visit(final ForEachStmt f, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(GuardStmt g, CodeVisitor arg) {
+  public Boolean visit(final ForStmt f, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(IfStmt i, CodeVisitor arg) {
+  public Boolean visit(final GuardStmt g, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(RegularAltStmt r, CodeVisitor arg) {
+  public Boolean visit(final IfStmt i, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(ReturnStmt r, CodeVisitor arg) {
+  public Boolean visit(final RegularAltStmt r, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(SwitchStmt s, CodeVisitor arg) {
+  public Boolean visit(final ReturnStmt r, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(WhileStmt w, CodeVisitor arg) {
+  public Boolean visit(final SwitchStmt s, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(BodyDeclaration<?> b, CodeVisitor arg) {
+  public Boolean visit(final WhileStmt w, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(ClassDeclaration c, CodeVisitor arg) {
+  public Boolean visit(final BodyDeclaration<?> b, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(ConstructorDeclaration c, CodeVisitor arg) {
+  public Boolean visit(final ClassDeclaration c, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(FieldDeclaration f, CodeVisitor arg) {
+  public Boolean visit(final ConstructorDeclaration c, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(MethodDeclaration<?> m, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final FieldDeclaration f, CodeVisitor arg) {
+    final FieldDeclaration f2 = (FieldDeclaration) arg;
+    return objectEquals(f.getModifiers(), f2.getModifiers()) &&
+        objectEquals(f.getType(), f2.getType()) &&
+        objectEquals(f.getName(), f2.getName()) &&
+        objectEquals(f.getComment(), f2.getComment());
   }
 
   @Override
-  public Boolean visit(ArrayExpr a, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final MethodDeclaration<?> m, CodeVisitor arg) {
+    final MethodDeclaration<?> m2 = (MethodDeclaration<?>) arg;
+    return objectEquals(m.getType(), m2.getType()) &&
+        objectEquals(m.getName(), m2.getName()) &&
+        objectEquals(m.getBody(), m2.getBody()) &&
+        objectsEquals(m.getParameters(), m2.getParameters()) &&
+        objectEquals(m.getComment(), m2.getComment());
   }
 
   @Override
-  public Boolean visit(BinaryExpr b, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final ArrayExpr a, CodeVisitor arg) {
+    final ArrayExpr a2 = (ArrayExpr) arg;
+    return objectsEquals(a.getValues(), a2.getValues()) &&
+        objectEquals(a.getComment(), a2.getComment());
   }
 
   @Override
-  public Boolean visit(BooleanExpr b, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final BinaryExpr b, CodeVisitor arg) {
+    final BinaryExpr b2 = (BinaryExpr) arg;
+    return objectEquals(b.getLeftExpression(), b2.getLeftExpression()) &&
+        objectEquals(b.getRightExpression(), b2.getRightExpression()) &&
+        objectEquals(b.getOperation(), b2.getOperation()) &&
+        objectEquals(b.getComment(), b2.getComment());
   }
 
   @Override
-  public Boolean visit(CallableExpr c, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final BooleanExpr b, CodeVisitor arg) {
+    final BooleanExpr b2 = (BooleanExpr) arg;
+    return objectEquals(b.getExpression(), b2.getExpression()) &&
+        objectEquals(b.getComment(), b2.getComment());
   }
 
   @Override
-  public Boolean visit(CastExpr c, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final CallableExpr c, CodeVisitor arg) {
+    final CallableExpr c2 = (CallableExpr) arg;
+    return objectEquals(c.getObjectExpression(), c2.getObjectExpression()) &&
+        objectEquals(c.getMethodExpression(), c2.getMethodExpression()) &&
+        objectEquals(c.getArguments(), c2.getArguments()) &&
+        objectEquals(c.getComment(), c2.getComment());
   }
 
   @Override
-  public Boolean visit(CharLiteral c, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final CastExpr c, CodeVisitor arg) {
+    final CastExpr c2 = (CastExpr) arg;
+    return objectEquals(c.getExpression(), c2.getExpression()) &&
+        objectEquals(c.isCoerce(), c2.isCoerce()) &&
+        objectEquals(c.isIgnoreAutoboxing(), c2.isIgnoreAutoboxing()) &&
+        objectEquals(c.getComment(), c2.getComment());
   }
 
   @Override
-  public Boolean visit(ClassExpr c, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final CharLiteral c, CodeVisitor arg) {
+    final CharLiteral c2 = (CharLiteral) arg;
+    return objectEquals(c.getValue(), c2.getValue()) &&
+        objectEquals(c.getComment(), c2.getComment());
   }
 
   @Override
-  public Boolean visit(ConstructorCallExpr c, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final ClassExpr c, CodeVisitor arg) {
+    final ClassExpr c2 = (ClassExpr) arg;
+    return objectEquals(c.getType(), c2.getType()) &&
+        objectEquals(c.getComment(), c2.getComment());
   }
 
   @Override
-  public Boolean visit(DeclarationExpr d, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final ConstructorCallExpr c, CodeVisitor arg) {
+    final ConstructorCallExpr c2 = (ConstructorCallExpr) arg;
+    return objectEquals(c.getObjectExpression(), c2.getObjectExpression()) &&
+        objectEquals(c.getMethodExpression(), c2.getMethodExpression()) &&
+        objectsEquals(c.getArguments(), c2.getArguments()) &&
+        objectsEquals(c.getTypeArguments(), c2.getTypeArguments()) &&
+        objectEquals(c.getComment(), c2.getComment());
   }
 
   @Override
-  public Boolean visit(DoubleLiteral d, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final DeclarationExpr d, CodeVisitor arg) {
+    final DeclarationExpr d2 = (DeclarationExpr) arg;
+    return objectEquals(d.getLeftExpression(), d2.getLeftExpression()) &&
+        objectEquals(d.getRightExpression(), d2.getRightExpression()) &&
+        objectEquals(d.getOperation(), d2.getOperation()) &&
+        objectEquals(d.getComment(), d2.getComment());
   }
 
   @Override
-  public Boolean visit(EmptyExpr e, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final DoubleLiteral d, CodeVisitor arg) {
+    final DoubleLiteral d2 = (DoubleLiteral) arg;
+    return objectEquals(d.getValue(), d2.getValue()) &&
+        objectEquals(d.getComment(), d2.getComment());
   }
 
   @Override
-  public Boolean visit(FieldAccessExpr f, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final EmptyExpr e, CodeVisitor arg) {
+    final EmptyExpr e2 = (EmptyExpr) arg;
+    return objectEquals(e.getComment(), e2.getComment());
   }
 
   @Override
-  public Boolean viit(IntegerLiteral i, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final FieldAccessExpr f, CodeVisitor arg) {
+    final FieldAccessExpr f2 = (FieldAccessExpr) arg;
+    return objectEquals(f.getObjectExpression(), f2.getObjectExpression()) &&
+        objectEquals(f.getFieldExpression(), f2.getFieldExpression()) &&
+        objectEquals(f.isImplicitThis(), f2.isImplicitThis()) &&
+        objectEquals(f.getComment(), f2.getComment());
   }
 
   @Override
-  public Boolean visit(ListExpression<?> l, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final IntegerLiteral i, CodeVisitor arg) {
+    final IntegerLiteral i2 = (IntegerLiteral) arg;
+    return objectEquals(i.getValue(), i2.getValue()) &&
+        objectEquals(i.getComment(), i2.getComment());
   }
 
   @Override
-  public Boolean visit(LongLiteral l, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final ListExpression<?> l, CodeVisitor arg) {
+    final ListExpression<?> l2 = (ListExpression<?>) arg;
+    return objectsEquals(l.getValues(), l2.getValues()) &&
+        objectEquals(l.getComment(), l2.getComment());
   }
 
   @Override
-  public Boolean visit(MapEntryExpr m, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final LongLiteral l, CodeVisitor arg) {
+    final LongLiteral l2 = (LongLiteral) arg;
+    return objectEquals(l.getValue(), l2.getValue()) &&
+        objectEquals(l.getComment(), l2.getComment());
   }
 
   @Override
-  public Boolean visit(MapExpr m, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final MapEntryExpr m, CodeVisitor arg) {
+    final MapEntryExpr m2 = (MapEntryExpr) arg;
+    return objectEquals(m.getKeyExpression(), m2.getKeyExpression()) &&
+        objectEquals(m.getValueExpression(), m2.getValueExpression()) &&
+        objectEquals(m.getComment(), m2.getComment());
   }
 
   @Override
-  public Boolean visit(MethodCallExpr m, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final MapExpr m, CodeVisitor arg) {
+    final MapExpr m2 = (MapExpr) arg;
+    return objectsEquals(m.getMapEntry(), m2.getMapEntry()) &&
+        objectEquals(m.getComment(), m2.getComment());
   }
 
   @Override
-  public Boolean visit(NewArrayExpr n, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final MethodCallExpr m, CodeVisitor arg) {
+    final MethodCallExpr m2 = (MethodCallExpr) arg;
+    return objectEquals(m.getObjectExpression(), m2.getObjectExpression()) &&
+        objectEquals(m.getMethodExpression(), m2.getMethodExpression()) &&
+        objectsEquals(m.getArguments(), m2.getArguments()) &&
+        objectsEquals(m.getTypeArguments(), m2.getTypeArguments()) &&
+        objectEquals(m.getImplicitThis(), m2.getImplicitThis()) &&
+        objectEquals(m.getComment(), m2.getComment());
   }
 
   @Override
-  public Boolean visit(NotExpression n, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final NewArrayExpr n, CodeVisitor arg) {
+    final NewArrayExpr n2 = (NewArrayExpr) arg;
+    return objectEquals(n.getArrayLiteral(), n2.getArrayLiteral()) &&
+        objectsEquals(n.getLevels(), n2.getLevels()) &&
+        objectEquals(n.getComment(), n2.getComment());
   }
 
   @Override
-  public Boolean visit(NullLiteral n, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final NotExpression n, CodeVisitor arg) {
+    final NotExpression n2 = (NotExpression) arg;
+    return objectEquals(n.getExpression(), n2.getExpression()) &&
+        objectEquals(n.getComment(), n2.getComment());
   }
 
   @Override
-  public Boolean visit(PostfixExpr p, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final NullLiteral n, CodeVisitor arg) {
+    final NullLiteral n2 = (NullLiteral) arg;
+    return objectEquals(n.getValue(), n2.getValue()) &&
+        objectEquals(n.getComment(), n2.getComment());
   }
 
   @Override
-  public Boolean visit(PrefixExpr p, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final PostfixExpr p, CodeVisitor arg) {
+    final PostfixExpr p2 = (PostfixExpr) arg;
+    return objectEquals(p.getExpression(), p2.getExpression()) &&
+        objectEquals(p.getOperation(), p2.getOperation()) &&
+        objectEquals(p.getComment(), p2.getComment());
   }
 
   @Override
-  public Boolean visit(ProtocolExpr p, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final PrefixExpr p, CodeVisitor arg) {
+    final PrefixExpr p2 = (PrefixExpr) arg;
+    return objectEquals(p.getExpression(), p2.getExpression()) &&
+        objectEquals(p.getOperation(), p2.getOperation()) &&
+        objectEquals(p.getComment(), p2.getComment());
   }
 
   @Override
-  public Boolean visit(RecordExpr r, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final ProtocolExpr p, CodeVisitor arg) {
+    final ProtocolExpr p2 = (ProtocolExpr) arg;
+    return objectEquals(p.getTagExpression(), p2.getTagExpression()) &&
+        objectsEquals(p.getValues(), p2.getValues()) &&
+        objectEquals(p.getComment(), p2.getComment());
   }
 
   @Override
-  public Boolean visit(SkipExpr s, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final RecordExpr r, CodeVisitor arg) {
+    final RecordExpr r2 = (RecordExpr) arg;
+    return objectsEquals(r.getValues(), r2.getValues()) &&
+        objectEquals(r.getComment(), r2.getComment());
   }
 
   @Override
-  public Boolean visit(StopExpr s, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final SkipExpr s, CodeVisitor arg) {
+    final SkipExpr s2 = (SkipExpr) arg;
+    return objectEquals(s.getComment(), s2.getComment());
   }
 
   @Override
-  public Boolean visit(TernaryExpr t, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final StopExpr s, CodeVisitor arg) {
+    final StopExpr s2 = (StopExpr) arg;
+    return objectEquals(s.getComment(), s2.getComment());
   }
 
   @Override
-  public Boolean visit(UnaryMinusExpr u, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final TernaryExpr t, CodeVisitor arg) {
+    final TernaryExpr t2 = (TernaryExpr) arg;
+    return objectEquals(t.getCondition(), t2.getCondition()) &&
+        objectEquals(t.getTrueExpression(), t2.getTrueExpression()) &&
+        objectEquals(t.getFalseExpression(), t2.getFalseExpression()) &&
+        objectEquals(t.getComment(), t2.getComment());
   }
 
   @Override
-  public Boolean visit(UnaryPlusExpr u, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final UnaryMinusExpr u, CodeVisitor arg) {
+    final UnaryMinusExpr u2 = (UnaryMinusExpr) arg;
+    return objectEquals(u.getExpression(), u2.getExpression()) &&
+        objectEquals(u.getComment(), u2.getComment());
   }
 
   @Override
-  public Boolean visit(BlockComment b, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final UnaryPlusExpr u, CodeVisitor arg) {
+    final UnaryPlusExpr u2 = (UnaryPlusExpr) arg;
+    return objectEquals(u.getExpression(), u2.getExpression()) &&
+        objectEquals(u.getComment(), u2.getComment());
   }
 
   @Override
-  public Boolean visit(LineComment l, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final BlockComment b, CodeVisitor arg) {
+    final BlockComment b2 = (BlockComment) arg;
+    return objectEquals(b.getContent(), b2.getContent()) &&
+        objectEquals(b.getCommentedNode(), b2.getCommentedNode()) &&
+        objectEquals(b.getComment(), b2.getComment());
   }
 
   @Override
-  public Boolean visit(ArrayType a, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final LineComment l, CodeVisitor arg) {
+    final LineComment l2 = (LineComment) arg;
+    return objectEquals(l.getContent(), l2.getContent()) &&
+        objectEquals(l.getCommentedNode(), l2.getCommentedNode()) &&
+        objectEquals(l.getComment(), l2.getComment());
   }
 
   @Override
-  public Boolean visit(BarrierType b, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final ArrayType a, CodeVisitor arg) {
+    final ArrayType a2 = (ArrayType) arg;
+    return objectEquals(a.getElementType(), a2.getElementType()) &&
+        objectEquals(a.getComment(), a2.getComment());
   }
 
   @Override
-  public Boolean visit(ByteType b, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final BarrierType b, CodeVisitor arg) {
+    final BarrierType b2 = (BarrierType) arg;
+    return objectEquals(b.getComment(), b2.getComment());
   }
 
   @Override
-  public Boolean visit(ChannelEndType c, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final ByteType b, CodeVisitor arg) {
+    final ByteType b2 = (ByteType) arg;
+    return objectEquals(b.getComment(), b2.getComment());
   }
 
   @Override
-  public Boolean visit(ChannelType c, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final ChannelEndType c, CodeVisitor arg) {
+    final ChannelEndType c2 = (ChannelEndType) arg;
+    return objectEquals(c.getChannelEnd(), c2.getChannelEnd()) &&
+        objectEquals(c.getComponentType(), c2.getComponentType()) &&
+        objectEquals(c.getComment(), c2.getComment());
   }
 
   @Override
-  public Boolean visit(CharType c, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final ChannelType c, CodeVisitor arg) {
+    final ChannelType c2 = (ChannelType) arg;
+    return objectEquals(c.getChannelEnd(), c2.getChannelEnd()) &&
+        objectEquals(c.getComponentType(), c2.getComponentType()) &&
+        objectEquals(c.getComment(), c2.getComment());
   }
 
   @Override
-  public Boolean visit(DoubleType d, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final CharType c, CodeVisitor arg) {
+    final CharType c2 = (CharType) arg;
+    return objectEquals(c.getComment(), c2.getComment());
   }
 
   @Override
-  public Boolean visit(ExternalType e, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final DoubleType d, CodeVisitor arg) {
+    final DoubleType d2 = (DoubleType) arg;
+    return objectEquals(d.getComment(), d2.getComment());
   }
 
   @Override
-  public Boolean visit(FloatType f, CodeVisitor arg) {
+  public Boolean visit(final ExternalType e, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(IntegerType i, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final FloatType f, CodeVisitor arg) {
+    final FloatType f2 = (FloatType) arg;
+    return objectEquals(f.getComment(), f2.getComment());
   }
 
   @Override
-  public Boolean visit(LongType l, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final IntegerType i, CodeVisitor arg) {
+    final IntegerType i2 = (IntegerType) arg;
+    return objectEquals(i.getComment(), i2.getComment());
   }
 
   @Override
-  public Boolean visit(MethodCallType<?> m, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final LongType l, CodeVisitor arg) {
+    final LongType l2 = (LongType) arg;
+    return objectEquals(l.getComment(), l2.getComment());
   }
 
   @Override
-  public Boolean visit(MobileType m, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final MobileType m, CodeVisitor arg) {
+    final MobileType m2 = (MobileType) arg;
+    return objectEquals(m.doesYield(), m2.doesYield()) &&
+        objectEquals(m.getType(), m2.getType()) &&
+        objectsEquals(m.getTypeArguments(), m2.getTypeArguments()) &&
+        objectsEquals(m.getImplementedTypes(), m2.getImplementedTypes()) &&
+        objectEquals(m.getComment(), m2.getComment());
   }
 
   @Override
-  public Boolean visit(NullType n, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final NullType n, CodeVisitor arg) {
+    final NullType n2 = (NullType) arg;
+    return objectEquals(n.getComment(), n2.getComment());
   }
 
   @Override
-  public Boolean visit(ProcedureType p, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final ProcedureType p, CodeVisitor arg) {
+    final ProcedureType p2 = (ProcedureType) arg;
+    return objectEquals(p.doesYield(), p2.doesYield()) &&
+        objectEquals(p.getType(), p2.getType()) &&
+        objectsEquals(p.getTypeArguments(), p2.getTypeArguments()) &&
+        objectsEquals(p.getImplementedTypes(), p2.getImplementedTypes()) &&
+        objectEquals(p.getComment(), p2.getComment());
   }
 
   @Override
-  public Boolean visit(ProtocolTagType p, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final ProtocolTagType p, CodeVisitor arg) {
+    final ProtocolTagType p2 = (ProtocolTagType) arg;
+    return objectEquals(p.getName(), p2.getName()) &&
+        objectsEquals(p.getTypeFields(), p2.getTypeFields()) &&
+        objectEquals(p.getComment(), p2.getComment());
   }
 
   @Override
-  public Boolean visit(ProtocolType p, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final ProtocolType p, CodeVisitor arg) {
+    final ProtocolType p2 = (ProtocolType) arg;
+    return objectEquals(p.getName(), p2.getName()) &&
+        objectsEquals(p.getTypeFields(), p2.getTypeFields()) &&
+        objectEquals(p.getComment(), p2.getComment());
   }
 
   @Override
-  public Boolean visit(RecordType r, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final RecordType r, CodeVisitor arg) {
+    final RecordType r2 = (RecordType) arg;
+    return objectEquals(r.getName(), r2.getName()) &&
+        objectsEquals(r.getTypeFields(), r2.getTypeFields()) &&
+        objectEquals(r.getComment(), r2.getComment());
   }
 
   @Override
-  public Boolean visit(ShortType s, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final ShortType s, CodeVisitor arg) {
+    final ShortType s2 = (ShortType) arg;
+    return objectEquals(s.getComment(), s2.getComment());
   }
 
   @Override
-  public Boolean visit(StringType s, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final StringType s, CodeVisitor arg) {
+    final StringType s2 = (StringType) arg;
+    return objectEquals(s.getComment(), s2.getComment());
   }
 
   @Override
-  public Boolean visit(TimerType t, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final TimerType t, CodeVisitor arg) {
+    final TimerType t2 = (TimerType) arg;
+    return objectEquals(t.getComment(), t2.getComment());
   }
 
   @Override
-  public Boolean visit(UnknownType u, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final UnknownType u, CodeVisitor arg) {
+    final UnknownType u2 = (UnknownType) arg;
+    return objectEquals(u.getComment(), u2.getComment());
   }
 
   @Override
-  public Boolean visit(VoidType v, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final VoidType v, CodeVisitor arg) {
+    final VoidType v2 = (VoidType) arg;
+    return objectEquals(v.getComment(), v2.getComment());
   }
 }

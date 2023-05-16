@@ -156,7 +156,7 @@ public interface GenericVisitor<R, A> {
 
   R visit(final FieldAccessExpr f, A arg);
 
-  R viit(final IntegerLiteral i, A arg);
+  R visit(final IntegerLiteral i, A arg);
 
   R visit(final ListExpression<?> l, A arg);
 
@@ -225,8 +225,6 @@ public interface GenericVisitor<R, A> {
   R visit(final IntegerType i, A arg);
 
   R visit(final LongType l, A arg);
-
-  R visit(final MethodCallType<?> m, A arg);
 
   R visit(final MobileType m, A arg);
 

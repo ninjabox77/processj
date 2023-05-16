@@ -221,8 +221,6 @@ public interface VoidVisitor<A> {
 
   void visit(final LongType l, A arg);
 
-  void visit(final MethodCallType<?> m, A arg);
-
   void visit(final MobileType m, A arg);
 
   void visit(final NullType n, A arg);

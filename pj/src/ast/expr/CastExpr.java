@@ -74,7 +74,7 @@ public class CastExpr extends Expression<CastExpr> {
     return this;
   }
 
-  public boolean isIgnoringAutoboxing() {
+  public boolean isIgnoreAutoboxing() {
     return ignoreAutoboxing_;
   }
 

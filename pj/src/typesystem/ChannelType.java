@@ -13,7 +13,6 @@ import visitor.VoidVisitor;
  */
 public class ChannelType extends Constructed {
 
-
   public static final int SHARED_READ = 0x0001;
   public static final int SHARED_WRITE = 0x0002;
   public static final int SHARED = 0x0004;
