@@ -113,8 +113,6 @@ public interface VoidVisitor<A> {
    * Java nodes
    *********************************************************/
 
-  void visit(final BodyDeclaration<?> b, A arg);
-
   void visit(final ClassDeclaration c, A arg);
 
   void visit(final ConstructorDeclaration c, A arg);

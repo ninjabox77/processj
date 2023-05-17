@@ -257,62 +257,99 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
 
   @Override
   public Boolean visit(final ExpressionStmt e, CodeVisitor arg) {
-    return null;
+    final ExpressionStmt e2 = (ExpressionStmt) arg;
+    return objectEquals(e.getExpression(), e2.getExpression()) &&
+        objectEquals(e.getComment(), e2.getComment());
   }
 
   @Override
   public Boolean visit(final ForEachStmt f, CodeVisitor arg) {
-    return null;
+    final ForEachStmt f2 = (ForEachStmt) arg;
+    return objectEquals(f.getVariable(), f2.getVariable()) &&
+        objectEquals(f.getCollectionExpr(), f2.getCollectionExpr()) &&
+        objectEquals(f.getLoopBlock(), f2.getLoopBlock());
   }
 
   @Override
   public Boolean visit(final ForStmt f, CodeVisitor arg) {
-    return null;
+    final ForStmt f2 = (ForStmt) arg;
+    return objectEquals(f.getInitialization(), f2.getInitialization()) &&
+        objectEquals(f.getCondition(), f2.getCondition()) &&
+        objectEquals(f.getUpdate(), f2.getUpdate()) &&
+        objectEquals(f.getLoopBlock(), f2.getLoopBlock()) &&
+        objectEquals(f.getComment(), f2.getComment());
   }
 
   @Override
   public Boolean visit(final GuardStmt g, CodeVisitor arg) {
-    return null;
+    final GuardStmt g2 = (GuardStmt) arg;
+    return objectEquals(g.getExpression(), g2.getExpression()) &&
+        objectEquals(g.getStatement(), g2.getStatement()) &&
+        objectEquals(g.getComment(), g2.getComment());
   }
 
   @Override
   public Boolean visit(final IfStmt i, CodeVisitor arg) {
-    return null;
+    final IfStmt i2 = (IfStmt) arg;
+    return objectEquals(i.getConditional(), i2.getConditional()) &&
+        objectEquals(i.getIfPart(), i2.getIfPart()) &&
+        objectEquals(i.getElsePart(), i2.getElsePart()) &&
+        objectEquals(i.getComment(), i2.getComment());
   }
 
   @Override
   public Boolean visit(final RegularAltStmt r, CodeVisitor arg) {
-    return null;
+    final RegularAltStmt r2 = (RegularAltStmt) arg;
+    return objectsEquals(r.getGuards(), r2.getGuards()) &&
+        objectEquals(r.getGuards(), r2.getGuards()) &&
+        objectEquals(r.isFairAlt(), r2.isFairAlt()) &&
+        objectEquals(r.getComment(), r2.getComment());
   }
 
   @Override
   public Boolean visit(final ReturnStmt r, CodeVisitor arg) {
-    return null;
+    final ReturnStmt r2 = (ReturnStmt) arg;
+    return objectEquals(r.getExpression(), r2.getExpression()) &&
+        objectEquals(r.getComment(), r2.getComment());
   }
 
   @Override
   public Boolean visit(final SwitchStmt s, CodeVisitor arg) {
-    return null;
+    final SwitchStmt s2 = (SwitchStmt) arg;
+    return objectEquals(s.getSelector(), s2.getSelector()) &&
+        objectsEquals(s.getSwitchCases(), s2.getSwitchCases()) &&
+        objectEquals(s.getDefaultStmt(), s2.getDefaultStmt()) &&
+        objectEquals(s.getComment(), s2.getComment());
   }
 
   @Override
   public Boolean visit(final WhileStmt w, CodeVisitor arg) {
-    return null;
-  }
-
-  @Override
-  public Boolean visit(final BodyDeclaration<?> b, CodeVisitor arg) {
-    return null;
+    final WhileStmt w2 = (WhileStmt) arg;
+    return objectEquals(w.getCondition(), w2.getCondition()) &&
+        objectEquals(w.getLoopBlock(), w2.getLoopBlock()) &&
+        objectEquals(w.getComment(), w2.getComment());
   }
 
   @Override
   public Boolean visit(final ClassDeclaration c, CodeVisitor arg) {
-    return null;
+    final ClassDeclaration c2 = (ClassDeclaration) arg;
+    return objectEquals(c.getModifiers(), c2.getModifiers()) &&
+        objectEquals(c.getName(), c2.getName()) &&
+        objectsEquals(c.getDeclarations(), c2.getDeclarations()) &&
+        objectEquals(c.isInterface(), c2.isInterface()) &&
+        objectsEquals(c.getExtendedClasses(), c2.getExtendedClasses()) &&
+        objectsEquals(c.getImplementedClasses(), c2.getImplementedClasses());
   }
 
   @Override
   public Boolean visit(final ConstructorDeclaration c, CodeVisitor arg) {
-    return null;
+    final ConstructorDeclaration c2 = (ConstructorDeclaration) arg;
+    return objectEquals(c.getModifiers(), c2.getModifiers()) &&
+        objectEquals(c.getType(), c2.getType()) &&
+        objectEquals(c.getName(), c2.getName()) &&
+        objectEquals(c.getBody(), c2.getBody()) &&
+        objectsEquals(c.getParameters(), c2.getParameters()) &&
+        objectEquals(c.getComment(), c2.getComment());
   }
 
   @Override

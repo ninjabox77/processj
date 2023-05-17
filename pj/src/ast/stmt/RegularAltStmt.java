@@ -11,7 +11,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class RegularAltStmt extends AltStmt {
+public class RegularAltStmt extends AltStmt<RegularAltStmt> {
 
   private boolean fairAlt_;
 

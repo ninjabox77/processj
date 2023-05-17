@@ -147,7 +147,7 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public EmptyStmt asEmptyStmt() {
-    throw new IllegalStateException(String.format("%s is not an EmptyStmt, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not a EmptyStmt, it is a %s", this, getClass().getSimpleName()));
   }
 
   public boolean isContinueStmt() {
@@ -155,7 +155,7 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public ContinueStmt asContinueStmt() {
-    throw new IllegalStateException(String.format("%s is not an ContinueStmt, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not a ContinueStmt, it is a %s", this, getClass().getSimpleName()));
   }
 
   public boolean isBreakStmt() {
@@ -163,7 +163,7 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public BreakStmt asBreakStmt() {
-    throw new IllegalStateException(String.format("%s is not an BreakStmt, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not a BreakStmt, it is a %s", this, getClass().getSimpleName()));
   }
 
   public boolean isReturnStmt() {
@@ -180,6 +180,14 @@ public abstract class Statement extends AnnotatedNode {
 
   public ForEachStmt asForEachStmt() {
     throw new IllegalStateException(String.format("%s is not a ForEachStmt, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isExpressionStmt() {
+    return false;
+  }
+
+  public ExpressionStmt asExpressionStmt() {
+    throw new IllegalStateException(String.format("%s is not a ExpressionStmt, it is a %s", this, getClass().getSimpleName()));
   }
 
   @Override

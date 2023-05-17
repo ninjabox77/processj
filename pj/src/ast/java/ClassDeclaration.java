@@ -7,6 +7,7 @@ import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
+import javax.swing.text.html.Option;
 import java.util.Optional;
 
 /**
@@ -68,6 +69,10 @@ public class ClassDeclaration extends TypeDeclaration<ClassDeclaration> {
     implementedClasses_ = implementedClasses;
     setAsParentNodeOf(implementedClasses);
     return this;
+  }
+
+  public Optional<Sequence<ClassDeclaration>> getImplementedClasses() {
+    return Optional.ofNullable(implementedClasses_);
   }
 
   public ClassDeclaration setIsInterface(final boolean isInterface) {

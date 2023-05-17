@@ -113,8 +113,6 @@ public interface DefaultVisitor<R> {
    * Java nodes
    *********************************************************/
 
-  R visit(final BodyDeclaration<?> b);
-
   R visit(final ClassDeclaration c);
 
   R visit(final ConstructorDeclaration c);

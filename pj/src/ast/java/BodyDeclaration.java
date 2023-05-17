@@ -12,7 +12,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class BodyDeclaration<T extends BodyDeclaration<?>> extends AnnotatedNode implements Modifier<T> {
+public abstract class BodyDeclaration<T extends BodyDeclaration<?>> extends AnnotatedNode implements Modifier<T> {
 
   private int modifiers_;
 

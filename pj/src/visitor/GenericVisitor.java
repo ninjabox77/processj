@@ -118,8 +118,6 @@ public interface GenericVisitor<R, A> {
    * Java nodes
    *********************************************************/
 
-  R visit(final BodyDeclaration<?> b, A arg);
-
   R visit(final ClassDeclaration c, A arg);
 
   R visit(final ConstructorDeclaration c, A arg);
