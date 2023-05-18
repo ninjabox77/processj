@@ -29,8 +29,6 @@ public interface DefaultVisitor<R> {
 
   R visit(final Name n);
 
-  R visit(final Node n);
-
   R visit(final Package p);
 
   R visit(final Parameter p);

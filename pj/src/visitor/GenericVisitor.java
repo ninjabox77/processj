@@ -34,8 +34,6 @@ public interface GenericVisitor<R, A> {
 
   R visit(final Name n, A arg);
 
-  R visit(final Node n, A arg);
-
   R visit(final Package p, A arg);
 
   R visit(final Parameter p, A arg);

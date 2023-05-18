@@ -11,6 +11,7 @@ import ast.toplevel.*;
 import ast.types.*;
 import typesystem.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -107,12 +108,17 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
 
   @Override
   public Boolean visit(final ArrayDimension a, CodeVisitor arg) {
-    return null;
+    final ArrayDimension a2 = (ArrayDimension) arg;
+    return objectEquals(a.getDimension(), a2.getDimension()) &&
+        objectEquals(a.getComment(), a2.getComment());
   }
 
   @Override
   public Boolean visit(final ClassNode c, CodeVisitor arg) {
-    return null;
+    final ClassNode c2 = (ClassNode) arg;
+    return objectEquals(c.getName(), c2.getName()) &&
+        Arrays.equals(c.getBytes(), c2.getBytes()) &&
+        objectEquals(c.getComment(), c2.getComment());
   }
 
   @Override
@@ -122,52 +128,70 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
 
   @Override
   public Boolean visit(final Import i, CodeVisitor arg) {
-    return null;
+    final Import i2 = (Import) arg;
+    return objectEquals(i.getName(), i2.getName()) &&
+        objectEquals(i.getAlias(), i2.getAlias()) &&
+        objectEquals(i.getFieldName(), i2.getFieldName()) &&
+        objectEquals(i.isJavaImport(), i2.isJavaImport()) &&
+        objectEquals(i.isStar(), i2.isStar()) &&
+        objectEquals(i.getComment(), i2.getComment());
   }
 
   @Override
   public Boolean visit(final Name n, CodeVisitor arg) {
-    return null;
-  }
-
-  @Override
-  public Boolean visit(final Node n, CodeVisitor arg) {
-    return null;
+    final Name n2 = (Name) arg;
+    return objectEquals(n.getIdentifier(), n2.getIdentifier()) &&
+        objectEquals(n.getQualifier(), n2.getQualifier()) &&
+        objectEquals(n.getComment(), n2.getComment());
   }
 
   @Override
   public Boolean visit(final Package p, CodeVisitor arg) {
-    return null;
+    final Package p2 = (Package) arg;
+    return objectEquals(p.getName(), p2.getName()) &&
+        objectEquals(p.getComment(), p2.getComment());
   }
 
   @Override
   public Boolean visit(final Parameter p, CodeVisitor arg) {
-    return null;
+    final Parameter p2 = (Parameter) arg;
+    return objectEquals(p.getName(), p2.getName()) &&
+        objectEquals(p.getType(), p2.getType()) &&
+        objectEquals(p.getModifiers(), p2.getModifiers()) &&
+        objectEquals(p.getComment(), p2.getComment());
   }
 
   @Override
   public Boolean visit(final Sequence<?> s, CodeVisitor arg) {
-    return null;
+    return objectEquals(s, arg);
   }
 
   @Override
   public Boolean visit(final ArrayNode a, CodeVisitor arg) {
-    return null;
+    final ArrayNode a2 = (ArrayNode) arg;
+    return objectEquals(a.getType(), a2.getType()) &&
+        objectEquals(a.getComment(), a2.getComment());
   }
 
   @Override
   public Boolean visit(final BarrierNode b, CodeVisitor arg) {
-    return null;
+    final BarrierNode b2 = (BarrierNode) arg;
+    return objectEquals(b.getType(), b2.getType()) &&
+        objectEquals(b.getComment(), b2.getComment());
   }
 
   @Override
   public Boolean visit(final ChannelEndNode c, CodeVisitor arg) {
-    return null;
+    final ChannelEndNode c2 = (ChannelEndNode) arg;
+    return objectEquals(c.getType(), c2.getType()) &&
+        objectEquals(c.getComment(), c2.getComment());
   }
 
   @Override
   public Boolean visit(final ChannelNode c, CodeVisitor arg) {
-    return null;
+    final ChannelNode c2 = (ChannelNode) arg;
+    return objectEquals(c.getType(), c2.getType()) &&
+        objectEquals(c.getComment(), c2.getComment());
   }
 
   @Override
@@ -177,12 +201,16 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
 
   @Override
   public Boolean visit(final PrimitiveNode p, CodeVisitor arg) {
-    return null;
+    final PrimitiveNode p2 = (PrimitiveNode) arg;
+    return objectEquals(p.getType(), p2.getType()) &&
+        objectEquals(p.getComment(), p2.getComment());
   }
 
   @Override
   public Boolean visit(final TimerNode t, CodeVisitor arg) {
-    return null;
+    final TimerNode t2 = (TimerNode) arg;
+    return objectEquals(t.getType(), t2.getType()) &&
+        objectEquals(t.getComment(), t2.getComment());
   }
 
   @Override
@@ -227,39 +255,59 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
 
   @Override
   public Boolean visit(final BlockStmt b, CodeVisitor arg) {
-    return null;
+    final BlockStmt b2 = (BlockStmt) arg;
+    return objectEquals(b.getStatements(), b2.getStatements()) &&
+        objectEquals(b.getComment(), b2.getComment()) &&
+        objectsEquals(b.getStatementLabels(), b2.getStatementLabels());
   }
 
   @Override
   public Boolean visit(final BreakStmt b, CodeVisitor arg) {
-    return null;
+    final BreakStmt b2 = (BreakStmt) arg;
+    return objectEquals(b.getLabel(), b2.getLabel()) &&
+        objectEquals(b.getComment(), b2.getComment()) &&
+        objectsEquals(b.getStatementLabels(), b2.getStatementLabels());
   }
 
   @Override
   public Boolean visit(final CaseStmt c, CodeVisitor arg) {
-    return null;
+    final CaseStmt c2 = (CaseStmt) arg;
+    return objectEquals(c.getExpression(), c2.getExpression()) &&
+        objectEquals(c.getStatement(), c2.getStatement()) &&
+        objectsEquals(c.getStatementLabels(), c2.getStatementLabels()) &&
+        objectEquals(c.getComment(), c2.getComment());
   }
 
   @Override
   public Boolean visit(final ContinueStmt c, CodeVisitor arg) {
-    return null;
+    final ContinueStmt c2 = (ContinueStmt) arg;
+    return objectEquals(c.getLabel(), c2.getLabel()) &&
+        objectsEquals(c.getStatementLabels(), c2.getStatementLabels()) &&
+        objectEquals(c.getComment(), c2.getComment());
   }
 
   @Override
   public Boolean visit(final DoWhileStmt d, CodeVisitor arg) {
-    return null;
+    final DoWhileStmt d2 = (DoWhileStmt) arg;
+    return objectEquals(d.getCondition(), d2.getCondition()) &&
+        objectEquals(d.getLoopBlock(), d2.getLoopBlock()) &&
+        objectsEquals(d.getStatementLabels(), d2.getStatementLabels()) &&
+        objectEquals(d.getComment(), d2.getComment());
   }
 
   @Override
   public Boolean visit(final EmptyStmt e, CodeVisitor arg) {
-    return null;
+    final EmptyStmt e2 = (EmptyStmt) arg;
+    return objectEquals(e.getComment(), e2.getComment()) &&
+        objectsEquals(e.getStatementLabels(), e2.getStatementLabels());
   }
 
   @Override
   public Boolean visit(final ExpressionStmt e, CodeVisitor arg) {
     final ExpressionStmt e2 = (ExpressionStmt) arg;
     return objectEquals(e.getExpression(), e2.getExpression()) &&
-        objectEquals(e.getComment(), e2.getComment());
+        objectEquals(e.getComment(), e2.getComment()) &&
+        objectsEquals(e.getStatementLabels(), e2.getStatementLabels());
   }
 
   @Override
@@ -267,7 +315,9 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
     final ForEachStmt f2 = (ForEachStmt) arg;
     return objectEquals(f.getVariable(), f2.getVariable()) &&
         objectEquals(f.getCollectionExpr(), f2.getCollectionExpr()) &&
-        objectEquals(f.getLoopBlock(), f2.getLoopBlock());
+        objectEquals(f.getLoopBlock(), f2.getLoopBlock()) &&
+        objectEquals(f.getComment(), f2.getComment()) &&
+        objectsEquals(f.getStatementLabels(), f2.getStatementLabels());
   }
 
   @Override
@@ -277,7 +327,8 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
         objectEquals(f.getCondition(), f2.getCondition()) &&
         objectEquals(f.getUpdate(), f2.getUpdate()) &&
         objectEquals(f.getLoopBlock(), f2.getLoopBlock()) &&
-        objectEquals(f.getComment(), f2.getComment());
+        objectEquals(f.getComment(), f2.getComment()) &&
+        objectsEquals(f.getStatementLabels(), f2.getStatementLabels());
   }
 
   @Override
@@ -285,7 +336,8 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
     final GuardStmt g2 = (GuardStmt) arg;
     return objectEquals(g.getExpression(), g2.getExpression()) &&
         objectEquals(g.getStatement(), g2.getStatement()) &&
-        objectEquals(g.getComment(), g2.getComment());
+        objectEquals(g.getComment(), g2.getComment()) &&
+        objectsEquals(g.getStatementLabels(), g2.getStatementLabels());
   }
 
   @Override
@@ -294,7 +346,8 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
     return objectEquals(i.getConditional(), i2.getConditional()) &&
         objectEquals(i.getIfPart(), i2.getIfPart()) &&
         objectEquals(i.getElsePart(), i2.getElsePart()) &&
-        objectEquals(i.getComment(), i2.getComment());
+        objectEquals(i.getComment(), i2.getComment()) &&
+        objectsEquals(i.getStatementLabels(), i2.getStatementLabels());
   }
 
   @Override
@@ -303,14 +356,16 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
     return objectsEquals(r.getGuards(), r2.getGuards()) &&
         objectEquals(r.getGuards(), r2.getGuards()) &&
         objectEquals(r.isFairAlt(), r2.isFairAlt()) &&
-        objectEquals(r.getComment(), r2.getComment());
+        objectEquals(r.getComment(), r2.getComment()) &&
+        objectsEquals(r.getStatementLabels(), r2.getStatementLabels());
   }
 
   @Override
   public Boolean visit(final ReturnStmt r, CodeVisitor arg) {
     final ReturnStmt r2 = (ReturnStmt) arg;
     return objectEquals(r.getExpression(), r2.getExpression()) &&
-        objectEquals(r.getComment(), r2.getComment());
+        objectEquals(r.getComment(), r2.getComment()) &&
+        objectsEquals(r.getStatementLabels(), r2.getStatementLabels());
   }
 
   @Override
@@ -319,7 +374,8 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
     return objectEquals(s.getSelector(), s2.getSelector()) &&
         objectsEquals(s.getSwitchCases(), s2.getSwitchCases()) &&
         objectEquals(s.getDefaultStmt(), s2.getDefaultStmt()) &&
-        objectEquals(s.getComment(), s2.getComment());
+        objectEquals(s.getComment(), s2.getComment()) &&
+        objectsEquals(s.getStatementLabels(), s2.getStatementLabels());
   }
 
   @Override
@@ -327,7 +383,8 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
     final WhileStmt w2 = (WhileStmt) arg;
     return objectEquals(w.getCondition(), w2.getCondition()) &&
         objectEquals(w.getLoopBlock(), w2.getLoopBlock()) &&
-        objectEquals(w.getComment(), w2.getComment());
+        objectEquals(w.getComment(), w2.getComment()) &&
+        objectsEquals(w.getStatementLabels(), w2.getStatementLabels());
   }
 
   @Override

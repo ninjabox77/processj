@@ -29,8 +29,6 @@ public interface VoidVisitor<A> {
 
   void visit(final Name n, A arg);
 
-  void visit(final Node n, A arg);
-
   void visit(final Package p, A arg);
 
   void visit(final Parameter p, A arg);

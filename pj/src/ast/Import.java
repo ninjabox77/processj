@@ -77,6 +77,10 @@ public class Import extends AnnotatedNode {
     return this;
   }
 
+  public boolean isStar() {
+    return isStar_;
+  }
+
   public Import setAlias(final String alias) {
     if (Objects.equals(alias, alias_)) {
       return this;

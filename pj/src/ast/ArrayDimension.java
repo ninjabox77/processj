@@ -34,11 +34,11 @@ public class ArrayDimension extends Node {
     this(null, new IntegerLiteral(String.valueOf(dimension)));
   }
 
-  public ArrayDimension(Expression dimension) {
+  public ArrayDimension(Expression<?> dimension) {
     this(null, dimension);
   }
 
-  public ArrayDimension(Token token, Expression dimension) {
+  public ArrayDimension(Token token, Expression<?> dimension) {
     super(token);
     setDimension(dimension);
   }
