@@ -215,7 +215,13 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
 
   @Override
   public Boolean visit(final ConstantTopLevel c, CodeVisitor arg) {
-    return null;
+    final ConstantTopLevel c2 = (ConstantTopLevel) arg;
+    return objectEquals(c.getModifiers(), c2.getModifiers()) &&
+        objectEquals(c.getType(), c2.getType()) &&
+        objectEquals(c.getName(), c2.getName()) &&
+        objectEquals(c.getRightExpression(), c2.getRightExpression()) &&
+        objectsEquals(c.getImplementedNames(), c2.getImplementedNames()) &&
+        objectEquals(c.getComment(), c2.getComment());
   }
 
   @Override
@@ -224,33 +230,60 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
-  public Boolean visit(final MethodCallTopLevel<?> m, CodeVisitor arg) {
-    return null;
-  }
-
-  @Override
-  public Boolean visit(final MobileDeclaration m, CodeVisitor arg) {
-    return null;
+  public Boolean visit(final MethodCallableTopLevel<?> m, CodeVisitor arg) {
+    final MethodCallableTopLevel<?> m2 = (MethodCallableTopLevel<?>) arg;
+    return objectEquals(m.getModifiers(), m2.getModifiers()) &&
+        objectEquals(m.getType(), m2.getType()) &&
+        objectEquals(m.getName(), m2.getName()) &&
+        objectEquals(m.getType(), m2.getType()) &&
+        objectEquals(m.getParameters(), m2.getParameters()) &&
+        objectEquals(m.getBody(), m2.getBody()) &&
+        objectsEquals(m.getImplementedNames(), m2.getImplementedNames()) &&
+        objectEquals(m.getComment(), m2.getComment());
   }
 
   @Override
   public Boolean visit(final ProcedureTopLevel p, CodeVisitor arg) {
-    return null;
+    final ProcedureTopLevel p2 = (ProcedureTopLevel) arg;
+    return objectEquals(p.getModifiers(), p2.getModifiers()) &&
+        objectEquals(p.getType(), p2.getType()) &&
+        objectEquals(p.getName(), p2.getName()) &&
+        objectEquals(p.getType(), p2.getType()) &&
+        objectEquals(p.getParameters(), p2.getParameters()) &&
+        objectEquals(p.getBody(), p2.getBody()) &&
+        objectEquals(p.doesYield(), p2.doesYield()) &&
+        objectsEquals(p.getImplementedNames(), p2.getImplementedNames()) &&
+        objectEquals(p.getComment(), p2.getComment());
   }
 
   @Override
   public Boolean visit(final ProtocolTagDeclaration p, CodeVisitor arg) {
-    return null;
+    final ProtocolTagDeclaration p2 = (ProtocolTagDeclaration) arg;
+    return objectEquals(p.getName(), p2.getName()) &&
+        objectsEquals(p.getDeclaredFields(), p2.getDeclaredFields()) &&
+        objectEquals(p.getComment(), p2.getComment());
   }
 
   @Override
   public Boolean visit(final ProtocolTopLevel p, CodeVisitor arg) {
-    return null;
+    final ProtocolTopLevel p2 = (ProtocolTopLevel) arg;
+    return objectEquals(p.getModifiers(), p2.getModifiers()) &&
+        objectEquals(p.getType(), p2.getType()) &&
+        objectEquals(p.getName(), p2.getName()) &&
+        objectsEquals(p.getDeclaredTags(), p2.getDeclaredTags()) &&
+        objectsEquals(p.getImplementedNames(), p2.getImplementedNames()) &&
+        objectEquals(p.getComment(), p2.getComment());
   }
 
   @Override
   public Boolean visit(final RecordTopLevel r, CodeVisitor arg) {
-    return null;
+    final RecordTopLevel r2 = (RecordTopLevel) arg;
+    return objectEquals(r.getModifiers(), r2.getModifiers()) &&
+        objectEquals(r.getType(), r2.getType()) &&
+        objectEquals(r.getName(), r2.getName()) &&
+        objectsEquals(r.getDeclaredFields(), r2.getDeclaredFields()) &&
+        objectsEquals(r.getImplementedNames(), r2.getImplementedNames()) &&
+        objectEquals(r.getComment(), r2.getComment());
   }
 
   @Override

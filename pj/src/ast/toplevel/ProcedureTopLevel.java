@@ -14,7 +14,9 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ProcedureTopLevel extends MethodCallTopLevel<ProcedureTopLevel> {
+public class ProcedureTopLevel extends MethodCallableTopLevel<ProcedureTopLevel> {
+
+  private boolean yields_;
 
   public ProcedureTopLevel() {
     this(null, null, false);
@@ -37,7 +39,20 @@ public class ProcedureTopLevel extends MethodCallTopLevel<ProcedureTopLevel> {
   }
 
   public ProcedureTopLevel(Token token, final int modifiers, Type type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<Parameter> parameters, BlockStmt body, final boolean yields) {
-    super(token, modifiers, type, name, implementedNames, parameters, body, yields);
+    super(token, modifiers, type, name, implementedNames, parameters, body);
+    setYields(yields);
+  }
+
+  public ProcedureTopLevel setYields(final boolean yields) {
+    if (yields == yields_) {
+      return this;
+    }
+    yields_ = yields;
+    return this;
+  }
+
+  public boolean doesYield() {
+    return yields_;
   }
 
   @Override

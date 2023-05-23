@@ -14,17 +14,36 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class MethodCallTopLevel<T extends MethodCallTopLevel<?>> extends TopLevelDeclaration<T> {
+public class MethodCallableTopLevel<T extends MethodCallableTopLevel<?>> extends TopLevelDeclaration<T> {
 
   private Sequence<Parameter> parameters_;
   private BlockStmt body_;
   private boolean yields_;
 
-  public MethodCallTopLevel(Token token, int modifiers, Type type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<Parameter> parameters, BlockStmt body, final boolean yields) {
+  public MethodCallableTopLevel() {
+    this(null, null);
+  }
+
+  public MethodCallableTopLevel(Type type, final String name) {
+    this(ACC_PUBLIC, type, name);
+  }
+
+  public MethodCallableTopLevel(int modifiers, Type type, final String name) {
+    this(modifiers, type, name, null);
+  }
+
+  public MethodCallableTopLevel(int modifiers, Type type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
+    this(modifiers, type, name, implementedNames, new BlockStmt());
+  }
+
+  public MethodCallableTopLevel(int modifiers, Type type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, BlockStmt body) {
+    this(null, modifiers, type, name, implementedNames, null, body);
+  }
+
+  public MethodCallableTopLevel(Token token, int modifiers, Type type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<Parameter> parameters, BlockStmt body) {
     super(token, modifiers, type, name, implementedNames);
     setParameters(parameters);
     setBody(body);
-    setYields(yields);
   }
 
   public T setParameters(Sequence<Parameter> parameters) {
@@ -59,18 +78,6 @@ public class MethodCallTopLevel<T extends MethodCallTopLevel<?>> extends TopLeve
     return body_;
   }
 
-  public T setYields(final boolean yields) {
-    if (yields == yields_) {
-      return (T) this;
-    }
-    yields_ = yields;
-    return (T) this;
-  }
-
-  public boolean doesYield() {
-    return yields_;
-  }
-
   public boolean isProcedureTopLevel() {
     return false;
   }
@@ -79,21 +86,13 @@ public class MethodCallTopLevel<T extends MethodCallTopLevel<?>> extends TopLeve
     throw new IllegalStateException(String.format("%s is not a ProcedureDeclaration, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isMobileDeclaration() {
-    return false;
-  }
-
-  public MobileDeclaration asMobileDeclaration() {
-    throw new IllegalStateException(String.format("%s is not a MobileDeclaration, it is a %s", this, getClass().getSimpleName()));
-  }
-
   @Override
-  public boolean isMethodCallTopLevel() {
+  public boolean isMethodCallableTopLevel() {
     return true;
   }
 
   @Override
-  public MethodCallTopLevel<?> asMethodCallTopLevel() {
+  public MethodCallableTopLevel<?> asMethodCallableTopLevel() {
     return this;
   }
 
