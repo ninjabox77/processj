@@ -4,6 +4,9 @@ import ast.CompileUnit;
 import ast.Sequence;
 import ast.ClassNode;
 import org.antlr.v4.runtime.Token;
+import visitor.DefaultVisitor;
+import visitor.GenericVisitor;
+import visitor.VoidVisitor;
 
 import java.io.File;
 import java.util.HashMap;
@@ -81,5 +84,20 @@ public class CompilationUnit extends ProcessingUnit {
     final String path = file.getAbsolutePath();
     // TODO:
     return this;
+  }
+
+  @Override
+  public <T, A> T accept(GenericVisitor<T, A> v, A arg) {
+    return null;
+  }
+
+  @Override
+  public <A> void accept(VoidVisitor<A> v, A arg) {
+
+  }
+
+  @Override
+  public <T> T accept(DefaultVisitor<T> v) {
+    return null;
   }
 }

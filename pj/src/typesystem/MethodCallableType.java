@@ -3,9 +3,6 @@ package typesystem;
 import ast.Node;
 import ast.Sequence;
 import org.antlr.v4.runtime.Token;
-import visitor.DefaultVisitor;
-import visitor.GenericVisitor;
-import visitor.VoidVisitor;
 
 import java.util.Optional;
 
@@ -15,22 +12,22 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public abstract class MethodCallType<T extends MethodCallType<?>> extends Constructed {
+public abstract class MethodCallableType<T extends MethodCallableType<?>> extends Constructed {
 
   private boolean yields_;
   private Type returnType_;
   private Sequence<Type> typeArguments_;
   private Sequence<Type> implementedTypes_;
 
-  public MethodCallType() {
+  public MethodCallableType() {
     this(null, new VoidType(), null, null, false);
   }
 
-  public MethodCallType(Type type, Sequence<Type> typeArguments, final boolean yields) {
+  public MethodCallableType(Type type, Sequence<Type> typeArguments, final boolean yields) {
     this(null, type, typeArguments, null, yields);
   }
 
-  public MethodCallType(Token token, Type returnType, Sequence<Type> typeArguments, Sequence<Type> implementedTypes, final boolean yields) {
+  public MethodCallableType(Token token, Type returnType, Sequence<Type> typeArguments, Sequence<Type> implementedTypes, final boolean yields) {
     super(token);
     setType(returnType);
     setTypeArguments(typeArguments);
@@ -172,27 +169,27 @@ public abstract class MethodCallType<T extends MethodCallType<?>> extends Constr
   }
 
   @Override
-  public boolean isMethodCallType() {
+  public boolean isMethodCallableType() {
     return true;
   }
 
   @Override
-  public MethodCallType<?> asMethodCallType() {
+  public MethodCallableType<?> asMethodCallableType() {
     return this;
   }
 
-  @Override
-  public <T, A> T accept(GenericVisitor<T, A> v, A arg) {
-    return v.visit(this, arg);
-  }
-
-  @Override
-  public <A> void accept(VoidVisitor<A> v, A arg) {
-    v.visit(this, arg);
-  }
-
-  @Override
-  public <T> T accept(DefaultVisitor<T> v) {
-    return v.visit(this);
-  }
+//  @Override
+//  public <T, A> T accept(GenericVisitor<T, A> v, A arg) {
+//    return v.visit(this, arg);
+//  }
+//
+//  @Override
+//  public <A> void accept(VoidVisitor<A> v, A arg) {
+//    v.visit(this, arg);
+//  }
+//
+//  @Override
+//  public <T> T accept(DefaultVisitor<T> v) {
+//    return v.visit(this);
+//  }
 }

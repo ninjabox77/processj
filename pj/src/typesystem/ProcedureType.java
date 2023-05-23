@@ -13,7 +13,7 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public class ProcedureType extends MethodCallType<ProcedureType> {
+public class ProcedureType extends MethodCallableType<ProcedureType> {
 
   public ProcedureType() {
     this(null);

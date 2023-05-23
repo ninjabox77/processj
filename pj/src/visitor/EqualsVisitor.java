@@ -421,6 +421,17 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
+  public Boolean visit(final ReplicatedAltStmt r, CodeVisitor arg) {
+    final ReplicatedAltStmt r2 = (ReplicatedAltStmt) arg;
+    return objectsEquals(r.getStatementLabels(), r2.getStatementLabels()) &&
+        objectsEquals(r.getGuards(), r2.getGuards()) &&
+        objectEquals(r.getInitialization(), r2.getInitialization()) &&
+        objectEquals(r.getConditional(), r2.getConditional()) &&
+        objectEquals(r.getUpdate(), r2.getUpdate()) &&
+        objectEquals(r.getComment(), r2.getComment());
+  }
+
+  @Override
   public Boolean visit(final ClassDeclaration c, CodeVisitor arg) {
     final ClassDeclaration c2 = (ClassDeclaration) arg;
     return objectEquals(c.getModifiers(), c2.getModifiers()) &&
@@ -481,6 +492,13 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   public Boolean visit(final BooleanExpr b, CodeVisitor arg) {
     final BooleanExpr b2 = (BooleanExpr) arg;
     return objectEquals(b.getExpression(), b2.getExpression()) &&
+        objectEquals(b.getComment(), b2.getComment());
+  }
+
+  @Override
+  public Boolean visit(final BooleanLiteral b, CodeVisitor arg) {
+    final BooleanLiteral b2 = (BooleanLiteral) arg;
+    return objectEquals(b.getValue(), b2.getValue()) &&
         objectEquals(b.getComment(), b2.getComment());
   }
 
@@ -690,6 +708,15 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
     final UnaryPlusExpr u2 = (UnaryPlusExpr) arg;
     return objectEquals(u.getExpression(), u2.getExpression()) &&
         objectEquals(u.getComment(), u2.getComment());
+  }
+
+  @Override
+  public Boolean visit(final VariableExpr v, CodeVisitor arg) {
+    final VariableExpr v2 = (VariableExpr) arg;
+    return objectEquals(v.getModifiers(), v2.getModifiers()) &&
+        objectEquals(v.getName(), v2.getName()) &&
+        objectEquals(v.getAccessVariable(), v2.getAccessVariable()) &&
+        objectEquals(v.getComment(), v2.getComment());
   }
 
   @Override

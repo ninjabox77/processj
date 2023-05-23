@@ -14,7 +14,7 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public class MobileType extends MethodCallType<MobileType> {
+public class MobileType extends MethodCallableType<MobileType> {
 
   public MobileType() {
     this(null, null);

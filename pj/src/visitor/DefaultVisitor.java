@@ -105,6 +105,8 @@ public interface DefaultVisitor<R> {
 
   R visit(final WhileStmt w);
 
+  R visit(final ReplicatedAltStmt r);
+
   /*********************************************************
    * Java nodes
    *********************************************************/
@@ -126,6 +128,8 @@ public interface DefaultVisitor<R> {
   R visit(final BinaryExpr b);
 
   R visit(final BooleanExpr b);
+
+  R visit(final BooleanLiteral b);
 
   R visit(final CallableExpr c);
 
@@ -180,6 +184,8 @@ public interface DefaultVisitor<R> {
   R visit(final UnaryMinusExpr u);
 
   R visit(final UnaryPlusExpr u);
+
+  R visit(final VariableExpr v);
 
   /*********************************************************
    * Comments nodes

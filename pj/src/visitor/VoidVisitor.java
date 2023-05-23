@@ -105,6 +105,8 @@ public interface VoidVisitor<A> {
 
   void visit(final WhileStmt w, A arg);
 
+  void visit(final ReplicatedAltStmt r, A arg);
+
   /*********************************************************
    * Java nodes
    *********************************************************/
@@ -126,6 +128,8 @@ public interface VoidVisitor<A> {
   void visit(final BinaryExpr b, A arg);
 
   void visit(final BooleanExpr b, A arg);
+
+  void visit(final BooleanLiteral b, A arg);
 
   void visit(final CallableExpr c, A arg);
 
@@ -180,6 +184,8 @@ public interface VoidVisitor<A> {
   void visit(final UnaryMinusExpr u, A arg);
 
   void visit(final UnaryPlusExpr u, A arg);
+
+  void visit(final VariableExpr v, A arg);
 
   /*********************************************************
    * Comments nodes

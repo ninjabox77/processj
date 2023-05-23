@@ -110,6 +110,8 @@ public interface GenericVisitor<R, A> {
 
   R visit(final WhileStmt w, A arg);
 
+  R visit(final ReplicatedAltStmt r, A arg);
+
   /*********************************************************
    * Java nodes
    *********************************************************/
@@ -131,6 +133,8 @@ public interface GenericVisitor<R, A> {
   R visit(final BinaryExpr b, A arg);
 
   R visit(final BooleanExpr b, A arg);
+
+  R visit(final BooleanLiteral b, A arg);
 
   R visit(final CallableExpr c, A arg);
 
@@ -185,6 +189,8 @@ public interface GenericVisitor<R, A> {
   R visit(final UnaryMinusExpr u, A arg);
 
   R visit(final UnaryPlusExpr u, A arg);
+
+  R visit(final VariableExpr v, A arg);
 
   /*********************************************************
    * Comments nodes

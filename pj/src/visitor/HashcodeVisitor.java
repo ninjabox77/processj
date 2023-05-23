@@ -23,482 +23,518 @@ import typesystem.*;
 public class HashcodeVisitor implements DefaultVisitor<Integer> {
 
   @Override
-  public Integer visit(AnnotationNode a) {
+  public Integer visit(final AnnotationNode a) {
     return null;
   }
 
   @Override
-  public Integer visit(ArrayDimension a) {
-    return null;
+  public Integer visit(final ArrayDimension a) {
+    return (a.getDimension().isPresent() ? a.getDimension().get().accept(this) : 0) * 31;
   }
 
   @Override
-  public Integer visit(ClassNode c) {
+  public Integer visit(final ClassNode c) {
     return null;
   }
 
   @Override
-  public Integer visit(CompileUnit c) {
+  public Integer visit(final CompileUnit c) {
     return null;
   }
 
   @Override
-  public Integer visit(Import i) {
+  public Integer visit(final Import i) {
     return null;
   }
 
   @Override
-  public Integer visit(Name n) {
+  public Integer visit(final Name n) {
     return null;
   }
 
   @Override
-  public Integer visit(Package p) {
+  public Integer visit(final Package p) {
     return null;
   }
 
   @Override
-  public Integer visit(Parameter p) {
+  public Integer visit(final Parameter p) {
     return null;
   }
 
   @Override
-  public Integer visit(Sequence<?> s) {
-    return null;
+  public Integer visit(final Sequence<?> s) {
+    int hash = 0;
+    for (Object object : s)
+      hash += ((CodeVisitor) object).accept(this) * 31;
+    return hash;
   }
 
   @Override
-  public Integer visit(ArrayNode a) {
+  public Integer visit(final ArrayNode a) {
     return null;
   }
 
   @Override
-  public Integer visit(BarrierNode b) {
+  public Integer visit(final BarrierNode b) {
     return null;
   }
 
   @Override
-  public Integer visit(ChannelEndNode c) {
+  public Integer visit(final ChannelEndNode c) {
     return null;
   }
 
   @Override
-  public Integer visit(ChannelNode c) {
+  public Integer visit(final ChannelNode c) {
     return null;
   }
 
   @Override
-  public Integer visit(ExternalNode e) {
+  public Integer visit(final ExternalNode e) {
     return null;
   }
 
   @Override
-  public Integer visit(PrimitiveNode p) {
+  public Integer visit(final PrimitiveNode p) {
     return null;
   }
 
   @Override
-  public Integer visit(TimerNode t) {
+  public Integer visit(final TimerNode t) {
     return null;
   }
 
   @Override
-  public Integer visit(ConstantTopLevel c) {
+  public Integer visit(final ConstantTopLevel c) {
     return null;
   }
 
   @Override
-  public Integer visit(ExternalTopLevel e) {
+  public Integer visit(final ExternalTopLevel e) {
     return null;
   }
 
   @Override
-  public Integer visit(MethodCallableTopLevel<?> m) {
+  public Integer visit(final MethodCallableTopLevel<?> m) {
     return null;
   }
 
   @Override
-  public Integer visit(ProcedureTopLevel p) {
+  public Integer visit(final ProcedureTopLevel p) {
     return null;
   }
 
   @Override
-  public Integer visit(ProtocolTagDeclaration p) {
+  public Integer visit(final ProtocolTagDeclaration p) {
     return null;
   }
 
   @Override
-  public Integer visit(ProtocolTopLevel p) {
+  public Integer visit(final ProtocolTopLevel p) {
     return null;
   }
 
   @Override
-  public Integer visit(RecordTopLevel r) {
+  public Integer visit(final RecordTopLevel r) {
     return null;
   }
 
   @Override
-  public Integer visit(BlockStmt b) {
+  public Integer visit(final BlockStmt b) {
     return null;
   }
 
   @Override
-  public Integer visit(BreakStmt b) {
+  public Integer visit(final BreakStmt b) {
     return null;
   }
 
   @Override
-  public Integer visit(CaseStmt c) {
+  public Integer visit(final CaseStmt c) {
     return null;
   }
 
   @Override
-  public Integer visit(ContinueStmt c) {
+  public Integer visit(final ContinueStmt c) {
     return null;
   }
 
   @Override
-  public Integer visit(DoWhileStmt d) {
+  public Integer visit(final DoWhileStmt d) {
     return null;
   }
 
   @Override
-  public Integer visit(EmptyStmt e) {
+  public Integer visit(final EmptyStmt e) {
     return null;
   }
 
   @Override
-  public Integer visit(ExpressionStmt e) {
+  public Integer visit(final ExpressionStmt e) {
     return null;
   }
 
   @Override
-  public Integer visit(ForEachStmt f) {
+  public Integer visit(final ForEachStmt f) {
     return null;
   }
 
   @Override
-  public Integer visit(ForStmt f) {
+  public Integer visit(final ForStmt f) {
     return null;
   }
 
   @Override
-  public Integer visit(GuardStmt g) {
+  public Integer visit(final GuardStmt g) {
     return null;
   }
 
   @Override
-  public Integer visit(IfStmt i) {
+  public Integer visit(final IfStmt i) {
     return null;
   }
 
   @Override
-  public Integer visit(RegularAltStmt r) {
+  public Integer visit(final RegularAltStmt r) {
     return null;
   }
 
   @Override
-  public Integer visit(ReturnStmt r) {
+  public Integer visit(final ReturnStmt r) {
     return null;
   }
 
   @Override
-  public Integer visit(SwitchStmt s) {
+  public Integer visit(final SwitchStmt s) {
     return null;
   }
 
   @Override
-  public Integer visit(WhileStmt w) {
+  public Integer visit(final WhileStmt w) {
     return null;
   }
 
   @Override
-  public Integer visit(ClassDeclaration c) {
+  public Integer visit(final ReplicatedAltStmt r) {
     return null;
   }
 
   @Override
-  public Integer visit(ConstructorDeclaration c) {
+  public Integer visit(final ClassDeclaration c) {
     return null;
   }
 
   @Override
-  public Integer visit(FieldDeclaration f) {
+  public Integer visit(final ConstructorDeclaration c) {
     return null;
   }
 
   @Override
-  public Integer visit(MethodDeclaration<?> m) {
+  public Integer visit(final FieldDeclaration f) {
     return null;
   }
 
   @Override
-  public Integer visit(ArrayExpr a) {
+  public Integer visit(final MethodDeclaration<?> m) {
     return null;
   }
 
   @Override
-  public Integer visit(BinaryExpr b) {
+  public Integer visit(final ArrayExpr a) {
     return null;
   }
 
   @Override
-  public Integer visit(BooleanExpr b) {
+  public Integer visit(final BinaryExpr b) {
     return null;
   }
 
   @Override
-  public Integer visit(CallableExpr c) {
+  public Integer visit(final BooleanExpr b) {
     return null;
   }
 
   @Override
-  public Integer visit(CastExpr c) {
+  public Integer visit(final BooleanLiteral b) {
     return null;
   }
 
   @Override
-  public Integer visit(CharLiteral c) {
+  public Integer visit(final CallableExpr c) {
     return null;
   }
 
   @Override
-  public Integer visit(ClassExpr c) {
+  public Integer visit(final CastExpr c) {
     return null;
   }
 
   @Override
-  public Integer visit(ConstructorCallExpr c) {
+  public Integer visit(final CharLiteral c) {
     return null;
   }
 
   @Override
-  public Integer visit(DeclarationExpr d) {
+  public Integer visit(final ClassExpr c) {
     return null;
   }
 
   @Override
-  public Integer visit(DoubleLiteral d) {
+  public Integer visit(final ConstructorCallExpr c) {
     return null;
   }
 
   @Override
-  public Integer visit(EmptyExpr e) {
+  public Integer visit(final DeclarationExpr d) {
     return null;
   }
 
   @Override
-  public Integer visit(FieldAccessExpr f) {
+  public Integer visit(final DoubleLiteral d) {
     return null;
   }
 
   @Override
-  public Integer visit(IntegerLiteral i) {
+  public Integer visit(final EmptyExpr e) {
     return null;
   }
 
   @Override
-  public Integer visit(ListExpression<?> l) {
+  public Integer visit(final FieldAccessExpr f) {
     return null;
   }
 
   @Override
-  public Integer visit(LongLiteral l) {
+  public Integer visit(final IntegerLiteral i) {
     return null;
   }
 
   @Override
-  public Integer visit(MapEntryExpr m) {
+  public Integer visit(final ListExpression<?> l) {
     return null;
   }
 
   @Override
-  public Integer visit(MapExpr m) {
+  public Integer visit(final LongLiteral l) {
     return null;
   }
 
   @Override
-  public Integer visit(MethodCallExpr m) {
+  public Integer visit(final MapEntryExpr m) {
     return null;
   }
 
   @Override
-  public Integer visit(NewArrayExpr n) {
+  public Integer visit(final MapExpr m) {
     return null;
   }
 
   @Override
-  public Integer visit(NotExpression n) {
+  public Integer visit(final MethodCallExpr m) {
     return null;
   }
 
   @Override
-  public Integer visit(NullLiteral n) {
+  public Integer visit(final NewArrayExpr n) {
     return null;
   }
 
   @Override
-  public Integer visit(PostfixExpr p) {
+  public Integer visit(final NotExpression n) {
     return null;
   }
 
   @Override
-  public Integer visit(PrefixExpr p) {
+  public Integer visit(final NullLiteral n) {
     return null;
   }
 
   @Override
-  public Integer visit(ProtocolExpr p) {
+  public Integer visit(final PostfixExpr p) {
     return null;
   }
 
   @Override
-  public Integer visit(RecordExpr r) {
+  public Integer visit(final PrefixExpr p) {
     return null;
   }
 
   @Override
-  public Integer visit(SkipExpr s) {
+  public Integer visit(final ProtocolExpr p) {
     return null;
   }
 
   @Override
-  public Integer visit(StopExpr s) {
+  public Integer visit(final RecordExpr r) {
     return null;
   }
 
   @Override
-  public Integer visit(TernaryExpr t) {
+  public Integer visit(final SkipExpr s) {
     return null;
   }
 
   @Override
-  public Integer visit(UnaryMinusExpr u) {
+  public Integer visit(final StopExpr s) {
     return null;
   }
 
   @Override
-  public Integer visit(UnaryPlusExpr u) {
+  public Integer visit(final TernaryExpr t) {
     return null;
   }
 
   @Override
-  public Integer visit(BlockComment b) {
+  public Integer visit(final UnaryMinusExpr u) {
     return null;
   }
 
   @Override
-  public Integer visit(LineComment l) {
+  public Integer visit(final UnaryPlusExpr u) {
     return null;
   }
 
   @Override
-  public Integer visit(ArrayType a) {
+  public Integer visit(final VariableExpr v) {
     return null;
   }
 
   @Override
-  public Integer visit(BarrierType b) {
+  public Integer visit(final BlockComment b) {
     return null;
   }
 
   @Override
-  public Integer visit(ByteType b) {
+  public Integer visit(final LineComment l) {
     return null;
   }
 
   @Override
-  public Integer visit(ChannelEndType c) {
+  public Integer visit(final ArrayType a) {
     return null;
   }
 
   @Override
-  public Integer visit(ChannelType c) {
+  public Integer visit(final BarrierType b) {
     return null;
   }
 
   @Override
-  public Integer visit(CharType c) {
+  public Integer visit(final ByteType b) {
     return null;
   }
 
   @Override
-  public Integer visit(DoubleType d) {
+  public Integer visit(final ChannelEndType c) {
     return null;
   }
 
   @Override
-  public Integer visit(ExternalType e) {
+  public Integer visit(final ChannelType c) {
     return null;
   }
 
   @Override
-  public Integer visit(FloatType f) {
-    return null;
+  public Integer visit(final CharType c) {
+    return c.hashCode() * 31 +
+        (c.getComment().isPresent() ? c.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
-  public Integer visit(IntegerType i) {
-    return null;
+  public Integer visit(final DoubleType d) {
+    return d.hashCode() * 31 +
+        (d.getComment().isPresent() ? d.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
-  public Integer visit(LongType l) {
-    return null;
+  public Integer visit(final ExternalType e) {
+    return e.hashCode() * 31 +
+        (e.getComment().isPresent() ? e.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
-  public Integer visit(MobileType m) {
-    return null;
+  public Integer visit(final FloatType f) {
+    return f.hashCode() * 31 +
+        (f.getComment().isPresent() ? f.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
-  public Integer visit(NullType n) {
-    return null;
+  public Integer visit(final IntegerType i) {
+    return i.hashCode() * 31 +
+        (i.getComment().isPresent() ? i.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
-  public Integer visit(ProcedureType p) {
-    return null;
+  public Integer visit(final LongType l) {
+    return l.hashCode() * 31 +
+        (l.getComment().isPresent() ? l.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
-  public Integer visit(ProtocolTagType p) {
+  public Integer visit(final MobileType m) {
     return null;
   }
 
   @Override
-  public Integer visit(ProtocolType p) {
-    return null;
+  public Integer visit(final NullType n) {
+    return n.hashCode() * 31 +
+        (n.getComment().isPresent() ? n.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
-  public Integer visit(RecordType r) {
+  public Integer visit(final ProcedureType p) {
     return null;
   }
 
   @Override
-  public Integer visit(ShortType s) {
-    return null;
+  public Integer visit(final ProtocolTagType p) {
+    return p.getName().hashCode() * 31 +
+        (p.getTypeFields().isPresent() ? p.getTypeFields().get().accept(this) : 0) * 31 +
+        (p.getComment().isPresent() ? p.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
-  public Integer visit(StringType s) {
-    return null;
+  public Integer visit(final ProtocolType p) {
+    return p.getName().hashCode() * 31 +
+        (p.getTypeFields().isPresent() ? p.getTypeFields().get().accept(this) : 0) * 31 +
+        (p.getComment().isPresent() ? p.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
-  public Integer visit(TimerType t) {
-    return null;
+  public Integer visit(final RecordType r) {
+    return r.getName().hashCode() * 31 +
+        (r.getTypeFields().isPresent() ? r.getTypeFields().get().accept(this) : 0) * 31 +
+        (r.getComment().isPresent() ? r.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
-  public Integer visit(UnknownType u) {
-    return null;
+  public Integer visit(final ShortType s) {
+    return s.hashCode() * 31 +
+        (s.getComment().isPresent() ? s.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
-  public Integer visit(VoidType v) {
-    return null;
+  public Integer visit(final StringType s) {
+    return s.hashCode() * 31 +
+        (s.getComment().isPresent() ? s.getComment().get().accept(this) : 0) * 31;
+  }
+
+  @Override
+  public Integer visit(final TimerType t) {
+    return t.hashCode() * 31 +
+        (t.getComment().isPresent() ? t.getComment().get().accept(this) : 0) * 31;
+  }
+
+  @Override
+  public Integer visit(final UnknownType u) {
+    return u.hashCode() * 31 +
+        (u.getComment().isPresent() ? u.getComment().get().accept(this) : 0) * 31;
+  }
+
+  @Override
+  public Integer visit(final VoidType v) {
+    return v.hashCode() * 31 +
+        (v.getComment().isPresent() ? v.getComment().get().accept(this) : 0) * 31;
   }
 }
