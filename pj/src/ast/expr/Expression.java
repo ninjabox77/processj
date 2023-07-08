@@ -2,8 +2,8 @@ package ast.expr;
 
 import ast.AnnotatedNode;
 import ast.Node;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 
 /**
  * Base class for all expressions.
@@ -12,7 +12,7 @@ import typesystem.Type;
  */
 public abstract class Expression<E extends Expression<?>> extends AnnotatedNode {
 
-  private Type type_;
+  private ASTType type_;
 
   public Expression() {
     this(null);
@@ -24,7 +24,7 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   @Override
-  public E setType(Type type) {
+  public E setASTType(ASTType type) {
     if (type == type_) {
       return (E) this;
     }
@@ -37,7 +37,7 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   @Override
-  public Type getType() {
+  public ASTType getASTType() {
     return type_;
   }
 
@@ -47,7 +47,7 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
       return false;
     }
     if (node == type_) {
-      setType((Type) replaceWith);
+      setASTType((ASTType) replaceWith);
       return true;
     }
     return false;

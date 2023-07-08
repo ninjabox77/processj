@@ -1,6 +1,5 @@
 package ast.expr;
 
-import ast.Node;
 import ast.Sequence;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;

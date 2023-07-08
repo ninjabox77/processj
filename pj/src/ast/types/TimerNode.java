@@ -1,6 +1,5 @@
 package ast.types;
 
-import ast.AnnotatedNode;
 import org.antlr.v4.runtime.Token;
 import typesystem.TimerType;
 import typesystem.Type;
@@ -13,7 +12,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class TimerNode extends AnnotatedNode {
+public class TimerNode extends ASTType {
 
   private TimerType type_;
 
@@ -27,11 +26,11 @@ public class TimerNode extends AnnotatedNode {
 
   public TimerNode(Token token, Type type) {
     super(token);
-    setType(type);
+    setTSType(type);
   }
 
   @Override
-  public TimerNode setType(Type type) {
+  public TimerNode setTSType(Type type) {
     if (type == type_) {
       return this;
     }
@@ -44,8 +43,18 @@ public class TimerNode extends AnnotatedNode {
   }
 
   @Override
-  public TimerType getType() {
+  public TimerType getTSType() {
     return type_;
+  }
+
+  @Override
+  public boolean isTimerNode() {
+    return true;
+  }
+
+  @Override
+  public TimerNode asTimerNode() {
+    return this;
   }
 
   @Override

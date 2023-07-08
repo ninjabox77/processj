@@ -1,8 +1,8 @@
 package ast.expr;
 
 import ast.Node;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -22,17 +22,17 @@ public class CastExpr extends Expression<CastExpr> {
     this(null, null, false);
   }
 
-  public CastExpr(Type type, Expression<?> expression, final boolean coerce) {
+  public CastExpr(ASTType type, Expression<?> expression, final boolean coerce) {
     this(null, type, expression, coerce, false);
   }
 
-  public CastExpr(Type type, Expression<?> expression, final boolean coerce, final boolean ignoreAutoboxing) {
+  public CastExpr(ASTType type, Expression<?> expression, final boolean coerce, final boolean ignoreAutoboxing) {
     this(null, type, expression, coerce, ignoreAutoboxing);
   }
 
-  public CastExpr(Token token, Type type, Expression<?> expression, final boolean coerce, final boolean ignoreAutoboxing) {
+  public CastExpr(Token token, ASTType type, Expression<?> expression, final boolean coerce, final boolean ignoreAutoboxing) {
     super(token);
-    setType(type);
+    this.setASTType(type);
     setExpression(expression);
     setCoerce(coerce);
     setIgnoreAutoboxing(ignoreAutoboxing);
@@ -89,8 +89,8 @@ public class CastExpr extends Expression<CastExpr> {
   }
 
   @Override
-  public CastExpr setType(Type type) {
-    return super.setType(type);
+  public CastExpr setASTType(ASTType type) {
+    return super.setASTType(type);
   }
 
   @Override

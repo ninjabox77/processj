@@ -1,8 +1,8 @@
 package ast.toplevel;
 
 import ast.*;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -15,7 +15,7 @@ import java.util.Optional;
 public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> extends AnnotatedNode implements Modifier<T> {
 
   protected int modifiers_;
-  protected Type type_;
+  protected ASTType type_;
   protected String name_;
   private Sequence<TopLevelDeclaration<?>> implementedNames_;
 
@@ -23,29 +23,29 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
     this(null, null);
   }
 
-  public TopLevelDeclaration(Type type, final String name) {
+  public TopLevelDeclaration(ASTType type, final String name) {
     this(ACC_PRIVATE, type, name);
   }
 
-  public TopLevelDeclaration(final int modifier, Type type, final String name) {
+  public TopLevelDeclaration(final int modifier, ASTType type, final String name) {
     this(modifier, type, name, null);
   }
 
-  public TopLevelDeclaration(final int modifier, Type type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
+  public TopLevelDeclaration(final int modifier, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
     this(null, modifier, type, name, implementedNames);
   }
 
-  public TopLevelDeclaration(Token token, final int modifier, Type type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
+  public TopLevelDeclaration(Token token, final int modifier, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
     super(token);
     setModifiers(modifier);
-    setType(type);
+    setASTType(type);
     setName(name);
     setImplementedNames(implementedNames);
     customInitialization();
   }
 
   @Override
-  public T setType(Type type) {
+  public T setASTType(ASTType type) {
     if (type == type_) {
       return (T) this;
     }
@@ -58,7 +58,7 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
   }
 
   @Override
-  public Type getType() {
+  public ASTType getASTType() {
     return type_;
   }
 
@@ -126,7 +126,7 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
       return false;
     }
     if (node == type_) {
-      setType((Type) replaceWith);
+      setASTType((ASTType) replaceWith);
       return true;
     }
     if (implementedNames_ != null) {
@@ -164,11 +164,11 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
     throw new IllegalStateException(String.format("%s is not a ProtocolDeclaration, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isMethodCallableTopLevel() {
+  public boolean isCallableTopLevel() {
     return false;
   }
 
-  public MethodCallableTopLevel<?> asMethodCallableTopLevel() {
+  public CallableTopLevel<?> asCallableTopLevel() {
     throw new IllegalStateException(String.format("%s is not a MethodCallDeclaration, it is a %s", this, getClass().getSimpleName()));
   }
 }

@@ -14,7 +14,7 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public class MobileType extends MethodCallableType<MobileType> {
+public class MobileType extends CallableType<MobileType> {
 
   public MobileType() {
     this(null, null);
@@ -28,8 +28,8 @@ public class MobileType extends MethodCallableType<MobileType> {
     super(token, type, typeArguments, null, yields);
   }
 
-  public MobileType setType(Type retuntType) {
-    return super.setType(retuntType);
+  public MobileType setTSType(Type retuntType) {
+    return super.setTSType(retuntType);
   }
 
   public MobileType setTypeArguments(Sequence<Type> argumentsType) {

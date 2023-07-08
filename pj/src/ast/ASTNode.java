@@ -10,7 +10,7 @@ import java.util.Objects;
  *
  * @author Ben
  */
-public abstract class ASTNode<N extends ASTNode<?>> implements ParentNode<N> {
+public abstract class ASTNode<N extends ASTNode<?>> implements NodeWithParent<N> {
 
   /**
    * The line number on which the token appears.

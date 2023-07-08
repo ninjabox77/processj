@@ -7,7 +7,7 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public interface OptionalLabel<N extends Node> {
+public interface NodeWithLabel<N extends Node> {
 
   Optional<String> getLabel();
 

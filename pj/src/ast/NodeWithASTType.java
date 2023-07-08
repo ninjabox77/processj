@@ -1,19 +1,19 @@
 package ast;
 
-import typesystem.Type;
+import ast.types.ASTType;
 
 /**
- * Represents a node with a type in the AST.
+ * Represents a node that has an optional ASTType.
  *
  * @author Ben
  */
-public interface OptionalType<N extends Node, T extends Type> {
+public interface NodeWithASTType<N extends Node, T extends ASTType> {
 
-  default T getType() {
+  default T getASTType() {
     throw new IllegalStateException(String.format("%s cannot have an optional type, it is a %s", this, getClass().getSimpleName()));
   }
 
-  default N setType(T type) {
+  default N setASTType(T type) {
     throw new IllegalStateException(String.format("%s cannot have an optional type, it is a %s", this, getClass().getSimpleName()));
   }
 }

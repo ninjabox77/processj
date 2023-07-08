@@ -1,6 +1,5 @@
 package ast.types;
 
-import ast.AnnotatedNode;
 import ast.Node;
 import org.antlr.v4.runtime.Token;
 import typesystem.ArrayType;
@@ -12,7 +11,7 @@ import visitor.VoidVisitor;
 /**
  * Represents an array type in the AST.
  */
-public class ArrayNode extends AnnotatedNode {
+public class ArrayNode extends ASTType {
 
   /**
    * Used to determine whether brackets appear next to the type
@@ -41,12 +40,12 @@ public class ArrayNode extends AnnotatedNode {
 
   public ArrayNode(Token token, Type arrayType, BracketPosition position) {
     super(token);
-    setType(arrayType);
+    setTSType(arrayType);
     setBracketPosition(position);
   }
 
   @Override
-  public ArrayNode setType(Type arrayType) {
+  public ArrayNode setTSType(Type arrayType) {
     if (arrayType == arrayType_) {
       return this;
     }
@@ -59,7 +58,7 @@ public class ArrayNode extends AnnotatedNode {
   }
 
   @Override
-  public ArrayType getType() {
+  public ArrayType getTSType() {
     return arrayType_;
   }
 
@@ -81,10 +80,20 @@ public class ArrayNode extends AnnotatedNode {
       return false;
     }
     if (node == arrayType_) {
-      setType((ArrayType) replaceWith);
+      setTSType((ArrayType) replaceWith);
       return true;
     }
     return false;
+  }
+
+  @Override
+  public boolean isArrayNode() {
+    return true;
+  }
+
+  @Override
+  public ArrayNode asArrayNode() {
+    return this;
   }
 
   @Override

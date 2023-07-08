@@ -1,6 +1,7 @@
 package typesystem;
 
 import ast.AnnotatedNode;
+import ast.NodeWithTSType;
 import org.antlr.v4.runtime.Token;
 
 /**
@@ -8,7 +9,7 @@ import org.antlr.v4.runtime.Token;
  *
  * @author Ben
  */
-public abstract class Type extends AnnotatedNode {
+public abstract class Type extends AnnotatedNode implements NodeWithTSType<Type, Type> {
 
   public Type(Token token) {
     super(token);

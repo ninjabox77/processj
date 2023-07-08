@@ -75,11 +75,11 @@ public abstract class Constructed extends Type {
     throw new IllegalStateException(String.format("%s is not a ProtocolCaseType, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isMethodCallableType() {
+  public boolean isCallableType() {
     return false;
   }
 
-  public MethodCallableType<?> asMethodCallableType() {
+  public CallableType<?> asCallableType() {
     throw new IllegalStateException(String.format("%s is not a CallableType, it is a %s", this, getClass().getSimpleName()));
   }
 }

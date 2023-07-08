@@ -16,7 +16,7 @@ import java.util.stream.Collector;
  *
  * @author Ben
  */
-public class Sequence<N extends Node> implements ParentNode<Sequence<N>>, List<N>, Iterable<N>, CodeVisitor {
+public class Sequence<N extends Node> implements NodeWithParent<Sequence<N>>, List<N>, Iterable<N>, CodeVisitor {
   protected List<N> arrayList_ = new ArrayList<>();
   protected Node parentNode_;
 
@@ -256,7 +256,7 @@ public class Sequence<N extends Node> implements ParentNode<Sequence<N>>, List<N
 
   private void setAsParentNodeOf(List<? extends Node> children) {
     if (children != null) {
-      for (ParentNode<?> node : children) {
+      for (NodeWithParent<?> node : children) {
         node.setParentNode(getParentNodeForChildren());
       }
     }

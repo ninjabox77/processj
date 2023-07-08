@@ -66,7 +66,7 @@ public interface GenericVisitor<R, A> {
 
   R visit(final ExternalTopLevel e, A arg);
 
-  R visit(final MethodCallableTopLevel<?> m, A arg);
+  R visit(final CallableTopLevel<?> m, A arg);
 
   R visit(final ProcedureTopLevel p, A arg);
 

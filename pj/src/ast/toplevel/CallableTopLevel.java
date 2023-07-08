@@ -3,8 +3,8 @@ package ast.toplevel;
 import ast.Sequence;
 import ast.Parameter;
 import ast.stmt.BlockStmt;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -14,33 +14,33 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class MethodCallableTopLevel<T extends MethodCallableTopLevel<?>> extends TopLevelDeclaration<T> {
+public abstract class CallableTopLevel<T extends CallableTopLevel<?>> extends TopLevelDeclaration<T> {
 
   private Sequence<Parameter> parameters_;
   private BlockStmt body_;
   private boolean yields_;
 
-  public MethodCallableTopLevel() {
+  public CallableTopLevel() {
     this(null, null);
   }
 
-  public MethodCallableTopLevel(Type type, final String name) {
+  public CallableTopLevel(ASTType type, final String name) {
     this(ACC_PUBLIC, type, name);
   }
 
-  public MethodCallableTopLevel(int modifiers, Type type, final String name) {
+  public CallableTopLevel(int modifiers, ASTType type, final String name) {
     this(modifiers, type, name, null);
   }
 
-  public MethodCallableTopLevel(int modifiers, Type type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
+  public CallableTopLevel(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
     this(modifiers, type, name, implementedNames, new BlockStmt());
   }
 
-  public MethodCallableTopLevel(int modifiers, Type type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, BlockStmt body) {
+  public CallableTopLevel(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, BlockStmt body) {
     this(null, modifiers, type, name, implementedNames, null, body);
   }
 
-  public MethodCallableTopLevel(Token token, int modifiers, Type type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<Parameter> parameters, BlockStmt body) {
+  public CallableTopLevel(Token token, int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<Parameter> parameters, BlockStmt body) {
     super(token, modifiers, type, name, implementedNames);
     setParameters(parameters);
     setBody(body);
@@ -87,12 +87,12 @@ public class MethodCallableTopLevel<T extends MethodCallableTopLevel<?>> extends
   }
 
   @Override
-  public boolean isMethodCallableTopLevel() {
+  public boolean isCallableTopLevel() {
     return true;
   }
 
   @Override
-  public MethodCallableTopLevel<?> asMethodCallableTopLevel() {
+  public CallableTopLevel<?> asCallableTopLevel() {
     return this;
   }
 

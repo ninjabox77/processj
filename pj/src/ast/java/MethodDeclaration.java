@@ -3,8 +3,8 @@ package ast.java;
 import ast.Parameter;
 import ast.Sequence;
 import ast.stmt.BlockStmt;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -19,7 +19,7 @@ import java.util.Optional;
  */
 public class MethodDeclaration<T extends MethodDeclaration<?>> extends BodyDeclaration<T> {
 
-  private Type type_;
+  private ASTType type_;
   private String name_;
   private BlockStmt body_;
   private Sequence<Parameter> parameters_;
@@ -28,25 +28,25 @@ public class MethodDeclaration<T extends MethodDeclaration<?>> extends BodyDecla
     this(ACC_PUBLIC, null, null);
   }
 
-  public MethodDeclaration(final int modifiers, Type type, final String name) {
+  public MethodDeclaration(final int modifiers, ASTType type, final String name) {
     this(modifiers, type, name, null, new BlockStmt());
   }
 
-  public MethodDeclaration(final int modifiers, Type type, final String name, Sequence<Parameter> parameters, BlockStmt body) {
+  public MethodDeclaration(final int modifiers, ASTType type, final String name, Sequence<Parameter> parameters, BlockStmt body) {
     this(null, modifiers, type, name, parameters, body);
   }
 
-  public MethodDeclaration(Token token, final int modifiers, Type type, final String name, Sequence<Parameter> parameters, BlockStmt body) {
+  public MethodDeclaration(Token token, final int modifiers, ASTType type, final String name, Sequence<Parameter> parameters, BlockStmt body) {
     super(token, modifiers);
     setModifiers(modifiers);
-    setType(type);
+    setASTType(type);
     setName(name);
     setParameters(parameters);
     setBody(body);
   }
 
   @Override
-  public T setType(Type type) {
+  public T setASTType(ASTType type) {
     if (type == type_) {
       return (T) this;
     }
@@ -64,7 +64,7 @@ public class MethodDeclaration<T extends MethodDeclaration<?>> extends BodyDecla
   }
 
   @Override
-  public Type getType() {
+  public ASTType getASTType() {
     return type_;
   }
 

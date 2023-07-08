@@ -61,7 +61,7 @@ public interface DefaultVisitor<R> {
 
   R visit(final ExternalTopLevel e);
 
-  R visit(final MethodCallableTopLevel<?> m);
+  R visit(final CallableTopLevel<?> m);
 
   R visit(final ProcedureTopLevel p);
 

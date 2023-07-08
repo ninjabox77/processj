@@ -1,7 +1,7 @@
 package ast.expr;
 
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -35,8 +35,8 @@ public class DeclarationExpr extends BinaryExpr {
   }
 
   @Override
-  public DeclarationExpr setType(Type type) {
-    return (DeclarationExpr) super.setType(type);
+  public DeclarationExpr setASTType(ASTType type) {
+    return (DeclarationExpr) super.setASTType(type);
   }
 
   @Override

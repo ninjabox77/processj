@@ -1,7 +1,7 @@
 package ast.expr;
 
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -25,8 +25,6 @@ public class LongLiteral extends ConstantExpr {
     super(token, value);
   }
 
-  // TODO: asLong?
-
   @Override
   public boolean isLongLiteral() {
     return true;
@@ -38,8 +36,8 @@ public class LongLiteral extends ConstantExpr {
   }
 
   @Override
-  public LongLiteral setType(Type type) {
-    return (LongLiteral) super.setType(type);
+  public LongLiteral setASTType(ASTType type) {
+    return (LongLiteral) super.setASTType(type);
   }
 
   @Override

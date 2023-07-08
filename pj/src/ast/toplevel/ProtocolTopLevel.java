@@ -2,8 +2,8 @@ package ast.toplevel;
 
 import ast.Node;
 import ast.Sequence;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -23,23 +23,23 @@ public class ProtocolTopLevel extends TopLevelDeclaration<ProtocolTopLevel> {
     this(null, null);
   }
 
-  public ProtocolTopLevel(Type type, final String name) {
+  public ProtocolTopLevel(ASTType type, final String name) {
     this(ACC_PRIVATE, type, name);
   }
 
-  public ProtocolTopLevel(int modifiers, Type type, final String name) {
+  public ProtocolTopLevel(int modifiers, ASTType type, final String name) {
     this(modifiers, type, name, null);
   }
 
-  public ProtocolTopLevel(int modifiers, Type type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
+  public ProtocolTopLevel(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
     this(modifiers, type, name, implementedNames, null);
   }
 
-  public ProtocolTopLevel(int modifiers, Type type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<ProtocolTagDeclaration> declaredTags) {
+  public ProtocolTopLevel(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<ProtocolTagDeclaration> declaredTags) {
     this(null, modifiers, type, name, implementedNames, declaredTags);
   }
 
-  public ProtocolTopLevel(Token token, int modifiers, Type type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<ProtocolTagDeclaration> declaredTags) {
+  public ProtocolTopLevel(Token token, int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<ProtocolTagDeclaration> declaredTags) {
     super(token, modifiers, type, name, implementedNames);
     setDeclaredTags(declaredTags);
   }

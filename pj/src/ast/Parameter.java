@@ -1,7 +1,7 @@
 package ast;
 
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -16,29 +16,29 @@ import java.util.Objects;
 public class Parameter extends AnnotatedNode implements Modifier<Parameter>, Variable<Parameter> {
 
   private int modifiers_;
-  private Type type_;
+  private ASTType type_;
   private String name_;
 
   public Parameter() {
     this(null, null);
   }
 
-  public Parameter(Type type, final String name) {
+  public Parameter(ASTType type, final String name) {
     this(ACC_NATIVE, type, name);
   }
 
-  public Parameter(final int modifiers, Type type, final String name) {
+  public Parameter(final int modifiers, ASTType type, final String name) {
     this(null, modifiers, type, name);
   }
 
-  public Parameter(Token token, final int modifiers, Type type, final String name) {
+  public Parameter(Token token, final int modifiers, ASTType type, final String name) {
     super(token);
-    setType(type);
+    setASTType(type);
     setName(name);
   }
 
   @Override
-  public Parameter setType(Type type) {
+  public Parameter setASTType(ASTType type) {
     if (type == type_) {
       return this;
     }
@@ -51,7 +51,7 @@ public class Parameter extends AnnotatedNode implements Modifier<Parameter>, Var
   }
 
   @Override
-  public Type getType() {
+  public ASTType getASTType() {
     return type_;
   }
 
@@ -75,7 +75,7 @@ public class Parameter extends AnnotatedNode implements Modifier<Parameter>, Var
       return false;
     }
     if (node == type_) {
-      setType((Type) replaceWith);
+      setASTType((ASTType) replaceWith);
       return true;
     }
     return false;

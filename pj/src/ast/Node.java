@@ -1,9 +1,11 @@
 package ast;
 
 import ast.comments.Comment;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 import visitor.CodeVisitor;
+import visitor.EqualsVisitor;
+import visitor.HashcodeVisitor;
 
 import java.util.Optional;
 
@@ -12,27 +14,16 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public abstract class Node extends ASTNode<Node> implements OptionalType<Node, Type>, CodeVisitor {
+public abstract class Node extends ASTNode<Node> implements NodeWithASTType<Node, ASTType>, CodeVisitor {
 
-  /**
-   * The children of this node if it is the root of a subtree.
-   */
+  // The children of this node if it is the root of a subtree.
   protected final Sequence<Node> children_ = new Sequence<>();
-
-  /**
-   * The parent of this node if it is not the main compilation unit.
-   */
+  // The parent of this node if it is not the main compilation unit.
   protected Node parentNode_;
-
-  /**
-   * Single line comments attached to this node. Note that these are orphan
-   * comments that appear after the first single line or block comment.
-   */
+  // Single line comments attached to this node. Note that these are orphan
+  // comments that appear after the first single line or block comment.
   protected Sequence<Comment> orphanComments_;
-
-  /**
-   * Main comment attached to this node.
-   */
+  // Main comment attached to this node.
   protected Comment comment_;
 
   public Node(Token token) {
@@ -121,5 +112,18 @@ public abstract class Node extends ASTNode<Node> implements OptionalType<Node, T
   @Override
   public Node getParentNodeForChildren() {
     return this;
+  }
+
+  @Override
+  public int hashCode() {
+    return HashcodeVisitor.hashCode(this);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof Node)) {
+      return false;
+    }
+    return EqualsVisitor.equals(this, (Node) obj);
   }
 }

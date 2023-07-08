@@ -1,6 +1,5 @@
 package ast.types;
 
-import ast.AnnotatedNode;
 import org.antlr.v4.runtime.Token;
 import typesystem.BarrierType;
 import typesystem.Type;
@@ -13,7 +12,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class BarrierNode extends AnnotatedNode {
+public class BarrierNode extends ASTType {
 
   private BarrierType type_;
 
@@ -27,11 +26,11 @@ public class BarrierNode extends AnnotatedNode {
 
   public BarrierNode(Token token, Type type) {
     super(token);
-    setType(type);
+    setTSType(type);
   }
 
   @Override
-  public BarrierNode setType(Type type) {
+  public BarrierNode setTSType(Type type) {
     if (type == type_) {
       return this;
     }
@@ -44,8 +43,18 @@ public class BarrierNode extends AnnotatedNode {
   }
 
   @Override
-  public BarrierType getType() {
+  public BarrierType getTSType() {
     return type_;
+  }
+
+  @Override
+  public boolean isBarrierNode() {
+    return true;
+  }
+
+  @Override
+  public BarrierNode asBarrierNode() {
+    return this;
   }
 
   @Override

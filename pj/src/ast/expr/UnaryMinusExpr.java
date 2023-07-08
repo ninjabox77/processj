@@ -1,8 +1,8 @@
 package ast.expr;
 
 import ast.Node;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -46,8 +46,8 @@ public class UnaryMinusExpr extends Expression<UnaryMinusExpr> {
   }
 
   @Override
-  public UnaryMinusExpr setType(Type type) {
-    return super.setType(type);
+  public UnaryMinusExpr setASTType(ASTType type) {
+    return super.setASTType(type);
   }
 
   @Override

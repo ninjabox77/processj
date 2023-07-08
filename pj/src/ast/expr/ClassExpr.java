@@ -1,7 +1,7 @@
 package ast.expr;
 
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -18,18 +18,18 @@ public class ClassExpr extends Expression<ClassExpr> {
     this(null);
   }
 
-  public ClassExpr(Type type) {
+  public ClassExpr(ASTType type) {
     this(null, type);
   }
 
-  public ClassExpr(Token token, Type type) {
+  public ClassExpr(Token token, ASTType type) {
     super(token);
-    setType(type);
+    this.setASTType(type);
   }
 
   @Override
-  public ClassExpr setType(Type type) {
-    return super.setType(type);
+  public ClassExpr setASTType(ASTType type) {
+    return super.setASTType(type);
   }
 
   @Override

@@ -1,6 +1,5 @@
 package ast.types;
 
-import ast.AnnotatedNode;
 import ast.Node;
 import org.antlr.v4.runtime.Token;
 import typesystem.IntegerType;
@@ -15,7 +14,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class PrimitiveNode extends AnnotatedNode {
+public class PrimitiveNode extends ASTType {
 
   private Primitive type_;
 
@@ -29,11 +28,11 @@ public class PrimitiveNode extends AnnotatedNode {
 
   public PrimitiveNode(Token token, Type type) {
     super(token);
-    setType(type);
+    setTSType(type);
   }
 
   @Override
-  public PrimitiveNode setType(Type type) {
+  public PrimitiveNode setTSType(Type type) {
     if (type == type_) {
       return this;
     }
@@ -46,20 +45,30 @@ public class PrimitiveNode extends AnnotatedNode {
   }
 
   @Override
-  public Primitive getType() {
-    return type_;
-  }
-
-  @Override
   public boolean replace(Node node, Node replaceWith) {
     if (node == null) {
       return false;
     }
     if (node == type_) {
-      setType((Primitive) replaceWith);
+      setTSType((Primitive) replaceWith);
       return true;
     }
     return false;
+  }
+
+  @Override
+  public Primitive getTSType() {
+    return type_;
+  }
+
+  @Override
+  public boolean isPrimitiveNode() {
+    return true;
+  }
+
+  @Override
+  public PrimitiveNode asPrimitiveNode() {
+    return this;
   }
 
   @Override

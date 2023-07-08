@@ -18,12 +18,13 @@ import java.util.Optional;
  * dimension will always be 1 for each set of brackets. For example
  *
  *  - Array(int), represents a one dimensional array.
- *  - Array(Array(int)), represents a two dimensional array.
- *  - and so on
+ *  - Array(Array(int)), represents a two-dimensional array, where
+ *    the inner Array is a one dimensional array.
+ *  - and so on.
  *
  * @author Ben
  */
-public class ArrayDimension extends Node {
+public class ArrayDimension extends AnnotatedNode {
   private Expression<?> dimension_;
 
   public ArrayDimension() {

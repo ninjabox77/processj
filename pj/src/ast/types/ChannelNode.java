@@ -1,6 +1,5 @@
 package ast.types;
 
-import ast.AnnotationNode;
 import ast.Node;
 import org.antlr.v4.runtime.Token;
 import typesystem.ChannelType;
@@ -14,7 +13,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ChannelNode extends AnnotationNode {
+public class ChannelNode extends ASTType {
 
   private ChannelType type_;
 
@@ -28,11 +27,11 @@ public class ChannelNode extends AnnotationNode {
 
   public ChannelNode(Token token, Type type) {
     super(token);
-    setType(type);
+    setTSType(type);
   }
 
   @Override
-  public ChannelNode setType(Type type) {
+  public ChannelNode setTSType(Type type) {
     if (type == type_) {
       return this;
     }
@@ -45,7 +44,7 @@ public class ChannelNode extends AnnotationNode {
   }
 
   @Override
-  public ChannelType getType() {
+  public ChannelType getTSType() {
     return type_;
   }
 
@@ -55,10 +54,20 @@ public class ChannelNode extends AnnotationNode {
       return false;
     }
     if (node == type_) {
-      setType((ChannelType) replaceWith);
+      setTSType((ChannelType) replaceWith);
       return true;
     }
     return false;
+  }
+
+  @Override
+  public boolean isChannelNode() {
+    return true;
+  }
+
+  @Override
+  public ChannelNode asChannelNode() {
+    return this;
   }
 
   @Override

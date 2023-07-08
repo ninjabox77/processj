@@ -1,6 +1,6 @@
 package ast.stmt;
 
-import ast.OptionalLabel;
+import ast.NodeWithLabel;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -14,7 +14,7 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public class BreakStmt extends Statement implements OptionalLabel<BreakStmt> {
+public class BreakStmt extends Statement implements NodeWithLabel<BreakStmt> {
 
   private String label_;
 

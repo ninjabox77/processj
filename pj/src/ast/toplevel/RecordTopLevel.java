@@ -3,8 +3,8 @@ package ast.toplevel;
 import ast.java.FieldDeclaration;
 import ast.Node;
 import ast.Sequence;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -24,23 +24,23 @@ public class RecordTopLevel extends TopLevelDeclaration<RecordTopLevel> {
     this(null, null);
   }
 
-  public RecordTopLevel(Type type, final String name) {
+  public RecordTopLevel(ASTType type, final String name) {
     this(ACC_PUBLIC, type, name);
   }
 
-  public RecordTopLevel(int modifiers, Type type, final String name) {
+  public RecordTopLevel(int modifiers, ASTType type, final String name) {
     this(modifiers, type, name, null);
   }
 
-  public RecordTopLevel(int modifiers, Type type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
+  public RecordTopLevel(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
     this(null, modifiers, type, name, implementedNames, null);
   }
 
-  public RecordTopLevel(int modifiers, Type type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<FieldDeclaration> declaredFields) {
+  public RecordTopLevel(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<FieldDeclaration> declaredFields) {
     this(null, modifiers, type, name, implementedNames, declaredFields);
   }
 
-  public RecordTopLevel(Token token, int modifiers, Type type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<FieldDeclaration> declaredFields) {
+  public RecordTopLevel(Token token, int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<FieldDeclaration> declaredFields) {
     super(token, modifiers, type, name, implementedNames);
     setDeclaredFields(declaredFields);
   }

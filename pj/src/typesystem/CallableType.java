@@ -12,24 +12,24 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public abstract class MethodCallableType<T extends MethodCallableType<?>> extends Constructed {
+public abstract class CallableType<T extends CallableType<?>> extends Constructed {
 
   private boolean yields_;
   private Type returnType_;
   private Sequence<Type> typeArguments_;
   private Sequence<Type> implementedTypes_;
 
-  public MethodCallableType() {
+  public CallableType() {
     this(null, new VoidType(), null, null, false);
   }
 
-  public MethodCallableType(Type type, Sequence<Type> typeArguments, final boolean yields) {
+  public CallableType(Type type, Sequence<Type> typeArguments, final boolean yields) {
     this(null, type, typeArguments, null, yields);
   }
 
-  public MethodCallableType(Token token, Type returnType, Sequence<Type> typeArguments, Sequence<Type> implementedTypes, final boolean yields) {
+  public CallableType(Token token, Type returnType, Sequence<Type> typeArguments, Sequence<Type> implementedTypes, final boolean yields) {
     super(token);
-    setType(returnType);
+    setTSType(returnType);
     setTypeArguments(typeArguments);
     setImplementedTypes(implementedTypes);
     setYield(yields);
@@ -37,7 +37,7 @@ public abstract class MethodCallableType<T extends MethodCallableType<?>> extend
   }
 
   @Override
-  public T setType(Type retuntType) {
+  public T setTSType(Type retuntType) {
     if (retuntType == returnType_) {
       return (T) this;
     }
@@ -50,7 +50,7 @@ public abstract class MethodCallableType<T extends MethodCallableType<?>> extend
   }
 
   @Override
-  public Type getType() {
+  public Type getTSType() {
     return returnType_;
   }
 
@@ -120,7 +120,7 @@ public abstract class MethodCallableType<T extends MethodCallableType<?>> extend
       return false;
     }
     if (node == returnType_) {
-      setType((Type) replaceWith);
+      setTSType((Type) replaceWith);
       return true;
     }
     if (typeArguments_ == null) {
@@ -169,27 +169,12 @@ public abstract class MethodCallableType<T extends MethodCallableType<?>> extend
   }
 
   @Override
-  public boolean isMethodCallableType() {
+  public boolean isCallableType() {
     return true;
   }
 
   @Override
-  public MethodCallableType<?> asMethodCallableType() {
+  public CallableType<?> asCallableType() {
     return this;
   }
-
-//  @Override
-//  public <T, A> T accept(GenericVisitor<T, A> v, A arg) {
-//    return v.visit(this, arg);
-//  }
-//
-//  @Override
-//  public <A> void accept(VoidVisitor<A> v, A arg) {
-//    v.visit(this, arg);
-//  }
-//
-//  @Override
-//  public <T> T accept(DefaultVisitor<T> v) {
-//    return v.visit(this);
-//  }
 }

@@ -3,6 +3,8 @@ package ast.java;
 import ast.Parameter;
 import ast.Sequence;
 import ast.stmt.BlockStmt;
+import ast.types.ASTType;
+import ast.types.PrimitiveNode;
 import org.antlr.v4.runtime.Token;
 import typesystem.Type;
 import typesystem.VoidType;
@@ -18,18 +20,18 @@ import visitor.VoidVisitor;
 public class ConstructorDeclaration extends MethodDeclaration<ConstructorDeclaration> {
 
   public ConstructorDeclaration() {
-    this(ACC_PUBLIC, new VoidType(), "<ini>");
+    this(ACC_PUBLIC, new PrimitiveNode(new VoidType()), "<ini>");
   }
 
-  public ConstructorDeclaration(final int modifiers, Type type, final String name) {
+  public ConstructorDeclaration(final int modifiers, ASTType type, final String name) {
     this(modifiers, type, name, new BlockStmt());
   }
 
-  public ConstructorDeclaration(final int modifiers, Type type, final String name, BlockStmt body) {
+  public ConstructorDeclaration(final int modifiers, ASTType type, final String name, BlockStmt body) {
     this(null, modifiers, type, name, null, body);
   }
 
-  public ConstructorDeclaration(Token token, final int modifiers, Type type, final String name, Sequence<Parameter> parameters, BlockStmt body) {
+  public ConstructorDeclaration(Token token, final int modifiers, ASTType type, final String name, Sequence<Parameter> parameters, BlockStmt body) {
     super(token, modifiers, type, name, parameters, body);
   }
 

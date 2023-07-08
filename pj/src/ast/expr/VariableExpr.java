@@ -2,8 +2,8 @@ package ast.expr;
 
 import ast.Node;
 import ast.Variable;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -36,13 +36,13 @@ public class VariableExpr extends Expression<VariableExpr> implements Variable<V
     this(null, null);
   }
 
-  public VariableExpr(Type type, final String name) {
+  public VariableExpr(ASTType type, final String name) {
     this(null, type, name);
   }
 
-  public VariableExpr(Token token, Type type, final String name) {
+  public VariableExpr(Token token, ASTType type, final String name) {
     super(token);
-    setType(type);
+    this.setASTType(type);
     setName(name);
   }
 
@@ -71,8 +71,8 @@ public class VariableExpr extends Expression<VariableExpr> implements Variable<V
   }
 
   @Override
-  public VariableExpr setType(Type type) {
-    return super.setType(type);
+  public VariableExpr setASTType(ASTType type) {
+    return super.setASTType(type);
   }
 
   @Override

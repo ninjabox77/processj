@@ -1,8 +1,8 @@
 package ast.expr;
 
 import ast.Node;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -74,8 +74,8 @@ public class BinaryExpr extends Expression<BinaryExpr> {
   }
 
   @Override
-  public BinaryExpr setType(Type type) {
-    return super.setType(type);
+  public BinaryExpr setASTType(ASTType type) {
+    return super.setASTType(type);
   }
 
   @Override

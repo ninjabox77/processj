@@ -61,7 +61,7 @@ public interface VoidVisitor<A> {
 
   void visit(final ExternalTopLevel e, A arg);
 
-  void visit(final MethodCallableTopLevel<?> m, A arg);
+  void visit(final CallableTopLevel<?> m, A arg);
 
   void visit(final ProcedureTopLevel p, A arg);
 

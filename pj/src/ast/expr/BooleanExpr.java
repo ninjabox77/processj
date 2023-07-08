@@ -1,8 +1,8 @@
 package ast.expr;
 
 import ast.Node;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -64,8 +64,8 @@ public class BooleanExpr extends Expression<BooleanExpr> {
   }
 
   @Override
-  public BooleanExpr setType(Type type) {
-    return super.setType(type);
+  public BooleanExpr setASTType(ASTType type) {
+    return super.setASTType(type);
   }
 
   @Override

@@ -2,8 +2,8 @@ package ast.toplevel;
 
 import ast.Node;
 import ast.expr.Expression;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -23,19 +23,19 @@ public class ConstantTopLevel extends TopLevelDeclaration<ConstantTopLevel> {
     this(null, null);
   }
 
-  public ConstantTopLevel(Type type, String name) {
+  public ConstantTopLevel(ASTType type, String name) {
     this(ACC_PUBLIC, type, name);
   }
 
-  public ConstantTopLevel(int modifier, Type type, String name) {
+  public ConstantTopLevel(int modifier, ASTType type, String name) {
     this(modifier, type, name, null);
   }
 
-  public ConstantTopLevel(int modifier, Type type, String name, Expression<?> rightExpression) {
+  public ConstantTopLevel(int modifier, ASTType type, String name, Expression<?> rightExpression) {
     this(null, modifier, type, name, rightExpression);
   }
 
-  public ConstantTopLevel(Token token, int modifier, Type type, String name, Expression<?> rightExpression) {
+  public ConstantTopLevel(Token token, int modifier, ASTType type, String name, Expression<?> rightExpression) {
     super(token, modifier, type, name, null);
     setRightExpression(rightExpression);
   }

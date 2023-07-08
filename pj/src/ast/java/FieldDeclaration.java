@@ -3,8 +3,8 @@ package ast.java;
 import ast.Node;
 import ast.Variable;
 import ast.expr.Expression;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -20,7 +20,7 @@ import java.util.Objects;
  */
 public class FieldDeclaration extends BodyDeclaration<FieldDeclaration> implements Variable<FieldDeclaration> {
 
-  private Type type_;
+  private ASTType type_;
   private String name_;
   private Expression<?> rightExpression_;
 
@@ -28,22 +28,22 @@ public class FieldDeclaration extends BodyDeclaration<FieldDeclaration> implemen
     this(null, null);
   }
 
-  public FieldDeclaration(Type type, final String name) {
+  public FieldDeclaration(ASTType type, final String name) {
     this(ACC_PRIVATE, type, name);
   }
 
-  public FieldDeclaration(final int modifiers, Type type, final String name) {
+  public FieldDeclaration(final int modifiers, ASTType type, final String name) {
     this(modifiers, type, name, null);
   }
 
-  public FieldDeclaration(final int modifiers, Type type, final String name, Expression<?> rightExpression) {
+  public FieldDeclaration(final int modifiers, ASTType type, final String name, Expression<?> rightExpression) {
     this(null, modifiers, type, name, rightExpression);
   }
 
-  public FieldDeclaration(Token token, final int modifiers, Type type, final String name, Expression<?> rightExpression) {
+  public FieldDeclaration(Token token, final int modifiers, ASTType type, final String name, Expression<?> rightExpression) {
     super(token);
     setModifiers(modifiers);
-    setType(type);
+    setASTType(type);
     setName(name);
     setRightExpression(rightExpression);
   }
@@ -61,7 +61,7 @@ public class FieldDeclaration extends BodyDeclaration<FieldDeclaration> implemen
   }
 
   @Override
-  public FieldDeclaration setType(Type type) {
+  public FieldDeclaration setASTType(ASTType type) {
     if (type == type_) {
       return this;
     }
@@ -74,7 +74,7 @@ public class FieldDeclaration extends BodyDeclaration<FieldDeclaration> implemen
   }
 
   @Override
-  public Type getType() {
+  public ASTType getASTType() {
     return type_;
   }
 

@@ -2,7 +2,6 @@ package ast.stmt;
 
 import ast.Node;
 import ast.Sequence;
-import ast.VariableScope;
 import ast.expr.BooleanExpr;
 import ast.expr.BooleanLiteral;
 import ast.expr.Expression;
@@ -24,7 +23,7 @@ public class ForStmt extends Statement implements LoopingStmt<ForStmt> {
   private BooleanExpr condition_;
   private Sequence<Expression<?>> update_;
   private Statement loopBlock_;
-  private VariableScope scope_;
+//  private VariableScope scope_;
 
   public ForStmt() {
     this(Sequence.sequenceList(), new BooleanExpr(new BooleanLiteral("false")), Sequence.sequenceList(), new EmptyStmt());

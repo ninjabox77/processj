@@ -1,8 +1,8 @@
 package ast.expr;
 
 import ast.Node;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -70,8 +70,8 @@ public class PostfixExpr extends Expression<PostfixExpr> {
   }
 
   @Override
-  public PostfixExpr setType(Type type) {
-    return super.setType(type);
+  public PostfixExpr setASTType(ASTType type) {
+    return super.setASTType(type);
   }
 
   @Override

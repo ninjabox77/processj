@@ -3,8 +3,8 @@ package ast.expr;
 import ast.ArrayDimension;
 import ast.Node;
 import ast.Sequence;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * Represents an array object construction. For example, "new int[][]{...}"
  * where "int" represents the element type, "[][]" represents the level of
- * brackets, and "{...}" represents an array literal..
+ * brackets, and "{...}" represents an array literal.
  *
  * @author Ben
  */
@@ -27,20 +27,20 @@ public class NewArrayExpr extends Expression<NewArrayExpr> {
     this(null, null, null);
   }
 
-  public NewArrayExpr(Type elementType, Sequence<ArrayDimension> levels, ArrayExpr arrayLiteral) {
+  public NewArrayExpr(ASTType elementType, Sequence<ArrayDimension> levels, ArrayExpr arrayLiteral) {
     this(null, elementType, levels, arrayLiteral);
   }
 
-  public NewArrayExpr(Token token, Type elementType, Sequence<ArrayDimension> levels, ArrayExpr arrayLiteral) {
+  public NewArrayExpr(Token token, ASTType elementType, Sequence<ArrayDimension> levels, ArrayExpr arrayLiteral) {
     super(token);
-    setType(elementType);
+    this.setASTType(elementType);
     setLevels(levels);
     setArrayLiteral(arrayLiteral);
   }
 
   @Override
-  public NewArrayExpr setType(Type type) {
-    return super.setType(type);
+  public NewArrayExpr setASTType(ASTType type) {
+    return super.setASTType(type);
   }
 
   public NewArrayExpr setLevels(Sequence<ArrayDimension> levels) {

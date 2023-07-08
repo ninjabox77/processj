@@ -13,7 +13,7 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public class ProcedureType extends MethodCallableType<ProcedureType> {
+public class ProcedureType extends CallableType<ProcedureType> {
 
   public ProcedureType() {
     this(null);
@@ -27,7 +27,7 @@ public class ProcedureType extends MethodCallableType<ProcedureType> {
     super(token, new VoidType(), typeArguments, null, yields);
   }
 
-  public ProcedureType setType(Type retuntType) {
+  public ProcedureType setTSType(Type retuntType) {
     throw new UnsupportedOperationException("Cannot change the return type of a ProcedureType");
   }
 

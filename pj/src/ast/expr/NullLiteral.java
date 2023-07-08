@@ -1,7 +1,7 @@
 package ast.expr;
 
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -36,8 +36,8 @@ public class NullLiteral extends ConstantExpr {
   }
 
   @Override
-  public NullLiteral setType(Type type) {
-    return (NullLiteral) super.setType(type);
+  public NullLiteral setASTType(ASTType type) {
+    return (NullLiteral) super.setASTType(type);
   }
 
   @Override

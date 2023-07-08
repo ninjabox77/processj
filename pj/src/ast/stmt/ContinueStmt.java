@@ -1,6 +1,6 @@
 package ast.stmt;
 
-import ast.OptionalLabel;
+import ast.NodeWithLabel;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -14,7 +14,7 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public class ContinueStmt extends Statement implements OptionalLabel<ContinueStmt> {
+public class ContinueStmt extends Statement implements NodeWithLabel<ContinueStmt> {
 
   private String label_;
 

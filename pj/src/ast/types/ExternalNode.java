@@ -1,6 +1,5 @@
 package ast.types;
 
-import ast.AnnotatedNode;
 import ast.Node;
 import org.antlr.v4.runtime.Token;
 import typesystem.ExternalType;
@@ -14,7 +13,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ExternalNode extends AnnotatedNode {
+public class ExternalNode extends ASTType {
 
   private ExternalType type_;
 
@@ -24,11 +23,11 @@ public class ExternalNode extends AnnotatedNode {
 
   public ExternalNode(Token token, Type type) {
     super(token);
-    setType(type);
+    setTSType(type);
   }
 
   @Override
-  public ExternalNode setType(Type type) {
+  public ExternalNode setTSType(Type type) {
     if (type == type_) {
       return this;
     }
@@ -41,7 +40,7 @@ public class ExternalNode extends AnnotatedNode {
   }
 
   @Override
-  public ExternalType getType() {
+  public ExternalType getTSType() {
     return type_;
   }
 
@@ -51,10 +50,20 @@ public class ExternalNode extends AnnotatedNode {
       return false;
     }
     if (node == type_) {
-      setType((ExternalType) replaceWith);
+      setTSType((ExternalType) replaceWith);
       return true;
     }
     return false;
+  }
+
+  @Override
+  public boolean isExternalNode() {
+    return true;
+  }
+
+  @Override
+  public ExternalNode asExternalNode() {
+    return this;
   }
 
   @Override

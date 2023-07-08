@@ -2,7 +2,6 @@ package ast.stmt;
 
 import ast.Node;
 import ast.Sequence;
-import ast.VariableScope;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -16,24 +15,25 @@ import visitor.VoidVisitor;
 public class BlockStmt extends Statement {
 
   private Sequence<Statement> statements_;
-  private VariableScope scope_;
+//  private VariableScope scope_;
 
   public BlockStmt() {
     this(Sequence.sequenceList());
   }
 
   public BlockStmt(Sequence<Statement> statements) {
-    this(statements, null);
+//    this(statements, null);
+    this(null, statements);
   }
 
-  public BlockStmt(Sequence<Statement> statements, final VariableScope scope) {
-    this(null, statements, scope);
-  }
+//  public BlockStmt(Sequence<Statement> statements, final VariableScope scope) {
+//    this(null, statements, scope);
+//  }
 
-  public BlockStmt(Token token, Sequence<Statement> statements, VariableScope scope) {
+  public BlockStmt(Token token, Sequence<Statement> statements/*, VariableScope scope*/) {
     super(token, null);
     setStatements(statements);
-    setScope(scope);
+//    setScope(scope);
   }
 
   public BlockStmt setStatements(Sequence<Statement> statements) {
@@ -66,20 +66,20 @@ public class BlockStmt extends Statement {
     return statements_;
   }
 
-  public BlockStmt setScope(final VariableScope scope) {
-    if (scope == scope_) {
-      return this;
-    }
-    if (scope_ != null) {
-      scope_.setParentNode(null);
-    }
-    scope_ = scope;
-    return this;
-  }
+//  public BlockStmt setScope(final VariableScope scope) {
+//    if (scope == scope_) {
+//      return this;
+//    }
+//    if (scope_ != null) {
+//      scope_.setParentNode(null);
+//    }
+//    scope_ = scope;
+//    return this;
+//  }
 
-  public VariableScope getScope() {
-    return scope_;
-  }
+//  public VariableScope getScope() {
+//    return scope_;
+//  }
 
   @Override
   public boolean isEmpty() {

@@ -15,12 +15,20 @@ import ast.types.*;
 import typesystem.*;
 
 /**
- * Visitor used to compute the hash value of each node
- * in the AST.
+ * Visitor used to compute the hash value of each node in the AST.
  *
  * @author Ben
  */
 public class HashcodeVisitor implements DefaultVisitor<Integer> {
+
+  private static HashcodeVisitor INSTANCE = new HashcodeVisitor();
+
+  private HashcodeVisitor() {
+  }
+
+  public static int hashCode(final Node node) {
+    return node.accept(INSTANCE);
+  }
 
   @Override
   public Integer visit(final AnnotationNode a) {
@@ -116,7 +124,7 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final MethodCallableTopLevel<?> m) {
+  public Integer visit(final CallableTopLevel<?> m) {
     return null;
   }
 
@@ -473,7 +481,8 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
 
   @Override
   public Integer visit(final MobileType m) {
-    return null;
+    return m.hashCode() * 31 +
+        (m.getComment().isPresent() ? m.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
