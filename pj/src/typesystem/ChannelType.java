@@ -21,6 +21,10 @@ public class ChannelType extends Constructed {
   private int shared_;
   private Type componentType_;
 
+  public ChannelType() {
+    this(null);
+  }
+
   public ChannelType(Type componentType) {
     this(null, componentType, NON_SHARED);
   }

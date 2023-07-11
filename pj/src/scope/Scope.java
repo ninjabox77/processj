@@ -9,8 +9,6 @@ import java.util.List;
  * that the parent scope is generally the enclosing scope, but when inheritance
  * is present, as in the case of records and protocols, the enclosing scope
  * is the parent of the record or protocol.
- *
- * @author Ben
  */
 public interface Scope {
 

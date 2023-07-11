@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface NodeWithParent<T> {
 
   default boolean isOrphan() {
-    return getParentNode().isPresent();
+    return getParentNode().isEmpty();
   }
 
   Optional<Node> getParentNode();

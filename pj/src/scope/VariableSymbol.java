@@ -5,8 +5,6 @@ import typesystem.Type;
 
 /**
  * Represents a variable name.
- *
- * @author Ben
  */
 public class VariableSymbol extends BaseSymbol implements MemberSymbol {
 

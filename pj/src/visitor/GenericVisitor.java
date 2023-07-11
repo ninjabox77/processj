@@ -58,6 +58,8 @@ public interface GenericVisitor<R, A> {
 
   R visit(final TimerNode t, A arg);
 
+  R visit(final VoidNode v, A arg);
+
   /*********************************************************
    * Top-level nodes
    *********************************************************/
@@ -240,6 +242,8 @@ public interface GenericVisitor<R, A> {
 
   R visit(final ShortType s, A arg);
 
+  R visit(final BooleanType b, A arg);
+
   R visit(final StringType s, A arg);
 
   R visit(final TimerType t, A arg);
@@ -247,4 +251,6 @@ public interface GenericVisitor<R, A> {
   R visit(final UnknownType u, A arg);
 
   R visit(final VoidType v, A arg);
+
+  R visit(final TypeVariable t, A arg);
 }

@@ -4,8 +4,6 @@ import ast.Node;
 
 /**
  * Base for all callabel symbols.
- *
- * @author Ben
  */
 public class CallabelSymbol extends SymbolWithScope {
 

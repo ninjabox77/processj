@@ -82,4 +82,12 @@ public abstract class Constructed extends Type {
   public CallableType<?> asCallableType() {
     throw new IllegalStateException(String.format("%s is not a CallableType, it is a %s", this, getClass().getSimpleName()));
   }
+
+  public boolean isTypeVariable() {
+    return false;
+  }
+
+  public TypeVariable asTypeVariable() {
+    throw new IllegalStateException(String.format("%s is not a TypeVariable, it is a %s", this, getClass().getSimpleName()));
+  }
 }

@@ -53,6 +53,8 @@ public interface DefaultVisitor<R> {
 
   R visit(final TimerNode t);
 
+  R visit(final VoidNode v);
+
   /*********************************************************
    * Top-level nodes
    *********************************************************/
@@ -235,6 +237,8 @@ public interface DefaultVisitor<R> {
 
   R visit(final ShortType s);
 
+  R visit(final BooleanType b);
+
   R visit(final StringType s);
 
   R visit(final TimerType t);
@@ -242,4 +246,6 @@ public interface DefaultVisitor<R> {
   R visit(final UnknownType u);
 
   R visit(final VoidType v);
+
+  R visit(final TypeVariable t);
 }

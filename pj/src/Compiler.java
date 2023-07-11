@@ -1,3 +1,8 @@
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import parser.ProcessJLexer;
+import parser.ProcessJParser;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -119,5 +124,9 @@ public class Compiler {
     if (args.length == 2) {
       System.out.println();
     }
+    ProcessJLexer lex = new ProcessJLexer(CharStreams.fromString("package hello; import a.b.c.*; import a::b;"));
+    ProcessJParser parser = new ProcessJParser(new CommonTokenStream(lex));
+    ProcessJParser.InitContext init = parser.init();
+    new visitor.AstBuilder().visitInit(init);
   }
 }

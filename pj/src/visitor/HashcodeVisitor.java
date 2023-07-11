@@ -114,6 +114,11 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
+  public Integer visit(final VoidNode v) {
+    return null;
+  }
+
+  @Override
   public Integer visit(final ConstantTopLevel c) {
     return null;
   }
@@ -445,50 +450,42 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
 
   @Override
   public Integer visit(final CharType c) {
-    return c.hashCode() * 31 +
-        (c.getComment().isPresent() ? c.getComment().get().accept(this) : 0) * 31;
+    return (c.getComment().isPresent() ? c.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final DoubleType d) {
-    return d.hashCode() * 31 +
-        (d.getComment().isPresent() ? d.getComment().get().accept(this) : 0) * 31;
+    return (d.getComment().isPresent() ? d.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ExternalType e) {
-    return e.hashCode() * 31 +
-        (e.getComment().isPresent() ? e.getComment().get().accept(this) : 0) * 31;
+    return (e.getComment().isPresent() ? e.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final FloatType f) {
-    return f.hashCode() * 31 +
-        (f.getComment().isPresent() ? f.getComment().get().accept(this) : 0) * 31;
+    return (f.getComment().isPresent() ? f.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final IntegerType i) {
-    return i.hashCode() * 31 +
-        (i.getComment().isPresent() ? i.getComment().get().accept(this) : 0) * 31;
+    return (i.getComment().isPresent() ? i.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final LongType l) {
-    return l.hashCode() * 31 +
-        (l.getComment().isPresent() ? l.getComment().get().accept(this) : 0) * 31;
+    return (l.getComment().isPresent() ? l.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final MobileType m) {
-    return m.hashCode() * 31 +
-        (m.getComment().isPresent() ? m.getComment().get().accept(this) : 0) * 31;
+    return (m.getComment().isPresent() ? m.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final NullType n) {
-    return n.hashCode() * 31 +
-        (n.getComment().isPresent() ? n.getComment().get().accept(this) : 0) * 31;
+    return (n.getComment().isPresent() ? n.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
@@ -519,31 +516,36 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
 
   @Override
   public Integer visit(final ShortType s) {
-    return s.hashCode() * 31 +
-        (s.getComment().isPresent() ? s.getComment().get().accept(this) : 0) * 31;
+    return (s.getComment().isPresent() ? s.getComment().get().accept(this) : 0) * 31;
+  }
+
+  @Override
+  public Integer visit(final BooleanType b) {
+    return (b.getComment().isPresent() ? b.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final StringType s) {
-    return s.hashCode() * 31 +
-        (s.getComment().isPresent() ? s.getComment().get().accept(this) : 0) * 31;
+    return (s.getComment().isPresent() ? s.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final TimerType t) {
-    return t.hashCode() * 31 +
-        (t.getComment().isPresent() ? t.getComment().get().accept(this) : 0) * 31;
+    return (t.getComment().isPresent() ? t.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final UnknownType u) {
-    return u.hashCode() * 31 +
-        (u.getComment().isPresent() ? u.getComment().get().accept(this) : 0) * 31;
+    return (u.getComment().isPresent() ? u.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final VoidType v) {
-    return v.hashCode() * 31 +
-        (v.getComment().isPresent() ? v.getComment().get().accept(this) : 0) * 31;
+    return (v.getComment().isPresent() ? v.getComment().get().accept(this) : 0) * 31;
+  }
+
+  @Override
+  public Integer visit(final TypeVariable t) {
+    return (t.getComment().isPresent() ? t.getComment().get().accept(this) : 0) * 31;
   }
 }

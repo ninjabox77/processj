@@ -28,11 +28,6 @@ public abstract class ASTNode<N extends ASTNode<?>> implements NodeWithParent<N>
   private int stop_ = -1;
 
   /**
-   * The index of the first character of this token relative to the line.
-   */
-  private int charPosition_ = -1;
-
-  /**
    * The line of text that contains this token.
    */
   private String text_ = null;
@@ -42,16 +37,14 @@ public abstract class ASTNode<N extends ASTNode<?>> implements NodeWithParent<N>
       line_ = token.getLine();
       start_ = token.getStartIndex();
       stop_ = token.getStopIndex();
-      charPosition_ = token.getCharPositionInLine();
       text_ = token.getText();
     }
   }
 
-  public ASTNode(int line, int start, int stop, int charPosition, final String text) {
+  public ASTNode(int line, int start, int stop, final String text) {
     setLine(line);
     setStart(start);
     setStop(stop);
-    setCharPosition(charPosition);
     setText(text);
   }
 
@@ -91,18 +84,6 @@ public abstract class ASTNode<N extends ASTNode<?>> implements NodeWithParent<N>
     return (N) this;
   }
 
-  public int getCharPosition() {
-    return charPosition_;
-  }
-
-  public N setCharPosition(int charPosition) {
-    if (charPosition == charPosition_) {
-      return (N) this;
-    }
-    charPosition_ = charPosition;
-    return (N) this;
-  }
-
   public int getStop() {
     return stop_;
   }
@@ -117,7 +98,6 @@ public abstract class ASTNode<N extends ASTNode<?>> implements NodeWithParent<N>
 
   public N setSourcePositionFromNode(ASTNode<?> node) {
     start_ = node.getStart();
-    charPosition_ = node.getCharPosition();
     stop_ = node.getStop();
     line_ = node.getLine();
     text_ = node.getText();

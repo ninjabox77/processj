@@ -6,8 +6,6 @@ import java.util.List;
 
 /**
  * Represent a class for the re-writers to use.
- *
- * @author Ben
  */
 public class ClassSymbol extends AggregatedSymbol {
 

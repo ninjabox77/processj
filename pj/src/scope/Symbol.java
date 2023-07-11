@@ -2,8 +2,6 @@ package scope;
 
 /**
  * Represents a symbol that has a name and a scope in which in it lives.
- *
- * @author Ben
  */
 public interface Symbol {
 
@@ -16,7 +14,7 @@ public interface Symbol {
   // The scope in which the variable lives.
   void setScope(Scope scope);
 
-  // Return true if the symbol represents a type.
+  // Return true if this symbol represents an aggregated symbol.
   default boolean isType() {
     return false;
   }

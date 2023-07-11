@@ -5,8 +5,6 @@ import ast.types.ASTType;
 
 /**
  * Base class for all symbols in ProcessJ.
- *
- * @author Ben
  */
 public abstract class BaseSymbol implements Symbol {
 

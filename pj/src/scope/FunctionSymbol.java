@@ -5,8 +5,6 @@ import ast.types.ASTType;
 
 /**
  * Represents a function.
- *
- * @author Ben
  */
 public abstract class FunctionSymbol extends SymbolWithScope {
 

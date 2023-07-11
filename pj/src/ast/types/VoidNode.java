@@ -2,46 +2,50 @@ package ast.types;
 
 import ast.Node;
 import org.antlr.v4.runtime.Token;
-import typesystem.IntegerType;
-import typesystem.Primitive;
 import typesystem.Type;
+import typesystem.VoidType;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
 /**
- * Represents a primitive type in the AST.
+ * Represents a void type in the AST.
  *
  * @author Ben
  */
-public class PrimitiveNode extends ASTType {
+public class VoidNode extends ASTType {
 
-  private Primitive type_;
+  private VoidType type_;
 
-  public PrimitiveNode() {
-    this(new IntegerType());
+  public VoidNode() {
+    this(null);
   }
 
-  public PrimitiveNode(Type type) {
+  public VoidNode(Type type) {
     this(null, type);
   }
 
-  public PrimitiveNode(Token token, Type type) {
+  public VoidNode(Token token, Type type) {
     super(token);
     setTSType(type);
   }
 
   @Override
-  public PrimitiveNode setTSType(Type type) {
+  public VoidNode setTSType(Type type) {
     if (type == type_) {
       return this;
     }
     if (type_ != null) {
       type_.setParentNode(null);
     }
-    type_ = type.asPrimitiveType();
+    type_ = type.asVoidType();
     setAsParentNodeOf(type);
     return this;
+  }
+
+  @Override
+  public Type getTSType() {
+    return type_;
   }
 
   @Override
@@ -50,24 +54,19 @@ public class PrimitiveNode extends ASTType {
       return false;
     }
     if (node == type_) {
-      setTSType((Primitive) replaceWith);
+      setTSType((VoidType) replaceWith);
       return true;
     }
     return false;
   }
 
   @Override
-  public Primitive getTSType() {
-    return type_;
-  }
-
-  @Override
-  public boolean isPrimitiveNode() {
+  public boolean isVoidNode() {
     return true;
   }
 
   @Override
-  public PrimitiveNode asPrimitiveNode() {
+  public VoidNode asVoidNode() {
     return this;
   }
 

@@ -2,8 +2,6 @@ package scope;
 
 /**
  * Base class for all symbols with scope.
- *
- * @author Ben
  */
 public abstract class SymbolWithScope extends BaseScope implements Symbol, Scope {
 

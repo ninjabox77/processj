@@ -53,6 +53,8 @@ public interface VoidVisitor<A> {
 
   void visit(final TimerNode t, A arg);
 
+  void visit(final VoidNode v, A arg);
+
   /*********************************************************
    * Top-level nodes
    *********************************************************/
@@ -235,6 +237,8 @@ public interface VoidVisitor<A> {
 
   void visit(final ShortType s, A arg);
 
+  void visit(final BooleanType b, A arg);
+
   void visit(final StringType s, A arg);
 
   void visit(final TimerType t, A arg);
@@ -242,4 +246,6 @@ public interface VoidVisitor<A> {
   void visit(final UnknownType u, A arg);
 
   void visit(final VoidType v, A arg);
+
+  void visit(final TypeVariable t, A arg);
 }

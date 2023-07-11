@@ -6,27 +6,27 @@ import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
 /**
- * Represents the timer type.
+ * Represents the boolean type.
  *
  * @author Ben
  */
-public class BarrierType extends Primitive {
+public class BooleanType extends Primitive {
 
-  public BarrierType() {
+  public BooleanType() {
     this(null);
   }
 
-  public BarrierType(Token token) {
+  public BooleanType(Token token) {
     super(token);
   }
 
   @Override
-  public boolean isBarrierType() {
+  public boolean isBooleanType() {
     return true;
   }
 
   @Override
-  public BarrierType asBarrierType() {
+  public BooleanType asBooleanType() {
     return this;
   }
 

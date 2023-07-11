@@ -19,6 +19,10 @@ public class ChannelEndType extends Constructed {
   private int channelEnd_;
   private Type componentType_;
 
+  public ChannelEndType() {
+    this(null);
+  }
+
   public ChannelEndType(Type componentType) {
     this(null, componentType, READ_END);
   }

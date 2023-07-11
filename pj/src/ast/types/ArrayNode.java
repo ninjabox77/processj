@@ -31,7 +31,11 @@ public class ArrayNode extends ASTType {
   private ArrayType arrayType_;
 
   public ArrayNode() {
-    this(null, null, BracketPosition.TYPE);
+    this(null);
+  }
+
+  public ArrayNode(Type arrayType) {
+    this(arrayType, BracketPosition.TYPE);
   }
 
   public ArrayNode(Type arrayType, BracketPosition position) {

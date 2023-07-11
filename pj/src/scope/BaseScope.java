@@ -7,8 +7,6 @@ import java.util.Map;
 
 /**
  * Base class for all scopes in ProcessJ.
- *
- * @author Ben
  */
 public abstract class BaseScope implements Scope {
 

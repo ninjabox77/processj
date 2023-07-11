@@ -2,8 +2,6 @@ package scope;
 
 /**
  * Represents a parameter.
- *
- * @author Ben
  */
 public class ParameterSymbol extends VariableSymbol {
 

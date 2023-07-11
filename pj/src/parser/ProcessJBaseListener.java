@@ -341,13 +341,13 @@ public class ProcessJBaseListener implements ProcessJListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTypeType(ProcessJParser.TypeTypeContext ctx) { }
+	@Override public void enterType_(ProcessJParser.Type_Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTypeType(ProcessJParser.TypeTypeContext ctx) { }
+	@Override public void exitType_(ProcessJParser.Type_Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

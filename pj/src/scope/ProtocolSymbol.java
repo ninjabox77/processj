@@ -2,8 +2,6 @@ package scope;
 
 /**
  * Represents a protocol variant.
- *
- * @author Ben
  */
 public class ProtocolSymbol extends AggregatedSymbol implements MemberSymbol {
 

@@ -42,7 +42,7 @@ public class Name extends AnnotatedNode {
     if (qualifier == qualifier_) {
       return this;
     }
-    if (qualifier != null) {
+    if (qualifier_ != null) {
       qualifier_.setParentNode(null);
     }
     qualifier_ = qualifier;

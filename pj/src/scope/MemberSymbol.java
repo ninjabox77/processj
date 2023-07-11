@@ -2,8 +2,6 @@ package scope;
 
 /**
  * Represents a symbol in an aggregated symbol.
- *
- * @author Ben
  */
 public interface MemberSymbol extends Symbol {
 

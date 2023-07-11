@@ -16,7 +16,7 @@ import java.util.Queue;
 
 /**
  * The compilation unit collects all compilation data as it is generated
- * by the compiler system. We use an instance of this class to add additional
+ * by the compiler. We use an instance of this class to add additional
  * resources to the compile unit, and force the compilation to be run
  * again if needed.
  *

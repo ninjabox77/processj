@@ -2,8 +2,6 @@ package scope;
 
 /**
  * Represents a procedure.
- *
- * @author Ben
  */
 public class ProcedureSymbol extends FunctionSymbol {
 

@@ -77,4 +77,12 @@ public abstract class ASTType extends AnnotatedNode implements NodeWithTSType<AS
   public TimerNode asTimerNode() {
     throw new IllegalStateException(String.format("%s is not a TimerNode, it is a %s", this, getClass().getSimpleName()));
   }
+
+  public boolean isVoidNode() {
+    return false;
+  }
+
+  public VoidNode asVoidNode() {
+    throw new IllegalStateException(String.format("%s is not a VoidNode, it is a %s", this, getClass().getSimpleName()));
+  }
 }

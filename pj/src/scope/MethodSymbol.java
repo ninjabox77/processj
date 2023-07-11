@@ -2,8 +2,6 @@ package scope;
 
 /**
  * Represents a method symbol.
- *
- * @author Ben
  */
 public class MethodSymbol extends FunctionSymbol implements MemberSymbol {
 

@@ -2,8 +2,6 @@ package scope;
 
 /**
  * Represents a field.
- *
- * @author Ben
  */
 public class FieldSymbol extends VariableSymbol implements MemberSymbol {
 

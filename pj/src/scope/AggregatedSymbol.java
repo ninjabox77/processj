@@ -7,8 +7,6 @@ import java.util.List;
 
 /**
  * Base class for all constructed types.
- *
- * @author Ben
  */
 public abstract class AggregatedSymbol extends SymbolWithScope implements MemberSymbol {
 
@@ -114,6 +112,14 @@ public abstract class AggregatedSymbol extends SymbolWithScope implements Member
 
   public ProtocolSymbol asProtocolSymbol() {
     throw new IllegalStateException(String.format("%s is not a ProtocolSymbol, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isProtocolTagSymbol() {
+    return false;
+  }
+
+  public ProtocolTagSymbol asProtocolTagSymbol() {
+    throw new IllegalStateException(String.format("%s is not a ProtocolTagSymbol, it is a %s", this, getClass().getSimpleName()));
   }
 
   @Override

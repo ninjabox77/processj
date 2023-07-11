@@ -2,8 +2,6 @@ package scope;
 
 /**
  * Represents a record symbol.
- *
- * @author Ben
  */
 public class RecordSymbol extends AggregatedSymbol implements MemberSymbol {
 

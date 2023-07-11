@@ -11,7 +11,7 @@ init
  ;
 
 packageDeclaration
- : PACKAGE packageAccess SEMI
+ : PACKAGE Identifier SEMI
  ;
 
 importDeclaration
@@ -25,11 +25,11 @@ singleImportDeclaration
  ;
 
 multiImportDeclaration
- : IMPORT annotation? Identifier (DOT Identifier)* (DCOLON Identifier)? SEMI
+ : IMPORT annotation? packageAccess (DCOLON Identifier)? SEMI
  ;
 
 multiImportDeclarationStar
- : IMPORT annotation? Identifier (DOT Identifier)*  DOT MULT SEMI
+ : IMPORT annotation? packageAccess  DOT MULT SEMI
  ;
 
 typeDeclaration
@@ -41,7 +41,7 @@ typeDeclaration
  ;
 
 procedureDeclaration
- : modifier* typeType Identifier LPAREN formalDeclarationList? RPAREN blockExpression
+ : modifier* type_ Identifier LPAREN formalDeclarationList? RPAREN blockExpression
  ;
 
 modifier
@@ -71,7 +71,7 @@ recordBody
  ;
 
 recordField
- : typeType variableDeclaratorList SEMI
+ : type_ variableDeclaratorList SEMI
  ;
 
 protocolDeclaration
@@ -88,7 +88,7 @@ protocolCase
  ;
 
 constantDeclaration
- : modifier* typeType variableDeclaratorList SEMI
+ : modifier* type_ variableDeclaratorList SEMI
  ;
 
 packageAccess
@@ -106,7 +106,7 @@ localVariableDeclarationStatement
  ;
 
 localVariableDeclaration
- : variableModifier* typeType variableDeclaratorList
+ : variableModifier* type_ variableDeclaratorList
  ;
 
 variableDeclaratorList
@@ -121,7 +121,7 @@ variableDeclaratorIdentifier
  : Identifier dims?
  ;
 
-typeType
+type_
  : primitiveType
  | referenceType
  | annotation* classType
@@ -167,14 +167,14 @@ arrayType
  ;
 
 channelType
- : SHARED READ CHAN LT typeType GT         # ChannelSharedReadType
- | SHARED WRITE CHAN LT typeType GT        # ChannelSharedWriteType
- | SHARED CHAN LT typeType GT              # ChannelSharedType
- | CHAN LT typeType GT                     # ChannelType_
- | CHAN LT typeType GT DOT READ            # ChannelDotRead
- | CHAN LT typeType GT DOT WRITE           # ChannelDotWrite
- | SHARED CHAN LT typeType GT DOT READ     # ChannelSharedDotRead
- | SHARED CHAN LT typeType GT DOT WRITE    # ChannelSharedDotWrite
+ : SHARED READ CHAN LT type_ GT         # ChannelSharedReadType
+ | SHARED WRITE CHAN LT type_ GT        # ChannelSharedWriteType
+ | SHARED CHAN LT type_ GT              # ChannelSharedType
+ | CHAN LT type_ GT                     # ChannelType_
+ | CHAN LT type_ GT DOT READ            # ChannelDotRead
+ | CHAN LT type_ GT DOT WRITE           # ChannelDotWrite
+ | SHARED CHAN LT type_ GT DOT READ     # ChannelSharedDotRead
+ | SHARED CHAN LT type_ GT DOT WRITE    # ChannelSharedDotWrite
  ;
 
 typeVariable
@@ -298,7 +298,7 @@ formalDeclarations
  ;
 
 formalDeclaration
- : variableModifier* typeType variableDeclarator (EQ variableInitializer)?
+ : variableModifier* type_ variableDeclarator (EQ variableInitializer)?
  ;
 
 variableModifier
@@ -307,7 +307,7 @@ variableModifier
  ;
 
 lastFormalDeclaration
- : annotation? typeType ELLIPSIS Identifier
+ : annotation? type_ ELLIPSIS Identifier
  ;
 
 comparisonOperator

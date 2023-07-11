@@ -43,6 +43,14 @@ public abstract class Primitive extends Type {
     throw new IllegalStateException(String.format("%s is not a ShortType, it is a %s", this, getClass().getSimpleName()));
   }
 
+  public boolean isBooleanType() {
+    return false;
+  }
+
+  public BooleanType asBooleanType() {
+    throw new IllegalStateException(String.format("%s is not a BooleanType, it is a %s", this, getClass().getSimpleName()));
+  }
+
   public boolean isLongType() {
     return false;
   }
