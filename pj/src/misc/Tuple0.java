@@ -7,6 +7,16 @@ public class Tuple0 extends Tuple {
   }
 
   @Override
+  public boolean isTuple0() {
+    return true;
+  }
+
+  @Override
+  public Tuple0 asTuple0() {
+    return this;
+  }
+
+  @Override
   protected Tuple0 clone() {
     return INSTANCE;
   }

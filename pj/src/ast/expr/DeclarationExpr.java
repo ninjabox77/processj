@@ -18,11 +18,11 @@ import visitor.VoidVisitor;
  */
 public class DeclarationExpr extends BinaryExpr {
 
-  public DeclarationExpr(Expression<?> leftExpression, Token operation, Expression<?> rightExpression) {
+  public DeclarationExpr(VariableExpr leftExpression, Token operation, Expression<?> rightExpression) {
     this(null, leftExpression, operation, rightExpression);
   }
 
-  public DeclarationExpr(Token token, Expression<?> leftExpression, Token operation, Expression<?> rightExpression) {
+  public DeclarationExpr(Token token, VariableExpr leftExpression, Token operation, Expression<?> rightExpression) {
     super(token, leftExpression, operation, rightExpression);
   }
 

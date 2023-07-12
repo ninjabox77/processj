@@ -179,8 +179,7 @@ channelType
 
 typeVariable
  : annotation* Identifier                       # TypeVariableIdentifier
- | annotation* packageAccess DCOLON Identifier  # TypeVariablePackageDdotIdentifier
- | annotation* packageAccess DOT Identifier     # TypeVariablePackageDotIdentifier
+ | annotation* packageAccess DCOLON Identifier  # TypeVariablePackageDotIdentifier
  ;
 
 dims

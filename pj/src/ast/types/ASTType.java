@@ -85,4 +85,12 @@ public abstract class ASTType extends AnnotatedNode implements NodeWithTSType<AS
   public VoidNode asVoidNode() {
     throw new IllegalStateException(String.format("%s is not a VoidNode, it is a %s", this, getClass().getSimpleName()));
   }
+
+  public boolean isConstructedNode() {
+    return false;
+  }
+
+  public ConstructedNode asConstructedNode() {
+    throw new IllegalStateException(String.format("%s is not a ConstructedNode, it is a %s", this, getClass().getSimpleName()));
+  }
 }

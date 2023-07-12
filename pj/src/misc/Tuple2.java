@@ -14,6 +14,16 @@ public class Tuple2<T1, T2> extends Tuple {
     this(tuple.v1, tuple.v2);
   }
 
+  @Override
+  public boolean isTuple2() {
+    return true;
+  }
+
+  @Override
+  public Tuple2<T1, T2> asTuple2() {
+    return this;
+  }
+
   public T1 getV1() {
     return v1;
   }

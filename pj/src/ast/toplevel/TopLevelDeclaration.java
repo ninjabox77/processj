@@ -171,4 +171,12 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
   public CallableTopLevel<?> asCallableTopLevel() {
     throw new IllegalStateException(String.format("%s is not a MethodCallDeclaration, it is a %s", this, getClass().getSimpleName()));
   }
+
+  public boolean isTypeDeclarationTopLevel() {
+    return false;
+  }
+
+  public TypeDeclarationTopLevel asTypeDeclarationTopLevel() {
+    throw new IllegalStateException(String.format("%s is not a TypeDeclarationTopLevel, it is a %s", this, getClass().getSimpleName()));
+  }
 }

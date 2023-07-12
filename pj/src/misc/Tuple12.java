@@ -34,6 +34,16 @@ public class Tuple12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> extends 
     this(tuple.v1, tuple.v2, tuple.v3, tuple.v4, tuple.v5, tuple.v6, tuple.v7, tuple.v8, tuple.v9, tuple.v10, tuple.v11, tuple.v12);
   }
 
+  @Override
+  public boolean isTuple12() {
+    return true;
+  }
+
+  @Override
+  public Tuple12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> asTuple12() {
+    return this;
+  }
+
   public T1 getV1() {
     return v1;
   }

@@ -33,6 +33,134 @@ public class Tuple<E> extends AbstractList<E> implements Cloneable, Comparable<T
         : 1;
   }
 
+  public boolean isTuple0() {
+    return false;
+  }
+
+  public Tuple0 asTuple0() {
+    throw new IllegalStateException(String.format("%s is not a Tuple0, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isTuple1() {
+    return false;
+  }
+
+  public <T1> Tuple1<T1> asTuple1() {
+    throw new IllegalStateException(String.format("%s is not a Tuple1, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isTuple2() {
+    return false;
+  }
+
+  public <T1, T2> Tuple2<T1, T2> asTuple2() {
+    throw new IllegalStateException(String.format("%s is not a Tuple2, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isTuple3() {
+    return false;
+  }
+
+  public <T1, T2, T3> Tuple3<T1, T2, T3> asTuple3() {
+    throw new IllegalStateException(String.format("%s is not a Tuple3, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isTuple4() {
+    return false;
+  }
+
+  public <T1, T2, T3, T4> Tuple4<T1, T2, T3, T4> asTuple4() {
+    throw new IllegalStateException(String.format("%s is not a Tuple4, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isTuple5() {
+    return false;
+  }
+
+  public <T1, T2, T3, T4, T5> Tuple5<T1, T2, T3, T4, T5> asTuple5() {
+    throw new IllegalStateException(String.format("%s is not a Tuple5, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isTuple6() {
+    return false;
+  }
+
+  public <T1, T2, T3, T4, T5, T6> Tuple6<T1, T2, T3, T4, T5, T6> asTuple6() {
+    throw new IllegalStateException(String.format("%s is not a Tuple6, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isTuple7() {
+    return false;
+  }
+
+  public <T1, T2, T3, T4, T5, T6, T7> Tuple7<T1, T2, T3, T4, T5, T6, T7> asTuple7() {
+    throw new IllegalStateException(String.format("%s is not a Tuple7, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isTuple8() {
+    return false;
+  }
+
+  public <T1, T2, T3, T4, T5, T6, T7, T8> Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> asTuple8() {
+    throw new IllegalStateException(String.format("%s is not a Tuple8, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isTuple9() {
+    return false;
+  }
+
+  public <T1, T2, T3, T4, T5, T6, T7, T8, T9> Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9> asTuple9() {
+    throw new IllegalStateException(String.format("%s is not a Tuple9, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isTuple10() {
+    return false;
+  }
+
+  public <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> Tuple10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> asTuple10() {
+    throw new IllegalStateException(String.format("%s is not a Tuple10, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isTuple11() {
+    return false;
+  }
+
+  public <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> asTuple11() {
+    throw new IllegalStateException(String.format("%s is not a Tuple11, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isTuple12() {
+    return false;
+  }
+
+  public <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> Tuple12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> asTuple12() {
+    throw new IllegalStateException(String.format("%s is not a Tuple12, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isTuple13() {
+    return false;
+  }
+
+  public <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> Tuple13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> asTuple13() {
+    throw new IllegalStateException(String.format("%s is not a Tuple13, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isTuple14() {
+    return false;
+  }
+
+  public <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> Tuple14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> asTuple14() {
+    throw new IllegalStateException(String.format("%s is not a Tuple14, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isTuple15() {
+    return false;
+  }
+
+  public <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> Tuple15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> asTuple15() {
+    throw new IllegalStateException(String.format("%s is not a Tuple15, it is a %s", this, getClass().getSimpleName()));
+  }
+
   public static <T> Tuple0 tuple() {
     return Tuple0.INSTANCE;
   }

@@ -229,6 +229,13 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
+  public Boolean visit(final ConstructedNode c, CodeVisitor arg) {
+    final ConstructedNode c2 = (ConstructedNode) arg;
+    return objectEquals(c.getTSType(), c2.getTSType()) &&
+        objectEquals(c.getComment(), c2.getComment());
+  }
+
+  @Override
   public Boolean visit(final ConstantTopLevel c, CodeVisitor arg) {
     final ConstantTopLevel c2 = (ConstantTopLevel) arg;
     return objectEquals(c.getModifiers(), c2.getModifiers()) &&
@@ -297,6 +304,15 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
         objectsEquals(r.getDeclaredFields(), r2.getDeclaredFields()) &&
         objectsEquals(r.getImplementedNames(), r2.getImplementedNames()) &&
         objectEquals(r.getComment(), r2.getComment());
+  }
+
+  @Override
+  public Boolean visit(final TypeDeclarationTopLevel t, CodeVisitor arg) {
+    final TypeDeclarationTopLevel t2 = (TypeDeclarationTopLevel) arg;
+    return objectEquals(t.getModifiers(), t2.getModifiers()) &&
+        objectEquals(t.getASTType(), t2.getASTType()) &&
+        objectEquals(t.getName(), t2.getName()) &&
+        objectEquals(t.getComment(), t2.getComment());
   }
 
   @Override
@@ -580,8 +596,8 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
-  public Boolean visit(final FieldAccessExpr f, CodeVisitor arg) {
-    final FieldAccessExpr f2 = (FieldAccessExpr) arg;
+  public Boolean visit(final FieldExpr f, CodeVisitor arg) {
+    final FieldExpr f2 = (FieldExpr) arg;
     return objectEquals(f.getObjectExpression(), f2.getObjectExpression()) &&
         objectEquals(f.getFieldExpression(), f2.getFieldExpression()) &&
         objectEquals(f.isImplicitThis(), f2.isImplicitThis()) &&

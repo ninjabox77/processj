@@ -55,6 +55,8 @@ public interface DefaultVisitor<R> {
 
   R visit(final VoidNode v);
 
+  R visit(final ConstructedNode c);
+
   /*********************************************************
    * Top-level nodes
    *********************************************************/
@@ -72,6 +74,8 @@ public interface DefaultVisitor<R> {
   R visit(final ProtocolTopLevel p);
 
   R visit(final RecordTopLevel r);
+
+  R visit(final TypeDeclarationTopLevel t);
 
   /*********************************************************
    * Statement nodes
@@ -149,7 +153,7 @@ public interface DefaultVisitor<R> {
 
   R visit(final EmptyExpr e);
 
-  R visit(final FieldAccessExpr f);
+  R visit(final FieldExpr f);
 
   R visit(final IntegerLiteral i);
 

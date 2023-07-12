@@ -18,6 +18,16 @@ public class Tuple4<T1, T2, T3, T4> extends Tuple {
     this(tuple.v1, tuple.v2, tuple.v3, tuple.v4);
   }
 
+  @Override
+  public boolean isTuple4() {
+    return true;
+  }
+
+  @Override
+  public Tuple4<T1, T2, T3, T4> asTuple4() {
+    return this;
+  }
+
   public T1 getV1() {
     return v1;
   }

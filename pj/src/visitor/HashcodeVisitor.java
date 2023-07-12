@@ -119,6 +119,11 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
+  public Integer visit(final ConstructedNode c) {
+    return null;
+  }
+
+  @Override
   public Integer visit(final ConstantTopLevel c) {
     return null;
   }
@@ -150,6 +155,11 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
 
   @Override
   public Integer visit(final RecordTopLevel r) {
+    return null;
+  }
+
+  @Override
+  public Integer visit(final TypeDeclarationTopLevel t) {
     return null;
   }
 
@@ -314,7 +324,7 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final FieldAccessExpr f) {
+  public Integer visit(final FieldExpr f) {
     return null;
   }
 

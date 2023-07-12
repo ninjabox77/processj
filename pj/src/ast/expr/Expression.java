@@ -173,11 +173,11 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
     throw new IllegalStateException(String.format("%s is not a UnaryPlusExpr, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isFieldAccessExpr() {
+  public boolean isFieldExpr() {
     return false;
   }
 
-  public FieldAccessExpr asFieldAccessExpr() {
+  public FieldExpr asFieldExpr() {
     throw new IllegalStateException(String.format("%s is not a UnaryPlusExpr, it is a %s", this, getClass().getSimpleName()));
   }
 

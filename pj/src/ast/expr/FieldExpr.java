@@ -17,27 +17,27 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public class FieldAccessExpr extends Expression<FieldAccessExpr> {
+public class FieldExpr extends Expression<FieldExpr> {
 
   private Expression<?> objectExpression_;
   private Expression<?> fieldExpression_;
   private boolean implicitThis_;
 
-  public FieldAccessExpr() {
+  public FieldExpr() {
     this(null, null);
   }
 
-  public FieldAccessExpr(Expression<?> objectExpression, Expression<?> fieldExpression) {
+  public FieldExpr(Expression<?> objectExpression, Expression<?> fieldExpression) {
     this(null, objectExpression, fieldExpression);
   }
 
-  public FieldAccessExpr(Token token, Expression<?> objectExpression, Expression<?> fieldExpression) {
+  public FieldExpr(Token token, Expression<?> objectExpression, Expression<?> fieldExpression) {
     super(token);
     setObjectExpression(objectExpression);
     setFieldExpression(fieldExpression);
   }
 
-  public FieldAccessExpr setObjectExpression(Expression<?> objectExpression) {
+  public FieldExpr setObjectExpression(Expression<?> objectExpression) {
     if (objectExpression == objectExpression_) {
       return this;
     }
@@ -53,7 +53,7 @@ public class FieldAccessExpr extends Expression<FieldAccessExpr> {
     return Optional.ofNullable(objectExpression_);
   }
 
-  public FieldAccessExpr setFieldExpression(Expression<?> fieldExpression) {
+  public FieldExpr setFieldExpression(Expression<?> fieldExpression) {
     if (fieldExpression == fieldExpression_) {
       return this;
     }
@@ -69,7 +69,7 @@ public class FieldAccessExpr extends Expression<FieldAccessExpr> {
     return fieldExpression_;
   }
 
-  public FieldAccessExpr setImplicitThis(final boolean implicitThis) {
+  public FieldExpr setImplicitThis(final boolean implicitThis) {
     if (implicitThis == implicitThis_) {
       return this;
     }
@@ -82,12 +82,12 @@ public class FieldAccessExpr extends Expression<FieldAccessExpr> {
   }
 
   @Override
-  public boolean isFieldAccessExpr() {
+  public boolean isFieldExpr() {
     return true;
   }
 
   @Override
-  public FieldAccessExpr asFieldAccessExpr() {
+  public FieldExpr asFieldExpr() {
     return this;
   }
 

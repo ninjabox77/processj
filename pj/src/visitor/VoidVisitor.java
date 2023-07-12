@@ -55,6 +55,8 @@ public interface VoidVisitor<A> {
 
   void visit(final VoidNode v, A arg);
 
+  void visit(final ConstructedNode c, A arg);
+
   /*********************************************************
    * Top-level nodes
    *********************************************************/
@@ -72,6 +74,8 @@ public interface VoidVisitor<A> {
   void visit(final ProtocolTopLevel p, A arg);
 
   void visit(final RecordTopLevel r, A arg);
+
+  void visit(final TypeDeclarationTopLevel t, A arg);
 
   /*********************************************************
    * Statement nodes
@@ -149,7 +153,7 @@ public interface VoidVisitor<A> {
 
   void visit(final EmptyExpr e, A arg);
 
-  void visit(final FieldAccessExpr f, A arg);
+  void visit(final FieldExpr f, A arg);
 
   void visit(final IntegerLiteral i, A arg);
 

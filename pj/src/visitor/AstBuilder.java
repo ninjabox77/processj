@@ -2,11 +2,16 @@ package visitor;
 
 import ast.*;
 import ast.Package;
+import ast.expr.BinaryExpr;
+import ast.expr.DeclarationExpr;
+import ast.expr.Expression;
+import ast.expr.VariableExpr;
 import ast.java.FieldDeclaration;
-import ast.toplevel.ProcedureTopLevel;
-import ast.toplevel.RecordTopLevel;
+import ast.toplevel.*;
 import ast.types.*;
-import misc.ConfigureAST;
+import misc.Tuple;
+import misc.Tuple1;
+import misc.Tuple2;
 import org.objectweb.asm.Opcodes;
 import parser.ProcessJBaseVisitor;
 import parser.ProcessJParser;
@@ -28,11 +33,65 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     return array;
   }
 
+  private ASTType createASTType(Type type) {
+    if (type.isPrimitiveType()) {
+      Primitive primitive = type.asPrimitiveType();
+      PrimitiveNode primitiveNode = configureNode(new PrimitiveNode(), primitive);
+      if (primitive.isByteType()) {
+        primitiveNode.setTSType(primitive.asByteType());
+      } else if (primitive.isIntegerType()) {
+        primitiveNode.setTSType(primitive.asIntegerType());
+      } else if (primitive.isShortType()) {
+        primitiveNode.setTSType(primitive.asShortType());
+      } else if (primitive.isBooleanType()) {
+        primitiveNode.setTSType(primitive.asBooleanType());
+      } else if (primitive.isLongType()) {
+        primitiveNode.setTSType(primitive.asLongType());
+      } else if (primitive.isFloatType()) {
+        primitiveNode.setTSType(primitive.asFloatType());
+      } else if (primitive.isDoubleType()) {
+        primitiveNode.setTSType(primitive.asDoubleType());
+      } else if (primitive.isCharType()) {
+        primitiveNode.setTSType(primitive.asCharType());
+      } else if (primitive.isTimerType()) {
+        primitiveNode.setTSType(primitive.asTimerType());
+      } else if (primitive.isBarrierType()) {
+        primitiveNode.setTSType(primitive.asBarrierType());
+      } else if (primitive.isStringType()) {
+        primitiveNode.setTSType(primitive.asStringType());
+      }
+      return primitiveNode;
+    } else if (type.isConstructedType()) {
+      Constructed constructed = type.asConstructedType();
+      if (constructed.isArrayType()) {
+        ArrayType arrayType = constructed.asArrayType();
+        ArrayNode arrayNode = configureNode(new ArrayNode(), arrayType);
+        return arrayNode.setTSType(arrayType);
+      } else if (constructed.isChannelType()) {
+        ChannelType channelType = constructed.asChannelType();
+        ChannelNode channelNode = configureNode(new ChannelNode(), channelType);
+        return channelNode.setTSType(channelType);
+      } else if (constructed.isChannelEndType()) {
+        ChannelEndType channelEndType = constructed.asChannelEndType();
+        ChannelEndNode channelEndNode = configureNode(new ChannelEndNode(), channelEndType);
+        return channelEndNode.setTSType(channelEndType);
+      } else if (constructed.isTypeVariable()) {
+        TypeVariable typeVariable = constructed.asTypeVariable();
+        ConstructedNode constructedNode = configureNode(new ConstructedNode(), typeVariable);
+        return constructedNode.setTSType(typeVariable);
+      }
+      // types like protocol and record are resolved elsewhere
+    }
+    return null;
+  }
+
   @Override
   public Object visitInit(ProcessJParser.InitContext ctx) {
     Package packet = visitPackageDeclaration(ctx.packageDeclaration());
     Sequence<Import> imports = Sequence.sequenceList();
     ctx.importDeclaration().forEach(i -> imports.add((Import) visit(i)));
+    Sequence<TopLevelDeclaration<?>> topLevel = Sequence.sequenceList();
+    ctx.typeDeclaration().forEach(t -> topLevel.add((TopLevelDeclaration<?>) visit(t)));
     return null;
   }
 
@@ -85,13 +144,12 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
 
   @Override
   public ProcedureTopLevel visitProcedureDeclaration(ProcessJParser.ProcedureDeclarationContext ctx) {
-    int modifiers = 0;
+    int modifiers = Opcodes.ACC_PRIVATE;
     if (ctx.modifier() != null) {
+      modifiers -= Opcodes.ACC_PRIVATE;
       for (int i = 0; i < ctx.modifier().size(); ++i) {
         modifiers += visitModifier(ctx.modifier(i));
       }
-    } else {
-      modifiers = Opcodes.ACC_PUBLIC;
     }
     ASTType type = visitType_(ctx.type_());
     String procName = ctx.Identifier().toString();
@@ -112,7 +170,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     if (ctx.NATIVE() != null) {
       return Opcodes.ACC_NATIVE;
     }
-    return Opcodes.ACC_PUBLIC;
+    return Opcodes.ACC_PRIVATE;
   }
 
   @Override
@@ -131,7 +189,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
         } else if (ctr.isChannelEndType()) {
           return configureNode(new ChannelEndNode(ctr.asChannelEndType()), ctx);
         } else if (ctr.isTypeVariable()) {
-          return null; // TODO: what should a type variable return?
+          return configureNode(new ConstructedNode(ctr.asTypeVariable()), ctx);
         }
       }
     } else if (ctx.classType() != null) {
@@ -293,21 +351,13 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   }
 
   @Override
-  public TypeVariable visitTypeVariablePackageDdotIdentifier(ProcessJParser.TypeVariablePackageDdotIdentifierContext ctx) {
+  public TypeVariable visitTypeVariablePackageDotIdentifier(ProcessJParser.TypeVariablePackageDotIdentifierContext ctx) {
     Name name = new Name()
         .setQualifier(visitPackageAccess(ctx.packageAccess()))
         .setIdentifier(ctx.Identifier().getText());
     configureNode(name, ctx.packageAccess());
     return configureNode(new TypeVariable(name), ctx);
   }
-
-//  @Override
-//  public TypeVariable visitTypeVariablePackageDotIdentifier(ProcessJParser.TypeVariablePackageDotIdentifierContext ctx) {
-//    Name name = new Name().setQualifier(visitPackageAccess(ctx.packageAccess())).setIdentifier(ctx.Identifier().getText());
-//    configureNode(name, ctx);
-//    return configureNode(new TypeVariable(name), ctx);
-//  }
-
 
   @Override
   public Object visitFormalDeclaration_(ProcessJParser.FormalDeclaration_Context ctx) {
@@ -326,20 +376,30 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
 
   @Override
   public RecordTopLevel visitRecordDeclaration(ProcessJParser.RecordDeclarationContext ctx) {
-    int modifiers = 0;
+    int modifiers = Opcodes.ACC_PRIVATE;
     if (ctx.modifier() != null) {
+      modifiers -= Opcodes.ACC_PRIVATE;
       for (int i = 0; i < ctx.modifier().size(); ++i) {
         modifiers += visitModifier(ctx.modifier(i));
       }
-    } else {
-      modifiers = Opcodes.ACC_PUBLIC;
     }
     String name = ctx.Identifier().getText();
-    Sequence<Name> _extends;
+    Sequence<TopLevelDeclaration<?>> implementedNames = Sequence.sequenceList();
     if (ctx.extends_() != null) {
-      _extends = visitExtends(ctx.extends_());
+      Sequence<Name> _extends = visitExtends(ctx.extends_());
+      for (Name n : _extends) {
+        TypeDeclarationTopLevel typeDecl = configureNode(new TypeDeclarationTopLevel(), n);
+        typeDecl.setQualifier(n);
+        implementedNames.add(typeDecl);
+      }
     }
-    return null;
+    Sequence<FieldDeclaration> fields = visitRecordBody(ctx.recordBody());
+    RecordTopLevel recordTopLevel = new RecordTopLevel();
+    recordTopLevel.setModifiers(modifiers)
+        .setName(name)
+        .setImplementedNames(implementedNames)
+        .setDeclaredFields(fields);
+    return configureNode(recordTopLevel, ctx);
   }
 
   @Override
@@ -353,30 +413,192 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   public Sequence<FieldDeclaration> visitRecordBody(ProcessJParser.RecordBodyContext ctx) {
     Sequence<FieldDeclaration> fields = Sequence.sequenceList();
     if (ctx.recordField() != null) {
-      ctx.recordField().forEach(f -> fields.add(visitRecordField(f)));
+      ctx.recordField().forEach(f -> fields.addAll(visitRecordField(f)));
     }
     return fields;
   }
 
   @Override
-  public FieldDeclaration visitRecordField(ProcessJParser.RecordFieldContext ctx) {
+  public Sequence<FieldDeclaration> visitRecordField(ProcessJParser.RecordFieldContext ctx) {
+    Sequence<FieldDeclaration> fields = Sequence.sequenceList();
     Type type = (Type) visit(ctx.type_());
+    Sequence<Expression<?>> variables = visitVariableDeclaratorList(ctx.variableDeclaratorList());
+    for (Expression<?> expr : variables) {
+      if (expr.isVariableExpr()) {
+        VariableExpr variableExpr = expr.asVariableExpr();
+        FieldDeclaration field = new FieldDeclaration(null, variableExpr.getName());
+        if (variableExpr.getASTType() != null) {
+          if (variableExpr.getASTType().isArrayNode()) {
+            ArrayNode arrayNode = variableExpr.getASTType().asArrayNode();
+            arrayNode.getTSType().setComponentType(type);
+            field.setASTType(arrayNode);
+          }
+        } else {
+          field.setASTType(createASTType(type));
+        }
+        fields.add(configureNode(field, variableExpr));
+      } else if (expr.isDeclarationExpr()) {
+        DeclarationExpr declarationExpr = expr.asDeclarationExpr();
+        String name = declarationExpr.getLeftExpression().asVariableExpr().getName();
+        FieldDeclaration field = new FieldDeclaration(null, name);
+        field.setRightExpression(declarationExpr.getRightExpression());
+        field.setASTType(createASTType(type));
+        fields.add(configureNode(field, declarationExpr));
+      }
+    }
+    return fields;
+  }
+
+  @Override
+  public Sequence<Expression<?>> visitVariableDeclaratorList(ProcessJParser.VariableDeclaratorListContext ctx) {
+    Sequence<Expression<?>> variables = Sequence.sequenceList();
+    ctx.variableDeclarator().forEach(v -> variables.add(visitVariableDeclarator(v)));
+    return variables;
+  }
+
+  @Override
+  public Expression<?> visitVariableDeclarator(ProcessJParser.VariableDeclaratorContext ctx) {
+    VariableExpr variableExpr;
+    Tuple<?> tuple = visitVariableDeclaratorIdentifier(ctx.variableDeclaratorIdentifier());
+    if (tuple.isTuple1()) {
+      Tuple1<String> t1 = tuple.asTuple1();
+      variableExpr = new VariableExpr().setName(t1.getV1());
+    } else {
+      Tuple2<String, ArrayType> t2 = tuple.asTuple2();
+      ArrayNode arrayNode = configureNode(new ArrayNode(t2.getV2()), t2.getV2());
+      variableExpr = new VariableExpr(arrayNode, t2.getV1());
+    }
+    configureNode(variableExpr, ctx.variableDeclaratorIdentifier());
+    if (ctx.variableInitializer() != null) {
+      DeclarationExpr declarationExpr = new DeclarationExpr(variableExpr,
+          ctx.EQ().getSymbol(), visitVariableInitializer(ctx.variableInitializer()));
+      return configureNode(declarationExpr, ctx);
+    }
+    return configureNode(variableExpr, ctx);
+  }
+
+  @Override
+  public Tuple<?> visitVariableDeclaratorIdentifier(ProcessJParser.VariableDeclaratorIdentifierContext ctx) {
+    String name = ctx.Identifier().getText();
+    if (ctx.dims() != null) {
+      ArrayType type = visitDims(ctx.dims());
+      return Tuple2.tuple(name, type);
+    }
+    return Tuple1.tuple(name);
+  }
+
+  @Override
+  public Expression<?> visitVariableInitializer(ProcessJParser.VariableInitializerContext ctx) {
     return null;
   }
 
   @Override
-  public Object visitVariableDeclaratorList(ProcessJParser.VariableDeclaratorListContext ctx) {
-//    ctx.variableDeclarator().forEach(v ->);
-    return null;
+  public ProtocolTopLevel visitProtocolDeclarationSemi(ProcessJParser.ProtocolDeclarationSemiContext ctx) {
+    int modifiers = Opcodes.ACC_PRIVATE;
+    if (ctx.modifier() != null) {
+      modifiers -= Opcodes.ACC_PRIVATE;
+      for (int i = 0; i < ctx.modifier().size(); ++i) {
+        modifiers += visitModifier(ctx.modifier(i));
+      }
+    }
+    String name = ctx.Identifier().getText();
+    Sequence<TopLevelDeclaration<?>> implementedNames = Sequence.sequenceList();
+    if (ctx.extends_() != null) {
+      Sequence<Name> _extends = visitExtends(ctx.extends_());
+      for (Name n : _extends) {
+        TypeDeclarationTopLevel typeDecl = configureNode(new TypeDeclarationTopLevel(), n);
+        typeDecl.setQualifier(n);
+        implementedNames.add(typeDecl);
+      }
+    }
+    ProtocolTopLevel protocolTopLevel = new ProtocolTopLevel();
+    protocolTopLevel.setModifiers(modifiers)
+        .setName(name)
+        .setImplementedNames(implementedNames);
+    return configureNode(protocolTopLevel, ctx);
   }
 
   @Override
-  public Object visitVariableDeclarator(ProcessJParser.VariableDeclaratorContext ctx) {
-    return null;
+  public ProtocolTopLevel visitProtocolDeclarationWithBody(ProcessJParser.ProtocolDeclarationWithBodyContext ctx) {
+    int modifiers = Opcodes.ACC_PRIVATE;
+    if (ctx.modifier() != null) {
+      modifiers -= Opcodes.ACC_PRIVATE;
+      for (int i = 0; i < ctx.modifier().size(); ++i) {
+        modifiers += visitModifier(ctx.modifier(i));
+      }
+    }
+    String name = ctx.Identifier().getText();
+    Sequence<TopLevelDeclaration<?>> names = Sequence.sequenceList();
+    if (ctx.extends_() != null) {
+      Sequence<Name> _extends = visitExtends(ctx.extends_());
+      for (Name n : _extends) {
+        TypeDeclarationTopLevel typeDecl = configureNode(new TypeDeclarationTopLevel(), n);
+        typeDecl.setQualifier(n);
+        names.add(typeDecl);
+      }
+    }
+    Sequence<ProtocolTagDeclaration> tags = visitProtocolBody(ctx.protocolBody());
+    ProtocolTopLevel protocolTopLevel = new ProtocolTopLevel();
+    protocolTopLevel.setModifiers(modifiers)
+        .setName(name)
+        .setImplementedNames(names)
+        .setDeclaredTags(tags);
+    return configureNode(protocolTopLevel, ctx);
   }
 
   @Override
-  public Object visitVariableDeclaratorIdentifier(ProcessJParser.VariableDeclaratorIdentifierContext ctx) {
-    return null;
+  public Sequence<ConstantTopLevel> visitConstantDeclaration(ProcessJParser.ConstantDeclarationContext ctx) {
+    int modifiers = Opcodes.ACC_PRIVATE;
+    if (ctx.modifier() != null) {
+      modifiers -= Opcodes.ACC_PRIVATE;
+      for (int i = 0; i < ctx.modifier().size(); ++i) {
+        modifiers += visitModifier(ctx.modifier(i));
+      }
+    }
+    ASTType type = visitType_(ctx.type_());
+    Sequence<ConstantTopLevel> constantTopLevels = Sequence.sequenceList();
+    Sequence<Expression<?>> variables = visitVariableDeclaratorList(ctx.variableDeclaratorList());
+    for (Expression<?> expr : variables) {
+      if (expr.isVariableExpr()) {
+        VariableExpr variableExpr = expr.asVariableExpr();
+        ConstantTopLevel constDecl = new ConstantTopLevel();
+        constDecl.setModifiers(modifiers);
+        constDecl.setName(variableExpr.getName());
+        if (variableExpr.getASTType() != null) {
+          if (variableExpr.getASTType().isArrayNode()) {
+            ArrayNode arrayNode = variableExpr.getASTType().asArrayNode();
+            arrayNode.getTSType().setComponentType(type.getTSType());
+            constDecl.setASTType(arrayNode);
+          }
+        } else {
+          constDecl.setASTType(type);
+        }
+        constantTopLevels.add(configureNode(constDecl, variableExpr));
+      } else if (expr.isDeclarationExpr()) {
+        DeclarationExpr declarationExpr = expr.asDeclarationExpr();
+        String name = declarationExpr.getLeftExpression().asVariableExpr().getName();
+        ConstantTopLevel constDecl = new ConstantTopLevel();
+        constDecl.setName(name);
+        constDecl.setRightExpression(declarationExpr.getRightExpression());
+        constDecl.setASTType(type);
+        constantTopLevels.add(configureNode(constDecl, declarationExpr));
+      }
+    }
+    return constantTopLevels;
+  }
+
+  @Override
+  public Sequence<ProtocolTagDeclaration> visitProtocolBody(ProcessJParser.ProtocolBodyContext ctx) {
+    Sequence<ProtocolTagDeclaration> tags = Sequence.sequenceList();
+    ctx.protocolCase().forEach(t -> tags.add(visitProtocolCase(t)));
+    return tags;
+  }
+
+  @Override
+  public ProtocolTagDeclaration visitProtocolCase(ProcessJParser.ProtocolCaseContext ctx) {
+    String name = ctx.Identifier().getText();
+    Sequence<FieldDeclaration> fields = visitRecordBody(ctx.recordBody());
+    ProtocolTagDeclaration protocolTag = new ProtocolTagDeclaration(name, fields);
+    return configureNode(protocolTag, ctx);
   }
 }

@@ -16,6 +16,16 @@ public class Tuple3<T1, T2, T3> extends Tuple {
     this(tuple.v1, tuple.v2, tuple.v3);
   }
 
+  @Override
+  public boolean isTuple3() {
+    return true;
+  }
+
+  @Override
+  public Tuple3<T1, T2, T3> asTuple3() {
+    return this;
+  }
+
   public T1 getV1() {
     return v1;
   }

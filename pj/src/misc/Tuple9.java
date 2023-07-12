@@ -28,6 +28,16 @@ public class Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9> extends Tuple {
     this(tuple.v1, tuple.v2, tuple.v3, tuple.v4, tuple.v5, tuple.v6, tuple.v7, tuple.v8, tuple.v9);
   }
 
+  @Override
+  public boolean isTuple9() {
+    return true;
+  }
+
+  @Override
+  public Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9> asTuple9() {
+    return this;
+  }
+
   public T1 getV1() {
     return v1;
   }

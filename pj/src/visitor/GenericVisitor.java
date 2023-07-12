@@ -60,6 +60,8 @@ public interface GenericVisitor<R, A> {
 
   R visit(final VoidNode v, A arg);
 
+  R visit(final ConstructedNode c, A arg);
+
   /*********************************************************
    * Top-level nodes
    *********************************************************/
@@ -77,6 +79,8 @@ public interface GenericVisitor<R, A> {
   R visit(final ProtocolTopLevel p, A arg);
 
   R visit(final RecordTopLevel r, A arg);
+
+  R visit(final TypeDeclarationTopLevel t, A arg);
 
   /*********************************************************
    * Statement nodes
@@ -154,7 +158,7 @@ public interface GenericVisitor<R, A> {
 
   R visit(final EmptyExpr e, A arg);
 
-  R visit(final FieldAccessExpr f, A arg);
+  R visit(final FieldExpr f, A arg);
 
   R visit(final IntegerLiteral i, A arg);
 

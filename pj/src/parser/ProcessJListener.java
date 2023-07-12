@@ -466,18 +466,6 @@ public interface ProcessJListener extends ParseTreeListener {
 	 */
 	void exitTypeVariableIdentifier(ProcessJParser.TypeVariableIdentifierContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code TypeVariablePackageDdotIdentifier}
-	 * labeled alternative in {@link ProcessJParser#typeVariable}.
-	 * @param ctx the parse tree
-	 */
-	void enterTypeVariablePackageDdotIdentifier(ProcessJParser.TypeVariablePackageDdotIdentifierContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code TypeVariablePackageDdotIdentifier}
-	 * labeled alternative in {@link ProcessJParser#typeVariable}.
-	 * @param ctx the parse tree
-	 */
-	void exitTypeVariablePackageDdotIdentifier(ProcessJParser.TypeVariablePackageDdotIdentifierContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code TypeVariablePackageDotIdentifier}
 	 * labeled alternative in {@link ProcessJParser#typeVariable}.
 	 * @param ctx the parse tree
