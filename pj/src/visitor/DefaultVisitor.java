@@ -35,6 +35,8 @@ public interface DefaultVisitor<R> {
 
   R visit(final Sequence<?> s);
 
+  R visit(final VariableDecl v);
+
   /*********************************************************
    * Type nodes
    *********************************************************/
@@ -61,21 +63,21 @@ public interface DefaultVisitor<R> {
    * Top-level nodes
    *********************************************************/
 
-  R visit(final ConstantTopLevel c);
+  R visit(final ConstantDecl c);
 
-  R visit(final ExternalTopLevel e);
+  R visit(final ExternalDecl e);
 
-  R visit(final CallableTopLevel<?> m);
+  R visit(final CallableDecl<?> m);
 
   R visit(final ProcedureTopLevel p);
 
-  R visit(final ProtocolTagDeclaration p);
+  R visit(final ProtocolTagDecl p);
 
-  R visit(final ProtocolTopLevel p);
+  R visit(final ProtocolDecl p);
 
-  R visit(final RecordTopLevel r);
+  R visit(final RecordDecl r);
 
-  R visit(final TypeDeclarationTopLevel t);
+  R visit(final TypeVariableDecl t);
 
   /*********************************************************
    * Statement nodes

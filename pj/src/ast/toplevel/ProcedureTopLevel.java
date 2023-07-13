@@ -14,7 +14,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ProcedureTopLevel extends CallableTopLevel<ProcedureTopLevel> {
+public class ProcedureTopLevel extends CallableDecl<ProcedureTopLevel> {
 
   private boolean yields_;
 

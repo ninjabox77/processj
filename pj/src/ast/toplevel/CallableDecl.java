@@ -14,33 +14,33 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public abstract class CallableTopLevel<T extends CallableTopLevel<?>> extends TopLevelDeclaration<T> {
+public abstract class CallableDecl<T extends CallableDecl<?>> extends TopLevelDeclaration<T> {
 
   private Sequence<Parameter> parameters_;
   private BlockStmt body_;
   private boolean yields_;
 
-  public CallableTopLevel() {
+  public CallableDecl() {
     this(null, null);
   }
 
-  public CallableTopLevel(ASTType type, final String name) {
+  public CallableDecl(ASTType type, final String name) {
     this(ACC_PUBLIC, type, name);
   }
 
-  public CallableTopLevel(int modifiers, ASTType type, final String name) {
+  public CallableDecl(int modifiers, ASTType type, final String name) {
     this(modifiers, type, name, null);
   }
 
-  public CallableTopLevel(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
+  public CallableDecl(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
     this(modifiers, type, name, implementedNames, new BlockStmt());
   }
 
-  public CallableTopLevel(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, BlockStmt body) {
+  public CallableDecl(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, BlockStmt body) {
     this(null, modifiers, type, name, implementedNames, null, body);
   }
 
-  public CallableTopLevel(Token token, int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<Parameter> parameters, BlockStmt body) {
+  public CallableDecl(Token token, int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<Parameter> parameters, BlockStmt body) {
     super(token, modifiers, type, name, implementedNames);
     setParameters(parameters);
     setBody(body);
@@ -87,12 +87,12 @@ public abstract class CallableTopLevel<T extends CallableTopLevel<?>> extends To
   }
 
   @Override
-  public boolean isCallableTopLevel() {
+  public boolean isCallableDecl() {
     return true;
   }
 
   @Override
-  public CallableTopLevel<?> asCallableTopLevel() {
+  public CallableDecl<?> asCallableDecl() {
     return this;
   }
 

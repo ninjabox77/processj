@@ -5,5 +5,5 @@ package ast.toplevel;
  *
  * @author Ben
  */
-public class ExternalTopLevel {
+public class ExternalDecl {
 }

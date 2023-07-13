@@ -140,43 +140,43 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
     return false;
   }
 
-  public boolean isConstantTopLevel() {
+  public boolean isConstantDecl() {
     return false;
   }
 
-  public ConstantTopLevel asConstantTopLevel() {
+  public ConstantDecl asConstantDecl() {
     throw new IllegalStateException(String.format("%s is not a VariableDeclaration, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isRecordTopLevel() {
+  public boolean isRecordDecl() {
     return false;
   }
 
-  public RecordTopLevel asRecordTopLevel() {
+  public RecordDecl asRecordDecl() {
     throw new IllegalStateException(String.format("%s is not a RecordDeclaration, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isProtocolTopLevel() {
+  public boolean isProtocolDecl() {
     return false;
   }
 
-  public ProtocolTopLevel asProtocolTopLevel() {
+  public ProtocolDecl asProtocolDecl() {
     throw new IllegalStateException(String.format("%s is not a ProtocolDeclaration, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isCallableTopLevel() {
+  public boolean isCallableDecl() {
     return false;
   }
 
-  public CallableTopLevel<?> asCallableTopLevel() {
+  public CallableDecl<?> asCallableDecl() {
     throw new IllegalStateException(String.format("%s is not a MethodCallDeclaration, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isTypeDeclarationTopLevel() {
+  public boolean isTypeVariableDecl() {
     return false;
   }
 
-  public TypeDeclarationTopLevel asTypeDeclarationTopLevel() {
+  public TypeVariableDecl asTypeVariableDecl() {
     throw new IllegalStateException(String.format("%s is not a TypeDeclarationTopLevel, it is a %s", this, getClass().getSimpleName()));
   }
 }

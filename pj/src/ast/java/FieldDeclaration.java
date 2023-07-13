@@ -1,105 +1,49 @@
 package ast.java;
 
 import ast.Node;
-import ast.Variable;
-import ast.expr.Expression;
-import ast.types.ASTType;
+import ast.VariableDecl;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
-import java.util.Objects;
-
 /**
- * Represents a declaration of a field in a record, a protocol as
- * part of its tag, or a class (which is only used during code
- * transformation).
+ * Represents a declaration of a field in a record, a protocol as part of
+ * its tag, or a class (which is only used during code transformation).
  *
  * @author Ben
  */
-public class FieldDeclaration extends BodyDeclaration<FieldDeclaration> implements Variable<FieldDeclaration> {
+public class FieldDeclaration extends BodyDeclaration<FieldDeclaration> {
 
-  private ASTType type_;
-  private String name_;
-  private Expression<?> rightExpression_;
+  private VariableDecl variable_;
 
-  public FieldDeclaration() {
-    this(null, null);
+  private FieldDeclaration() {
+    this(null);
   }
 
-  public FieldDeclaration(ASTType type, final String name) {
-    this(ACC_PRIVATE, type, name);
+  public FieldDeclaration(VariableDecl variable) {
+    this(null, variable);
   }
 
-  public FieldDeclaration(final int modifiers, ASTType type, final String name) {
-    this(modifiers, type, name, null);
-  }
-
-  public FieldDeclaration(final int modifiers, ASTType type, final String name, Expression<?> rightExpression) {
-    this(null, modifiers, type, name, rightExpression);
-  }
-
-  public FieldDeclaration(Token token, final int modifiers, ASTType type, final String name, Expression<?> rightExpression) {
+  public FieldDeclaration(Token token, VariableDecl variable) {
     super(token);
-    setModifiers(modifiers);
-    setASTType(type);
-    setName(name);
-    setRightExpression(rightExpression);
+    setVariable(variable);
   }
 
-  public FieldDeclaration setRightExpression(Expression<?> rightExpression) {
-    if (rightExpression == rightExpression_) {
+  public FieldDeclaration setVariable(VariableDecl variable) {
+    if (variable == variable_) {
       return this;
     }
-    if (rightExpression_ != null) {
-      rightExpression_.setParentNode(null);
+    if (variable_ != null) {
+      variable_.setParentNode(null);
     }
-    rightExpression_ = rightExpression;
-    setAsParentNodeOf(rightExpression);
+    variable_ = variable;
+    setAsParentNodeOf(variable);
     return this;
   }
 
-  @Override
-  public FieldDeclaration setASTType(ASTType type) {
-    if (type == type_) {
-      return this;
-    }
-    if (type_ != null) {
-      type_.setParentNode(null);
-    }
-    type_ = type;
-    setAsParentNodeOf(type);
-    return this;
-  }
-
-  @Override
-  public ASTType getASTType() {
-    return type_;
-  }
-
-  @Override
-  public FieldDeclaration setName(String name) {
-    if (Objects.equals(name, name_)) {
-      return this;
-    }
-    name_ = name;
-    return this;
-  }
-
-  @Override
-  public String getName() {
-    return name_;
-  }
-
-  @Override
-  public boolean hasInitialExpression() {
-    return rightExpression_ != null;
-  }
-
-  @Override
-  public Expression<?> getInitialExpression() {
-    return rightExpression_;
+  public VariableDecl getVariable() {
+    return variable_;
   }
 
   @Override
@@ -122,8 +66,8 @@ public class FieldDeclaration extends BodyDeclaration<FieldDeclaration> implemen
     if (node == null) {
       return false;
     }
-    if (node == rightExpression_) {
-      setRightExpression((Expression<?>) replaceWith);
+    if (node == variable_) {
+      setVariable((VariableDecl) replaceWith);
       return true;
     }
     return super.replace(node, replaceWith);

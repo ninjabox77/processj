@@ -15,36 +15,36 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public class ProtocolTopLevel extends TopLevelDeclaration<ProtocolTopLevel> {
+public class ProtocolDecl extends TopLevelDeclaration<ProtocolDecl> {
 
-  private Sequence<ProtocolTagDeclaration> declaredTags_;
+  private Sequence<ProtocolTagDecl> declaredTags_;
 
-  public ProtocolTopLevel() {
+  public ProtocolDecl() {
     this(null, null);
   }
 
-  public ProtocolTopLevel(ASTType type, final String name) {
+  public ProtocolDecl(ASTType type, final String name) {
     this(ACC_PRIVATE, type, name);
   }
 
-  public ProtocolTopLevel(int modifiers, ASTType type, final String name) {
+  public ProtocolDecl(int modifiers, ASTType type, final String name) {
     this(modifiers, type, name, null);
   }
 
-  public ProtocolTopLevel(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
+  public ProtocolDecl(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
     this(modifiers, type, name, implementedNames, null);
   }
 
-  public ProtocolTopLevel(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<ProtocolTagDeclaration> declaredTags) {
+  public ProtocolDecl(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<ProtocolTagDecl> declaredTags) {
     this(null, modifiers, type, name, implementedNames, declaredTags);
   }
 
-  public ProtocolTopLevel(Token token, int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<ProtocolTagDeclaration> declaredTags) {
+  public ProtocolDecl(Token token, int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<ProtocolTagDecl> declaredTags) {
     super(token, modifiers, type, name, implementedNames);
     setDeclaredTags(declaredTags);
   }
 
-  public ProtocolTopLevel setDeclaredTags(Sequence<ProtocolTagDeclaration> declaredTags) {
+  public ProtocolDecl setDeclaredTags(Sequence<ProtocolTagDecl> declaredTags) {
     if (declaredTags == declaredTags_) {
       return this;
     }
@@ -56,17 +56,17 @@ public class ProtocolTopLevel extends TopLevelDeclaration<ProtocolTopLevel> {
     return this;
   }
 
-  public Optional<Sequence<ProtocolTagDeclaration>> getDeclaredTags() {
+  public Optional<Sequence<ProtocolTagDecl>> getDeclaredTags() {
     return Optional.ofNullable(declaredTags_);
   }
 
   @Override
-  public boolean isProtocolTopLevel() {
+  public boolean isProtocolDecl() {
     return true;
   }
 
   @Override
-  public ProtocolTopLevel asProtocolTopLevel() {
+  public ProtocolDecl asProtocolDecl() {
     return this;
   }
 

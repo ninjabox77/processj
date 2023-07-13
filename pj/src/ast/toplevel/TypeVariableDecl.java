@@ -12,23 +12,23 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class TypeDeclarationTopLevel extends TopLevelDeclaration<TypeDeclarationTopLevel> {
+public class TypeVariableDecl extends TopLevelDeclaration<TypeVariableDecl> {
 
   private Name qualifier_;
 
-  public TypeDeclarationTopLevel() {
+  public TypeVariableDecl() {
     this(null);
   }
 
-  public TypeDeclarationTopLevel(Name name) {
+  public TypeVariableDecl(Name name) {
     this(null, name);
   }
 
-  public TypeDeclarationTopLevel(Token token, Name name) {
+  public TypeVariableDecl(Token token, Name name) {
     super(token, ACC_PUBLIC, null, null, null);
   }
 
-  public TypeDeclarationTopLevel setQualifier(Name name) {
+  public TypeVariableDecl setQualifier(Name name) {
     if (name == qualifier_) {
       return this;
     }
@@ -57,12 +57,12 @@ public class TypeDeclarationTopLevel extends TopLevelDeclaration<TypeDeclaration
   }
 
   @Override
-  public boolean isTypeDeclarationTopLevel() {
+  public boolean isTypeVariableDecl() {
     return true;
   }
 
   @Override
-  public TypeDeclarationTopLevel asTypeDeclarationTopLevel() {
+  public TypeVariableDecl asTypeVariableDecl() {
     return this;
   }
 

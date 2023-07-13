@@ -3,9 +3,6 @@ package ast.java;
 import ast.AnnotatedNode;
 import ast.Modifier;
 import org.antlr.v4.runtime.Token;
-import visitor.DefaultVisitor;
-import visitor.GenericVisitor;
-import visitor.VoidVisitor;
 
 /**
  * Represents any declaration that can appear in a class or interface.

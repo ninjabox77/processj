@@ -1,5 +1,6 @@
 package ast.expr;
 
+import ast.VariableDecl;
 import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
@@ -16,27 +17,48 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class DeclarationExpr extends BinaryExpr {
+public class DeclarationExpr extends Expression<DeclarationExpr> {
 
-  public DeclarationExpr(VariableExpr leftExpression, Token operation, Expression<?> rightExpression) {
-    this(null, leftExpression, operation, rightExpression);
+  private VariableDecl declaration_;
+
+  public DeclarationExpr() {
+    this(null);
   }
 
-  public DeclarationExpr(Token token, VariableExpr leftExpression, Token operation, Expression<?> rightExpression) {
-    super(token, leftExpression, operation, rightExpression);
+  public DeclarationExpr(VariableDecl declaration) {
+    this(null, declaration);
+  }
+
+  public DeclarationExpr(Token token, VariableDecl declaration) {
+    super(token);
   }
 
   @Override
   public void customInitialization() {
-    final Expression<?> left = getLeftExpression();
-    if (!left.isVariableExpr()) {
-      throw new RuntimeException("");
+    if (declaration_ != null) {
+      setASTType(declaration_.getASTType());
     }
+  }
+
+  public DeclarationExpr setDeclaration(VariableDecl declaration) {
+    if (declaration == declaration_) {
+      return this;
+    }
+    if (declaration_ != null) {
+      declaration_.setParentNode(null);
+    }
+    declaration_ = declaration;
+    setAsParentNodeOf(declaration);
+    return this;
+  }
+
+  public VariableDecl getDeclaration() {
+    return declaration_;
   }
 
   @Override
   public DeclarationExpr setASTType(ASTType type) {
-    return (DeclarationExpr) super.setASTType(type);
+    return super.setASTType(type);
   }
 
   @Override

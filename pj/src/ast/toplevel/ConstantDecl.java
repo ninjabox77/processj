@@ -15,32 +15,32 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public class ConstantTopLevel extends TopLevelDeclaration<ConstantTopLevel> {
+public class ConstantDecl extends TopLevelDeclaration<ConstantDecl> {
 
   private Expression<?> rightExpression_;
 
-  public ConstantTopLevel() {
+  public ConstantDecl() {
     this(null, null);
   }
 
-  public ConstantTopLevel(ASTType type, String name) {
+  public ConstantDecl(ASTType type, String name) {
     this(ACC_PUBLIC, type, name);
   }
 
-  public ConstantTopLevel(int modifier, ASTType type, String name) {
+  public ConstantDecl(int modifier, ASTType type, String name) {
     this(modifier, type, name, null);
   }
 
-  public ConstantTopLevel(int modifier, ASTType type, String name, Expression<?> rightExpression) {
+  public ConstantDecl(int modifier, ASTType type, String name, Expression<?> rightExpression) {
     this(null, modifier, type, name, rightExpression);
   }
 
-  public ConstantTopLevel(Token token, int modifier, ASTType type, String name, Expression<?> rightExpression) {
+  public ConstantDecl(Token token, int modifier, ASTType type, String name, Expression<?> rightExpression) {
     super(token, modifier, type, name, null);
     setRightExpression(rightExpression);
   }
 
-  public ConstantTopLevel setRightExpression(Expression<?> rightExpression) {
+  public ConstantDecl setRightExpression(Expression<?> rightExpression) {
     if (rightExpression == rightExpression_) {
       return this;
     }
@@ -57,12 +57,12 @@ public class ConstantTopLevel extends TopLevelDeclaration<ConstantTopLevel> {
   }
 
   @Override
-  public boolean isConstantTopLevel() {
+  public boolean isConstantDecl() {
     return true;
   }
 
   @Override
-  public ConstantTopLevel asConstantTopLevel() {
+  public ConstantDecl asConstantDecl() {
     return this;
   }
 

@@ -35,6 +35,8 @@ public interface VoidVisitor<A> {
 
   void visit(final Sequence<?> s, A arg);
 
+  void visit(final VariableDecl v, A arg);
+
   /*********************************************************
    * Type nodes
    *********************************************************/
@@ -61,21 +63,21 @@ public interface VoidVisitor<A> {
    * Top-level nodes
    *********************************************************/
 
-  void visit(final ConstantTopLevel c, A arg);
+  void visit(final ConstantDecl c, A arg);
 
-  void visit(final ExternalTopLevel e, A arg);
+  void visit(final ExternalDecl e, A arg);
 
-  void visit(final CallableTopLevel<?> m, A arg);
+  void visit(final CallableDecl<?> m, A arg);
 
   void visit(final ProcedureTopLevel p, A arg);
 
-  void visit(final ProtocolTagDeclaration p, A arg);
+  void visit(final ProtocolTagDecl p, A arg);
 
-  void visit(final ProtocolTopLevel p, A arg);
+  void visit(final ProtocolDecl p, A arg);
 
-  void visit(final RecordTopLevel r, A arg);
+  void visit(final RecordDecl r, A arg);
 
-  void visit(final TypeDeclarationTopLevel t, A arg);
+  void visit(final TypeVariableDecl t, A arg);
 
   /*********************************************************
    * Statement nodes

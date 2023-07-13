@@ -40,6 +40,8 @@ public interface GenericVisitor<R, A> {
 
   R visit(final Sequence<?> s, A arg);
 
+  R visit(final VariableDecl v, A arg);
+
   /*********************************************************
    * Type nodes
    *********************************************************/
@@ -66,21 +68,21 @@ public interface GenericVisitor<R, A> {
    * Top-level nodes
    *********************************************************/
 
-  R visit(final ConstantTopLevel c, A arg);
+  R visit(final ConstantDecl c, A arg);
 
-  R visit(final ExternalTopLevel e, A arg);
+  R visit(final ExternalDecl e, A arg);
 
-  R visit(final CallableTopLevel<?> m, A arg);
+  R visit(final CallableDecl<?> m, A arg);
 
   R visit(final ProcedureTopLevel p, A arg);
 
-  R visit(final ProtocolTagDeclaration p, A arg);
+  R visit(final ProtocolTagDecl p, A arg);
 
-  R visit(final ProtocolTopLevel p, A arg);
+  R visit(final ProtocolDecl p, A arg);
 
-  R visit(final RecordTopLevel r, A arg);
+  R visit(final RecordDecl r, A arg);
 
-  R visit(final TypeDeclarationTopLevel t, A arg);
+  R visit(final TypeVariableDecl t, A arg);
 
   /*********************************************************
    * Statement nodes

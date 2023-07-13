@@ -79,6 +79,11 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
+  public Integer visit(final VariableDecl v) {
+    return null;
+  }
+
+  @Override
   public Integer visit(final ArrayNode a) {
     return null;
   }
@@ -124,17 +129,17 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final ConstantTopLevel c) {
+  public Integer visit(final ConstantDecl c) {
     return null;
   }
 
   @Override
-  public Integer visit(final ExternalTopLevel e) {
+  public Integer visit(final ExternalDecl e) {
     return null;
   }
 
   @Override
-  public Integer visit(final CallableTopLevel<?> m) {
+  public Integer visit(final CallableDecl<?> m) {
     return null;
   }
 
@@ -144,22 +149,22 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final ProtocolTagDeclaration p) {
+  public Integer visit(final ProtocolTagDecl p) {
     return null;
   }
 
   @Override
-  public Integer visit(final ProtocolTopLevel p) {
+  public Integer visit(final ProtocolDecl p) {
     return null;
   }
 
   @Override
-  public Integer visit(final RecordTopLevel r) {
+  public Integer visit(final RecordDecl r) {
     return null;
   }
 
   @Override
-  public Integer visit(final TypeDeclarationTopLevel t) {
+  public Integer visit(final TypeVariableDecl t) {
     return null;
   }
 

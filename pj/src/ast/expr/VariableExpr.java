@@ -28,7 +28,6 @@ import java.util.Optional;
  */
 public class VariableExpr extends Expression<VariableExpr> implements Variable<VariableExpr> {
 
-  private int modifiers_;
   private String name_;
   private Variable<?> accessVariable_;
 
@@ -42,20 +41,8 @@ public class VariableExpr extends Expression<VariableExpr> implements Variable<V
 
   public VariableExpr(Token token, ASTType type, final String name) {
     super(token);
-    this.setASTType(type);
+    setASTType(type);
     setName(name);
-  }
-
-  public VariableExpr setModifiers(final int modifiers) {
-    if (modifiers == modifiers_) {
-      return this;
-    }
-    modifiers_ = modifiers;
-    return this;
-  }
-
-  public int getModifiers() {
-    return modifiers_;
   }
 
   public VariableExpr setAccessVariable(Variable<?> accessVariable) {

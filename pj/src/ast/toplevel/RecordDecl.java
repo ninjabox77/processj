@@ -16,36 +16,36 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public class RecordTopLevel extends TopLevelDeclaration<RecordTopLevel> {
+public class RecordDecl extends TopLevelDeclaration<RecordDecl> {
 
   private Sequence<FieldDeclaration> declaredFields_;
 
-  public RecordTopLevel() {
+  public RecordDecl() {
     this(null, null);
   }
 
-  public RecordTopLevel(ASTType type, final String name) {
+  public RecordDecl(ASTType type, final String name) {
     this(ACC_PUBLIC, type, name);
   }
 
-  public RecordTopLevel(int modifiers, ASTType type, final String name) {
+  public RecordDecl(int modifiers, ASTType type, final String name) {
     this(modifiers, type, name, null);
   }
 
-  public RecordTopLevel(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
+  public RecordDecl(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
     this(null, modifiers, type, name, implementedNames, null);
   }
 
-  public RecordTopLevel(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<FieldDeclaration> declaredFields) {
+  public RecordDecl(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<FieldDeclaration> declaredFields) {
     this(null, modifiers, type, name, implementedNames, declaredFields);
   }
 
-  public RecordTopLevel(Token token, int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<FieldDeclaration> declaredFields) {
+  public RecordDecl(Token token, int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<FieldDeclaration> declaredFields) {
     super(token, modifiers, type, name, implementedNames);
     setDeclaredFields(declaredFields);
   }
 
-  public RecordTopLevel setDeclaredFields(Sequence<FieldDeclaration> fields) {
+  public RecordDecl setDeclaredFields(Sequence<FieldDeclaration> fields) {
     if (fields == declaredFields_) {
       return this;
     }
@@ -62,12 +62,12 @@ public class RecordTopLevel extends TopLevelDeclaration<RecordTopLevel> {
   }
 
   @Override
-  public boolean isRecordTopLevel() {
+  public boolean isRecordDecl() {
     return true;
   }
 
   @Override
-  public RecordTopLevel asRecordTopLevel() {
+  public RecordDecl asRecordDecl() {
     return this;
   }
 

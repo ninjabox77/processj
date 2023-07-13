@@ -15,30 +15,30 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public class ProtocolTagDeclaration extends AnnotatedNode {
+public class ProtocolTagDecl extends AnnotatedNode {
 
   private String name_;
   private Sequence<FieldDeclaration> declaredFields_;
 
-  public ProtocolTagDeclaration() {
+  public ProtocolTagDecl() {
     this(null);
   }
 
-  public ProtocolTagDeclaration(final String name) {
+  public ProtocolTagDecl(final String name) {
     this(name, null);
   }
 
-  public ProtocolTagDeclaration(final String name, Sequence<FieldDeclaration> namedTags) {
+  public ProtocolTagDecl(final String name, Sequence<FieldDeclaration> namedTags) {
     this(null, name, namedTags);
   }
 
-  public ProtocolTagDeclaration(Token token, final String name, Sequence<FieldDeclaration> declaredFields) {
+  public ProtocolTagDecl(Token token, final String name, Sequence<FieldDeclaration> declaredFields) {
     super(token);
     setName(name);
     setDeclaredFields(declaredFields);
   }
 
-  public ProtocolTagDeclaration setName(final String name) {
+  public ProtocolTagDecl setName(final String name) {
     if (Objects.equals(name, name_)) {
       return this;
     }
@@ -50,7 +50,7 @@ public class ProtocolTagDeclaration extends AnnotatedNode {
     return name_;
   }
 
-  public ProtocolTagDeclaration setDeclaredFields(Sequence<FieldDeclaration> declaredFields) {
+  public ProtocolTagDecl setDeclaredFields(Sequence<FieldDeclaration> declaredFields) {
     if (declaredFields == declaredFields_) {
       return this;
     }

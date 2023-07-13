@@ -175,6 +175,16 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
+  public Boolean visit(final VariableDecl v, CodeVisitor arg) {
+    final VariableDecl v2 = (VariableDecl) arg;
+    return objectEquals(v.getModifiers(), v2.getModifiers()) &&
+        objectEquals(v.getASTType(), v2.getASTType()) &&
+        objectEquals(v.getName(), v2.getName()) &&
+        objectEquals(v.getInitialExpression(), v2.getInitialExpression()) &&
+        objectEquals(v.getComment(), v2.getComment());
+  }
+
+  @Override
   public Boolean visit(final ArrayNode a, CodeVisitor arg) {
     final ArrayNode a2 = (ArrayNode) arg;
     return objectEquals(a.getTSType(), a2.getTSType()) &&
@@ -236,8 +246,8 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
-  public Boolean visit(final ConstantTopLevel c, CodeVisitor arg) {
-    final ConstantTopLevel c2 = (ConstantTopLevel) arg;
+  public Boolean visit(final ConstantDecl c, CodeVisitor arg) {
+    final ConstantDecl c2 = (ConstantDecl) arg;
     return objectEquals(c.getModifiers(), c2.getModifiers()) &&
         objectEquals(c.getASTType(), c2.getASTType()) &&
         objectEquals(c.getName(), c2.getName()) &&
@@ -247,13 +257,13 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
-  public Boolean visit(final ExternalTopLevel e, CodeVisitor arg) {
+  public Boolean visit(final ExternalDecl e, CodeVisitor arg) {
     return null;
   }
 
   @Override
-  public Boolean visit(final CallableTopLevel<?> m, CodeVisitor arg) {
-    final CallableTopLevel<?> m2 = (CallableTopLevel<?>) arg;
+  public Boolean visit(final CallableDecl<?> m, CodeVisitor arg) {
+    final CallableDecl<?> m2 = (CallableDecl<?>) arg;
     return objectEquals(m.getModifiers(), m2.getModifiers()) &&
         objectEquals(m.getASTType(), m2.getASTType()) &&
         objectEquals(m.getName(), m2.getName()) &&
@@ -277,16 +287,16 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
-  public Boolean visit(final ProtocolTagDeclaration p, CodeVisitor arg) {
-    final ProtocolTagDeclaration p2 = (ProtocolTagDeclaration) arg;
+  public Boolean visit(final ProtocolTagDecl p, CodeVisitor arg) {
+    final ProtocolTagDecl p2 = (ProtocolTagDecl) arg;
     return objectEquals(p.getName(), p2.getName()) &&
         objectsEquals(p.getDeclaredFields(), p2.getDeclaredFields()) &&
         objectEquals(p.getComment(), p2.getComment());
   }
 
   @Override
-  public Boolean visit(final ProtocolTopLevel p, CodeVisitor arg) {
-    final ProtocolTopLevel p2 = (ProtocolTopLevel) arg;
+  public Boolean visit(final ProtocolDecl p, CodeVisitor arg) {
+    final ProtocolDecl p2 = (ProtocolDecl) arg;
     return objectEquals(p.getModifiers(), p2.getModifiers()) &&
         objectEquals(p.getASTType(), p2.getASTType()) &&
         objectEquals(p.getName(), p2.getName()) &&
@@ -296,8 +306,8 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
-  public Boolean visit(final RecordTopLevel r, CodeVisitor arg) {
-    final RecordTopLevel r2 = (RecordTopLevel) arg;
+  public Boolean visit(final RecordDecl r, CodeVisitor arg) {
+    final RecordDecl r2 = (RecordDecl) arg;
     return objectEquals(r.getModifiers(), r2.getModifiers()) &&
         objectEquals(r.getASTType(), r2.getASTType()) &&
         objectEquals(r.getName(), r2.getName()) &&
@@ -307,8 +317,8 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
-  public Boolean visit(final TypeDeclarationTopLevel t, CodeVisitor arg) {
-    final TypeDeclarationTopLevel t2 = (TypeDeclarationTopLevel) arg;
+  public Boolean visit(final TypeVariableDecl t, CodeVisitor arg) {
+    final TypeVariableDecl t2 = (TypeVariableDecl) arg;
     return objectEquals(t.getModifiers(), t2.getModifiers()) &&
         objectEquals(t.getASTType(), t2.getASTType()) &&
         objectEquals(t.getName(), t2.getName()) &&
@@ -485,9 +495,7 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   @Override
   public Boolean visit(final FieldDeclaration f, CodeVisitor arg) {
     final FieldDeclaration f2 = (FieldDeclaration) arg;
-    return objectEquals(f.getModifiers(), f2.getModifiers()) &&
-        objectEquals(f.getASTType(), f2.getASTType()) &&
-        objectEquals(f.getName(), f2.getName()) &&
+    return objectEquals(f.getVariable(), f2.getVariable()) &&
         objectEquals(f.getComment(), f2.getComment());
   }
 
@@ -576,9 +584,7 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   @Override
   public Boolean visit(final DeclarationExpr d, CodeVisitor arg) {
     final DeclarationExpr d2 = (DeclarationExpr) arg;
-    return objectEquals(d.getLeftExpression(), d2.getLeftExpression()) &&
-        objectEquals(d.getRightExpression(), d2.getRightExpression()) &&
-        objectEquals(d.getOperation(), d2.getOperation()) &&
+    return objectEquals(d.getDeclaration(), d2.getDeclaration()) &&
         objectEquals(d.getComment(), d2.getComment());
   }
 
@@ -742,8 +748,7 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   @Override
   public Boolean visit(final VariableExpr v, CodeVisitor arg) {
     final VariableExpr v2 = (VariableExpr) arg;
-    return objectEquals(v.getModifiers(), v2.getModifiers()) &&
-        objectEquals(v.getName(), v2.getName()) &&
+    return objectEquals(v.getName(), v2.getName()) &&
         objectEquals(v.getAccessVariable(), v2.getAccessVariable()) &&
         objectEquals(v.getComment(), v2.getComment());
   }
