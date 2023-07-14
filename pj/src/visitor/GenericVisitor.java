@@ -200,6 +200,16 @@ public interface GenericVisitor<R, A> {
 
   R visit(final VariableExpr v, A arg);
 
+  R visit(final FloatLiteral f, A arg);
+
+  R visit(final StringLiteral s, A arg);
+
+  R visit(final BlockExpr b, A arg);
+
+  R visit(final ChannelReadExpr c, A arg);
+
+  R visit(final ChannelWriteExpr c, A arg);
+
   /*********************************************************
    * Comments nodes
    *********************************************************/

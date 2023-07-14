@@ -429,6 +429,31 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
+  public Integer visit(final FloatLiteral f) {
+    return null;
+  }
+
+  @Override
+  public Integer visit(final StringLiteral s) {
+    return null;
+  }
+
+  @Override
+  public Integer visit(final BlockExpr b) {
+    return null;
+  }
+
+  @Override
+  public Integer visit(final ChannelReadExpr c) {
+    return null;
+  }
+
+  @Override
+  public Integer visit(final ChannelWriteExpr c) {
+    return null;
+  }
+
+  @Override
   public Integer visit(final BlockComment b) {
     return null;
   }

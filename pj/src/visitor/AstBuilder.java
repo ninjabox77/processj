@@ -2,11 +2,11 @@ package visitor;
 
 import ast.*;
 import ast.Package;
-import ast.expr.DeclarationExpr;
-import ast.expr.Expression;
-import ast.expr.VariableExpr;
+import ast.expr.*;
 import ast.java.FieldDeclaration;
+import ast.stmt.BlockStmt;
 import ast.stmt.EmptyStmt;
+import ast.stmt.ExpressionStmt;
 import ast.stmt.Statement;
 import ast.toplevel.*;
 import ast.types.*;
@@ -282,7 +282,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   // we build an array-type in reverse order so that in the body of
   // the caller we can set its component-type; e.g.:
   //
-  //    ArrayType(ArrayType(ArrayType(<component-type>)))
+  //   ArrayType(ArrayType(ArrayType(<component-type>)))
   //
   // where component-type can be an atomic or constructed type
   //
@@ -621,22 +621,78 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   @Override
   public Statement visitStatement(ProcessJParser.StatementContext ctx) {
     if (ctx.localVariableDeclarationStatement() != null) {
-      //
+      Sequence<Statement> stmts = visitLocalVariableDeclarationStatement(ctx.localVariableDeclarationStatement());
+      BlockStmt block = new BlockStmt(stmts);
+      block.setFabricated(true); // this is only set temporarily
+      return configureNode(block, ctx);
     } else if (ctx.expressionStatement() != null) {
-      //
+      ExpressionStmt exprStmt = visitExpressionStatement(ctx.expressionStatement());
+      return exprStmt;
     }
     return configureNode(new EmptyStmt(), ctx);
   }
 
   @Override
-  public Object visitLocalVariableDeclarationStatement(ProcessJParser.LocalVariableDeclarationStatementContext ctx) {
+  public Sequence<Statement> visitLocalVariableDeclarationStatement(ProcessJParser.LocalVariableDeclarationStatementContext ctx) {
+    Sequence<VariableDecl> variables = visitLocalVariableDeclaration(ctx.localVariableDeclaration());
+    Sequence<Statement> stmts = Sequence.sequenceList();
+    for (VariableDecl v : variables) {
+      DeclarationExpr declaration = configureNode(new DeclarationExpr(v), v);
+      stmts.add(configureNode(new ExpressionStmt(declaration), ctx));
+    }
+    return stmts;
+  }
+
+  @Override
+  public Sequence<VariableDecl> visitLocalVariableDeclaration(ProcessJParser.LocalVariableDeclarationContext ctx) {
+    ASTType type = visitType_(ctx.type_());
+    Sequence<VariableDecl> variables = visitVariableDeclaratorList(ctx.variableDeclaratorList());
+    for (VariableDecl v : variables) {
+      if (v.getASTType() != null) {
+        ArrayNode arrayNode = v.getASTType().asArrayNode();
+        arrayNode.getTSType().setTSType(type.getTSType());
+        v.setASTType(arrayNode);
+      } else {
+        v.setASTType(type);
+      }
+    }
+    return variables;
+  }
+
+  @Override
+  public ExpressionStmt visitExpressionStatement(ProcessJParser.ExpressionStatementContext ctx) {
     return null;
   }
 
   @Override
-  public Object visitLocalVariableDeclaration(ProcessJParser.LocalVariableDeclarationContext ctx) {
-    ASTType type = visitType_(ctx.type_());
-    Sequence<VariableDecl> variables = visitVariableDeclaratorList(ctx.variableDeclaratorList());
+  public Object visitExpressionWithBlock(ProcessJParser.ExpressionWithBlockContext ctx) {
+    return null;
+  }
+
+  @Override
+  public Object visitAnnotationExpression(ProcessJParser.AnnotationExpressionContext ctx) {
+    return null;
+  }
+
+  @Override
+  public ConstantExpr visitLiteralExpression(ProcessJParser.LiteralExpressionContext ctx) {
+    ConstantExpr literal = new NullLiteral();
+    if (ctx.IntegerLiteral() != null) {
+      literal = new IntegerLiteral(ctx.IntegerLiteral().getText());
+    } else if (ctx.FloatingPointLiteral() != null) {
+      literal = new FloatLiteral(ctx.FloatingPointLiteral().getText());
+    } else if (ctx.BooleanLiteral() != null) {
+      literal = new BooleanLiteral(ctx.BooleanLiteral().getText());
+    } else if (ctx.CharacterLiteral() != null) {
+      literal = new CharLiteral(ctx.CharacterLiteral().getText());
+    } else if (ctx.StringLiteral() != null) {
+      literal = new StringLiteral(ctx.StringLiteral().getText());
+    }
+    return configureNode(literal, ctx);
+  }
+
+  @Override
+  public Object visitPathExpression(ProcessJParser.PathExpressionContext ctx) {
     return null;
   }
 }

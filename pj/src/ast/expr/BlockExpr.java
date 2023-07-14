@@ -1,35 +1,38 @@
-package ast.stmt;
+package ast.expr;
 
 import ast.Node;
 import ast.Sequence;
+import ast.stmt.Statement;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
 /**
- * Represents a pair of curly brackets.
+ * Represents an expression with a block, that is, a pair of curly
+ * brackets that can be used as expression that contains a sequence
+ * of statements.
  *
  * @author Ben
  */
-public class BlockStmt extends Statement {
+public class BlockExpr extends Expression<BlockExpr> {
 
   private Sequence<Statement> statements_;
 
-  public BlockStmt() {
+  public BlockExpr() {
     this(Sequence.sequenceList());
   }
 
-  public BlockStmt(Sequence<Statement> statements) {
+  public BlockExpr(Sequence<Statement> statements) {
     this(null, statements);
   }
 
-  public BlockStmt(Token token, Sequence<Statement> statements) {
-    super(token, null);
+  public BlockExpr(Token token, Sequence<Statement> statements) {
+    super(token);
     setStatements(statements);
   }
 
-  public BlockStmt setStatements(Sequence<Statement> statements) {
+  public BlockExpr setStatements(Sequence<Statement> statements) {
     if (statements == statements_) {
       return this;
     }
@@ -41,36 +44,17 @@ public class BlockStmt extends Statement {
     return this;
   }
 
-  public BlockStmt addStatement(Statement stat) {
-    if (stat != null) {
-      stat.setParentNode(null);
-      statements_.add(stat);
-      setAsParentNodeOf(stat);
-    }
-    return this;
-  }
-
-  public BlockStmt addStatements(Sequence<Statement> stmts) {
-    statements_.addAll(stmts);
-    return this;
-  }
-
   public Sequence<Statement> getStatements() {
     return statements_;
   }
 
   @Override
-  public boolean isEmpty() {
-    return statements_.isEmpty();
-  }
-
-  @Override
-  public boolean isBlockStmt() {
+  public boolean isBlockExpr() {
     return true;
   }
 
   @Override
-  public BlockStmt asBlockStmt() {
+  public BlockExpr asBlockExpr() {
     return this;
   }
 

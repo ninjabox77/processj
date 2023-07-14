@@ -195,6 +195,16 @@ public interface DefaultVisitor<R> {
 
   R visit(final VariableExpr v);
 
+  R visit(final FloatLiteral f);
+
+  R visit(final StringLiteral s);
+
+  R visit(final BlockExpr b);
+
+  R visit(final ChannelReadExpr c);
+
+  R visit(final ChannelWriteExpr c);
+
   /*********************************************************
    * Comments nodes
    *********************************************************/

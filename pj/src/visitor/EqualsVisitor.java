@@ -754,6 +754,39 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
+  public Boolean visit(final FloatLiteral f, CodeVisitor arg) {
+    final FloatLiteral f2 = (FloatLiteral) arg;
+    return objectEquals(f.getValue(), f2.getValue()) &&
+        objectEquals(f.getComment(), f2.getComment());
+  }
+
+  @Override
+  public Boolean visit(final StringLiteral s, CodeVisitor arg) {
+    final StringLiteral s2 = (StringLiteral) arg;
+    return objectEquals(s.getValue(), s2.getValue()) &&
+        objectEquals(s.getComment(), s2.getComment());
+  }
+
+  @Override
+  public Boolean visit(final BlockExpr b, CodeVisitor arg) {
+    final BlockExpr b2 = (BlockExpr) arg;
+    return objectEquals(b.getStatements(), b2.getStatements()) &&
+        objectEquals(b.getComment(), b2.getComment());
+  }
+
+  @Override
+  public Boolean visit(final ChannelReadExpr c, CodeVisitor arg) {
+    final ChannelReadExpr c2 = (ChannelReadExpr) arg;
+    return false;
+  }
+
+  @Override
+  public Boolean visit(final ChannelWriteExpr c, CodeVisitor arg) {
+    final ChannelWriteExpr c2 = (ChannelWriteExpr) arg;
+    return false;
+  }
+
+  @Override
   public Boolean visit(final BlockComment b, CodeVisitor arg) {
     final BlockComment b2 = (BlockComment) arg;
     return objectEquals(b.getContent(), b2.getContent()) &&

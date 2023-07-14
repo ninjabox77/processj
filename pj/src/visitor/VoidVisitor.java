@@ -195,6 +195,16 @@ public interface VoidVisitor<A> {
 
   void visit(final VariableExpr v, A arg);
 
+  void visit(final FloatLiteral f, A arg);
+
+  void visit(final StringLiteral s, A arg);
+
+  void visit(final BlockExpr b, A arg);
+
+  void visit(final ChannelReadExpr c, A arg);
+
+  void visit(final ChannelWriteExpr c, A arg);
+
   /*********************************************************
    * Comments nodes
    *********************************************************/

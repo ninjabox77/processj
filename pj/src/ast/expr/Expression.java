@@ -244,4 +244,28 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   public NewArrayExpr asNewArrayExpr() {
     throw new IllegalStateException(String.format("%s is not a NewArrayExpr, it is a %s", this, getClass().getSimpleName()));
   }
+
+  public boolean isBlockExpr() {
+    return false;
+  }
+
+  public BlockExpr asBlockExpr() {
+    throw new IllegalStateException(String.format("%s is not a BlockExpr, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isChannelReadExpr() {
+    return false;
+  }
+
+  public ChannelReadExpr asChannelReadExpr() {
+    throw new IllegalStateException(String.format("%s is not a ChannelReadExpr, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isChannelWriteExpr() {
+    return false;
+  }
+
+  public ChannelWriteExpr asChannelWriteExpr() {
+    throw new IllegalStateException(String.format("%s is not a ChannelWriteExpr, it is a %s", this, getClass().getSimpleName()));
+  }
 }

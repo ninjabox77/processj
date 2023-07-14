@@ -54,7 +54,7 @@ public abstract class ConstantExpr extends Expression<ConstantExpr> {
   }
 
   public CharLiteral asCharLiteral() {
-    throw new IllegalStateException(String.format("%s is not an CharLiteral, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not a CharLiteral, it is a %s", this, getClass().getSimpleName()));
   }
 
   public boolean isIntegerLiteral() {
@@ -70,7 +70,15 @@ public abstract class ConstantExpr extends Expression<ConstantExpr> {
   }
 
   public LongLiteral asLongLiteral() {
-    throw new IllegalStateException(String.format("%s is not an LongLiteral, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not a LongLiteral, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isFloatLiteral() {
+    return false;
+  }
+
+  public FloatLiteral asFloatLiteral() {
+    throw new IllegalStateException(String.format("%s is not a FloatLiteral, it is a %s", this, getClass().getSimpleName()));
   }
 
   public boolean isDoubleLiteral() {
@@ -78,7 +86,15 @@ public abstract class ConstantExpr extends Expression<ConstantExpr> {
   }
 
   public DoubleLiteral asDoubleLiteral() {
-    throw new IllegalStateException(String.format("%s is not an DoubleLiteral, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not a DoubleLiteral, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isStringLiteral() {
+    return false;
+  }
+
+  public StringLiteral asStringLiteral() {
+    throw new IllegalStateException(String.format("%s is not a StringLiteral, it is a %s", this, getClass().getSimpleName()));
   }
 
   public boolean isNullLiteral() {
@@ -86,7 +102,7 @@ public abstract class ConstantExpr extends Expression<ConstantExpr> {
   }
 
   public NullLiteral asNullLiteral() {
-    throw new IllegalStateException(String.format("%s is not an NullLiteral, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not a NullLiteral, it is a %s", this, getClass().getSimpleName()));
   }
 
   @Override
