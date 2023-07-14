@@ -205,6 +205,8 @@ public interface VoidVisitor<A> {
 
   void visit(final ChannelWriteExpr c, A arg);
 
+  void visit(final PathAccessExpr p, A arg);
+
   /*********************************************************
    * Comments nodes
    *********************************************************/

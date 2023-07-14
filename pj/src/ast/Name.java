@@ -50,10 +50,6 @@ public class Name extends AnnotatedNode {
     return this;
   }
 
-  public Name removeQualifier() {
-    return setQualifier(null);
-  }
-
   public Optional<Name> getQualifier() {
     return Optional.ofNullable(qualifier_);
   }
@@ -76,7 +72,7 @@ public class Name extends AnnotatedNode {
       return false;
     }
     if (node == qualifier_) {
-      removeQualifier();
+      setQualifier(null);
       return true;
     }
     return false;

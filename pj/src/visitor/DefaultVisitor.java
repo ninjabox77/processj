@@ -205,6 +205,8 @@ public interface DefaultVisitor<R> {
 
   R visit(final ChannelWriteExpr c);
 
+  R visit(PathAccessExpr p);
+
   /*********************************************************
    * Comments nodes
    *********************************************************/

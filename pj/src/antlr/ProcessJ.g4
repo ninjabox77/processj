@@ -11,7 +11,7 @@ init
  ;
 
 packageDeclaration
- : PACKAGE Identifier SEMI
+ : PACKAGE packageAccess SEMI
  ;
 
 importDeclaration

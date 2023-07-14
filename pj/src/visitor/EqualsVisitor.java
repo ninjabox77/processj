@@ -777,13 +777,24 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   @Override
   public Boolean visit(final ChannelReadExpr c, CodeVisitor arg) {
     final ChannelReadExpr c2 = (ChannelReadExpr) arg;
-    return false;
+    return objectEquals(c.getChannel(), c2.getChannel()) &&
+        objectEquals(c.getExternalRV(), c2.getExternalRV()) &&
+        objectEquals(c.getComment(), c2.getComment());
   }
 
   @Override
   public Boolean visit(final ChannelWriteExpr c, CodeVisitor arg) {
     final ChannelWriteExpr c2 = (ChannelWriteExpr) arg;
-    return false;
+    return objectEquals(c.getChannel(), c2.getChannel()) &&
+        objectEquals(c.getExpression(), c2.getExpression()) &&
+        objectEquals(c.getComment(), c2.getComment());
+  }
+
+  @Override
+  public Boolean visit(final PathAccessExpr p, CodeVisitor arg) {
+    final PathAccessExpr p2 = (PathAccessExpr) arg;
+    return objectEquals(p.getName(), p2.getName()) &&
+        objectEquals(p.getComment(), p2.getComment());
   }
 
   @Override

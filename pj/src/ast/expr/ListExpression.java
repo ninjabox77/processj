@@ -78,7 +78,7 @@ public class ListExpression<T extends ListExpression<?>> extends Expression<T> {
         }
       }
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override
@@ -94,7 +94,7 @@ public class ListExpression<T extends ListExpression<?>> extends Expression<T> {
         }
       }
     }
-    return super.remove(node);
+    return false;
   }
 
   @Override

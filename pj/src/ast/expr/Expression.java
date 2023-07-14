@@ -268,4 +268,12 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   public ChannelWriteExpr asChannelWriteExpr() {
     throw new IllegalStateException(String.format("%s is not a ChannelWriteExpr, it is a %s", this, getClass().getSimpleName()));
   }
+
+  public boolean isPathAccessExpr() {
+    return false;
+  }
+
+  public PathAccessExpr asPathAccessExpr() {
+    throw new IllegalStateException(String.format("%s is not a PathAccessExpr, it is a %s", this, getClass().getSimpleName()));
+  }
 }

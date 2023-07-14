@@ -210,6 +210,8 @@ public interface GenericVisitor<R, A> {
 
   R visit(final ChannelWriteExpr c, A arg);
 
+  R visit(final PathAccessExpr p, A arg);
+
   /*********************************************************
    * Comments nodes
    *********************************************************/

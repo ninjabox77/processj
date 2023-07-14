@@ -98,7 +98,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
 
   @Override
   public Package visitPackageDeclaration(ProcessJParser.PackageDeclarationContext ctx) {
-    Package packet = new Package(ctx.Identifier().getText());
+    Package packet = new Package(visitPackageAccess(ctx.packageAccess()));
     return configureNode(packet, ctx);
   }
 
@@ -669,6 +669,8 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     return null;
   }
 
+  // ===----------------------------------------------------------------------=== //
+
   @Override
   public Object visitAnnotationExpression(ProcessJParser.AnnotationExpressionContext ctx) {
     return null;
@@ -693,6 +695,19 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
 
   @Override
   public Object visitPathExpression(ProcessJParser.PathExpressionContext ctx) {
+    return null;
+  }
+
+  // ===----------------------------------------------------------------------=== //
+
+
+  @Override
+  public Object visitRecordLiteralExpression(ProcessJParser.RecordLiteralExpressionContext ctx) {
+    return null;
+  }
+
+  @Override
+  public Object visitRecordExpressionList(ProcessJParser.RecordExpressionListContext ctx) {
     return null;
   }
 }

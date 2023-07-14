@@ -287,7 +287,9 @@ public class ProcessJParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class PackageDeclarationContext extends ParserRuleContext {
 		public TerminalNode PACKAGE() { return getToken(ProcessJParser.PACKAGE, 0); }
-		public TerminalNode Identifier() { return getToken(ProcessJParser.Identifier, 0); }
+		public PackageAccessContext packageAccess() {
+			return getRuleContext(PackageAccessContext.class,0);
+		}
 		public TerminalNode SEMI() { return getToken(ProcessJParser.SEMI, 0); }
 		public PackageDeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -317,7 +319,7 @@ public class ProcessJParser extends Parser {
 			setState(203);
 			match(PACKAGE);
 			setState(204);
-			match(Identifier);
+			packageAccess();
 			setState(205);
 			match(SEMI);
 			}
@@ -9402,8 +9404,8 @@ public class ProcessJParser extends Parser {
 		"\u0001\u0000\u0000\u0000\u00c6\u00c7\u0001\u0000\u0000\u0000\u00c7\u00c9"+
 		"\u0001\u0000\u0000\u0000\u00c8\u00c6\u0001\u0000\u0000\u0000\u00c9\u00ca"+
 		"\u0005\u0000\u0000\u0001\u00ca\u0001\u0001\u0000\u0000\u0000\u00cb\u00cc"+
-		"\u00055\u0000\u0000\u00cc\u00cd\u0005r\u0000\u0000\u00cd\u00ce\u0005I"+
-		"\u0000\u0000\u00ce\u0003\u0001\u0000\u0000\u0000\u00cf\u00d3\u0003\u0006"+
+		"\u00055\u0000\u0000\u00cc\u00cd\u0003\"\u0011\u0000\u00cd\u00ce\u0005"+
+		"I\u0000\u0000\u00ce\u0003\u0001\u0000\u0000\u0000\u00cf\u00d3\u0003\u0006"+
 		"\u0003\u0000\u00d0\u00d3\u0003\b\u0004\u0000\u00d1\u00d3\u0003\n\u0005"+
 		"\u0000\u00d2\u00cf\u0001\u0000\u0000\u0000\u00d2\u00d0\u0001\u0000\u0000"+
 		"\u0000\u00d2\u00d1\u0001\u0000\u0000\u0000\u00d3\u0005\u0001\u0000\u0000"+

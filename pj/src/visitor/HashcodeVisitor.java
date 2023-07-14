@@ -454,6 +454,11 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
+  public Integer visit(final PathAccessExpr p) {
+    return null;
+  }
+
+  @Override
   public Integer visit(final BlockComment b) {
     return null;
   }

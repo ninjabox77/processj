@@ -1,34 +1,36 @@
-package ast;
+package ast.expr;
 
+import ast.Name;
+import ast.Node;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
-import java.util.Objects;
-
 /**
- * Represents a package statement.
+ * Represents a procedure, a record, a protocol, or a constant name
+ * access without importing the library.
  *
  * @author Ben
  */
-public class Package extends AnnotatedNode {
+public class PathAccessExpr extends Expression<PathAccessExpr> {
+
   private Name name_;
 
-  public Package() {
+  public PathAccessExpr() {
     this(null);
   }
 
-  public Package(Name name) {
+  public PathAccessExpr(Name name) {
     this(null, name);
   }
 
-  public Package(Token token, Name name) {
+  public PathAccessExpr(Token token, Name name) {
     super(token);
     setName(name);
   }
 
-  public Package setName(Name name) {
+  public PathAccessExpr setName(Name name) {
     if (name == name_) {
       return this;
     }
@@ -42,6 +44,16 @@ public class Package extends AnnotatedNode {
 
   public Name getName() {
     return name_;
+  }
+
+  @Override
+  public boolean isPathAccessExpr() {
+    return true;
+  }
+
+  @Override
+  public PathAccessExpr asPathAccessExpr() {
+    return this;
   }
 
   @Override
