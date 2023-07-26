@@ -93,4 +93,12 @@ public abstract class ASTType extends AnnotatedNode implements NodeWithTSType<AS
   public ConstructedNode asConstructedNode() {
     throw new IllegalStateException(String.format("%s is not a ConstructedNode, it is a %s", this, getClass().getSimpleName()));
   }
+
+  public boolean isErrorNode() {
+    return false;
+  }
+
+  public ErrorNode asErrorNode() {
+    throw new IllegalStateException(String.format("%s is not an ErrorNode, it is a %s", this, getClass().getSimpleName()));
+  }
 }

@@ -94,16 +94,16 @@ public class ParForBlock extends ParStmt<ParForBlock> {
 
   @Override
   public <T, A> T accept(GenericVisitor<T, A> v, A arg) {
-    return null;
+    return v.visit(this, arg);
   }
 
   @Override
   public <A> void accept(VoidVisitor<A> v, A arg) {
-
+    v.visit(this, arg);
   }
 
   @Override
   public <T> T accept(DefaultVisitor<T> v) {
-    return null;
+    return v.visit(this);
   }
 }

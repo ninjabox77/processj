@@ -311,6 +311,7 @@ statement
  | PRI? ALT altBody                                             # AltStatement
  | PRI? ALT LPAREN forControl RPAREN altBody                    # AltForStatement
  | PAR (ENROLL expressionList)? statement                       # ParStatement
+ | PAR LPAREN forControl RPAREN statement                       # ParForStatement
  | WHILE parExpression statement                                # WhileStatement
  | DO statement WHILE parExpression SEMI                        # DoStatement
  | SWITCH parExpression LBRACE switchBlockStatementGroup* switchLabel* RBRACE  # SwitchStatement
@@ -327,7 +328,7 @@ switchBlockStatementGroup
  ;
 
 switchLabel
- : CASE (expression | Identifier) COLON
+ : CASE expression COLON
  | DEFAULT COLON
  ;
 

@@ -59,6 +59,8 @@ public interface VoidVisitor<A> {
 
   void visit(final ConstructedNode c, A arg);
 
+  void visit(final ErrorNode e, A arg);
+
   /*********************************************************
    * Top-level nodes
    *********************************************************/
@@ -87,7 +89,7 @@ public interface VoidVisitor<A> {
 
   void visit(final BreakStmt b, A arg);
 
-  void visit(final CaseStmt c, A arg);
+  void visit(final SwitchCaseStmt c, A arg);
 
   void visit(final ContinueStmt c, A arg);
 
@@ -116,6 +118,10 @@ public interface VoidVisitor<A> {
   void visit(final ReplicatedAltStmt r, A arg);
 
   void visit(final AltCase a, A arg);
+
+  void visit(final RegularParBlock r, A arg);
+
+  void visit(final ParForBlock p, A arg);
 
   /*********************************************************
    * Java nodes

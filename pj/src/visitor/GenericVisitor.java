@@ -64,6 +64,8 @@ public interface GenericVisitor<R, A> {
 
   R visit(final ConstructedNode c, A arg);
 
+  R visit(final ErrorNode e, A arg);
+
   /*********************************************************
    * Top-level nodes
    *********************************************************/
@@ -92,7 +94,7 @@ public interface GenericVisitor<R, A> {
 
   R visit(final BreakStmt b, A arg);
 
-  R visit(final CaseStmt c, A arg);
+  R visit(final SwitchCaseStmt c, A arg);
 
   R visit(final ContinueStmt c, A arg);
 
@@ -121,6 +123,10 @@ public interface GenericVisitor<R, A> {
   R visit(final ReplicatedAltStmt r, A arg);
 
   R visit(final AltCase a, A Arg);
+
+  R visit(final RegularParBlock r, A arg);
+
+  R visit(final ParForBlock p, A arg);
 
   /*********************************************************
    * Java nodes

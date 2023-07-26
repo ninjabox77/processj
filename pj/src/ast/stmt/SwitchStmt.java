@@ -18,7 +18,7 @@ import java.util.Optional;
 public class SwitchStmt extends Statement {
 
   private Expression<?> selector_;
-  private Sequence<CaseStmt> switchCases_;
+  private Sequence<SwitchCaseStmt> switchCases_;
   private Statement defaultStmt_;
 
   public SwitchStmt() {
@@ -29,15 +29,15 @@ public class SwitchStmt extends Statement {
     this(selector, null);
   }
 
-  public SwitchStmt(Expression<?> selector, Sequence<CaseStmt> switchCases) {
+  public SwitchStmt(Expression<?> selector, Sequence<SwitchCaseStmt> switchCases) {
     this(null, selector, switchCases, null);
   }
 
-  public SwitchStmt(Expression<?> selector, Sequence<CaseStmt> switchCases, Statement defaultStmt) {
+  public SwitchStmt(Expression<?> selector, Sequence<SwitchCaseStmt> switchCases, Statement defaultStmt) {
     this(null, selector, switchCases, defaultStmt);
   }
 
-  public SwitchStmt(Token token, Expression<?> selector, Sequence<CaseStmt> switchCases, Statement defaultStmt) {
+  public SwitchStmt(Token token, Expression<?> selector, Sequence<SwitchCaseStmt> switchCases, Statement defaultStmt) {
     super(token, null);
     setSelector(selector);
     setSwitchCases(switchCases);
@@ -60,7 +60,7 @@ public class SwitchStmt extends Statement {
     return selector_;
   }
 
-  public SwitchStmt setSwitchCases(Sequence<CaseStmt> switchCases) {
+  public SwitchStmt setSwitchCases(Sequence<SwitchCaseStmt> switchCases) {
     if (switchCases == switchCases_) {
       return this;
     }
@@ -72,7 +72,7 @@ public class SwitchStmt extends Statement {
     return this;
   }
 
-  public Optional<Sequence<CaseStmt>> getSwitchCases() {
+  public Optional<Sequence<SwitchCaseStmt>> getSwitchCases() {
     return Optional.ofNullable(switchCases_);
   }
 
@@ -92,7 +92,7 @@ public class SwitchStmt extends Statement {
     return Optional.ofNullable(defaultStmt_);
   }
 
-  public CaseStmt getCase(int index) {
+  public SwitchCaseStmt getCase(int index) {
     if (switchCases_ != null) {
       if (index >= 0 && index < switchCases_.size()) {
         return switchCases_.get(index);
@@ -128,7 +128,7 @@ public class SwitchStmt extends Statement {
     if (switchCases_ != null) {
       for (int i = 0; i < switchCases_.size(); ++i) {
         if (node == switchCases_.get(i)) {
-          switchCases_.set(i, (CaseStmt) replaceWith);
+          switchCases_.set(i, (SwitchCaseStmt) replaceWith);
           return true;
         }
       }

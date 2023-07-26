@@ -125,7 +125,7 @@ public class Compiler {
     if (args.length == 2) {
       System.out.println();
     }
-    ProcessJLexer lex = new ProcessJLexer(CharStreams.fromString("private void foo() { }"));
+    ProcessJLexer lex = new ProcessJLexer(CharStreams.fromString("private void foo() { switch (a) { default: hello; } }"));
     ProcessJParser parser = new ProcessJParser(new CommonTokenStream(lex));
     ProcessJParser.CompilationUnitContext init = parser.compilationUnit();
     new AstBuilder().visitCompilationUnit(init);

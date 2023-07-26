@@ -124,12 +124,12 @@ public abstract class Statement extends AnnotatedNode {
     throw new IllegalStateException(String.format("%s is not a SwitchStmt, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isCaseStmt() {
+  public boolean isSwitchCaseStmt() {
     return false;
   }
 
-  public CaseStmt asCaseStmt() {
-    throw new IllegalStateException(String.format("%s is not a CaseStmt, it is a %s", this, getClass().getSimpleName()));
+  public SwitchCaseStmt asSwitchCaseStmt() {
+    throw new IllegalStateException(String.format("%s is not a SwitchCaseStmt, it is a %s", this, getClass().getSimpleName()));
   }
 
   public boolean isIfStmt() {

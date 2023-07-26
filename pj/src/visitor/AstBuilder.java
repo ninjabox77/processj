@@ -4,6 +4,7 @@ import ast.*;
 import ast.Package;
 import ast.expr.BooleanExpr;
 import ast.expr.DeclarationExpr;
+import ast.expr.EmptyExpr;
 import ast.expr.Expression;
 import ast.java.FieldDeclaration;
 import ast.stmt.*;
@@ -466,17 +467,21 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
       Tuple<?> tuple = visitVariableDeclaratorIdentifier(ctx.variableDeclaratorIdentifier());
       if (tuple.isTuple1()) {
         Tuple1<String> t1 = tuple.asTuple1();
+        ArrayType arrayType = configureNode(new ArrayType(type.getTSType()), type);
+        ArrayNode arrayNode = configureNode(new ArrayNode(arrayType), arrayType);
         parameter.setName(t1.getV1());
-        parameter.setASTType(type);
+        parameter.setASTType(arrayNode);
         configureNode(parameter, ctx.variableDeclaratorIdentifier());
       } else {
         Tuple2<String, ArrayType> t2 = tuple.asTuple2();
         ArrayNode arrayNode = configureNode(new ArrayNode(t2.getV2()), t2.getV2());
-        arrayNode.getTSType().setTSType(type.getTSType());
-        parameter.setASTType(arrayNode);
+        ErrorNode errorNode = new ErrorNode(arrayNode.getTSType());
+        parameter.setASTType(configureNode(errorNode, arrayNode));
         parameter.setName(t2.getV1());
         configureNode(parameter, ctx);
       }
+      parameter.setVarargs(true);
+      return parameter;
     }
     return visitFormalParameter(ctx.formalParameter());
   }
@@ -750,6 +755,11 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   }
 
   @Override
+  public Object visitEnhancedForControl(ProcessJParser.EnhancedForControlContext ctx) {
+    return null;
+  }
+
+  @Override
   public Sequence<Expression<?>> visitForInit(ProcessJParser.ForInitContext ctx) {
     if (ctx.localVariableDeclaration() != null) {
       Sequence<VariableDecl> variables = visitLocalVariableDeclaration(ctx.localVariableDeclaration());
@@ -828,8 +838,27 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   }
 
   @Override
-  public Object visitParStatement(ProcessJParser.ParStatementContext ctx) {
-    return null;
+  public RegularParBlock visitParStatement(ProcessJParser.ParStatementContext ctx) {
+    Sequence<Expression<?>> barriers = Sequence.sequenceList();
+    if (ctx.ENROLL() != null) {
+      barriers.addAll(visitExpressionList(ctx.expressionList()));
+    }
+    RegularParBlock parBlock = new RegularParBlock();
+    parBlock.setBarriers(barriers);
+    parBlock.setStatemetns(new Sequence<>((Statement) visit(ctx.statement())));
+    return configureNode(parBlock, ctx);
+  }
+
+  @Override
+  public ParForBlock visitParForStatement(ProcessJParser.ParForStatementContext ctx) {
+    ForStmt forStmt = visitForControl(ctx.forControl()).asForStmt();
+    ParForBlock parBlock = new ParForBlock();
+    parBlock.setInitialization(forStmt.getInitialization());
+    parBlock.setConditional(forStmt.getConditional());
+    parBlock.setUpdate(forStmt.getUpdate());
+    parBlock.setStatementLabels(forStmt.getStatementLabels().orElse(null));
+    parBlock.setStatemetns(new Sequence<>((Statement) visit(ctx.statement())));
+    return configureNode(parBlock, ctx);
   }
 
   @Override
@@ -843,17 +872,29 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
 
   @Override
   public Object visitSwitchStatement(ProcessJParser.SwitchStatementContext ctx) {
+    Expression<?> expression = visitParExpression(ctx.parExpression());
+    Sequence<SwitchCaseStmt> cases = Sequence.sequenceList();
+    ctx.switchBlockStatementGroup().forEach(c -> cases.add(visitSwitchBlockStatementGroup(c)));
     return null;
   }
 
   @Override
-  public Object visitSwitchBlockStatementGroup(ProcessJParser.SwitchBlockStatementGroupContext ctx) {
-    return null;
+  public SwitchCaseStmt visitSwitchBlockStatementGroup(ProcessJParser.SwitchBlockStatementGroupContext ctx) {
+    Sequence<Expression<?>> labels = Sequence.sequenceList();
+    ctx.switchLabel().forEach(l -> labels.add(visitSwitchLabel(l)));
+    Sequence<Statement> statements = Sequence.sequenceList();
+    ctx.blockStatement().forEach(s -> statements.addAll(visitBlockStatement(s)));
+    SwitchCaseStmt caseStmt = new SwitchCaseStmt(labels, statements);
+    return configureNode(caseStmt, ctx);
   }
 
   @Override
-  public Object visitSwitchLabel(ProcessJParser.SwitchLabelContext ctx) {
-    return null;
+  public Expression<?> visitSwitchLabel(ProcessJParser.SwitchLabelContext ctx) {
+    if (ctx.expression() != null) {
+      return (Expression<?>) visit(ctx.expression());
+    }
+    // An empty expression implies that there is a default case
+    return configureNode(new EmptyExpr(), ctx.DEFAULT());
   }
 
   @Override

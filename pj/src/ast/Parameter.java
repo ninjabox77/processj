@@ -38,6 +38,18 @@ public class Parameter extends AnnotatedNode implements Modifier<Parameter>, Var
     setName(name);
   }
 
+  public Parameter setVarargs(boolean isVarargs) {
+    if (isVarargs == isVarargs_) {
+      return this;
+    }
+    isVarargs_ = isVarargs;
+    return this;
+  }
+
+  public boolean isVarargs() {
+    return isVarargs_;
+  }
+
   @Override
   public Parameter setASTType(ASTType type) {
     if (type == type_) {

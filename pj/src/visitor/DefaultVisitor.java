@@ -59,6 +59,8 @@ public interface DefaultVisitor<R> {
 
   R visit(final ConstructedNode c);
 
+  R visit(final ErrorNode e);
+
   /*********************************************************
    * Top-level nodes
    *********************************************************/
@@ -87,7 +89,7 @@ public interface DefaultVisitor<R> {
 
   R visit(final BreakStmt b);
 
-  R visit(final CaseStmt c);
+  R visit(final SwitchCaseStmt c);
 
   R visit(final ContinueStmt c);
 
@@ -116,6 +118,10 @@ public interface DefaultVisitor<R> {
   R visit(final ReplicatedAltStmt r);
 
   R visit(final AltCase a);
+
+  R visit(final RegularParBlock r);
+
+  R visit(final ParForBlock p);
 
   /*********************************************************
    * Java nodes

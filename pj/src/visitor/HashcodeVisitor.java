@@ -129,6 +129,11 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
+  public Integer visit(final ErrorNode e) {
+    return null;
+  }
+
+  @Override
   public Integer visit(final ConstantDecl c) {
     return null;
   }
@@ -179,7 +184,7 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final CaseStmt c) {
+  public Integer visit(final SwitchCaseStmt c) {
     return null;
   }
 
@@ -250,6 +255,16 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
 
   @Override
   public Integer visit(final AltCase a) {
+    return null;
+  }
+
+  @Override
+  public Integer visit(final RegularParBlock r) {
+    return null;
+  }
+
+  @Override
+  public Integer visit(final ParForBlock p) {
     return null;
   }
 

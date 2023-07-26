@@ -826,6 +826,18 @@ public interface ProcessJListener extends ParseTreeListener {
 	 */
 	void exitParStatement(ProcessJParser.ParStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code ParForStatement}
+	 * labeled alternative in {@link ProcessJParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterParForStatement(ProcessJParser.ParForStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ParForStatement}
+	 * labeled alternative in {@link ProcessJParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitParForStatement(ProcessJParser.ParForStatementContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code WhileStatement}
 	 * labeled alternative in {@link ProcessJParser#statement}.
 	 * @param ctx the parse tree

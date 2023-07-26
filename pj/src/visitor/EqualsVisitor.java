@@ -246,6 +246,13 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
+  public Boolean visit(final ErrorNode e, CodeVisitor arg) {
+    final ErrorNode e2 = (ErrorNode) arg;
+    return objectEquals(e.getTSType(), e2.getTSType()) &&
+        objectEquals(e.getComment(), e2.getComment());
+  }
+
+  @Override
   public Boolean visit(final ConstantDecl c, CodeVisitor arg) {
     final ConstantDecl c2 = (ConstantDecl) arg;
     return objectEquals(c.getModifiers(), c2.getModifiers()) &&
@@ -342,10 +349,10 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
-  public Boolean visit(final CaseStmt c, CodeVisitor arg) {
-    final CaseStmt c2 = (CaseStmt) arg;
-    return objectEquals(c.getExpression(), c2.getExpression()) &&
-        objectEquals(c.getStatement(), c2.getStatement()) &&
+  public Boolean visit(final SwitchCaseStmt c, CodeVisitor arg) {
+    final SwitchCaseStmt c2 = (SwitchCaseStmt) arg;
+    return objectEquals(c.getExpressions(), c2.getExpressions()) &&
+        objectEquals(c.getStatements(), c2.getStatements()) &&
         objectsEquals(c.getStatementLabels(), c2.getStatementLabels()) &&
         objectEquals(c.getComment(), c2.getComment());
   }
@@ -477,6 +484,26 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
         objectEquals(a.getStatement(), a2.getStatement()) &&
         objectEquals(a.getStatementLabels(), a2.getStatementLabels()) &&
         objectEquals(a.getComment(), a2.getComment());
+  }
+
+  @Override
+  public Boolean visit(final RegularParBlock r, CodeVisitor arg) {
+    final RegularParBlock r2 = (RegularParBlock) arg;
+    return objectEquals(r.getBarriers(), r2.getBarriers()) &&
+        objectEquals(r.getStatements(), r2.getStatements()) &&
+        objectEquals(r.getStatementLabels(), r2.getStatements()) &&
+        objectEquals(r.getComment(), r2.getComment());
+  }
+
+  @Override
+  public Boolean visit(final ParForBlock p, CodeVisitor arg) {
+    final ParForBlock p2 = (ParForBlock) arg;
+    return objectEquals(p.getInitialization(), p2.getInitialization()) &&
+        objectEquals(p.getConditional(), p2.getConditional()) &&
+        objectEquals(p.getUpdate(), p2.getUpdate()) &&
+        objectEquals(p.getStatements(), p2.getStatements()) &&
+        objectEquals(p.getStatementLabels(), p2.getStatementLabels()) &&
+        objectEquals(p.getComment(), p2.getComment());
   }
 
   @Override
