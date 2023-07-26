@@ -11,11 +11,11 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#init}.
+	 * Visit a parse tree produced by {@link ProcessJParser#compilationUnit}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitInit(ProcessJParser.InitContext ctx);
+	T visitCompilationUnit(ProcessJParser.CompilationUnitContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ProcessJParser#packageDeclaration}.
 	 * @param ctx the parse tree
@@ -23,44 +23,47 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPackageDeclaration(ProcessJParser.PackageDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code SingleImportDeclaration_}
-	 * labeled alternative in {@link ProcessJParser#importDeclaration}.
+	 * Visit a parse tree produced by {@link ProcessJParser#packageModifier}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSingleImportDeclaration_(ProcessJParser.SingleImportDeclaration_Context ctx);
+	T visitPackageModifier(ProcessJParser.PackageModifierContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code MultiImportDeclaration_}
-	 * labeled alternative in {@link ProcessJParser#importDeclaration}.
+	 * Visit a parse tree produced by {@link ProcessJParser#packageName}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMultiImportDeclaration_(ProcessJParser.MultiImportDeclaration_Context ctx);
+	T visitPackageName(ProcessJParser.PackageNameContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code MultiImportDeclarationStar_}
-	 * labeled alternative in {@link ProcessJParser#importDeclaration}.
+	 * Visit a parse tree produced by {@link ProcessJParser#importDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMultiImportDeclarationStar_(ProcessJParser.MultiImportDeclarationStar_Context ctx);
+	T visitImportDeclaration(ProcessJParser.ImportDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#singleImportDeclaration}.
+	 * Visit a parse tree produced by {@link ProcessJParser#singleTypeImportDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSingleImportDeclaration(ProcessJParser.SingleImportDeclarationContext ctx);
+	T visitSingleTypeImportDeclaration(ProcessJParser.SingleTypeImportDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#multiImportDeclaration}.
+	 * Visit a parse tree produced by {@link ProcessJParser#singleTypeMultiImportDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMultiImportDeclaration(ProcessJParser.MultiImportDeclarationContext ctx);
+	T visitSingleTypeMultiImportDeclaration(ProcessJParser.SingleTypeMultiImportDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#multiImportDeclarationStar}.
+	 * Visit a parse tree produced by {@link ProcessJParser#singleStaticImportDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMultiImportDeclarationStar(ProcessJParser.MultiImportDeclarationStarContext ctx);
+	T visitSingleStaticImportDeclaration(ProcessJParser.SingleStaticImportDeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#singleStaticMultiImportDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSingleStaticMultiImportDeclaration(ProcessJParser.SingleStaticMultiImportDeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ProcessJParser#typeDeclaration}.
 	 * @param ctx the parse tree
@@ -68,11 +71,17 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitTypeDeclaration(ProcessJParser.TypeDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#procedureDeclaration}.
+	 * Visit a parse tree produced by {@link ProcessJParser#externDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitProcedureDeclaration(ProcessJParser.ProcedureDeclarationContext ctx);
+	T visitExternDeclaration(ProcessJParser.ExternDeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#procedureTypeDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitProcedureTypeDeclaration(ProcessJParser.ProcedureTypeDeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ProcessJParser#modifier}.
 	 * @param ctx the parse tree
@@ -80,11 +89,53 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitModifier(ProcessJParser.ModifierContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#recordDeclaration}.
+	 * Visit a parse tree produced by {@link ProcessJParser#formarlParameterList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitRecordDeclaration(ProcessJParser.RecordDeclarationContext ctx);
+	T visitFormarlParameterList(ProcessJParser.FormarlParameterListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#formalParameters}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFormalParameters(ProcessJParser.FormalParametersContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#formalParameter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFormalParameter(ProcessJParser.FormalParameterContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#variableModifier}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVariableModifier(ProcessJParser.VariableModifierContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#lastFormalDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLastFormalDeclaration(ProcessJParser.LastFormalDeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#variableDeclaratorIdentifier}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVariableDeclaratorIdentifier(ProcessJParser.VariableDeclaratorIdentifierContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#body}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBody(ProcessJParser.BodyContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#recordTypeDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRecordTypeDeclaration(ProcessJParser.RecordTypeDeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ProcessJParser#extends}.
 	 * @param ctx the parse tree
@@ -98,25 +149,29 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitRecordBody(ProcessJParser.RecordBodyContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#recordField}.
+	 * Visit a parse tree produced by {@link ProcessJParser#recordMemberDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitRecordField(ProcessJParser.RecordFieldContext ctx);
+	T visitRecordMemberDeclaration(ProcessJParser.RecordMemberDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code ProtocolDeclarationWithBody}
-	 * labeled alternative in {@link ProcessJParser#protocolDeclaration}.
+	 * Visit a parse tree produced by {@link ProcessJParser#recordMemberDeclarators}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitProtocolDeclarationWithBody(ProcessJParser.ProtocolDeclarationWithBodyContext ctx);
+	T visitRecordMemberDeclarators(ProcessJParser.RecordMemberDeclaratorsContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code ProtocolDeclarationSemi}
-	 * labeled alternative in {@link ProcessJParser#protocolDeclaration}.
+	 * Visit a parse tree produced by {@link ProcessJParser#recordMemberDeclarator}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitProtocolDeclarationSemi(ProcessJParser.ProtocolDeclarationSemiContext ctx);
+	T visitRecordMemberDeclarator(ProcessJParser.RecordMemberDeclaratorContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#protocolTypeDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitProtocolTypeDeclaration(ProcessJParser.ProtocolTypeDeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ProcessJParser#protocolBody}.
 	 * @param ctx the parse tree
@@ -129,54 +184,6 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitProtocolCase(ProcessJParser.ProtocolCaseContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#constantDeclaration}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitConstantDeclaration(ProcessJParser.ConstantDeclarationContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#packageAccess}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPackageAccess(ProcessJParser.PackageAccessContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#statement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitStatement(ProcessJParser.StatementContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#localVariableDeclarationStatement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLocalVariableDeclarationStatement(ProcessJParser.LocalVariableDeclarationStatementContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#localVariableDeclaration}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLocalVariableDeclaration(ProcessJParser.LocalVariableDeclarationContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#variableDeclaratorList}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitVariableDeclaratorList(ProcessJParser.VariableDeclaratorListContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#variableDeclarator}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitVariableDeclarator(ProcessJParser.VariableDeclaratorContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#variableDeclaratorIdentifier}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitVariableDeclaratorIdentifier(ProcessJParser.VariableDeclaratorIdentifierContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ProcessJParser#type_}.
 	 * @param ctx the parse tree
@@ -219,6 +226,32 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitArrayType(ProcessJParser.ArrayTypeContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code IdentifierArguments}
+	 * labeled alternative in {@link ProcessJParser#classType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdentifierArguments(ProcessJParser.IdentifierArgumentsContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ClassDotIdentifierArguments}
+	 * labeled alternative in {@link ProcessJParser#classType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitClassDotIdentifierArguments(ProcessJParser.ClassDotIdentifierArgumentsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#typeArguments}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTypeArguments(ProcessJParser.TypeArgumentsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#typeArgument}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTypeArgument(ProcessJParser.TypeArgumentContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code ChannelSharedReadType}
 	 * labeled alternative in {@link ProcessJParser#channelType}.
@@ -296,298 +329,6 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDims(ProcessJParser.DimsContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#variableInitializer}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitVariableInitializer(ProcessJParser.VariableInitializerContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#expressionStatement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExpressionStatement(ProcessJParser.ExpressionStatementContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code TernaryExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTernaryExpression(ProcessJParser.TernaryExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code RecordLiteralExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitRecordLiteralExpression(ProcessJParser.RecordLiteralExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ExpressionWithBlockExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExpressionWithBlockExpression(ProcessJParser.ExpressionWithBlockExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code PathExpression_}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPathExpression_(ProcessJParser.PathExpression_Context ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ReturnExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitReturnExpression(ProcessJParser.ReturnExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ReadWriteExpressionCall}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitReadWriteExpressionCall(ProcessJParser.ReadWriteExpressionCallContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code AndExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAndExpression(ProcessJParser.AndExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ReadWriteExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitReadWriteExpression(ProcessJParser.ReadWriteExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ContinueExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitContinueExpression(ProcessJParser.ContinueExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code SuspendExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSuspendExpression(ProcessJParser.SuspendExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code AssignmentExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAssignmentExpression(ProcessJParser.AssignmentExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code MethodCallExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMethodCallExpression(ProcessJParser.MethodCallExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code TimeoutExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTimeoutExpression(ProcessJParser.TimeoutExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code LiteralExpression_}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLiteralExpression_(ProcessJParser.LiteralExpression_Context ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ProtocolLiteralExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitProtocolLiteralExpression(ProcessJParser.ProtocolLiteralExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ConditionalAndExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitConditionalAndExpression(ProcessJParser.ConditionalAndExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code SyncExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSyncExpression(ProcessJParser.SyncExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code NegationExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNegationExpression(ProcessJParser.NegationExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code MultiplicativeExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMultiplicativeExpression(ProcessJParser.MultiplicativeExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code CallExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCallExpression(ProcessJParser.CallExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ClassExpression_}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitClassExpression_(ProcessJParser.ClassExpression_Context ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ExponentExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExponentExpression(ProcessJParser.ExponentExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ExternalLiteralExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExternalLiteralExpression(ProcessJParser.ExternalLiteralExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code AdditiveExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAdditiveExpression(ProcessJParser.AdditiveExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code RelationalExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitRelationalExpression(ProcessJParser.RelationalExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code InclusiveOrExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitInclusiveOrExpression(ProcessJParser.InclusiveOrExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ArrayLiteralExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitArrayLiteralExpression(ProcessJParser.ArrayLiteralExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ExclusiveOrExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExclusiveOrExpression(ProcessJParser.ExclusiveOrExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code GroupedExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitGroupedExpression(ProcessJParser.GroupedExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ShiftExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitShiftExpression(ProcessJParser.ShiftExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code BreakExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBreakExpression(ProcessJParser.BreakExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code FieldExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFieldExpression(ProcessJParser.FieldExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code SkipStopExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSkipStopExpression(ProcessJParser.SkipStopExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code AnnotationExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAnnotationExpression(ProcessJParser.AnnotationExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code PreUnaryExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPreUnaryExpression(ProcessJParser.PreUnaryExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code PostUnaryExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPostUnaryExpression(ProcessJParser.PostUnaryExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code AssignmentOperatorExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAssignmentOperatorExpression(ProcessJParser.AssignmentOperatorExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code CastExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCastExpression(ProcessJParser.CastExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ArrayAccessExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitArrayAccessExpression(ProcessJParser.ArrayAccessExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ConditionalOrExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitConditionalOrExpression(ProcessJParser.ConditionalOrExpressionContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link ProcessJParser#annotation}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -630,97 +371,451 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSingleElementAnnotation(ProcessJParser.SingleElementAnnotationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#literalExpression}.
+	 * Visit a parse tree produced by {@link ProcessJParser#typeName}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLiteralExpression(ProcessJParser.LiteralExpressionContext ctx);
+	T visitTypeName(ProcessJParser.TypeNameContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#pathExpression}.
+	 * Visit a parse tree produced by {@link ProcessJParser#constantDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPathExpression(ProcessJParser.PathExpressionContext ctx);
+	T visitConstantDeclaration(ProcessJParser.ConstantDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#actualDeclarationList}.
+	 * Visit a parse tree produced by {@link ProcessJParser#constantDeclarators}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitActualDeclarationList(ProcessJParser.ActualDeclarationListContext ctx);
+	T visitConstantDeclarators(ProcessJParser.ConstantDeclaratorsContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code FormalDeclaration_}
-	 * labeled alternative in {@link ProcessJParser#formalDeclarationList}.
+	 * Visit a parse tree produced by {@link ProcessJParser#constantDeclarator}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFormalDeclaration_(ProcessJParser.FormalDeclaration_Context ctx);
+	T visitConstantDeclarator(ProcessJParser.ConstantDeclaratorContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code LastFormalDeclaration_}
-	 * labeled alternative in {@link ProcessJParser#formalDeclarationList}.
+	 * Visit a parse tree produced by {@link ProcessJParser#variableInitializer}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLastFormalDeclaration_(ProcessJParser.LastFormalDeclaration_Context ctx);
+	T visitVariableInitializer(ProcessJParser.VariableInitializerContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#formalDeclarations}.
+	 * Visit a parse tree produced by {@link ProcessJParser#arrayInitializer}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFormalDeclarations(ProcessJParser.FormalDeclarationsContext ctx);
+	T visitArrayInitializer(ProcessJParser.ArrayInitializerContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#formalDeclaration}.
+	 * Visit a parse tree produced by {@link ProcessJParser#variableInitializerList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFormalDeclaration(ProcessJParser.FormalDeclarationContext ctx);
+	T visitVariableInitializerList(ProcessJParser.VariableInitializerListContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#variableModifier}.
+	 * Visit a parse tree produced by {@link ProcessJParser#block}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitVariableModifier(ProcessJParser.VariableModifierContext ctx);
+	T visitBlock(ProcessJParser.BlockContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#lastFormalDeclaration}.
+	 * Visit a parse tree produced by {@link ProcessJParser#blockStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLastFormalDeclaration(ProcessJParser.LastFormalDeclarationContext ctx);
+	T visitBlockStatement(ProcessJParser.BlockStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#comparisonOperator}.
+	 * Visit a parse tree produced by {@link ProcessJParser#localVariableDeclarationStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitComparisonOperator(ProcessJParser.ComparisonOperatorContext ctx);
+	T visitLocalVariableDeclarationStatement(ProcessJParser.LocalVariableDeclarationStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#assignmentOperator}.
+	 * Visit a parse tree produced by {@link ProcessJParser#localVariableDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAssignmentOperator(ProcessJParser.AssignmentOperatorContext ctx);
+	T visitLocalVariableDeclaration(ProcessJParser.LocalVariableDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#arrayElements}.
+	 * Visit a parse tree produced by {@link ProcessJParser#variableDeclaratorList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitArrayElements(ProcessJParser.ArrayElementsContext ctx);
+	T visitVariableDeclaratorList(ProcessJParser.VariableDeclaratorListContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#expressionWithBlock}.
+	 * Visit a parse tree produced by {@link ProcessJParser#variableDeclarator}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitExpressionWithBlock(ProcessJParser.ExpressionWithBlockContext ctx);
+	T visitVariableDeclarator(ProcessJParser.VariableDeclaratorContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#blockExpression}.
+	 * Visit a parse tree produced by the {@code BlockAsStatement}
+	 * labeled alternative in {@link ProcessJParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBlockExpression(ProcessJParser.BlockExpressionContext ctx);
+	T visitBlockAsStatement(ProcessJParser.BlockAsStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#statements}.
+	 * Visit a parse tree produced by the {@code AssertStatement}
+	 * labeled alternative in {@link ProcessJParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStatements(ProcessJParser.StatementsContext ctx);
+	T visitAssertStatement(ProcessJParser.AssertStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code IfStatement}
+	 * labeled alternative in {@link ProcessJParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIfStatement(ProcessJParser.IfStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ForStatement}
+	 * labeled alternative in {@link ProcessJParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitForStatement(ProcessJParser.ForStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code AltStatement}
+	 * labeled alternative in {@link ProcessJParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAltStatement(ProcessJParser.AltStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code AltForStatement}
+	 * labeled alternative in {@link ProcessJParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAltForStatement(ProcessJParser.AltForStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ParStatement}
+	 * labeled alternative in {@link ProcessJParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParStatement(ProcessJParser.ParStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code WhileStatement}
+	 * labeled alternative in {@link ProcessJParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhileStatement(ProcessJParser.WhileStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code DoStatement}
+	 * labeled alternative in {@link ProcessJParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDoStatement(ProcessJParser.DoStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code SwitchStatement}
+	 * labeled alternative in {@link ProcessJParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSwitchStatement(ProcessJParser.SwitchStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ReturnStatement}
+	 * labeled alternative in {@link ProcessJParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitReturnStatement(ProcessJParser.ReturnStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code BreakStatement}
+	 * labeled alternative in {@link ProcessJParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBreakStatement(ProcessJParser.BreakStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ContinueStatement}
+	 * labeled alternative in {@link ProcessJParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContinueStatement(ProcessJParser.ContinueStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code EmptyStatement}
+	 * labeled alternative in {@link ProcessJParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEmptyStatement(ProcessJParser.EmptyStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code StatementExpression}
+	 * labeled alternative in {@link ProcessJParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStatementExpression(ProcessJParser.StatementExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code LabelStatement}
+	 * labeled alternative in {@link ProcessJParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLabelStatement(ProcessJParser.LabelStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#switchBlockStatementGroup}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSwitchBlockStatementGroup(ProcessJParser.SwitchBlockStatementGroupContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#switchLabel}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSwitchLabel(ProcessJParser.SwitchLabelContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#forControl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitForControl(ProcessJParser.ForControlContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#forInit}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitForInit(ProcessJParser.ForInitContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#enhancedForControl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEnhancedForControl(ProcessJParser.EnhancedForControlContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#parExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParExpression(ProcessJParser.ParExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#expressionList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpressionList(ProcessJParser.ExpressionListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#invocation}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInvocation(ProcessJParser.InvocationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#arguments}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArguments(ProcessJParser.ArgumentsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#altBody}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAltBody(ProcessJParser.AltBodyContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#altCase}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAltCase(ProcessJParser.AltCaseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#altGuard}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAltGuard(ProcessJParser.AltGuardContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code AdditiveExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAdditiveExpression(ProcessJParser.AdditiveExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code RelationalExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRelationalExpression(ProcessJParser.RelationalExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code TernaryExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTernaryExpression(ProcessJParser.TernaryExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code MemberAccessExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMemberAccessExpression(ProcessJParser.MemberAccessExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code LogicalAndExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLogicalAndExpression(ProcessJParser.LogicalAndExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code PrimaryExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrimaryExpression(ProcessJParser.PrimaryExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ObjectCreationExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitObjectCreationExpression(ProcessJParser.ObjectCreationExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code LogicalOrExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLogicalOrExpression(ProcessJParser.LogicalOrExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code InvocationExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInvocationExpression(ProcessJParser.InvocationExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ShiftExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitShiftExpression(ProcessJParser.ShiftExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code AnnotatedExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAnnotatedExpression(ProcessJParser.AnnotatedExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ArrayAccexxExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArrayAccexxExpression(ProcessJParser.ArrayAccexxExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ExclusiveExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExclusiveExpression(ProcessJParser.ExclusiveExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code AndExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAndExpression(ProcessJParser.AndExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code InclusiveExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInclusiveExpression(ProcessJParser.InclusiveExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code AssignmentExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignmentExpression(ProcessJParser.AssignmentExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code PrefixExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrefixExpression(ProcessJParser.PrefixExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code InstanceofExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInstanceofExpression(ProcessJParser.InstanceofExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code PostfixExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPostfixExpression(ProcessJParser.PostfixExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code CastExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCastExpression(ProcessJParser.CastExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code EqualityExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEqualityExpression(ProcessJParser.EqualityExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code MultiplicativeExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMultiplicativeExpression(ProcessJParser.MultiplicativeExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#assignOp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignOp(ProcessJParser.AssignOpContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#primary}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrimary(ProcessJParser.PrimaryContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#creator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCreator(ProcessJParser.CreatorContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#creatorName}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCreatorName(ProcessJParser.CreatorNameContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProcessJParser#arrayExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArrayExpression(ProcessJParser.ArrayExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ProcessJParser#recordExpression}.
 	 * @param ctx the parse tree
@@ -752,184 +847,11 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitTagExpressionList(ProcessJParser.TagExpressionListContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#externalExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExternalExpression(ProcessJParser.ExternalExpressionContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link ProcessJParser#classExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitClassExpression(ProcessJParser.ClassExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#loopExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLoopExpression(ProcessJParser.LoopExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#forLoopExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitForLoopExpression(ProcessJParser.ForLoopExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#forInit}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitForInit(ProcessJParser.ForInitContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#forUpdate}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitForUpdate(ProcessJParser.ForUpdateContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#statementExpressionList}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitStatementExpressionList(ProcessJParser.StatementExpressionListContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#whileLoopExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitWhileLoopExpression(ProcessJParser.WhileLoopExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#doWhileLoopExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDoWhileLoopExpression(ProcessJParser.DoWhileLoopExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#infiniteLoopExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitInfiniteLoopExpression(ProcessJParser.InfiniteLoopExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#ifExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIfExpression(ProcessJParser.IfExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#switchExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSwitchExpression(ProcessJParser.SwitchExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#caseBlockExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCaseBlockExpression(ProcessJParser.CaseBlockExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#caseBlockGroupExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCaseBlockGroupExpression(ProcessJParser.CaseBlockGroupExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#caseLabel}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCaseLabel(ProcessJParser.CaseLabelContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#altExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAltExpression(ProcessJParser.AltExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#priAltExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPriAltExpression(ProcessJParser.PriAltExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#altBlodyExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAltBlodyExpression(ProcessJParser.AltBlodyExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code BooleanGuardExpression}
-	 * labeled alternative in {@link ProcessJParser#altCase}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBooleanGuardExpression(ProcessJParser.BooleanGuardExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code GuardExpression_}
-	 * labeled alternative in {@link ProcessJParser#altCase}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitGuardExpression_(ProcessJParser.GuardExpression_Context ctx);
-	/**
-	 * Visit a parse tree produced by the {@code AltExpression_}
-	 * labeled alternative in {@link ProcessJParser#altCase}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAltExpression_(ProcessJParser.AltExpression_Context ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#guardExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitGuardExpression(ProcessJParser.GuardExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#repAltLoopExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitRepAltLoopExpression(ProcessJParser.RepAltLoopExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#parBlockExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitParBlockExpression(ProcessJParser.ParBlockExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#barrierExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBarrierExpression(ProcessJParser.BarrierExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#externDeclaration}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExternDeclaration(ProcessJParser.ExternDeclarationContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#externType}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExternType(ProcessJParser.ExternTypeContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code IdentifierArguments}
-	 * labeled alternative in {@link ProcessJParser#classType}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIdentifierArguments(ProcessJParser.IdentifierArgumentsContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ClassDotIdentifierArguments}
-	 * labeled alternative in {@link ProcessJParser#classType}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitClassDotIdentifierArguments(ProcessJParser.ClassDotIdentifierArgumentsContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ProcessJParser#typeArgumentsOrDiamond}.
 	 * @param ctx the parse tree
@@ -937,21 +859,15 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitTypeArgumentsOrDiamond(ProcessJParser.TypeArgumentsOrDiamondContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#typeArguments}.
+	 * Visit a parse tree produced by {@link ProcessJParser#literal}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitTypeArguments(ProcessJParser.TypeArgumentsContext ctx);
+	T visitLiteral(ProcessJParser.LiteralContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#typeArgumentList}.
+	 * Visit a parse tree produced by {@link ProcessJParser#identifier}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitTypeArgumentList(ProcessJParser.TypeArgumentListContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProcessJParser#typeArgument}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTypeArgument(ProcessJParser.TypeArgumentContext ctx);
+	T visitIdentifier(ProcessJParser.IdentifierContext ctx);
 }

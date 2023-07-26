@@ -1,49 +1,37 @@
-package ast.expr;
+package ast.stmt;
 
+import ast.AnnotatedNode;
 import ast.Node;
-import ast.types.ASTType;
+import ast.expr.Expression;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
 /**
- * Represents a postfix expression such as expression++ or expression--.
+ * Represents a guard in an alt statement.
  *
  * @author Ben
  */
-public class PostfixExpr extends Expression<PostfixExpr> {
+public class Guard extends AnnotatedNode {
 
   private Expression<?> expression_;
-  private Token operation_;
+  private boolean isSkip_;
 
-  public PostfixExpr() {
-    this(null, null);
+  public Guard() {
+    this(null);
   }
 
-  public PostfixExpr(Token operation, Expression<?> expression) {
-    this(null, operation, expression);
+  public Guard(Expression<?> expression) {
+    this(null, expression);
   }
 
-  public PostfixExpr(Token token, Token operation, Expression<?> expression) {
+  private Guard(Token token, Expression<?> expression) {
     super(token);
-    setOperation(operation);
     setExpression(expression);
   }
 
-  public PostfixExpr setOperation(Token operation) {
-    if (operation == operation_) {
-      return this;
-    }
-    operation_ = operation;
-    return this;
-  }
-
-  public Token getOperation() {
-    return operation_;
-  }
-
-  public PostfixExpr setExpression(Expression<?> expression) {
+  public Guard setExpression(Expression<?> expression) {
     if (expression == expression_) {
       return this;
     }
@@ -59,19 +47,16 @@ public class PostfixExpr extends Expression<PostfixExpr> {
     return expression_;
   }
 
-  @Override
-  public boolean isPostfixExpr() {
-    return true;
-  }
-
-  @Override
-  public PostfixExpr asPostfixExpr() {
+  public Guard setSkip(boolean isSkip) {
+    if (isSkip == isSkip_) {
+      return this;
+    }
+    isSkip_ = isSkip;
     return this;
   }
 
-  @Override
-  public PostfixExpr setASTType(ASTType type) {
-    return super.setASTType(type);
+  public boolean isSkip() {
+    return isSkip_;
   }
 
   @Override

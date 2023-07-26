@@ -2,6 +2,7 @@ package ast.expr;
 
 import ast.Node;
 import ast.Sequence;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -58,6 +59,11 @@ public class RecordExpr extends Expression<RecordExpr> {
   }
 
   @Override
+  public RecordExpr setASTType(ASTType type) {
+    return super.setASTType(type);
+  }
+
+  @Override
   public boolean replace(Node node, Node replaceWith) {
     if (node == null) {
       return false;
@@ -70,7 +76,7 @@ public class RecordExpr extends Expression<RecordExpr> {
         }
       }
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override
@@ -86,7 +92,7 @@ public class RecordExpr extends Expression<RecordExpr> {
         }
       }
     }
-    return super.remove(node);
+    return false;
   }
 
   @Override

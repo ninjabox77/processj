@@ -60,9 +60,7 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public Statement copyStatementLabel(Statement stat) {
-    stat.getStatementLabels().ifPresent(labels -> {
-      labels.forEach(this::addStatementLabel);
-    });
+    stat.getStatementLabels().ifPresent(labels -> labels.forEach(this::addStatementLabel));
     return this;
   }
 
@@ -74,12 +72,12 @@ public abstract class Statement extends AnnotatedNode {
     throw new IllegalStateException(String.format("%s is not a AltStmt, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isGuardStmt() {
+  public boolean isAltCase() {
     return false;
   }
 
-  public GuardStmt asGuardStmt() {
-    throw new IllegalStateException(String.format("%s is not a GuardStmt, it is a %s", this, getClass().getSimpleName()));
+  public AltCase asAltCase() {
+    throw new IllegalStateException(String.format("%s is not a AltCase, it is a %s", this, getClass().getSimpleName()));
   }
 
   public boolean isEmpty() {
@@ -188,6 +186,14 @@ public abstract class Statement extends AnnotatedNode {
 
   public ExpressionStmt asExpressionStmt() {
     throw new IllegalStateException(String.format("%s is not a ExpressionStmt, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isParStmt() {
+    return false;
+  }
+
+  public ParStmt<?> asParStmt() {
+    throw new IllegalStateException(String.format("%s is not a ParStmt, it is a %s", this, getClass().getSimpleName()));
   }
 
   @Override

@@ -83,7 +83,7 @@ public class PrefixExpr extends Expression<PrefixExpr> {
       setExpression((Expression<?>) replaceWith);
       return true;
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override

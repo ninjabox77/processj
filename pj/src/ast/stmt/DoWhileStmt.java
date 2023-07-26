@@ -81,7 +81,7 @@ public class DoWhileStmt extends Statement implements LoopingStmt<DoWhileStmt> {
       setLoopBlock((Statement) replaceWith);
       return true;
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override
@@ -93,7 +93,7 @@ public class DoWhileStmt extends Statement implements LoopingStmt<DoWhileStmt> {
       setLoopBlock(null);
       return true;
     }
-    return super.remove(node);
+    return false;
   }
 
   @Override

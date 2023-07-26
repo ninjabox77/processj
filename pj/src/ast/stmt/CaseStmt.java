@@ -92,7 +92,7 @@ public class CaseStmt extends Statement {
       setStatement((Statement) replaceWith);
       return true;
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override
@@ -104,7 +104,7 @@ public class CaseStmt extends Statement {
       setStatement(null);
       return true;
     }
-    return super.remove(node);
+    return false;
   }
 
   @Override

@@ -1,6 +1,5 @@
 package ast.stmt;
 
-import ast.Node;
 import ast.Sequence;
 import ast.expr.BooleanLiteral;
 import ast.expr.Expression;
@@ -10,32 +9,32 @@ import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
 /**
- * Represents a replicated alt statement.
+ * Represents a par-block that looks like a for-statement.
  *
  * @author Ben
  */
-public class ReplicatedAltStmt extends AltStmt<ReplicatedAltStmt> {
+public class ParForBlock extends ParStmt<ParForBlock> {
 
   private Sequence<Expression<?>> initialization_;
   private Expression<?> conditional_;
   private Sequence<Expression<?>> update_;
 
-  public ReplicatedAltStmt() {
+  public ParForBlock() {
     this(Sequence.sequenceList(), new BooleanLiteral("false"), Sequence.sequenceList(), null);
   }
 
-  public ReplicatedAltStmt(Sequence<Expression<?>> initialization, Expression<?> conditional, Sequence<Expression<?>> update, Sequence<AltCase> altCase) {
-    this(null, initialization, conditional, update, altCase);
+  public ParForBlock(Sequence<Expression<?>> initialization, Expression<?> conditional, Sequence<Expression<?>> update, Sequence<Statement> statements) {
+    this(null, initialization, conditional, update, statements);
   }
 
-  public ReplicatedAltStmt(Token token, Sequence<Expression<?>> initialization, Expression<?> conditional, Sequence<Expression<?>> update, Sequence<AltCase> altCase) {
-    super(token, altCase);
+  public ParForBlock(Token token, Sequence<Expression<?>> initialization, Expression<?> conditional, Sequence<Expression<?>> update, Sequence<Statement> statements) {
+    super(token, statements);
     setInitialization(initialization);
     setConditional(conditional);
     setUpdate(update);
   }
 
-  public ReplicatedAltStmt setInitialization(Sequence<Expression<?>> initialization) {
+  public ParForBlock setInitialization(Sequence<Expression<?>> initialization) {
     if (initialization == initialization_) {
       return this;
     }
@@ -51,7 +50,7 @@ public class ReplicatedAltStmt extends AltStmt<ReplicatedAltStmt> {
     return initialization_;
   }
 
-  public ReplicatedAltStmt setConditional(Expression<?> conditional) {
+  public ParForBlock setConditional(Expression<?> conditional) {
     if (conditional == conditional_) {
       return this;
     }
@@ -67,7 +66,7 @@ public class ReplicatedAltStmt extends AltStmt<ReplicatedAltStmt> {
     return conditional_;
   }
 
-  public ReplicatedAltStmt setUpdate(Sequence<Expression<?>> update) {
+  public ParForBlock setUpdate(Sequence<Expression<?>> update) {
     if (update == update_) {
       return this;
     }
@@ -84,51 +83,27 @@ public class ReplicatedAltStmt extends AltStmt<ReplicatedAltStmt> {
   }
 
   @Override
-  public boolean isReplicatedAltStmt() {
+  public boolean isParForBlock() {
     return true;
   }
 
   @Override
-  public ReplicatedAltStmt asReplicatedAltStmt() {
+  public ParForBlock asParForBlock() {
     return this;
   }
 
   @Override
-  public boolean replace(Node node, Node replaceWith) {
-    if (node == null) {
-      return false;
-    }
-    for (int i = 0; i < initialization_.size(); ++i) {
-      if (node == initialization_.get(i)) {
-        initialization_.set(i, (Expression<?>) replaceWith);
-        return true;
-      }
-    }
-    if (node == conditional_) {
-      setConditional((Expression<?>) replaceWith);
-      return true;
-    }
-    for (int i = 0; i < update_.size(); ++i) {
-      if (node == update_.get(i)) {
-        update_.set(i, (Expression<?>) replaceWith);
-        return true;
-      }
-    }
-    return super.replace(node, replaceWith);
-  }
-
-  @Override
   public <T, A> T accept(GenericVisitor<T, A> v, A arg) {
-    return v.visit(this, arg);
+    return null;
   }
 
   @Override
   public <A> void accept(VoidVisitor<A> v, A arg) {
-    v.visit(this, arg);
+
   }
 
   @Override
   public <T> T accept(DefaultVisitor<T> v) {
-    return v.visit(this);
+    return null;
   }
 }

@@ -137,7 +137,7 @@ public class SwitchStmt extends Statement {
       setDefaultStmt((Statement) replaceWith);
       return true;
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override

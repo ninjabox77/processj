@@ -1,6 +1,7 @@
 package ast.expr;
 
 import ast.Node;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -73,6 +74,11 @@ public class ChannelWriteExpr extends Expression<ChannelWriteExpr> {
   }
 
   @Override
+  public ChannelWriteExpr setASTType(ASTType type) {
+    return super.setASTType(type);
+  }
+
+  @Override
   public boolean replace(Node node, Node replaceWith) {
     if (node == null) {
       return false;
@@ -85,7 +91,7 @@ public class ChannelWriteExpr extends Expression<ChannelWriteExpr> {
       setExpression((Expression<?>) replaceWith);
       return true;
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override

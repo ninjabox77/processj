@@ -91,7 +91,7 @@ public class WhileStmt extends Statement implements LoopingStmt<WhileStmt> {
       setLoopBlock((Statement) replaceWith);
       return true;
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override
@@ -103,7 +103,7 @@ public class WhileStmt extends Statement implements LoopingStmt<WhileStmt> {
       setLoopBlock(null);
       return true;
     }
-    return super.remove(node);
+    return false;
   }
 
   @Override

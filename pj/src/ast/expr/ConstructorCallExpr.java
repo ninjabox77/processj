@@ -16,15 +16,15 @@ import visitor.VoidVisitor;
 public class ConstructorCallExpr extends MethodCallExpr {
 
   public ConstructorCallExpr() {
-    this(null, null, null, null);
+    this(null, null, Sequence.sequenceList(), Sequence.sequenceList());
   }
 
-  public ConstructorCallExpr(Expression<?> objectExpression, Expression<?> methodExpression, Sequence<Expression<?>> arguments, Sequence<Type> typeArguments) {
-    this(null, objectExpression, methodExpression, arguments, typeArguments);
+  public ConstructorCallExpr(Expression<?> methodExpression, final String identifier, Sequence<Expression<?>> arguments, Sequence<Type> typeArguments) {
+    this(null, methodExpression, identifier, arguments, typeArguments);
   }
 
-  public ConstructorCallExpr(Token token, Expression<?> objectExpression, Expression<?> methodExpression, Sequence<Expression<?>> arguments, Sequence<Type> typeArguments) {
-    super(token, objectExpression, methodExpression, arguments, typeArguments);
+  public ConstructorCallExpr(Token token, Expression<?> methodExpression, final String identifier, Sequence<Expression<?>> arguments, Sequence<Type> typeArguments) {
+    super(token, methodExpression, identifier, arguments, typeArguments);
   }
 
   @Override

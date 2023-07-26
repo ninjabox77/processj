@@ -1,6 +1,7 @@
 package ast.expr;
 
 import ast.Sequence;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -41,6 +42,11 @@ public class ArrayExpr extends ListExpression<ArrayExpr> {
   @Override
   public ArrayExpr asArrayExpr() {
     return this;
+  }
+
+  @Override
+  public ArrayExpr setASTType(ASTType type) {
+    return super.setASTType(type);
   }
 
   @Override

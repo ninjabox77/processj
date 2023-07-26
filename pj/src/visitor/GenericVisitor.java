@@ -76,7 +76,7 @@ public interface GenericVisitor<R, A> {
 
   R visit(final ProcedureTopLevel p, A arg);
 
-  R visit(final ProtocolTagDecl p, A arg);
+  R visit(final ProtocolCaseDecl p, A arg);
 
   R visit(final ProtocolDecl p, A arg);
 
@@ -106,7 +106,7 @@ public interface GenericVisitor<R, A> {
 
   R visit(final ForStmt f, A arg);
 
-  R visit(final GuardStmt g, A arg);
+  R visit(final Guard g, A arg);
 
   R visit(final IfStmt i, A arg);
 
@@ -119,6 +119,8 @@ public interface GenericVisitor<R, A> {
   R visit(final WhileStmt w, A arg);
 
   R visit(final ReplicatedAltStmt r, A arg);
+
+  R visit(final AltCase a, A Arg);
 
   /*********************************************************
    * Java nodes
@@ -210,7 +212,11 @@ public interface GenericVisitor<R, A> {
 
   R visit(final ChannelWriteExpr c, A arg);
 
-  R visit(final PathAccessExpr p, A arg);
+  R visit(final PathExpression p, A arg);
+
+  R visit(final GroupExpr g, A arg);
+
+  R visit(final ArrayAccess a, A arg);
 
   /*********************************************************
    * Comments nodes

@@ -69,7 +69,7 @@ public class BlockExpr extends Expression<BlockExpr> {
         return true;
       }
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override
@@ -83,7 +83,7 @@ public class BlockExpr extends Expression<BlockExpr> {
         return true;
       }
     }
-    return super.remove(node);
+    return false;
   }
 
   @Override

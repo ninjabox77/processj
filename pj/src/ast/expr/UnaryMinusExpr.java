@@ -69,7 +69,7 @@ public class UnaryMinusExpr extends Expression<UnaryMinusExpr> {
       setExpression((Expression<?>) replaceWith);
       return true;
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override

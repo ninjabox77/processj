@@ -3,9 +3,6 @@ package ast.stmt;
 import ast.Node;
 import ast.Sequence;
 import org.antlr.v4.runtime.Token;
-import visitor.DefaultVisitor;
-import visitor.GenericVisitor;
-import visitor.VoidVisitor;
 
 import java.util.Optional;
 
@@ -18,34 +15,35 @@ import java.util.Optional;
  */
 public abstract class AltStmt<A extends AltStmt<?>> extends Statement {
 
-  private Sequence<GuardStmt> guards_;
+  private Sequence<AltCase> altCases_;
 
   public AltStmt() {
     this(null);
   }
 
-  public AltStmt(Sequence<GuardStmt> guards) {
-    this(null, guards);
+  public AltStmt(Sequence<AltCase> altCases) {
+    this(null, altCases);
   }
 
-  public AltStmt(Token token, Sequence<GuardStmt> guards) {
+  public AltStmt(Token token, Sequence<AltCase> altCases) {
     super(token, null);
+    setAltCases(altCases);
   }
 
-  public A setGuards(Sequence<GuardStmt> guards) {
-    if (guards == guards_) {
+  public A setAltCases(Sequence<AltCase> altCases) {
+    if (altCases == altCases_) {
       return (A) this;
     }
-    if (guards_ != null) {
-      guards_.setParentNode(null);
+    if (altCases_ != null) {
+      altCases_.setParentNode(null);
     }
-    guards_ = guards;
-    setAsParentNodeOf(guards);
+    altCases_ = altCases;
+    setAsParentNodeOf(altCases);
     return (A) this;
   }
 
-  public Optional<Sequence<GuardStmt>> getGuards() {
-    return Optional.ofNullable(guards_);
+  public Optional<Sequence<AltCase>> getAltCases() {
+    return Optional.ofNullable(altCases_);
   }
 
   public boolean isRegularAltStmt() {
@@ -53,7 +51,7 @@ public abstract class AltStmt<A extends AltStmt<?>> extends Statement {
   }
 
   public RegularAltStmt asRegularAltStmt() {
-    throw new IllegalStateException(String.format("%s is not an PriAltStmt, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not a PriAltStmt, it is a %s", this, getClass().getSimpleName()));
   }
 
   public boolean isReplicatedAltStmt() {
@@ -61,7 +59,7 @@ public abstract class AltStmt<A extends AltStmt<?>> extends Statement {
   }
 
   public ReplicatedAltStmt asReplicatedAltStmt() {
-    throw new IllegalStateException(String.format("%s is not an ReplicatedAltStmt, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not a ReplicatedAltStmt, it is a %s", this, getClass().getSimpleName()));
   }
 
   @Override
@@ -79,15 +77,15 @@ public abstract class AltStmt<A extends AltStmt<?>> extends Statement {
     if (node == null) {
       return false;
     }
-    if (guards_ != null) {
-      for (int i = 0; i < guards_.size(); ++i) {
-        if (node == guards_.get(i)) {
-          guards_.set(i, (GuardStmt) replaceWith);
+    if (altCases_ != null) {
+      for (int i = 0; i < altCases_.size(); ++i) {
+        if (node == altCases_.get(i)) {
+          altCases_.set(i, (AltCase) replaceWith);
           return true;
         }
       }
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override
@@ -95,14 +93,14 @@ public abstract class AltStmt<A extends AltStmt<?>> extends Statement {
     if (node == null) {
       return false;
     }
-    if (guards_ != null) {
-      for (int i = 0; i < guards_.size(); ++i) {
-        if (node == guards_.get(i)) {
-          guards_.remove(i);
+    if (altCases_ != null) {
+      for (int i = 0; i < altCases_.size(); ++i) {
+        if (node == altCases_.get(i)) {
+          altCases_.remove(i);
           return true;
         }
       }
     }
-    return super.remove(node);
+    return false;
   }
 }

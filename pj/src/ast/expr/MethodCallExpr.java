@@ -8,56 +8,63 @@ import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
  * Represents a method call, or a method call on an object or class.
+ * This class should only be when specifying generic arguments in a
+ * method call.
  *
  * @author Ben
  */
 public class MethodCallExpr extends Expression<MethodCallExpr> {
 
-  private Expression<?> objectExpression_;
   private Expression<?> methodExpression_;
   private Sequence<Expression<?>> arguments_;
   private Sequence<Type> typeArguments_;
+  private String identifier_;
   private boolean implicitThis_;
 
   public MethodCallExpr() {
-    this(null, null, null);
+    this(null);
   }
 
-  public MethodCallExpr(Expression<?> objectExpression, Expression<?> methodExpression, Sequence<Expression<?>> arguments) {
-    this(objectExpression, methodExpression, arguments, null);
+  public MethodCallExpr(final String identifier) {
+    this(identifier, Sequence.sequenceList());
   }
 
-  public MethodCallExpr(Expression<?> objectExpression, Expression<?> methodExpression, Sequence<Expression<?>> arguments, Sequence<Type> typeArguments) {
-    this(null, objectExpression, methodExpression, arguments, typeArguments);
+  public MethodCallExpr(final String identifier, Sequence<Expression<?>> arguments) {
+    this(null, identifier, arguments);
   }
 
-  public MethodCallExpr(Token token, Expression<?> objectExpression, Expression<?> methodExpression, Sequence<Expression<?>> arguments, Sequence<Type> typeArguments) {
+  public MethodCallExpr(Expression<?> methodExpression, final String identifier, Sequence<Expression<?>> arguments) {
+    this(methodExpression, identifier, arguments, Sequence.sequenceList());
+  }
+
+  public MethodCallExpr(Expression<?> methodExpression, final String identifier, Sequence<Expression<?>> arguments, Sequence<Type> typeArguments) {
+    this(null, methodExpression, identifier, arguments, typeArguments);
+  }
+
+  public MethodCallExpr(Token token, Expression<?> methodExpression, final String identifier, Sequence<Expression<?>> arguments, Sequence<Type> typeArguments) {
     super(token);
-    setObjectExpression(objectExpression);
     setMethodExpression(methodExpression);
+    setIdentifier(identifier);
     setArguments(arguments);
     setTypeArguments(typeArguments);
     setImplicitThis(false);
   }
 
-  public MethodCallExpr setObjectExpression(Expression<?> objectExpression) {
-    if (objectExpression == objectExpression_) {
+  public MethodCallExpr setIdentifier(final String identifier) {
+    if (Objects.equals(identifier, identifier_)) {
       return this;
     }
-    if (objectExpression_ != null) {
-      objectExpression_.setParentNode(null);
-    }
-    objectExpression_ = objectExpression;
-    setAsParentNodeOf(objectExpression);
+    identifier_ = identifier;
     return this;
   }
 
-  public Optional<Expression<?>> getObjectExpression() {
-    return Optional.ofNullable(objectExpression_);
+  public String getIdentifier() {
+    return identifier_;
   }
 
   public MethodCallExpr setMethodExpression(Expression<?> methodExpression) {
@@ -143,10 +150,6 @@ public class MethodCallExpr extends Expression<MethodCallExpr> {
     if (node == null) {
       return false;
     }
-    if (node == objectExpression_) {
-      setObjectExpression((Expression<?>) replaceWith);
-      return true;
-    }
     if (node == methodExpression_) {
       setMethodExpression((Expression<?>) replaceWith);
       return true;
@@ -167,7 +170,7 @@ public class MethodCallExpr extends Expression<MethodCallExpr> {
         }
       }
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override
@@ -175,8 +178,8 @@ public class MethodCallExpr extends Expression<MethodCallExpr> {
     if (node == null) {
       return false;
     }
-    if (node == objectExpression_) {
-      setObjectExpression(null);
+    if (node == methodExpression_) {
+      setMethodExpression(null);
       return true;
     }
     if (arguments_ != null) {
@@ -195,7 +198,7 @@ public class MethodCallExpr extends Expression<MethodCallExpr> {
         }
       }
     }
-    return super.remove(node);
+    return false;
   }
 
   @Override

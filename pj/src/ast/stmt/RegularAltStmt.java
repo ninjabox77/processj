@@ -19,12 +19,12 @@ public class RegularAltStmt extends AltStmt<RegularAltStmt> {
     this(null, false);
   }
 
-  public RegularAltStmt(Sequence<GuardStmt> guards, final boolean isFairALt) {
-    this(null, guards, isFairALt);
+  public RegularAltStmt(Sequence<AltCase> altCases, final boolean isFairALt) {
+    this(null, altCases, isFairALt);
   }
 
-  public RegularAltStmt(Token token, Sequence<GuardStmt> guards, final boolean isFairAlt) {
-    super(token, guards);
+  public RegularAltStmt(Token token, Sequence<AltCase> altCases, final boolean isFairAlt) {
+    super(token, altCases);
     setFairAlt(isFairAlt);
   }
 

@@ -2,6 +2,7 @@ package ast.expr;
 
 import ast.Node;
 import ast.stmt.BlockStmt;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -77,6 +78,11 @@ public class ChannelReadExpr extends Expression<ChannelReadExpr> {
   }
 
   @Override
+  public ChannelReadExpr setASTType(ASTType type) {
+    return super.setASTType(type);
+  }
+
+  @Override
   public boolean replace(Node node, Node replaceWith) {
     if (node == null) {
       return false;
@@ -89,7 +95,7 @@ public class ChannelReadExpr extends Expression<ChannelReadExpr> {
       setExternalRV((BlockExpr) replaceWith);
       return true;
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override

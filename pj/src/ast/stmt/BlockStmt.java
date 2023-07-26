@@ -85,7 +85,7 @@ public class BlockStmt extends Statement {
         return true;
       }
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override
@@ -99,7 +99,7 @@ public class BlockStmt extends Statement {
         return true;
       }
     }
-    return super.remove(node);
+    return false;
   }
 
   @Override

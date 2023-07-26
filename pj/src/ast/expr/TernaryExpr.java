@@ -111,7 +111,7 @@ public class TernaryExpr extends Expression<TernaryExpr> {
       setFalseExpression((Expression<?>) replaceWith);
       return true;
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override

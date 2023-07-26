@@ -71,7 +71,7 @@ public interface VoidVisitor<A> {
 
   void visit(final ProcedureTopLevel p, A arg);
 
-  void visit(final ProtocolTagDecl p, A arg);
+  void visit(final ProtocolCaseDecl p, A arg);
 
   void visit(final ProtocolDecl p, A arg);
 
@@ -101,7 +101,7 @@ public interface VoidVisitor<A> {
 
   void visit(final ForStmt f, A arg);
 
-  void visit(final GuardStmt g, A arg);
+  void visit(final Guard g, A arg);
 
   void visit(final IfStmt i, A arg);
 
@@ -114,6 +114,8 @@ public interface VoidVisitor<A> {
   void visit(final WhileStmt w, A arg);
 
   void visit(final ReplicatedAltStmt r, A arg);
+
+  void visit(final AltCase a, A arg);
 
   /*********************************************************
    * Java nodes
@@ -205,7 +207,11 @@ public interface VoidVisitor<A> {
 
   void visit(final ChannelWriteExpr c, A arg);
 
-  void visit(final PathAccessExpr p, A arg);
+  void visit(final PathExpression p, A arg);
+
+  void visit(final GroupExpr g, A arg);
+
+  void visit(final ArrayAccess a, A arg);
 
   /*********************************************************
    * Comments nodes

@@ -18,11 +18,11 @@ public class BinaryExpr extends Expression<BinaryExpr> {
   private Expression<?> rightExpression_;
   private Token operation_;
 
-  public BinaryExpr(Expression<?> leftExpression, Token operation, Expression<?> rightExpression) {
-    this(null, leftExpression, operation, rightExpression);
+  public BinaryExpr(Expression<?> leftExpression, Expression<?> rightExpression, Token operation) {
+    this(null, leftExpression, rightExpression, operation);
   }
 
-  public BinaryExpr(Token token, Expression<?> leftExpression, Token operation, Expression<?> rightExpression) {
+  public BinaryExpr(Token token, Expression<?> leftExpression, Expression<?> rightExpression, Token operation) {
     super(token);
     setLeftExpression(leftExpression);
     setRightExpression(rightExpression);
@@ -101,7 +101,7 @@ public class BinaryExpr extends Expression<BinaryExpr> {
       setRightExpression((Expression<?>) replaceWith);
       return true;
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override

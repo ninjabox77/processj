@@ -1,6 +1,5 @@
 package ast.expr;
 
-import ast.Name;
 import ast.Node;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
@@ -8,51 +7,50 @@ import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
 /**
- * Represents a procedure, a record, a protocol, or a constant name
- * access without importing the library.
+ * Represents a group of expressions.
  *
  * @author Ben
  */
-public class PathAccessExpr extends Expression<PathAccessExpr> {
+public class GroupExpr extends Expression<GroupExpr> {
 
-  private Name name_;
+  private Expression<?> expression_;
 
-  public PathAccessExpr() {
-    this(null);
+  public GroupExpr() {
+    this(new EmptyExpr());
   }
 
-  public PathAccessExpr(Name name) {
-    this(null, name);
+  public GroupExpr(Expression<?> expression) {
+    this(null, expression);
   }
 
-  public PathAccessExpr(Token token, Name name) {
+  public GroupExpr(Token token, Expression<?> expression) {
     super(token);
-    setName(name);
+    setExpression(expression);
   }
 
-  public PathAccessExpr setName(Name name) {
-    if (name == name_) {
+  public GroupExpr setExpression(Expression<?> expression) {
+    if (expression == expression_) {
       return this;
     }
-    if (name_ != null) {
-      name_.setParentNode(null);
+    if (expression_ != null) {
+      expression_.setParentNode(null);
     }
-    name_ = name;
-    setAsParentNodeOf(name);
+    expression_ = expression;
+    setAsParentNodeOf(expression);
     return this;
   }
 
-  public Name getName() {
-    return name_;
+  public Expression<?> getExpression() {
+    return expression_;
   }
 
   @Override
-  public boolean isPathAccessExpr() {
+  public boolean isGroupExpr() {
     return true;
   }
 
   @Override
-  public PathAccessExpr asPathAccessExpr() {
+  public GroupExpr asGroupExpr() {
     return this;
   }
 
@@ -61,8 +59,8 @@ public class PathAccessExpr extends Expression<PathAccessExpr> {
     if (node == null) {
       return false;
     }
-    if (node == name_) {
-      setName((Name) replaceWith);
+    if (node == expression_) {
+      setExpression((Expression<?>) replaceWith);
       return true;
     }
     return false;

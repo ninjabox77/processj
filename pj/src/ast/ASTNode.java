@@ -33,7 +33,7 @@ public abstract class ASTNode<N extends ASTNode<?>> implements NodeWithParent<N>
   private String text_ = null;
 
   public ASTNode(Token token) {
-    if (token != null) {
+    if (Objects.nonNull(token)) {
       line_ = token.getLine();
       start_ = token.getStartIndex();
       stop_ = token.getStopIndex();

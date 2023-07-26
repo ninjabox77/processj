@@ -69,7 +69,7 @@ public class ForStmt extends Statement implements LoopingStmt<ForStmt> {
     return this;
   }
 
-  public Expression<?> getCondition() {
+  public Expression<?> getConditional() {
     return condition_;
   }
 
@@ -146,7 +146,7 @@ public class ForStmt extends Statement implements LoopingStmt<ForStmt> {
       setLoopBlock((Statement) replaceWith);
       return true;
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override
@@ -170,7 +170,7 @@ public class ForStmt extends Statement implements LoopingStmt<ForStmt> {
         return true;
       }
     }
-    return super.remove(node);
+    return false;
   }
 
   @Override

@@ -31,6 +31,16 @@ public abstract class FunctionSymbol extends SymbolWithScope {
     return Utils.filter(variables_.values(), v -> v instanceof ParameterSymbol).size();
   }
 
+  @Override
+  public boolean isFunctionSymbol() {
+    return true;
+  }
+
+  @Override
+  public FunctionSymbol asFunctionSymbol() {
+    return this;
+  }
+
   public boolean isProcedureSymbol() {
     return false;
   }

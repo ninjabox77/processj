@@ -126,4 +126,9 @@ public abstract class AggregatedSymbol extends SymbolWithScope implements Member
   public boolean isAggregatedSymbol() {
     return true;
   }
+
+  @Override
+  public AggregatedSymbol asAggregatedSymbol() {
+    return this;
+  }
 }

@@ -178,7 +178,7 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public FieldExpr asFieldExpr() {
-    throw new IllegalStateException(String.format("%s is not a UnaryPlusExpr, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not a FieldExpr, it is a %s", this, getClass().getSimpleName()));
   }
 
   public boolean isClassExpr() {
@@ -269,11 +269,27 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
     throw new IllegalStateException(String.format("%s is not a ChannelWriteExpr, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isPathAccessExpr() {
+  public boolean isPathExpression() {
     return false;
   }
 
-  public PathAccessExpr asPathAccessExpr() {
-    throw new IllegalStateException(String.format("%s is not a PathAccessExpr, it is a %s", this, getClass().getSimpleName()));
+  public PathExpression asPathExpression() {
+    throw new IllegalStateException(String.format("%s is not a PathExpression, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isGroupExpr() {
+    return false;
+  }
+
+  public GroupExpr asGroupExpr() {
+    throw new IllegalStateException(String.format("%s is not a GroupExpr, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isArrayAccess() {
+    return false;
+  }
+
+  public ArrayAccess asArrayAccess() {
+    throw new IllegalStateException(String.format("%s is not an ArrayAccess, it is a %s", this, getClass().getSimpleName()));
   }
 }

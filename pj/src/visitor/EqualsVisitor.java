@@ -287,8 +287,8 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
-  public Boolean visit(final ProtocolTagDecl p, CodeVisitor arg) {
-    final ProtocolTagDecl p2 = (ProtocolTagDecl) arg;
+  public Boolean visit(final ProtocolCaseDecl p, CodeVisitor arg) {
+    final ProtocolCaseDecl p2 = (ProtocolCaseDecl) arg;
     return objectEquals(p.getName(), p2.getName()) &&
         objectsEquals(p.getDeclaredFields(), p2.getDeclaredFields()) &&
         objectEquals(p.getComment(), p2.getComment());
@@ -396,7 +396,7 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   public Boolean visit(final ForStmt f, CodeVisitor arg) {
     final ForStmt f2 = (ForStmt) arg;
     return objectEquals(f.getInitialization(), f2.getInitialization()) &&
-        objectEquals(f.getCondition(), f2.getCondition()) &&
+        objectEquals(f.getConditional(), f2.getConditional()) &&
         objectEquals(f.getUpdate(), f2.getUpdate()) &&
         objectEquals(f.getLoopBlock(), f2.getLoopBlock()) &&
         objectEquals(f.getComment(), f2.getComment()) &&
@@ -404,12 +404,11 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
-  public Boolean visit(final GuardStmt g, CodeVisitor arg) {
-    final GuardStmt g2 = (GuardStmt) arg;
+  public Boolean visit(final Guard g, CodeVisitor arg) {
+    final Guard g2 = (Guard) arg;
     return objectEquals(g.getExpression(), g2.getExpression()) &&
-        objectEquals(g.getStatement(), g2.getStatement()) &&
-        objectEquals(g.getComment(), g2.getComment()) &&
-        objectsEquals(g.getStatementLabels(), g2.getStatementLabels());
+        objectEquals(g.isSkip(), g2.isSkip()) &&
+        objectEquals(g.getComment(), g2.getComment());
   }
 
   @Override
@@ -425,8 +424,8 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   @Override
   public Boolean visit(final RegularAltStmt r, CodeVisitor arg) {
     final RegularAltStmt r2 = (RegularAltStmt) arg;
-    return objectsEquals(r.getGuards(), r2.getGuards()) &&
-        objectEquals(r.getGuards(), r2.getGuards()) &&
+    return objectsEquals(r.getAltCases(), r2.getAltCases()) &&
+        objectEquals(r.getAltCases(), r2.getAltCases()) &&
         objectEquals(r.isFairAlt(), r2.isFairAlt()) &&
         objectEquals(r.getComment(), r2.getComment()) &&
         objectsEquals(r.getStatementLabels(), r2.getStatementLabels());
@@ -463,11 +462,21 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   public Boolean visit(final ReplicatedAltStmt r, CodeVisitor arg) {
     final ReplicatedAltStmt r2 = (ReplicatedAltStmt) arg;
     return objectsEquals(r.getStatementLabels(), r2.getStatementLabels()) &&
-        objectsEquals(r.getGuards(), r2.getGuards()) &&
+        objectsEquals(r.getAltCases(), r2.getAltCases()) &&
         objectEquals(r.getInitialization(), r2.getInitialization()) &&
         objectEquals(r.getConditional(), r2.getConditional()) &&
         objectEquals(r.getUpdate(), r2.getUpdate()) &&
         objectEquals(r.getComment(), r2.getComment());
+  }
+
+  @Override
+  public Boolean visit(final AltCase a, CodeVisitor arg) {
+    final AltCase a2 = (AltCase) arg;
+    return objectEquals(a.getExpression(), a2.getExpression()) &&
+        objectEquals(a.getGuard(), a2.getGuard()) &&
+        objectEquals(a.getStatement(), a2.getStatement()) &&
+        objectEquals(a.getStatementLabels(), a2.getStatementLabels()) &&
+        objectEquals(a.getComment(), a2.getComment());
   }
 
   @Override
@@ -542,8 +551,9 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   @Override
   public Boolean visit(final CallableExpr c, CodeVisitor arg) {
     final CallableExpr c2 = (CallableExpr) arg;
-    return objectEquals(c.getObjectExpression(), c2.getObjectExpression()) &&
-        objectEquals(c.getMethodExpression(), c2.getMethodExpression()) &&
+    return objectEquals(c.getMethodExpression(), c2.getMethodExpression()) &&
+        objectEquals(c.getIdentifier(), c2.getIdentifier()) &&
+        objectEquals(c.isImplicitThis(), c2.isImplicitThis()) &&
         objectEquals(c.getArguments(), c2.getArguments()) &&
         objectEquals(c.getComment(), c2.getComment());
   }
@@ -574,8 +584,8 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   @Override
   public Boolean visit(final ConstructorCallExpr c, CodeVisitor arg) {
     final ConstructorCallExpr c2 = (ConstructorCallExpr) arg;
-    return objectEquals(c.getObjectExpression(), c2.getObjectExpression()) &&
-        objectEquals(c.getMethodExpression(), c2.getMethodExpression()) &&
+    return objectEquals(c.getMethodExpression(), c2.getMethodExpression()) &&
+        objectEquals(c.getIdentifier(), c2.getIdentifier()) &&
         objectsEquals(c.getArguments(), c2.getArguments()) &&
         objectsEquals(c.getTypeArguments(), c2.getTypeArguments()) &&
         objectEquals(c.getComment(), c2.getComment());
@@ -604,8 +614,8 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   @Override
   public Boolean visit(final FieldExpr f, CodeVisitor arg) {
     final FieldExpr f2 = (FieldExpr) arg;
-    return objectEquals(f.getObjectExpression(), f2.getObjectExpression()) &&
-        objectEquals(f.getFieldExpression(), f2.getFieldExpression()) &&
+    return objectEquals(f.getFieldExpression(), f2.getFieldExpression()) &&
+        objectEquals(f.getIdentifier(), f2.getIdentifier()) &&
         objectEquals(f.isImplicitThis(), f2.isImplicitThis()) &&
         objectEquals(f.getComment(), f2.getComment());
   }
@@ -649,8 +659,8 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   @Override
   public Boolean visit(final MethodCallExpr m, CodeVisitor arg) {
     final MethodCallExpr m2 = (MethodCallExpr) arg;
-    return objectEquals(m.getObjectExpression(), m2.getObjectExpression()) &&
-        objectEquals(m.getMethodExpression(), m2.getMethodExpression()) &&
+    return objectEquals(m.getMethodExpression(), m2.getMethodExpression()) &&
+        objectEquals(m.getIdentifier(), m2.getIdentifier()) &&
         objectsEquals(m.getArguments(), m2.getArguments()) &&
         objectsEquals(m.getTypeArguments(), m2.getTypeArguments()) &&
         objectEquals(m.getImplicitThis(), m2.getImplicitThis()) &&
@@ -791,10 +801,25 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
-  public Boolean visit(final PathAccessExpr p, CodeVisitor arg) {
-    final PathAccessExpr p2 = (PathAccessExpr) arg;
+  public Boolean visit(final PathExpression p, CodeVisitor arg) {
+    final PathExpression p2 = (PathExpression) arg;
     return objectEquals(p.getName(), p2.getName()) &&
         objectEquals(p.getComment(), p2.getComment());
+  }
+
+  @Override
+  public Boolean visit(final GroupExpr g, CodeVisitor arg) {
+    final GroupExpr g2 = (GroupExpr) arg;
+    return objectEquals(g.getExpression(), g2.getExpression()) &&
+        objectEquals(g.getComment(), g2.getComment());
+  }
+
+  @Override
+  public Boolean visit(final ArrayAccess a, CodeVisitor arg) {
+    final ArrayAccess a2 = (ArrayAccess) arg;
+    return objectEquals(a.getName(), a2.getName()) &&
+        objectEquals(a.getIndex(), a2.getIndex()) &&
+        objectEquals(a.getComment(), a2.getComment());
   }
 
   @Override

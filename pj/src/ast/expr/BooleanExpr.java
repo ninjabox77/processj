@@ -45,14 +45,6 @@ public class BooleanExpr extends Expression<BooleanExpr> {
     return expression_;
   }
 
-  public boolean isNotExpression() {
-    return false;
-  }
-
-  public NotExpression asNotExpression() {
-    throw new IllegalStateException(String.format("%s is not a NotExpression, it is a %s", this, getClass().getSimpleName()));
-  }
-
   @Override
   public boolean isBooleanExpr() {
     return true;
@@ -68,6 +60,14 @@ public class BooleanExpr extends Expression<BooleanExpr> {
     return super.setASTType(type);
   }
 
+  public boolean isNotExpression() {
+    return false;
+  }
+
+  public NotExpression asNotExpression() {
+    throw new IllegalStateException(String.format("%s is not a NotExpression, it is a %s", this, getClass().getSimpleName()));
+  }
+
   @Override
   public boolean replace(Node node, Node replaceWith) {
     if (node == null) {
@@ -77,7 +77,7 @@ public class BooleanExpr extends Expression<BooleanExpr> {
       setExpression((Expression<?>) replaceWith);
       return true;
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override

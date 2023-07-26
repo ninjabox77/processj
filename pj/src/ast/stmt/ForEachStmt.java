@@ -115,7 +115,7 @@ public class ForEachStmt extends Statement {
       setLoopBlock((Statement) replaceWith);
       return true;
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override

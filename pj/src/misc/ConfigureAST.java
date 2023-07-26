@@ -21,9 +21,7 @@ public class ConfigureAST {
     return astNode;
   }
 
-  //
   // this is to take care of multi-line comments in ProcessJ.
-  //
   public static int endPosition(Token token) {
     String text = token.getText();
     int stop = 0;

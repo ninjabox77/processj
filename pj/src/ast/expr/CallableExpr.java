@@ -7,49 +7,42 @@ import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Represents a mobile, a procedure, or a method call on an object
- * or a class (the latter is only used during code transformation).
+ * Represents a mobile, a procedure, or a method call on an object or
+ * a class (the latter is only used during code transformation). The
+ * methodExpression represent the instance of the class that was used
+ * to access the Java method. If it is null, then this indicates that
+ * it was implicitly accessed using "this".
  *
  * @author Ben
  */
 public class CallableExpr extends Expression<CallableExpr> {
 
-  private Expression<?> objectExpression_;
   private Expression<?> methodExpression_;
   private Sequence<Expression<?>> arguments_;
+  private boolean implicitThis_;
+  private String identifier_;
 
   public CallableExpr() {
-    this(null, new VariableExpr(), null);
+    this(null, null);
   }
 
-  public CallableExpr(Expression<?> objectExpression, Expression<?> methodExpression, Expression<?>... arguments) {
-    this(null, objectExpression, methodExpression, Sequence.sequenceList(arguments));
+  public CallableExpr(Expression<?> methodExpression, String identifier) {
+    this(methodExpression, identifier, (Expression<?>) null);
   }
 
-  public CallableExpr(Token token, Expression<?> objectExpression, Expression<?> methodExpression, Sequence<Expression<?>> arguments) {
+  public CallableExpr(Expression<?> methodExpression, String identifier, Expression<?>... arguments) {
+    this(null, methodExpression, identifier, Sequence.sequenceList(arguments));
+  }
+
+  public CallableExpr(Token token, Expression<?> methodExpression, String identifier, Sequence<Expression<?>> arguments) {
     super(token);
-    setObjectExpression(objectExpression);
     setMethodExpression(methodExpression);
+    setIdentifier(identifier);
     setArguments(arguments);
-  }
-
-  public CallableExpr setObjectExpression(Expression<?> objectExpression) {
-    if (objectExpression == objectExpression_) {
-      return this;
-    }
-    if (objectExpression_ != null) {
-      objectExpression_.setParentNode(null);
-    }
-    objectExpression_ = objectExpression;
-    setAsParentNodeOf(objectExpression);
-    return this;
-  }
-
-  public Optional<Expression<?>> getObjectExpression() {
-    return Optional.ofNullable(objectExpression_);
   }
 
   public CallableExpr setMethodExpression(Expression<?> methodExpression) {
@@ -64,8 +57,32 @@ public class CallableExpr extends Expression<CallableExpr> {
     return this;
   }
 
-  public Expression<?> getMethodExpression() {
-    return methodExpression_;
+  public Optional<Expression<?>> getMethodExpression() {
+    return Optional.ofNullable(methodExpression_);
+  }
+
+  public CallableExpr setIdentifier(final String identifier) {
+    if (Objects.equals(identifier, identifier_)) {
+      return this;
+    }
+    identifier_ = identifier;
+    return this;
+  }
+
+  public String getIdentifier() {
+    return identifier_;
+  }
+
+  public CallableExpr setImplicitThis(final boolean implicitThis) {
+    if (implicitThis == implicitThis_) {
+      return this;
+    }
+    implicitThis_ = implicitThis;
+    return this;
+  }
+
+  public boolean isImplicitThis() {
+    return implicitThis_ || getMethodExpression().isPresent();
   }
 
   public CallableExpr setArguments(Sequence<Expression<?>> arguments) {
@@ -99,10 +116,6 @@ public class CallableExpr extends Expression<CallableExpr> {
     if (node == null) {
       return false;
     }
-    if (node == objectExpression_) {
-      setObjectExpression((Expression<?>) replaceWith);
-      return true;
-    }
     if (node == methodExpression_) {
       setMethodExpression((Expression<?>) replaceWith);
       return true;
@@ -123,8 +136,8 @@ public class CallableExpr extends Expression<CallableExpr> {
     if (node == null) {
       return false;
     }
-    if (node == objectExpression_) {
-      setObjectExpression(null);
+    if (node == methodExpression_) {
+      setMethodExpression(null);
       return true;
     }
     if (arguments_ != null) {
@@ -136,6 +149,38 @@ public class CallableExpr extends Expression<CallableExpr> {
       }
     }
     return super.remove(node);
+  }
+
+  public boolean isReadCallable() {
+    return false;
+  }
+
+  public ReadCallable asReadCallable() {
+    throw new IllegalStateException(String.format("%s is not a ReadCallable, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isWriteCallable() {
+    return false;
+  }
+
+  public WriteCallable asWriteCallable() {
+    throw new IllegalStateException(String.format("%s is not a WriteCallable, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isSyncCallable() {
+    return false;
+  }
+
+  public SyncCallable asSyncCallable() {
+    throw new IllegalStateException(String.format("%s is not a SyncCallable, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isTimeOutCallable() {
+    return false;
+  }
+
+  public TimeOutCallable asTimeOutCallable() {
+    throw new IllegalStateException(String.format("%s is not a TimeOutCallable, it is a %s", this, getClass().getSimpleName()));
   }
 
   @Override

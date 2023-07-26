@@ -2,6 +2,7 @@ package ast.expr;
 
 import ast.Node;
 import ast.Sequence;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -63,6 +64,11 @@ public class ListExpression<T extends ListExpression<?>> extends Expression<T> {
   @Override
   public ListExpression<?> asListExpression() {
     return this;
+  }
+
+  @Override
+  public T setASTType(ASTType type) {
+    return (T) super.setASTType(type);
   }
 
   @Override

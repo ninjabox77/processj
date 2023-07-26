@@ -105,7 +105,7 @@ public class VariableExpr extends Expression<VariableExpr> implements Variable<V
       setAccessVariable((Variable<?>) replaceWith);
       return true;
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override

@@ -75,7 +75,7 @@ public class ConstantDecl extends TopLevelDeclaration<ConstantDecl> {
       setRightExpression((Expression<?>) replaceWith);
       return true;
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override

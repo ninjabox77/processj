@@ -13,4 +13,14 @@ public class MethodSymbol extends FunctionSymbol implements MemberSymbol {
   public boolean isMemberSymbol() {
     return true;
   }
+
+  @Override
+  public boolean isMethodSymbol() {
+    return true;
+  }
+
+  @Override
+  public MethodSymbol asMethodSymbol() {
+    return this;
+  }
 }

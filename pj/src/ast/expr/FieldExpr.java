@@ -1,16 +1,18 @@
 package ast.expr;
 
 import ast.Node;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
  * Represents a field access which contains a reference to a variable
- * expression that points to the field's declaration. The object expression
+ * object that points to the field's declaration. The fieldExpression
  * represents the instance of the class that was used to access the field.
  * If it is null, then this indicates that it was implicitly accessed
  * using "this".
@@ -19,38 +21,22 @@ import java.util.Optional;
  */
 public class FieldExpr extends Expression<FieldExpr> {
 
-  private Expression<?> objectExpression_;
   private Expression<?> fieldExpression_;
   private boolean implicitThis_;
+  private String identifier_;
 
   public FieldExpr() {
     this(null, null);
   }
 
-  public FieldExpr(Expression<?> objectExpression, Expression<?> fieldExpression) {
-    this(null, objectExpression, fieldExpression);
+  public FieldExpr(Expression<?> fieldExpression, final String identifier) {
+    this(null, fieldExpression, identifier);
   }
 
-  public FieldExpr(Token token, Expression<?> objectExpression, Expression<?> fieldExpression) {
+  public FieldExpr(Token token, Expression<?> fieldExpression, final String identifier) {
     super(token);
-    setObjectExpression(objectExpression);
     setFieldExpression(fieldExpression);
-  }
-
-  public FieldExpr setObjectExpression(Expression<?> objectExpression) {
-    if (objectExpression == objectExpression_) {
-      return this;
-    }
-    if (objectExpression_ != null) {
-      objectExpression_.setParentNode(null);
-    }
-    objectExpression_ = objectExpression;
-    setAsParentNodeOf(objectExpression);
-    return this;
-  }
-
-  public Optional<Expression<?>> getObjectExpression() {
-    return Optional.ofNullable(objectExpression_);
+    setIdentifier(identifier);
   }
 
   public FieldExpr setFieldExpression(Expression<?> fieldExpression) {
@@ -65,8 +51,20 @@ public class FieldExpr extends Expression<FieldExpr> {
     return this;
   }
 
-  public Expression<?> getFieldExpression() {
-    return fieldExpression_;
+  public Optional<Expression<?>> getFieldExpression() {
+    return Optional.ofNullable(fieldExpression_);
+  }
+
+  public FieldExpr setIdentifier(final String identifier) {
+    if (Objects.equals(identifier, identifier_)) {
+      return this;
+    }
+    identifier_ = identifier;
+    return this;
+  }
+
+  public String getIdentifier() {
+    return identifier_;
   }
 
   public FieldExpr setImplicitThis(final boolean implicitThis) {
@@ -78,7 +76,7 @@ public class FieldExpr extends Expression<FieldExpr> {
   }
 
   public boolean isImplicitThis() {
-    return implicitThis_ || objectExpression_ == null;
+    return implicitThis_ || getFieldExpression().isPresent();
   }
 
   @Override
@@ -92,19 +90,20 @@ public class FieldExpr extends Expression<FieldExpr> {
   }
 
   @Override
+  public FieldExpr setASTType(ASTType type) {
+    return super.setASTType(type);
+  }
+
+  @Override
   public boolean replace(Node node, Node replaceWith) {
     if (node == null) {
       return false;
-    }
-    if (node == objectExpression_) {
-      setObjectExpression((Expression<?>) replaceWith);
-      return true;
     }
     if (node == fieldExpression_) {
       setFieldExpression((Expression<?>) replaceWith);
       return true;
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override

@@ -149,7 +149,7 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final ProtocolTagDecl p) {
+  public Integer visit(final ProtocolCaseDecl p) {
     return null;
   }
 
@@ -214,7 +214,7 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final GuardStmt g) {
+  public Integer visit(final Guard g) {
     return null;
   }
 
@@ -245,6 +245,11 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
 
   @Override
   public Integer visit(final ReplicatedAltStmt r) {
+    return null;
+  }
+
+  @Override
+  public Integer visit(final AltCase a) {
     return null;
   }
 
@@ -454,7 +459,17 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final PathAccessExpr p) {
+  public Integer visit(final PathExpression p) {
+    return null;
+  }
+
+  @Override
+  public Integer visit(final GroupExpr g) {
+    return null;
+  }
+
+  @Override
+  public Integer visit(final ArrayAccess a) {
     return null;
   }
 

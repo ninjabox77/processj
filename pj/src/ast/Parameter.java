@@ -18,6 +18,7 @@ public class Parameter extends AnnotatedNode implements Modifier<Parameter>, Var
   private int modifiers_;
   private ASTType type_;
   private String name_;
+  private boolean isVarargs_;
 
   public Parameter() {
     this(null, null);

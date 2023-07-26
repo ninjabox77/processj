@@ -71,7 +71,7 @@ public interface DefaultVisitor<R> {
 
   R visit(final ProcedureTopLevel p);
 
-  R visit(final ProtocolTagDecl p);
+  R visit(final ProtocolCaseDecl p);
 
   R visit(final ProtocolDecl p);
 
@@ -101,7 +101,7 @@ public interface DefaultVisitor<R> {
 
   R visit(final ForStmt f);
 
-  R visit(final GuardStmt g);
+  R visit(final Guard g);
 
   R visit(final IfStmt i);
 
@@ -114,6 +114,8 @@ public interface DefaultVisitor<R> {
   R visit(final WhileStmt w);
 
   R visit(final ReplicatedAltStmt r);
+
+  R visit(final AltCase a);
 
   /*********************************************************
    * Java nodes
@@ -205,7 +207,11 @@ public interface DefaultVisitor<R> {
 
   R visit(final ChannelWriteExpr c);
 
-  R visit(PathAccessExpr p);
+  R visit(final PathExpression p);
+
+  R visit(final GroupExpr g);
+
+  R visit(final ArrayAccess a);
 
   /*********************************************************
    * Comments nodes

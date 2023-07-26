@@ -17,7 +17,7 @@ import java.util.Optional;
  */
 public class ProtocolDecl extends TopLevelDeclaration<ProtocolDecl> {
 
-  private Sequence<ProtocolTagDecl> declaredTags_;
+  private Sequence<ProtocolCaseDecl> declaredTags_;
 
   public ProtocolDecl() {
     this(null, null);
@@ -35,16 +35,16 @@ public class ProtocolDecl extends TopLevelDeclaration<ProtocolDecl> {
     this(modifiers, type, name, implementedNames, null);
   }
 
-  public ProtocolDecl(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<ProtocolTagDecl> declaredTags) {
+  public ProtocolDecl(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<ProtocolCaseDecl> declaredTags) {
     this(null, modifiers, type, name, implementedNames, declaredTags);
   }
 
-  public ProtocolDecl(Token token, int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<ProtocolTagDecl> declaredTags) {
+  public ProtocolDecl(Token token, int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<ProtocolCaseDecl> declaredTags) {
     super(token, modifiers, type, name, implementedNames);
     setDeclaredTags(declaredTags);
   }
 
-  public ProtocolDecl setDeclaredTags(Sequence<ProtocolTagDecl> declaredTags) {
+  public ProtocolDecl setDeclaredTags(Sequence<ProtocolCaseDecl> declaredTags) {
     if (declaredTags == declaredTags_) {
       return this;
     }
@@ -56,7 +56,7 @@ public class ProtocolDecl extends TopLevelDeclaration<ProtocolDecl> {
     return this;
   }
 
-  public Optional<Sequence<ProtocolTagDecl>> getDeclaredTags() {
+  public Optional<Sequence<ProtocolCaseDecl>> getDeclaredTags() {
     return Optional.ofNullable(declaredTags_);
   }
 

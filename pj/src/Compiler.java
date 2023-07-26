@@ -2,6 +2,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import parser.ProcessJLexer;
 import parser.ProcessJParser;
+import visitor.AstBuilder;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -124,9 +125,9 @@ public class Compiler {
     if (args.length == 2) {
       System.out.println();
     }
-    ProcessJLexer lex = new ProcessJLexer(CharStreams.fromString("package hello; import a.b.c.*; import a::b;"));
+    ProcessJLexer lex = new ProcessJLexer(CharStreams.fromString("private void foo() { }"));
     ProcessJParser parser = new ProcessJParser(new CommonTokenStream(lex));
-    ProcessJParser.InitContext init = parser.init();
-    new visitor.AstBuilder().visitInit(init);
+    ProcessJParser.CompilationUnitContext init = parser.compilationUnit();
+    new AstBuilder().visitCompilationUnit(init);
   }
 }

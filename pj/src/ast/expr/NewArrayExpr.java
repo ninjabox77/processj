@@ -98,7 +98,11 @@ public class NewArrayExpr extends Expression<NewArrayExpr> {
         }
       }
     }
-    return super.remove(node);
+    if (node == arrayLiteral_) {
+      setArrayLiteral(null);
+      return true;
+    }
+    return false;
   }
 
   @Override
@@ -118,7 +122,7 @@ public class NewArrayExpr extends Expression<NewArrayExpr> {
       setArrayLiteral((ArrayExpr) replaceWith);
       return true;
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override

@@ -131,7 +131,7 @@ public class IfStmt extends Statement {
       setElsePart((Statement) replaceWith);
       return true;
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override
@@ -143,7 +143,7 @@ public class IfStmt extends Statement {
       setElsePart(null);
       return true;
     }
-    return super.remove(node);
+    return false;
   }
 
   @Override

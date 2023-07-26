@@ -84,7 +84,7 @@ public class RecordDecl extends TopLevelDeclaration<RecordDecl> {
         }
       }
     }
-    return super.remove(node);
+    return false;
   }
 
   @Override
@@ -100,7 +100,7 @@ public class RecordDecl extends TopLevelDeclaration<RecordDecl> {
         }
       }
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override
