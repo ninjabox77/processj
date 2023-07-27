@@ -13,12 +13,14 @@ public final class Phases {
   public static final int INITIALIZATION = 1;
   // AST building.
   //  * lexical analysis
-  //  * semantic analysis
+  //  * syntax analysis
   //  * ast construction
   public static final int PARSING = 2;
   // Symbol table and scope.
+  //  * static analysis
   public static final int SYMBOL_SCOPE = 3;
   // Control flow graph.
+  //  * static analysis
   public static final int FLOW_GRAPH = 4;
   // Semantic analysis.
   //  * reachability check

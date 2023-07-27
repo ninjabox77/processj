@@ -7,8 +7,6 @@ import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
-import java.util.Optional;
-
 /**
  * Represents an array literal such as "{{1,2},{3,4}}", where the
  * outer { } is an ArrayLiteral that has two expressions inside,
@@ -16,36 +14,36 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public class ArrayExpr extends ListExpression<ArrayExpr> {
+public class ArrayInitializer extends ListExpression<ArrayInitializer> {
 
-  public ArrayExpr() {
-    this(null);
+  public ArrayInitializer() {
+    this((Expression<?>) null);
   }
 
-  public ArrayExpr(Expression<?>... values) {
+  public ArrayInitializer(Expression<?>... values) {
     this(null, Sequence.sequenceList(values));
   }
 
-  public ArrayExpr(Token token, Sequence<Expression<?>> values) {
+  public ArrayInitializer(Token token, Sequence<Expression<?>> values) {
     super(token, values);
   }
 
-  public ArrayExpr setValues(Sequence<Expression<?>> values) {
+  public ArrayInitializer setValues(Sequence<Expression<?>> values) {
     return super.setValues(values);
   }
 
   @Override
-  public boolean isArrayExpr() {
+  public boolean isArrayInitializer() {
     return true;
   }
 
   @Override
-  public ArrayExpr asArrayExpr() {
+  public ArrayInitializer asArrayInitializer() {
     return this;
   }
 
   @Override
-  public ArrayExpr setASTType(ASTType type) {
+  public ArrayInitializer setASTType(ASTType type) {
     return super.setASTType(type);
   }
 

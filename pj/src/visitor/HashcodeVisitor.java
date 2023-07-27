@@ -289,7 +289,7 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final ArrayExpr a) {
+  public Integer visit(final ArrayInitializer a) {
     return null;
   }
 
@@ -329,7 +329,7 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final ConstructorCallExpr c) {
+  public Integer visit(final ObjectCreationExpr c) {
     return null;
   }
 
@@ -409,16 +409,6 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final ProtocolExpr p) {
-    return null;
-  }
-
-  @Override
-  public Integer visit(final RecordExpr r) {
-    return null;
-  }
-
-  @Override
   public Integer visit(final SkipExpr s) {
     return null;
   }
@@ -485,6 +475,21 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
 
   @Override
   public Integer visit(final ArrayAccess a) {
+    return null;
+  }
+
+  @Override
+  public Integer visit(final RecordLiteral r) {
+    return null;
+  }
+
+  @Override
+  public Integer visit(final RecordMemberLiteral r) {
+    return null;
+  }
+
+  @Override
+  public Integer visit(final ProtocolLiteral p) {
     return null;
   }
 

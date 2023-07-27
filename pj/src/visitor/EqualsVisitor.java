@@ -546,8 +546,8 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
-  public Boolean visit(final ArrayExpr a, CodeVisitor arg) {
-    final ArrayExpr a2 = (ArrayExpr) arg;
+  public Boolean visit(final ArrayInitializer a, CodeVisitor arg) {
+    final ArrayInitializer a2 = (ArrayInitializer) arg;
     return objectsEquals(a.getValues(), a2.getValues()) &&
         objectEquals(a.getComment(), a2.getComment());
   }
@@ -609,8 +609,8 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
-  public Boolean visit(final ConstructorCallExpr c, CodeVisitor arg) {
-    final ConstructorCallExpr c2 = (ConstructorCallExpr) arg;
+  public Boolean visit(final ObjectCreationExpr c, CodeVisitor arg) {
+    final ObjectCreationExpr c2 = (ObjectCreationExpr) arg;
     return objectEquals(c.getMethodExpression(), c2.getMethodExpression()) &&
         objectEquals(c.getIdentifier(), c2.getIdentifier()) &&
         objectsEquals(c.getArguments(), c2.getArguments()) &&
@@ -733,21 +733,6 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
-  public Boolean visit(final ProtocolExpr p, CodeVisitor arg) {
-    final ProtocolExpr p2 = (ProtocolExpr) arg;
-    return objectEquals(p.getTagExpression(), p2.getTagExpression()) &&
-        objectsEquals(p.getValues(), p2.getValues()) &&
-        objectEquals(p.getComment(), p2.getComment());
-  }
-
-  @Override
-  public Boolean visit(final RecordExpr r, CodeVisitor arg) {
-    final RecordExpr r2 = (RecordExpr) arg;
-    return objectsEquals(r.getValues(), r2.getValues()) &&
-        objectEquals(r.getComment(), r2.getComment());
-  }
-
-  @Override
   public Boolean visit(final SkipExpr s, CodeVisitor arg) {
     final SkipExpr s2 = (SkipExpr) arg;
     return objectEquals(s.getComment(), s2.getComment());
@@ -847,6 +832,31 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
     return objectEquals(a.getName(), a2.getName()) &&
         objectEquals(a.getIndex(), a2.getIndex()) &&
         objectEquals(a.getComment(), a2.getComment());
+  }
+
+  @Override
+  public Boolean visit(final RecordLiteral r, CodeVisitor arg) {
+    final RecordLiteral r2 = (RecordLiteral) arg;
+    return objectEquals(r.getName(), r2.getName()) &&
+        objectEquals(r.getMembers(), r2.getMembers()) &&
+        objectEquals(r.getComment(), r2.getComment());
+  }
+
+  @Override
+  public Boolean visit(final RecordMemberLiteral r, CodeVisitor arg) {
+    final RecordMemberLiteral r2 = (RecordMemberLiteral) arg;
+    return objectEquals(r.getName(), r2.getName()) &&
+        objectEquals(r.getExpression(), r2.getExpression()) &&
+        objectEquals(r.getComment(), r2.getComment());
+  }
+
+  @Override
+  public Boolean visit(final ProtocolLiteral p, CodeVisitor arg) {
+    final ProtocolLiteral p2 = (ProtocolLiteral) arg;
+    return objectEquals(p.getName(), p2.getName()) &&
+        objectEquals(p.getTag(), p2.getTag()) &&
+        objectEquals(p.getMembers(), p2.getMembers()) &&
+        objectEquals(p.getComment(), p2.getComment());
   }
 
   @Override

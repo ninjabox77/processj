@@ -213,22 +213,6 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
     throw new IllegalStateException(String.format("%s is not a MethodCallExpr, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isRecordExpr() {
-    return false;
-  }
-
-  public RecordExpr asRecordExpr() {
-    throw new IllegalStateException(String.format("%s is not a RecordExpr, it is a %s", this, getClass().getSimpleName()));
-  }
-
-  public boolean isProtocolExpr() {
-    return false;
-  }
-
-  public ProtocolExpr asProtocolExpr() {
-    throw new IllegalStateException(String.format("%s is not a ProtocolExpr, it is a %s", this, getClass().getSimpleName()));
-  }
-
   public boolean isListExpression() {
     return false;
   }
@@ -291,5 +275,21 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
 
   public ArrayAccess asArrayAccess() {
     throw new IllegalStateException(String.format("%s is not an ArrayAccess, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isRecordLiteral() {
+    return false;
+  }
+
+  public RecordLiteral asRecordLiteral() {
+    throw new IllegalStateException(String.format("%s is not a RecordLiteral, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isProtocolLiteral() {
+    return false;
+  }
+
+  public ProtocolLiteral asProtocolLiteral() {
+    throw new IllegalStateException(String.format("%s is not a ProtocolLiteral, it is a %s", this, getClass().getSimpleName()));
   }
 }

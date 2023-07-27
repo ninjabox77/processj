@@ -16,7 +16,7 @@ import java.util.Optional;
  */
 public class CompileUnit extends AnnotatedNode {
 
-  private Package packet_;
+  private Package package_;
   private Sequence<Import> imports_;
   private Sequence<TopLevelDeclaration<?>> typeDeclarations_;
 
@@ -36,19 +36,19 @@ public class CompileUnit extends AnnotatedNode {
   }
 
   public CompileUnit setPackage(Package packet) {
-    if (packet == packet_) {
+    if (packet == package_) {
       return this;
     }
-    if (packet_ != null) {
-      packet_.setParentNode(null);
+    if (package_ != null) {
+      package_.setParentNode(null);
     }
-    packet_ = packet;
+    package_ = packet;
     setAsParentNodeOf(packet);
     return this;
   }
 
   public Package getPackage() {
-    return packet_;
+    return package_;
   }
 
   public CompileUnit setImports(Sequence<Import> imports) {
@@ -88,7 +88,7 @@ public class CompileUnit extends AnnotatedNode {
     if (node == null) {
       return false;
     }
-    if (node == packet_) {
+    if (node == package_) {
       setPackage((Package) replaceWith);
       return true;
     }
@@ -115,7 +115,7 @@ public class CompileUnit extends AnnotatedNode {
     if (node == null) {
       return false;
     }
-    if (node == packet_) {
+    if (node == package_) {
       setPackage(null);
       return true;
     }

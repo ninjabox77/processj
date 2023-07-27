@@ -144,7 +144,7 @@ public interface GenericVisitor<R, A> {
    * Expression nodes
    *********************************************************/
 
-  R visit(final ArrayExpr a, A arg);
+  R visit(final ArrayInitializer a, A arg);
 
   R visit(final BinaryExpr b, A arg);
 
@@ -160,7 +160,7 @@ public interface GenericVisitor<R, A> {
 
   R visit(final ClassExpr c, A arg);
 
-  R visit(final ConstructorCallExpr c, A arg);
+  R visit(final ObjectCreationExpr c, A arg);
 
   R visit(final DeclarationExpr d, A arg);
 
@@ -192,10 +192,6 @@ public interface GenericVisitor<R, A> {
 
   R visit(final PrefixExpr p, A arg);
 
-  R visit(final ProtocolExpr p, A arg);
-
-  R visit(final RecordExpr r, A arg);
-
   R visit(final SkipExpr s, A arg);
 
   R visit(final StopExpr s, A arg);
@@ -223,6 +219,12 @@ public interface GenericVisitor<R, A> {
   R visit(final GroupExpr g, A arg);
 
   R visit(final ArrayAccess a, A arg);
+
+  R visit(final RecordLiteral r, A arg);
+
+  R visit(final RecordMemberLiteral r, A arg);
+
+  R visit(final ProtocolLiteral p, A arg);
 
   /*********************************************************
    * Comments nodes

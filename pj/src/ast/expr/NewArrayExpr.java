@@ -21,17 +21,17 @@ import java.util.Optional;
 public class NewArrayExpr extends Expression<NewArrayExpr> {
 
   private Sequence<ArrayDimension> levels_;
-  private ArrayExpr arrayLiteral_;
+  private ArrayInitializer arrayLiteral_;
 
   public NewArrayExpr() {
     this(null, null, null);
   }
 
-  public NewArrayExpr(ASTType elementType, Sequence<ArrayDimension> levels, ArrayExpr arrayLiteral) {
+  public NewArrayExpr(ASTType elementType, Sequence<ArrayDimension> levels, ArrayInitializer arrayLiteral) {
     this(null, elementType, levels, arrayLiteral);
   }
 
-  public NewArrayExpr(Token token, ASTType elementType, Sequence<ArrayDimension> levels, ArrayExpr arrayLiteral) {
+  public NewArrayExpr(Token token, ASTType elementType, Sequence<ArrayDimension> levels, ArrayInitializer arrayLiteral) {
     super(token);
     this.setASTType(elementType);
     setLevels(levels);
@@ -59,7 +59,7 @@ public class NewArrayExpr extends Expression<NewArrayExpr> {
     return Optional.ofNullable(levels_);
   }
 
-  public NewArrayExpr setArrayLiteral(ArrayExpr arrayLiteral) {
+  public NewArrayExpr setArrayLiteral(ArrayInitializer arrayLiteral) {
     if (arrayLiteral == arrayLiteral_) {
       return this;
     }
@@ -71,7 +71,7 @@ public class NewArrayExpr extends Expression<NewArrayExpr> {
     return this;
   }
 
-  public ArrayExpr getArrayLiteral() {
+  public ArrayInitializer getArrayLiteral() {
     return arrayLiteral_;
   }
 
@@ -119,7 +119,7 @@ public class NewArrayExpr extends Expression<NewArrayExpr> {
       }
     }
     if (node == arrayLiteral_) {
-      setArrayLiteral((ArrayExpr) replaceWith);
+      setArrayLiteral((ArrayInitializer) replaceWith);
       return true;
     }
     return false;

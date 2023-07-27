@@ -2,10 +2,7 @@ package visitor;
 
 import ast.*;
 import ast.Package;
-import ast.expr.BooleanExpr;
-import ast.expr.DeclarationExpr;
-import ast.expr.EmptyExpr;
-import ast.expr.Expression;
+import ast.expr.*;
 import ast.java.FieldDeclaration;
 import ast.stmt.*;
 import ast.toplevel.*;
@@ -13,6 +10,8 @@ import ast.types.*;
 import misc.Tuple;
 import misc.Tuple1;
 import misc.Tuple2;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.objectweb.asm.Opcodes;
 import parser.ProcessJBaseVisitor;
 import parser.ProcessJParser;
@@ -91,8 +90,8 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   }
 
   @Override
-  public Object visitCompilationUnit(ProcessJParser.CompilationUnitContext ctx) {
-    Package _package;
+  public CompileUnit visitCompilationUnit(ProcessJParser.CompilationUnitContext ctx) {
+    Package _package = null;
     if (ctx.packageDeclaration() != null) {
       _package = visitPackageDeclaration(ctx.packageDeclaration());
     }
@@ -100,7 +99,8 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     ctx.importDeclaration().forEach(i -> imports.add(visitImportDeclaration(i)));
     Sequence<TopLevelDeclaration<?>> typeDecls = Sequence.sequenceList();
     ctx.typeDeclaration().forEach(t -> typeDecls.add(visitTypeDeclaration(t)));
-    return null;
+    CompileUnit compileUnit = new CompileUnit(_package, imports, typeDecls);
+    return configureNode(compileUnit, ctx);
   }
 
   @Override
@@ -622,8 +622,8 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   // Statements
 
   @Override
-  public Object visitBlockAsStatement(ProcessJParser.BlockAsStatementContext ctx) {
-    return null;
+  public BlockStmt visitBlockAsStatement(ProcessJParser.BlockAsStatementContext ctx) {
+    return visitBlock(ctx.block());
   }
 
   @Override
@@ -772,9 +772,9 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
 
   @Override
   public Sequence<Expression<?>> visitExpressionList(ProcessJParser.ExpressionListContext ctx) {
-    Sequence<Expression<?>> lst = Sequence.sequenceList();
-    ctx.expression().forEach(e -> lst.add((Expression<?>) visit(e)));
-    return lst;
+    Sequence<Expression<?>> expressions = Sequence.sequenceList();
+    ctx.expression().forEach(e -> expressions.add((Expression<?>) visit(e)));
+    return expressions;
   }
 
   @Override
@@ -940,5 +940,409 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   public Object visitLabelStatement(ProcessJParser.LabelStatementContext ctx) {
     // TODO: ??
     return null;
+  }
+
+  @Override
+  public Expression<?> visitPrimary(ProcessJParser.PrimaryContext ctx) {
+    if (ctx.LPAREN() != null) {
+      Expression<?> expression = (Expression<?>) visit(ctx.expression());
+      GroupExpr group = new GroupExpr(expression);
+      return configureNode(group, ctx);
+    }
+    if (ctx.literal() != null) {
+      return visitLiteral(ctx.literal());
+    }
+    return visitIdentifier(ctx.identifier());
+  }
+
+  @Override
+  public ConstantExpr visitLiteral(ProcessJParser.LiteralContext ctx) {
+    ConstantExpr literal = new NullLiteral("null");
+    if (ctx.IntegerLiteral() != null) {
+      literal = new IntegerLiteral(ctx.getText());
+    }
+    if (ctx.FloatingPointLiteral() != null) {
+      literal = new FloatLiteral(ctx.getText());
+    }
+    if (ctx.BooleanLiteral() != null) {
+      literal = new BooleanLiteral(ctx.getText());
+    }
+    if (ctx.CharacterLiteral() != null) {
+      literal = new CharLiteral(ctx.getText());
+    }
+    if (ctx.StringLiteral() != null) {
+      literal = new StringLiteral(ctx.getText());
+    }
+    return configureNode(literal, ctx);
+  }
+
+  @Override
+  public VariableExpr visitIdentifier(ProcessJParser.IdentifierContext ctx) {
+    VariableExpr identifier = new VariableExpr();
+    identifier.setName(ctx.getText());
+    return configureNode(identifier, ctx);
+  }
+
+  @Override
+  public Expression<?> visitAnnotatedExpression(ProcessJParser.AnnotatedExpressionContext ctx) {
+    return null;
+  }
+
+  @Override
+  public ArrayAccess visitArrayAccexxExpression(ProcessJParser.ArrayAccexxExpressionContext ctx) {
+    Expression<?> name = (Expression<?>) visit(ctx.expression(0));
+    Expression<?> index = (Expression<?>) visit(ctx.expression(1));
+    ArrayAccess arrayAccess = new ArrayAccess(name, index);
+    return configureNode(arrayAccess, ctx);
+  }
+
+
+  @Override
+  public Expression<?> visitMemberAccessExpression(ProcessJParser.MemberAccessExpressionContext ctx) {
+    Expression<?> scope = (Expression<?>) visit(ctx.expression());
+    if (ctx.identifier() != null) {
+      VariableExpr identifier = visitIdentifier(ctx.identifier());
+      FieldExpr fieldExpr = new FieldExpr(scope, identifier.getName());
+      return configureNode(fieldExpr, ctx);
+    }
+    CallableExpr invocation = visitInvocation(ctx.invocation());
+    invocation.setMethodExpression(scope);
+    return configureNode(invocation, ctx);
+  }
+
+  @Override
+  public CallableExpr visitInvocation(ProcessJParser.InvocationContext ctx) {
+    CallableExpr invocation = new CallableExpr();
+    VariableExpr variable = visitIdentifier(ctx.identifier());
+    switch (variable.getName()) {
+      case "timeout" -> invocation = new TimeOutCallable();
+      case "read" -> invocation = new ReadCallable();
+      case "write" -> invocation = new WriteCallable();
+    }
+    invocation.setIdentifier(variable.getName());
+    Expression<?> expression = visitArguments(ctx.arguments());
+    if (expression.isListExpression()) {
+      if (expression.asListExpression().getValues().isPresent()) {
+        invocation.setArguments(expression.asListExpression().getValues().get());
+      }
+      return configureNode(invocation, ctx);
+    }
+    // Extended rendezvous
+    invocation.setArguments(Sequence.sequenceList(expression));
+    return configureNode(invocation, ctx);
+  }
+
+  @Override
+  public Expression<?> visitArguments(ProcessJParser.ArgumentsContext ctx) {
+    if (ctx.block() != null) {
+      BlockExpr block = new BlockExpr(visitBlock(ctx.block()).getStatements());
+      return configureNode(block, ctx);
+    }
+    ListExpression<?> arguments = new ListExpression<>();
+    if (ctx.expressionList() != null) {
+      arguments.setValues(visitExpressionList(ctx.expressionList()));
+    }
+    return configureNode(arguments, ctx);
+  }
+
+  @Override
+  public PostfixExpr visitPostfixExpression(ProcessJParser.PostfixExpressionContext ctx) {
+    Expression<?> expression = (Expression<?>) visit(ctx.expression());
+    PostfixExpr postfixExpr = new PostfixExpr(ctx.op, expression);
+    return configureNode(postfixExpr, ctx);
+  }
+
+  @Override
+  public PrefixExpr visitPrefixExpression(ProcessJParser.PrefixExpressionContext ctx) {
+    Expression<?> expression = (Expression<?>) visit(ctx.expression());
+    PrefixExpr prefixExpr = new PrefixExpr(ctx.op, expression);
+    return configureNode(prefixExpr, ctx);
+  }
+
+  @Override
+  public CastExpr visitCastExpression(ProcessJParser.CastExpressionContext ctx) {
+    Primitive type = visitPrimitiveType(ctx.primitiveType());
+    Expression<?> expression = (Expression<?>) visit(ctx.expression());
+    PrimitiveNode primitiveNode = configureNode(new PrimitiveNode(type), type);
+    CastExpr castExpr = new CastExpr(primitiveNode, expression, false);
+    return configureNode(castExpr, ctx);
+  }
+
+  @Override
+  public BinaryExpr visitMultiplicativeExpression(ProcessJParser.MultiplicativeExpressionContext ctx) {
+    Expression<?> left = (Expression<?>) visit(ctx.expression(0));
+    Expression<?> right = (Expression<?>) visit(ctx.expression(1));
+    BinaryExpr binary = new BinaryExpr(left, right, ctx.op);
+    return configureNode(binary, ctx);
+  }
+
+  @Override
+  public BinaryExpr visitAdditiveExpression(ProcessJParser.AdditiveExpressionContext ctx) {
+    Expression<?> left = (Expression<?>) visit(ctx.expression(0));
+    Expression<?> right = (Expression<?>) visit(ctx.expression(1));
+    BinaryExpr binary = new BinaryExpr(left, right, ctx.op);
+    return configureNode(binary, ctx);
+  }
+
+  @Override
+  public BinaryExpr visitShiftExpression(ProcessJParser.ShiftExpressionContext ctx) {
+    return null;
+  }
+
+  @Override
+  public BinaryExpr visitRelationalExpression(ProcessJParser.RelationalExpressionContext ctx) {
+    Expression<?> left = (Expression<?>) visit(ctx.expression(0));
+    Expression<?> right = (Expression<?>) visit(ctx.expression(1));
+    BinaryExpr binary = new BinaryExpr(left, right, ctx.op);
+    return configureNode(binary, ctx);
+  }
+
+  @Override
+  public BinaryExpr visitInstanceofExpression(ProcessJParser.InstanceofExpressionContext ctx) {
+    Expression<?> left = (Expression<?>) visit(ctx.expression(0));
+    Expression<?> right = (Expression<?>) visit(ctx.expression(1));
+    BinaryExpr binary = new BinaryExpr(left, right, ctx.IS().getSymbol());
+    return configureNode(binary, ctx);
+  }
+
+  @Override
+  public BinaryExpr visitEqualityExpression(ProcessJParser.EqualityExpressionContext ctx) {
+    Expression<?> left = (Expression<?>) visit(ctx.expression(0));
+    Expression<?> right = (Expression<?>) visit(ctx.expression(1));
+    BinaryExpr binary = new BinaryExpr(left, right, ctx.op);
+    return configureNode(binary, ctx);
+  }
+
+  @Override
+  public BinaryExpr visitAndExpression(ProcessJParser.AndExpressionContext ctx) {
+    Expression<?> left = (Expression<?>) visit(ctx.expression(0));
+    Expression<?> right = (Expression<?>) visit(ctx.expression(1));
+    BinaryExpr binary = new BinaryExpr(left, right, ctx.AND().getSymbol());
+    return configureNode(binary, ctx);
+  }
+
+  @Override
+  public BinaryExpr visitExclusiveExpression(ProcessJParser.ExclusiveExpressionContext ctx) {
+    Expression<?> left = (Expression<?>) visit(ctx.expression(0));
+    Expression<?> right = (Expression<?>) visit(ctx.expression(1));
+    BinaryExpr binary = new BinaryExpr(left, right, ctx.XOR().getSymbol());
+    return configureNode(binary, ctx);
+  }
+
+  @Override
+  public BinaryExpr visitInclusiveExpression(ProcessJParser.InclusiveExpressionContext ctx) {
+    Expression<?> left = (Expression<?>) visit(ctx.expression(0));
+    Expression<?> right = (Expression<?>) visit(ctx.expression(1));
+    BinaryExpr binary = new BinaryExpr(left, right, ctx.OR().getSymbol());
+    return configureNode(binary, ctx);
+  }
+
+  @Override
+  public BinaryExpr visitLogicalAndExpression(ProcessJParser.LogicalAndExpressionContext ctx) {
+    Expression<?> left = (Expression<?>) visit(ctx.expression(0));
+    Expression<?> right = (Expression<?>) visit(ctx.expression(1));
+    BinaryExpr binary = new BinaryExpr(left, right, ctx.ANDAND().getSymbol());
+    return configureNode(binary, ctx);
+  }
+
+  @Override
+  public BinaryExpr visitLogicalOrExpression(ProcessJParser.LogicalOrExpressionContext ctx) {
+    Expression<?> left = (Expression<?>) visit(ctx.expression(0));
+    Expression<?> right = (Expression<?>) visit(ctx.expression(1));
+    BinaryExpr binary = new BinaryExpr(left, right, ctx.OROR().getSymbol());
+    return configureNode(binary, ctx);
+  }
+
+  @Override
+  public TernaryExpr visitTernaryExpression(ProcessJParser.TernaryExpressionContext ctx) {
+    Expression<?> conditional = (Expression<?>) visit(ctx.expression(0));
+    Expression<?> trueBranch = (Expression<?>) visit(ctx.expression(1));
+    Expression<?> falseBranch = (Expression<?>) visit(ctx.expression(2));
+    BooleanExpr booleanExpr = configureNode(new BooleanExpr(conditional), conditional);
+    TernaryExpr ternaryExpr = new TernaryExpr(booleanExpr, trueBranch, falseBranch);
+    return configureNode(ternaryExpr, ctx);
+  }
+
+  @Override
+  public AssignmentExpr visitAssignmentExpression(ProcessJParser.AssignmentExpressionContext ctx) {
+    Expression<?> left = (Expression<?>) visit(ctx.expression(0));
+    Expression<?> right = (Expression<?>) visit(ctx.expression(1));
+    Token op = visitAssignOp(ctx.assignOp()).getSymbol();
+    AssignmentExpr assign = new AssignmentExpr(left, right, op);
+    return configureNode(assign, ctx);
+  }
+
+  @Override
+  public TerminalNode visitAssignOp(ProcessJParser.AssignOpContext ctx) {
+    if (ctx.EQ() != null) {
+      return ctx.EQ();
+    }
+    if (ctx.MULTEQ() != null) {
+      return ctx.MULTEQ();
+    }
+    if (ctx.DIVEQ() != null) {
+      return ctx.DIVEQ();
+    }
+    if (ctx.MODEQ() != null) {
+      return ctx.MODEQ();
+    }
+    if (ctx.PLUSEQ() != null) {
+      return ctx.PLUSEQ();
+    }
+    if (ctx.MINUSEQ() != null) {
+      return ctx.MINUSEQ();
+    }
+    if (ctx.LSHIFTEQ() != null) {
+      return ctx.LSHIFTEQ();
+    }
+    if (ctx.RSHIFTEQ() != null) {
+      return ctx.RSHIFTEQ();
+    }
+    if (ctx.RRSHIFTEQ() != null) {
+      return ctx.RRSHIFTEQ();
+    }
+    if (ctx.ANDEQ() != null) {
+      return ctx.ANDEQ();
+    }
+    if (ctx.XOREQ() != null) {
+      return ctx.XOREQ();
+    }
+    return ctx.OREQ();
+  }
+
+  @Override
+  public Expression<?> visitCreator(ProcessJParser.CreatorContext ctx) {
+    Node type = visitCreatorName(ctx.creatorName());
+    if (ctx.recordExpression() != null) {
+      RecordLiteral record = new RecordLiteral();
+      if (type instanceof Name) {
+        record.setName((Name) type);
+      } else {
+        // If it is not a type name or a class then it must be
+        // a primitive type which should not be allowed.
+        record.setASTType(configureNode(new ErrorNode((Type) type), type));
+      }
+      record.setMembers(visitRecordExpression(ctx.recordExpression()));
+      return configureNode(record, ctx);
+    }
+    if (ctx.protocolExpression() != null) {
+      ProtocolLiteral protocol = visitProtocolExpression(ctx.protocolExpression());
+      if (type instanceof Name) {
+        protocol.setName((Name) type);
+      } else {
+        // If it is not a type name or a class then it must be
+        // a primitive type which should not be allowed.
+        protocol.setASTType(configureNode(new ErrorNode((Type) type), type));
+      }
+      return configureNode(protocol, ctx);
+    }
+    if (ctx.arrayExpression() != null) {
+      NewArrayExpr newArray = visitArrayExpression(ctx.arrayExpression());
+      if (type instanceof Type) {
+        newArray.setASTType(configureNode(new PrimitiveNode((Type) type), type));
+      } else {
+        // If it is not a primitive type then it must be a class or
+        // type name of some sort.
+        TypeVariable name = new TypeVariable((Name) type);
+        newArray.setASTType(configureNode(new ConstructedNode(name), type));
+      }
+    }
+    // TODO: class type??
+    return null;
+  }
+
+  @Override
+  public Node visitCreatorName(ProcessJParser.CreatorNameContext ctx) {
+    if (ctx.Identifier() != null) {
+      return new Name(ctx.Identifier().getText());
+    }
+    if (ctx.typeName() != null) {
+      return visitTypeName(ctx.typeName());
+    }
+    return visitPrimitiveType(ctx.primitiveType());
+  }
+
+  @Override
+  public Sequence<RecordMemberLiteral> visitRecordExpression(ProcessJParser.RecordExpressionContext ctx) {
+    Sequence<RecordMemberLiteral> members = Sequence.sequenceList();
+    ctx.recordExpressionList().forEach(r -> members.add(visitRecordExpressionList(r)));
+    return members;
+  }
+
+  @Override
+  public RecordMemberLiteral visitRecordExpressionList(ProcessJParser.RecordExpressionListContext ctx) {
+    Expression<?> expression = (Expression<?>) visit(ctx.expression());
+    Name name = configureNode(new Name(ctx.Identifier().getText()), ctx.Identifier());
+    RecordMemberLiteral member = new RecordMemberLiteral(name, expression);
+    return configureNode(member, ctx);
+  }
+
+  @Override
+  public ProtocolLiteral visitProtocolExpression(ProcessJParser.ProtocolExpressionContext ctx) {
+    return visitProtocolExpressionList(ctx.protocolExpressionList());
+  }
+
+  @Override
+  public ProtocolLiteral visitProtocolExpressionList(ProcessJParser.ProtocolExpressionListContext ctx) {
+    final String identifier = ctx.Identifier().getText();
+    Name tag = configureNode(new Name(identifier), ctx.Identifier());
+    Sequence<RecordMemberLiteral> members = visitTagExpressionList(ctx.tagExpressionList());
+    ProtocolLiteral protocol = new ProtocolLiteral();
+    protocol.setTag(tag);
+    protocol.setMembers(members);
+    return protocol;
+  }
+
+  @Override
+  public Sequence<RecordMemberLiteral> visitTagExpressionList(ProcessJParser.TagExpressionListContext ctx) {
+    Sequence<RecordMemberLiteral> members = Sequence.sequenceList();
+    ctx.recordExpressionList().forEach(r -> members.add(visitRecordExpressionList(r)));
+    return members;
+  }
+
+  @Override
+  public NewArrayExpr visitArrayExpression(ProcessJParser.ArrayExpressionContext ctx) {
+    NewArrayExpr newArray = new NewArrayExpr();
+    Sequence<ArrayDimension> dims = Sequence.sequenceList();
+    if (ctx.arrayInitializer() != null) {
+      ArrayInitializer initializer = visitArrayInitializer(ctx.arrayInitializer());
+      ctx.LBRACK().forEach(l -> {
+        EmptyExpr emptyExpr = new EmptyExpr(l.getSymbol());
+        dims.add(configureNode(new ArrayDimension(emptyExpr), l));
+      });
+      return configureNode(newArray, ctx);
+    }
+    ctx.expression().forEach(e -> {
+      Expression<?> expression = (Expression<?>) visit(e);
+      ArrayDimension dim = new ArrayDimension(expression);
+      dims.add(configureNode(dim, e));
+    });
+    int diff = ctx.LBRACK().size() - ctx.expression().size();
+    for (int i = 0; i < diff; ++i) {
+      EmptyExpr emptyExpr = new EmptyExpr(ctx.LBRACK(i).getSymbol());
+      dims.add(configureNode(new ArrayDimension(emptyExpr), ctx.LBRACK(i).getSymbol()));
+    }
+    return configureNode(newArray, ctx);
+  }
+
+  @Override
+  public ArrayInitializer visitArrayInitializer(ProcessJParser.ArrayInitializerContext ctx) {
+    ArrayInitializer arrayInitializer = new ArrayInitializer();
+    return configureNode(arrayInitializer, ctx);
+  }
+
+  @Override
+  public Sequence<Expression<?>> visitVariableInitializerList(ProcessJParser.VariableInitializerListContext ctx) {
+    Sequence<Expression<?>> expressions = Sequence.sequenceList();
+    ctx.variableInitializer().forEach(e -> expressions.add((Expression<?>) visit(e)));
+    return expressions;
+  }
+
+  @Override
+  public Expression<?> visitVariableInitializer(ProcessJParser.VariableInitializerContext ctx) {
+    if (ctx.expression() != null) {
+      return (Expression<?>) visit(ctx.expression());
+    }
+    return visitArrayInitializer(ctx.arrayInitializer());
   }
 }

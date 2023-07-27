@@ -48,12 +48,12 @@ public class ListExpression<T extends ListExpression<?>> extends Expression<T> {
     return Optional.ofNullable(values_);
   }
 
-  public boolean isArrayExpr() {
+  public boolean isArrayInitializer() {
     return false;
   }
 
-  public ArrayExpr asArrayExpr() {
-    throw new IllegalStateException(String.format("%s is not an ArrayExpr, it is a %s", this, getClass().getSimpleName()));
+  public ArrayInitializer asArrayInitializer() {
+    throw new IllegalStateException(String.format("%s is not an ArrayInitializer, it is a %s", this, getClass().getSimpleName()));
   }
 
   @Override

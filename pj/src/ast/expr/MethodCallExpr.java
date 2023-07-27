@@ -127,12 +127,12 @@ public class MethodCallExpr extends Expression<MethodCallExpr> {
     return implicitThis_;
   }
 
-  public boolean isConstructorCallExpr() {
+  public boolean isObjectCreationExpr() {
     return false;
   }
 
-  public ConstructorCallExpr asConstructorCallExpr() {
-    throw new IllegalStateException(String.format("%s is not a ConstructorCallExpr, it is a %s", this, getClass().getSimpleName()));
+  public ObjectCreationExpr asObjectCreationExpr() {
+    throw new IllegalStateException(String.format("%s is not an ObjectCreationExpr, it is a %s", this, getClass().getSimpleName()));
   }
 
   @Override

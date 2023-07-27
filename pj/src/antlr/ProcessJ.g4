@@ -400,7 +400,7 @@ expression
  | expression ANDAND expression                               # LogicalAndExpression
  | expression OROR expression                                 # LogicalOrExpression
  | <assoc=right> expression QUEST expression COLON expression # TernaryExpression
- | <assoc=right> expression assignOp expression               #  AssignmentExpression
+ | <assoc=right> expression assignOp expression               # AssignmentExpression
  ;
 
 assignOp
@@ -457,7 +457,7 @@ protocolExpression
  ;
 
 protocolExpressionList
- : DOT? Identifier tagExpressionList (COMMA DOT? Identifier tagExpressionList)*
+ : DOT? Identifier tagExpressionList //(COMMA DOT? Identifier tagExpressionList)*
  ;
 
 tagExpressionList
@@ -467,6 +467,7 @@ tagExpressionList
 //externalExpression
 // : NEW typeVariable LPAREN arguments? RPAREN
 // ;
+
 classExpression
  : typeArgumentsOrDiamond? arguments
  ;

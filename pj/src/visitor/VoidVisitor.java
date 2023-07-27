@@ -139,7 +139,7 @@ public interface VoidVisitor<A> {
    * Expression nodes
    *********************************************************/
 
-  void visit(final ArrayExpr a, A arg);
+  void visit(final ArrayInitializer a, A arg);
 
   void visit(final BinaryExpr b, A arg);
 
@@ -155,7 +155,7 @@ public interface VoidVisitor<A> {
 
   void visit(final ClassExpr c, A arg);
 
-  void visit(final ConstructorCallExpr c, A arg);
+  void visit(final ObjectCreationExpr c, A arg);
 
   void visit(final DeclarationExpr d, A arg);
 
@@ -187,10 +187,6 @@ public interface VoidVisitor<A> {
 
   void visit(final PrefixExpr p, A arg);
 
-  void visit(final ProtocolExpr p, A arg);
-
-  void visit(final RecordExpr r, A arg);
-
   void visit(final SkipExpr s, A arg);
 
   void visit(final StopExpr s, A arg);
@@ -218,6 +214,12 @@ public interface VoidVisitor<A> {
   void visit(final GroupExpr g, A arg);
 
   void visit(final ArrayAccess a, A arg);
+
+  void visit(final RecordLiteral r, A arg);
+
+  void visit(final RecordMemberLiteral r, A arg);
+
+  void visit(final ProtocolLiteral p, A arg);
 
   /*********************************************************
    * Comments nodes

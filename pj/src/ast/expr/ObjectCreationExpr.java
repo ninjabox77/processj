@@ -13,27 +13,27 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ConstructorCallExpr extends MethodCallExpr {
+public class ObjectCreationExpr extends MethodCallExpr {
 
-  public ConstructorCallExpr() {
+  public ObjectCreationExpr() {
     this(null, null, Sequence.sequenceList(), Sequence.sequenceList());
   }
 
-  public ConstructorCallExpr(Expression<?> methodExpression, final String identifier, Sequence<Expression<?>> arguments, Sequence<Type> typeArguments) {
+  public ObjectCreationExpr(Expression<?> methodExpression, final String identifier, Sequence<Expression<?>> arguments, Sequence<Type> typeArguments) {
     this(null, methodExpression, identifier, arguments, typeArguments);
   }
 
-  public ConstructorCallExpr(Token token, Expression<?> methodExpression, final String identifier, Sequence<Expression<?>> arguments, Sequence<Type> typeArguments) {
+  public ObjectCreationExpr(Token token, Expression<?> methodExpression, final String identifier, Sequence<Expression<?>> arguments, Sequence<Type> typeArguments) {
     super(token, methodExpression, identifier, arguments, typeArguments);
   }
 
   @Override
-  public boolean isConstructorCallExpr() {
+  public boolean isObjectCreationExpr() {
     return true;
   }
 
   @Override
-  public ConstructorCallExpr asConstructorCallExpr() {
+  public ObjectCreationExpr asObjectCreationExpr() {
     return this;
   }
 

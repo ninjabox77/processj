@@ -139,7 +139,7 @@ public interface DefaultVisitor<R> {
    * Expression nodes
    *********************************************************/
 
-  R visit(final ArrayExpr a);
+  R visit(final ArrayInitializer a);
 
   R visit(final BinaryExpr b);
 
@@ -155,7 +155,7 @@ public interface DefaultVisitor<R> {
 
   R visit(final ClassExpr c);
 
-  R visit(final ConstructorCallExpr c);
+  R visit(final ObjectCreationExpr c);
 
   R visit(final DeclarationExpr d);
 
@@ -187,10 +187,6 @@ public interface DefaultVisitor<R> {
 
   R visit(final PrefixExpr p);
 
-  R visit(final ProtocolExpr p);
-
-  R visit(final RecordExpr r);
-
   R visit(final SkipExpr s);
 
   R visit(final StopExpr s);
@@ -218,6 +214,12 @@ public interface DefaultVisitor<R> {
   R visit(final GroupExpr g);
 
   R visit(final ArrayAccess a);
+
+  R visit(final RecordLiteral r);
+
+  R visit(final RecordMemberLiteral r);
+
+  R visit(final ProtocolLiteral p);
 
   /*********************************************************
    * Comments nodes
