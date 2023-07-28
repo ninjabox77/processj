@@ -194,6 +194,16 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
+  public Integer visit(final SkipStmt s) {
+    return null;
+  }
+
+  @Override
+  public Integer visit(final StopStmt s) {
+    return null;
+  }
+
+  @Override
   public Integer visit(final DoWhileStmt d) {
     return null;
   }

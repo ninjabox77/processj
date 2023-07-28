@@ -93,6 +93,10 @@ public interface VoidVisitor<A> {
 
   void visit(final ContinueStmt c, A arg);
 
+  void visit(final SkipStmt s, A arg);
+
+  void visit(final StopStmt s, A arg);
+
   void visit(final DoWhileStmt d, A arg);
 
   void visit(final EmptyStmt e, A arg);

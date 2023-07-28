@@ -593,25 +593,13 @@ public class ProcessJBaseListener implements ProcessJListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTypeVariableIdentifier(ProcessJParser.TypeVariableIdentifierContext ctx) { }
+	@Override public void enterTypeVariable(ProcessJParser.TypeVariableContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTypeVariableIdentifier(ProcessJParser.TypeVariableIdentifierContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterTypeVariablePackageDotIdentifier(ProcessJParser.TypeVariablePackageDotIdentifierContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitTypeVariablePackageDotIdentifier(ProcessJParser.TypeVariablePackageDotIdentifierContext ctx) { }
+	@Override public void exitTypeVariable(ProcessJParser.TypeVariableContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

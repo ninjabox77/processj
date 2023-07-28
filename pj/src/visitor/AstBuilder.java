@@ -37,58 +37,6 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     return array;
   }
 
-  private ASTType createASTType(Type type) {
-    if (type.isPrimitiveType()) {
-      Primitive primitive = type.asPrimitiveType();
-      PrimitiveNode primitiveNode = configureNode(new PrimitiveNode(), primitive);
-      if (primitive.isByteType()) {
-        primitiveNode.setTSType(primitive.asByteType());
-      } else if (primitive.isIntegerType()) {
-        primitiveNode.setTSType(primitive.asIntegerType());
-      } else if (primitive.isShortType()) {
-        primitiveNode.setTSType(primitive.asShortType());
-      } else if (primitive.isBooleanType()) {
-        primitiveNode.setTSType(primitive.asBooleanType());
-      } else if (primitive.isLongType()) {
-        primitiveNode.setTSType(primitive.asLongType());
-      } else if (primitive.isFloatType()) {
-        primitiveNode.setTSType(primitive.asFloatType());
-      } else if (primitive.isDoubleType()) {
-        primitiveNode.setTSType(primitive.asDoubleType());
-      } else if (primitive.isCharType()) {
-        primitiveNode.setTSType(primitive.asCharType());
-      } else if (primitive.isTimerType()) {
-        primitiveNode.setTSType(primitive.asTimerType());
-      } else if (primitive.isBarrierType()) {
-        primitiveNode.setTSType(primitive.asBarrierType());
-      } else if (primitive.isStringType()) {
-        primitiveNode.setTSType(primitive.asStringType());
-      }
-      return primitiveNode;
-    } else if (type.isConstructedType()) {
-      Constructed constructed = type.asConstructedType();
-      if (constructed.isArrayType()) {
-        ArrayType arrayType = constructed.asArrayType();
-        ArrayNode arrayNode = configureNode(new ArrayNode(), arrayType);
-        return arrayNode.setTSType(arrayType);
-      } else if (constructed.isChannelType()) {
-        ChannelType channelType = constructed.asChannelType();
-        ChannelNode channelNode = configureNode(new ChannelNode(), channelType);
-        return channelNode.setTSType(channelType);
-      } else if (constructed.isChannelEndType()) {
-        ChannelEndType channelEndType = constructed.asChannelEndType();
-        ChannelEndNode channelEndNode = configureNode(new ChannelEndNode(), channelEndType);
-        return channelEndNode.setTSType(channelEndType);
-      } else if (constructed.isTypeVariable()) {
-        TypeVariable typeVariable = constructed.asTypeVariable();
-        ConstructedNode constructedNode = configureNode(new ConstructedNode(), typeVariable);
-        return constructedNode.setTSType(typeVariable);
-      }
-      // types like protocol and record are resolved elsewhere
-    }
-    return null;
-  }
-
   @Override
   public CompileUnit visitCompilationUnit(ProcessJParser.CompilationUnitContext ctx) {
     Package _package = null;
@@ -98,7 +46,15 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     Sequence<Import> imports = Sequence.sequenceList();
     ctx.importDeclaration().forEach(i -> imports.add(visitImportDeclaration(i)));
     Sequence<TopLevelDeclaration<?>> typeDecls = Sequence.sequenceList();
-    ctx.typeDeclaration().forEach(t -> typeDecls.add(visitTypeDeclaration(t)));
+    ctx.typeDeclaration().forEach(t -> {
+      Object obj = visitTypeDeclaration(t);
+      if (obj instanceof Sequence<?>) {
+        Sequence<TopLevelDeclaration<?>> constantDecls = (Sequence<TopLevelDeclaration<?>>) obj;
+        typeDecls.addAll(constantDecls);
+      } else {
+        typeDecls.add((TopLevelDeclaration<?>) obj);
+      }
+    });
     CompileUnit compileUnit = new CompileUnit(_package, imports, typeDecls);
     return configureNode(compileUnit, ctx);
   }
@@ -180,7 +136,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   }
 
   @Override
-  public TopLevelDeclaration<?> visitTypeDeclaration(ProcessJParser.TypeDeclarationContext ctx) {
+  public Object visitTypeDeclaration(ProcessJParser.TypeDeclarationContext ctx) {
     if (ctx.procedureTypeDeclaration() != null) {
       return visitProcedureTypeDeclaration(ctx.procedureTypeDeclaration());
     }
@@ -208,14 +164,20 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     if (ctx.formarlParameterList() != null) {
       parameters.addAll(visitFormarlParameterList(ctx.formarlParameterList()));
     }
-    BlockStmt body = null;
     ProcedureTopLevel procedure = new ProcedureTopLevel();
     procedure.setModifiers(modifiers);
     procedure.setASTType(type);
     procedure.setName(identifier);
     procedure.setParameters(parameters);
-    procedure.setBody(body);
+    if (ctx.body() != null) {
+      procedure.setBody(visitBody(ctx.body()));
+    }
     return configureNode(procedure, ctx);
+  }
+
+  @Override
+  public BlockStmt visitBody(ProcessJParser.BodyContext ctx) {
+    return visitBlock(ctx.block());
   }
 
   @Override
@@ -313,7 +275,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     } else if (ctx.channelType() != null) {
       return configureNode((Type) visit(ctx.channelType()), ctx);
     }
-    return configureNode((Type) visit(ctx.typeVariable()), ctx);
+    return configureNode(visitTypeVariable(ctx.typeVariable()), ctx);
   }
 
   @Override
@@ -326,7 +288,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
       Type type = (Type) visit(ctx.channelType());
       array.setComponentType(type);
     } else if (ctx.typeVariable() != null) {
-      Type type = (Type) visit(ctx.typeVariable());
+      TypeVariable type = visitTypeVariable(ctx.typeVariable());
       array.setComponentType(type);
     }
     return getParentArray(array);
@@ -392,21 +354,26 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   }
 
   @Override
-  public Object visitChannelSharedDotRead(ProcessJParser.ChannelSharedDotReadContext ctx) {
+  public ChannelEndType visitChannelSharedDotRead(ProcessJParser.ChannelSharedDotReadContext ctx) {
     Type type = configureNode((Type) visit(ctx.type_()), ctx.type_());
     ChannelEndType chan = new ChannelEndType(type, ChannelEndType.SHARED + ChannelEndType.READ_END);
     return configureNode(chan, ctx);
   }
 
   @Override
-  public Object visitChannelSharedDotWrite(ProcessJParser.ChannelSharedDotWriteContext ctx) {
+  public ChannelEndType visitChannelSharedDotWrite(ProcessJParser.ChannelSharedDotWriteContext ctx) {
     Type type = configureNode((Type) visit(ctx.type_()), ctx.type_());
     ChannelEndType chan = new ChannelEndType(type, ChannelEndType.SHARED + ChannelEndType.WRITE_END);
     return configureNode(chan, ctx);
   }
 
   @Override
-  public TypeVariable visitTypeVariableIdentifier(ProcessJParser.TypeVariableIdentifierContext ctx) {
+  public TypeVariable visitTypeVariable(ProcessJParser.TypeVariableContext ctx) {
+    if (ctx.typeName() != null) {
+      Name qualified = visitTypeName(ctx.typeName());
+      Name name = configureNode(new Name(qualified, ctx.Identifier().getText()), qualified);
+      return configureNode(new TypeVariable(name), ctx);
+    }
     Name name = configureNode(new Name(ctx.Identifier().getText()), ctx.Identifier());
     return configureNode(new TypeVariable(name), ctx);
   }
@@ -513,17 +480,24 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     }
     final String identifier = ctx.Identifier().getText();
     Sequence<FieldDeclaration> fields = visitRecordBody(ctx.recordBody());
-    // TODO: extends
     RecordDecl recordDecl = new RecordDecl();
     recordDecl.setModifiers(modifiers);
     recordDecl.setName(identifier);
     recordDecl.setDeclaredFields(fields);
+    if (ctx.extends_() != null) {
+      Sequence<TypeVariable> types = visitExtends(ctx.extends_());
+      Sequence<ConstructedNode> implNames = Sequence.sequenceList();
+      types.forEach(t -> implNames.add(configureNode(new ConstructedNode(t), t)));
+      recordDecl.setImplementedNames(implNames);
+    }
     return configureNode(recordDecl, ctx);
   }
 
   @Override
-  public Object visitExtends(ProcessJParser.ExtendsContext ctx) {
-    return null;
+  public Sequence<TypeVariable> visitExtends(ProcessJParser.ExtendsContext ctx) {
+    Sequence<TypeVariable> types = Sequence.sequenceList();
+    ctx.typeVariable().forEach(t -> types.add(visitTypeVariable(t)));
+    return types;
   }
 
   @Override
@@ -580,7 +554,12 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     ProtocolDecl protocolDecl = new ProtocolDecl();
     protocolDecl.setModifiers(modifiers);
     protocolDecl.setName(identifier);
-    // TODO: extends?
+    if (ctx.extends_() != null) {
+      Sequence<TypeVariable> types = visitExtends(ctx.extends_());
+      Sequence<ConstructedNode> implNames = Sequence.sequenceList();
+      types.forEach(t -> implNames.add(configureNode(new ConstructedNode(t), t)));
+      protocolDecl.setImplementedNames(implNames);
+    }
     if (ctx.protocolBody() != null) {
       protocolDecl.setDeclaredTags(visitProtocolBody(ctx.protocolBody()));
     }
@@ -605,21 +584,53 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   }
 
   @Override
-  public ConstantDecl visitConstantDeclaration(ProcessJParser.ConstantDeclarationContext ctx) {
-    return null;
+  public Sequence<ConstantDecl> visitConstantDeclaration(ProcessJParser.ConstantDeclarationContext ctx) {
+    int modifiers = 0;
+    for (int i = 0; i < ctx.modifier().size(); ++i) {
+      modifiers += visitModifier(ctx.modifier(i));
+    }
+    ASTType type = visitType_(ctx.type_());
+    Sequence<ConstantDecl> constantDecls = visitConstantDeclarators(ctx.constantDeclarators());
+    for (int i = 0; i < constantDecls.size(); ++i) {
+      if (constantDecls.get(i).getASTType() != null) {
+        ArrayNode arrayNode = constantDecls.get(i).getASTType().asArrayNode();
+        arrayNode.getTSType().setTSType(type.getTSType());
+      } else {
+        constantDecls.get(i).setASTType(type);
+      }
+      constantDecls.get(i).setModifiers(modifiers);
+    }
+    return constantDecls;
   }
 
   @Override
-  public Object visitConstantDeclarators(ProcessJParser.ConstantDeclaratorsContext ctx) {
-    return null;
+  public Sequence<ConstantDecl> visitConstantDeclarators(ProcessJParser.ConstantDeclaratorsContext ctx) {
+    Sequence<ConstantDecl> constantDecls = Sequence.sequenceList();
+    ctx.constantDeclarator().forEach(c -> constantDecls.add(visitConstantDeclarator(c)));
+    return constantDecls;
   }
 
   @Override
-  public Object visitConstantDeclarator(ProcessJParser.ConstantDeclaratorContext ctx) {
-    return null;
+  public ConstantDecl visitConstantDeclarator(ProcessJParser.ConstantDeclaratorContext ctx) {
+    ConstantDecl constantDecl = new ConstantDecl();
+    Tuple<?> tuple = visitVariableDeclaratorIdentifier(ctx.variableDeclaratorIdentifier());
+    if (tuple.isTuple1()) {
+      Tuple1<String> t1 = tuple.asTuple1();
+      constantDecl.setName(t1.getV1());
+      configureNode(constantDecl, ctx.variableDeclaratorIdentifier());
+    } else {
+      Tuple2<String, ArrayType> t2 = tuple.asTuple2();
+      ArrayNode arrayNode = configureNode(new ArrayNode(t2.getV2()), t2.getV2());
+      constantDecl.setASTType(arrayNode);
+      constantDecl.setName(t2.getV1());
+      configureNode(constantDecl, ctx);
+    }
+    if (ctx.EQ() != null) {
+      Expression<?> value = visitVariableInitializer(ctx.variableInitializer());
+      constantDecl.setRightExpression(value);
+    }
+    return configureNode(constantDecl, ctx);
   }
-
-  // Statements
 
   @Override
   public BlockStmt visitBlockAsStatement(ProcessJParser.BlockAsStatementContext ctx) {
@@ -922,6 +933,16 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
       continueStmt.setLabel(ctx.Identifier().getText());
     }
     return configureNode(continueStmt, ctx);
+  }
+
+  @Override
+  public SkipStmt visitSkipStatement(ProcessJParser.SkipStatementContext ctx) {
+    return configureNode(new SkipStmt(), ctx);
+  }
+
+  @Override
+  public StopStmt visitStopStatement(ProcessJParser.StopStatementContext ctx) {
+    return configureNode(new StopStmt(), ctx);
   }
 
   @Override

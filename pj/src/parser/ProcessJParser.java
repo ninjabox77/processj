@@ -3619,53 +3619,26 @@ public class ProcessJParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class TypeVariableContext extends ParserRuleContext {
-		public TypeVariableContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_typeVariable; }
-	 
-		public TypeVariableContext() { }
-		public void copyFrom(TypeVariableContext ctx) {
-			super.copyFrom(ctx);
-		}
-	}
-	@SuppressWarnings("CheckReturnValue")
-	public static class TypeVariableIdentifierContext extends TypeVariableContext {
 		public TerminalNode Identifier() { return getToken(ProcessJParser.Identifier, 0); }
-		public TypeVariableIdentifierContext(TypeVariableContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ProcessJListener ) ((ProcessJListener)listener).enterTypeVariableIdentifier(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ProcessJListener ) ((ProcessJListener)listener).exitTypeVariableIdentifier(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof ProcessJVisitor ) return ((ProcessJVisitor<? extends T>)visitor).visitTypeVariableIdentifier(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	@SuppressWarnings("CheckReturnValue")
-	public static class TypeVariablePackageDotIdentifierContext extends TypeVariableContext {
 		public TypeNameContext typeName() {
 			return getRuleContext(TypeNameContext.class,0);
 		}
 		public TerminalNode DCOLON() { return getToken(ProcessJParser.DCOLON, 0); }
-		public TerminalNode Identifier() { return getToken(ProcessJParser.Identifier, 0); }
-		public TypeVariablePackageDotIdentifierContext(TypeVariableContext ctx) { copyFrom(ctx); }
+		public TypeVariableContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_typeVariable; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ProcessJListener ) ((ProcessJListener)listener).enterTypeVariablePackageDotIdentifier(this);
+			if ( listener instanceof ProcessJListener ) ((ProcessJListener)listener).enterTypeVariable(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ProcessJListener ) ((ProcessJListener)listener).exitTypeVariablePackageDotIdentifier(this);
+			if ( listener instanceof ProcessJListener ) ((ProcessJListener)listener).exitTypeVariable(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof ProcessJVisitor ) return ((ProcessJVisitor<? extends T>)visitor).visitTypeVariablePackageDotIdentifier(this);
+			if ( visitor instanceof ProcessJVisitor ) return ((ProcessJVisitor<? extends T>)visitor).visitTypeVariable(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3678,7 +3651,6 @@ public class ProcessJParser extends Parser {
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,49,_ctx) ) {
 			case 1:
-				_localctx = new TypeVariableIdentifierContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(598);
@@ -3686,7 +3658,6 @@ public class ProcessJParser extends Parser {
 				}
 				break;
 			case 2:
-				_localctx = new TypeVariablePackageDotIdentifierContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(599);

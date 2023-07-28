@@ -366,6 +366,18 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
+  public Boolean visit(final SkipStmt s, CodeVisitor arg) {
+    final SkipStmt s2 = (SkipStmt) arg;
+    return objectEquals(s.getComment(), s2.getComment());
+  }
+
+  @Override
+  public Boolean visit(final StopStmt s, CodeVisitor arg) {
+    final StopStmt s2 = (StopStmt) arg;
+    return objectEquals(s.getComment(), s2.getComment());
+  }
+
+  @Override
   public Boolean visit(final DoWhileStmt d, CodeVisitor arg) {
     final DoWhileStmt d2 = (DoWhileStmt) arg;
     return objectEquals(d.getCondition(), d2.getCondition()) &&

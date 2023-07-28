@@ -9,7 +9,7 @@ import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
 /**
- * Represents the type of a constructed type in the AST.
+ * Represents a constructed type in the AST.
  *
  * @author Ben
  */

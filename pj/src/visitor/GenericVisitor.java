@@ -98,6 +98,10 @@ public interface GenericVisitor<R, A> {
 
   R visit(final ContinueStmt c, A arg);
 
+  R visit(final SkipStmt s, A arg);
+
+  R visit(final StopStmt s, A arg);
+
   R visit(final DoWhileStmt d, A arg);
 
   R visit(final EmptyStmt e, A arg);

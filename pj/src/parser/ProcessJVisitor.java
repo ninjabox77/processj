@@ -309,19 +309,11 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitChannelSharedDotWrite(ProcessJParser.ChannelSharedDotWriteContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code TypeVariableIdentifier}
-	 * labeled alternative in {@link ProcessJParser#typeVariable}.
+	 * Visit a parse tree produced by {@link ProcessJParser#typeVariable}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitTypeVariableIdentifier(ProcessJParser.TypeVariableIdentifierContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code TypeVariablePackageDotIdentifier}
-	 * labeled alternative in {@link ProcessJParser#typeVariable}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTypeVariablePackageDotIdentifier(ProcessJParser.TypeVariablePackageDotIdentifierContext ctx);
+	T visitTypeVariable(ProcessJParser.TypeVariableContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ProcessJParser#dims}.
 	 * @param ctx the parse tree

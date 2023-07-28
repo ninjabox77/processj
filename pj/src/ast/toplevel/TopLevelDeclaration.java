@@ -2,6 +2,7 @@ package ast.toplevel;
 
 import ast.*;
 import ast.types.ASTType;
+import ast.types.ConstructedNode;
 import org.antlr.v4.runtime.Token;
 
 import java.util.Objects;
@@ -17,7 +18,7 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
   protected int modifiers_;
   protected ASTType type_;
   protected String name_;
-  private Sequence<TopLevelDeclaration<?>> implementedNames_;
+  private Sequence<ConstructedNode> implementedNames_;
 
   public TopLevelDeclaration() {
     this(null, null);
@@ -31,11 +32,11 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
     this(modifier, type, name, null);
   }
 
-  public TopLevelDeclaration(final int modifier, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
+  public TopLevelDeclaration(final int modifier, ASTType type, final String name, Sequence<ConstructedNode> implementedNames) {
     this(null, modifier, type, name, implementedNames);
   }
 
-  public TopLevelDeclaration(Token token, final int modifier, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
+  public TopLevelDeclaration(Token token, final int modifier, ASTType type, final String name, Sequence<ConstructedNode> implementedNames) {
     super(token);
     setModifiers(modifier);
     setASTType(type);
@@ -88,7 +89,7 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
     return name_;
   }
 
-  public T setImplementedNames(Sequence<TopLevelDeclaration<?>> implementNames) {
+  public T setImplementedNames(Sequence<ConstructedNode> implementNames) {
     if (implementNames == implementedNames_) {
       return (T) this;
     }
@@ -100,7 +101,7 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
     return (T) this;
   }
 
-  public Optional<Sequence<TopLevelDeclaration<?>>> getImplementedNames() {
+  public Optional<Sequence<ConstructedNode>> getImplementedNames() {
     return Optional.ofNullable(implementedNames_);
   }
 
@@ -132,7 +133,7 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
     if (implementedNames_ != null) {
       for (int i = 0; i < implementedNames_.size(); ++i) {
         if (node == implementedNames_.get(i)) {
-          implementedNames_.set(i, (TopLevelDeclaration<?>) replaceWith);
+          implementedNames_.set(i, (ConstructedNode) replaceWith);
           return true;
         }
       }

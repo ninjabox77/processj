@@ -93,6 +93,10 @@ public interface DefaultVisitor<R> {
 
   R visit(final ContinueStmt c);
 
+  R visit(final SkipStmt s);
+
+  R visit(final StopStmt s);
+
   R visit(final DoWhileStmt d);
 
   R visit(final EmptyStmt e);

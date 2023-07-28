@@ -209,8 +209,8 @@ channelType
  ;
 
 typeVariable
- : Identifier                  # TypeVariableIdentifier
- | typeName DCOLON Identifier  # TypeVariablePackageDotIdentifier
+ : Identifier                  //# TypeVariableIdentifier
+ | typeName DCOLON Identifier  //# TypeVariablePackageDotIdentifier
  ;
 
 dims

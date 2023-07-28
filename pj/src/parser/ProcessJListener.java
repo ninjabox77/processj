@@ -508,29 +508,15 @@ public interface ProcessJListener extends ParseTreeListener {
 	 */
 	void exitChannelSharedDotWrite(ProcessJParser.ChannelSharedDotWriteContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code TypeVariableIdentifier}
-	 * labeled alternative in {@link ProcessJParser#typeVariable}.
+	 * Enter a parse tree produced by {@link ProcessJParser#typeVariable}.
 	 * @param ctx the parse tree
 	 */
-	void enterTypeVariableIdentifier(ProcessJParser.TypeVariableIdentifierContext ctx);
+	void enterTypeVariable(ProcessJParser.TypeVariableContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code TypeVariableIdentifier}
-	 * labeled alternative in {@link ProcessJParser#typeVariable}.
+	 * Exit a parse tree produced by {@link ProcessJParser#typeVariable}.
 	 * @param ctx the parse tree
 	 */
-	void exitTypeVariableIdentifier(ProcessJParser.TypeVariableIdentifierContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code TypeVariablePackageDotIdentifier}
-	 * labeled alternative in {@link ProcessJParser#typeVariable}.
-	 * @param ctx the parse tree
-	 */
-	void enterTypeVariablePackageDotIdentifier(ProcessJParser.TypeVariablePackageDotIdentifierContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code TypeVariablePackageDotIdentifier}
-	 * labeled alternative in {@link ProcessJParser#typeVariable}.
-	 * @param ctx the parse tree
-	 */
-	void exitTypeVariablePackageDotIdentifier(ProcessJParser.TypeVariablePackageDotIdentifierContext ctx);
+	void exitTypeVariable(ProcessJParser.TypeVariableContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ProcessJParser#dims}.
 	 * @param ctx the parse tree
