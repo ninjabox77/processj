@@ -651,8 +651,14 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     if (ctx.localVariableDeclarationStatement() != null) {
       return visitLocalVariableDeclarationStatement(ctx.localVariableDeclarationStatement());
     }
-    Statement stat = (Statement) visit(ctx.statement());
-    return null;
+    Sequence<Statement> statements = Sequence.sequenceList();
+    Object obj = visit(ctx.statement());
+    if (obj instanceof Statement) {
+      statements.add((Statement) obj);
+    } else if (obj instanceof Sequence<?>) {
+      statements.addAll((Sequence<? extends Statement>) obj);
+    }
+    return statements;
   }
 
   @Override
@@ -882,11 +888,17 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   }
 
   @Override
-  public Object visitSwitchStatement(ProcessJParser.SwitchStatementContext ctx) {
+  public Sequence<SwitchCaseStmt> visitSwitchStatement(ProcessJParser.SwitchStatementContext ctx) {
     Expression<?> expression = visitParExpression(ctx.parExpression());
     Sequence<SwitchCaseStmt> cases = Sequence.sequenceList();
     ctx.switchBlockStatementGroup().forEach(c -> cases.add(visitSwitchBlockStatementGroup(c)));
-    return null;
+    if (ctx.switchLabel() != null) {
+      ctx.switchLabel().forEach(l -> {
+        Expression<?> expr = visitSwitchLabel(l);
+        cases.add(configureNode(new SwitchCaseStmt(Sequence.sequenceList(expr)), expr));
+      });
+    }
+    return cases;
   }
 
   @Override
@@ -1082,14 +1094,26 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   @Override
   public PostfixExpr visitPostfixExpression(ProcessJParser.PostfixExpressionContext ctx) {
     Expression<?> expression = (Expression<?>) visit(ctx.expression());
-    PostfixExpr postfixExpr = new PostfixExpr(ctx.op, expression);
+    final int op = ctx.DPLUS() != null ? PostfixExpr.PLUSPLUS : PostfixExpr.MINUSMINUS;
+    PostfixExpr postfixExpr = new PostfixExpr(op, expression);
     return configureNode(postfixExpr, ctx);
   }
 
   @Override
   public PrefixExpr visitPrefixExpression(ProcessJParser.PrefixExpressionContext ctx) {
     Expression<?> expression = (Expression<?>) visit(ctx.expression());
-    PrefixExpr prefixExpr = new PrefixExpr(ctx.op, expression);
+    final int op = ctx.DPLUS() != null
+                   ? PrefixExpr.PLUSPLUS
+                   : ctx.DMINUS() != null
+                     ? PrefixExpr.MINUSMINUS
+                     : ctx.PLUS() != null
+                       ? PrefixExpr.PLUS
+                       : ctx.MINUS() != null
+                         ? PrefixExpr.MINUS
+                         : ctx.COMP() != null
+                           ? PrefixExpr.COMP
+                           : PrefixExpr.NOT;
+    PrefixExpr prefixExpr = new PrefixExpr(op, expression);
     return configureNode(prefixExpr, ctx);
   }
 
@@ -1106,7 +1130,8 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   public BinaryExpr visitMultiplicativeExpression(ProcessJParser.MultiplicativeExpressionContext ctx) {
     Expression<?> left = (Expression<?>) visit(ctx.expression(0));
     Expression<?> right = (Expression<?>) visit(ctx.expression(1));
-    BinaryExpr binary = new BinaryExpr(left, right, ctx.op);
+    final int op = ctx.MULT() != null ? BinaryExpr.MULT : ctx.DIV() != null ? BinaryExpr.DIV : BinaryExpr.MOD;
+    BinaryExpr binary = new BinaryExpr(left, right, op);
     return configureNode(binary, ctx);
   }
 
@@ -1114,20 +1139,38 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   public BinaryExpr visitAdditiveExpression(ProcessJParser.AdditiveExpressionContext ctx) {
     Expression<?> left = (Expression<?>) visit(ctx.expression(0));
     Expression<?> right = (Expression<?>) visit(ctx.expression(1));
-    BinaryExpr binary = new BinaryExpr(left, right, ctx.op);
+    final int op = ctx.PLUS() != null
+                   ? BinaryExpr.PLUS
+                   : BinaryExpr.MINUS;
+    BinaryExpr binary = new BinaryExpr(left, right, op);
     return configureNode(binary, ctx);
   }
 
   @Override
   public BinaryExpr visitShiftExpression(ProcessJParser.ShiftExpressionContext ctx) {
-    return null;
+    Expression<?> left = (Expression<?>) visit(ctx.expression(0));
+    Expression<?> right = (Expression<?>) visit(ctx.expression(1));
+    final int op = ctx.LT() != null
+                   ? BinaryExpr.RSHIFT
+                   : ctx.GT().size() > 2
+                     ? BinaryExpr.RRSHIFT
+                     : BinaryExpr.RSHIFT;
+    BinaryExpr binary = new BinaryExpr(left, right, op);
+    return configureNode(binary, ctx);
   }
 
   @Override
   public BinaryExpr visitRelationalExpression(ProcessJParser.RelationalExpressionContext ctx) {
     Expression<?> left = (Expression<?>) visit(ctx.expression(0));
     Expression<?> right = (Expression<?>) visit(ctx.expression(1));
-    BinaryExpr binary = new BinaryExpr(left, right, ctx.op);
+    final int op = ctx.LTEQ() != null
+                   ? BinaryExpr.LTEQ
+                   : ctx.GTEQ() != null
+                     ? BinaryExpr.GTEQ
+                     : ctx.GT() != null
+                       ? BinaryExpr.GT
+                       : BinaryExpr.LT;
+    BinaryExpr binary = new BinaryExpr(left, right, op);
     return configureNode(binary, ctx);
   }
 
@@ -1135,7 +1178,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   public BinaryExpr visitInstanceofExpression(ProcessJParser.InstanceofExpressionContext ctx) {
     Expression<?> left = (Expression<?>) visit(ctx.expression(0));
     Expression<?> right = (Expression<?>) visit(ctx.expression(1));
-    BinaryExpr binary = new BinaryExpr(left, right, ctx.IS().getSymbol());
+    BinaryExpr binary = new BinaryExpr(left, right, BinaryExpr.INSTANCEOF);
     return configureNode(binary, ctx);
   }
 
@@ -1143,7 +1186,10 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   public BinaryExpr visitEqualityExpression(ProcessJParser.EqualityExpressionContext ctx) {
     Expression<?> left = (Expression<?>) visit(ctx.expression(0));
     Expression<?> right = (Expression<?>) visit(ctx.expression(1));
-    BinaryExpr binary = new BinaryExpr(left, right, ctx.op);
+    final int op = ctx.EQEQ() != null
+                   ? BinaryExpr.EQEQ
+                   : BinaryExpr.NOTEQ;
+    BinaryExpr binary = new BinaryExpr(left, right, op);
     return configureNode(binary, ctx);
   }
 
@@ -1151,7 +1197,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   public BinaryExpr visitAndExpression(ProcessJParser.AndExpressionContext ctx) {
     Expression<?> left = (Expression<?>) visit(ctx.expression(0));
     Expression<?> right = (Expression<?>) visit(ctx.expression(1));
-    BinaryExpr binary = new BinaryExpr(left, right, ctx.AND().getSymbol());
+    BinaryExpr binary = new BinaryExpr(left, right, BinaryExpr.AND);
     return configureNode(binary, ctx);
   }
 
@@ -1159,7 +1205,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   public BinaryExpr visitExclusiveExpression(ProcessJParser.ExclusiveExpressionContext ctx) {
     Expression<?> left = (Expression<?>) visit(ctx.expression(0));
     Expression<?> right = (Expression<?>) visit(ctx.expression(1));
-    BinaryExpr binary = new BinaryExpr(left, right, ctx.XOR().getSymbol());
+    BinaryExpr binary = new BinaryExpr(left, right, BinaryExpr.XOR);
     return configureNode(binary, ctx);
   }
 
@@ -1167,7 +1213,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   public BinaryExpr visitInclusiveExpression(ProcessJParser.InclusiveExpressionContext ctx) {
     Expression<?> left = (Expression<?>) visit(ctx.expression(0));
     Expression<?> right = (Expression<?>) visit(ctx.expression(1));
-    BinaryExpr binary = new BinaryExpr(left, right, ctx.OR().getSymbol());
+    BinaryExpr binary = new BinaryExpr(left, right, BinaryExpr.OR);
     return configureNode(binary, ctx);
   }
 
@@ -1175,7 +1221,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   public BinaryExpr visitLogicalAndExpression(ProcessJParser.LogicalAndExpressionContext ctx) {
     Expression<?> left = (Expression<?>) visit(ctx.expression(0));
     Expression<?> right = (Expression<?>) visit(ctx.expression(1));
-    BinaryExpr binary = new BinaryExpr(left, right, ctx.ANDAND().getSymbol());
+    BinaryExpr binary = new BinaryExpr(left, right, BinaryExpr.ANDAND);
     return configureNode(binary, ctx);
   }
 
@@ -1183,7 +1229,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   public BinaryExpr visitLogicalOrExpression(ProcessJParser.LogicalOrExpressionContext ctx) {
     Expression<?> left = (Expression<?>) visit(ctx.expression(0));
     Expression<?> right = (Expression<?>) visit(ctx.expression(1));
-    BinaryExpr binary = new BinaryExpr(left, right, ctx.OROR().getSymbol());
+    BinaryExpr binary = new BinaryExpr(left, right, BinaryExpr.OROR);
     return configureNode(binary, ctx);
   }
 
@@ -1201,47 +1247,47 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   public AssignmentExpr visitAssignmentExpression(ProcessJParser.AssignmentExpressionContext ctx) {
     Expression<?> left = (Expression<?>) visit(ctx.expression(0));
     Expression<?> right = (Expression<?>) visit(ctx.expression(1));
-    Token op = visitAssignOp(ctx.assignOp()).getSymbol();
+    final int op = visitAssignOp(ctx.assignOp());
     AssignmentExpr assign = new AssignmentExpr(left, right, op);
     return configureNode(assign, ctx);
   }
 
   @Override
-  public TerminalNode visitAssignOp(ProcessJParser.AssignOpContext ctx) {
+  public Integer visitAssignOp(ProcessJParser.AssignOpContext ctx) {
     if (ctx.EQ() != null) {
-      return ctx.EQ();
+      return AssignmentExpr.EQ;
     }
     if (ctx.MULTEQ() != null) {
-      return ctx.MULTEQ();
+      return AssignmentExpr.MULTEQ;
     }
     if (ctx.DIVEQ() != null) {
-      return ctx.DIVEQ();
+      return AssignmentExpr.DIVEQ;
     }
     if (ctx.MODEQ() != null) {
-      return ctx.MODEQ();
+      return AssignmentExpr.MODEQ;
     }
     if (ctx.PLUSEQ() != null) {
-      return ctx.PLUSEQ();
+      return AssignmentExpr.PLUSEQ;
     }
     if (ctx.MINUSEQ() != null) {
-      return ctx.MINUSEQ();
+      return AssignmentExpr.MINUSEQ;
     }
     if (ctx.LSHIFTEQ() != null) {
-      return ctx.LSHIFTEQ();
+      return AssignmentExpr.LSHIFTEQ;
     }
     if (ctx.RSHIFTEQ() != null) {
-      return ctx.RSHIFTEQ();
+      return AssignmentExpr.RSHIFTEQ;
     }
     if (ctx.RRSHIFTEQ() != null) {
-      return ctx.RRSHIFTEQ();
+      return AssignmentExpr.RRSHIFTEQ;
     }
     if (ctx.ANDEQ() != null) {
-      return ctx.ANDEQ();
+      return AssignmentExpr.ANDEQ;
     }
     if (ctx.XOREQ() != null) {
-      return ctx.XOREQ();
+      return AssignmentExpr.XOREQ;
     }
-    return ctx.OREQ();
+    return AssignmentExpr.OREQ;
   }
 
   @Override

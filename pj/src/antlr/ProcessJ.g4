@@ -387,7 +387,7 @@ expression
  | expression DOT (identifier | invocation)                   # MemberAccessExpression
  | invocation                                                 # InvocationExpression
  | expression op=(DPLUS|DMINUS)                               # PostfixExpression
- | op=(DPLUS|DMINUS) expression                               # PrefixExpression
+ | op=(DPLUS|DMINUS|PLUS|MINUS|COMP|NOT) expression           # PrefixExpression
  | LPAREN primitiveType RPAREN expression                     # CastExpression
  | NEW creator                                                # ObjectCreationExpression
  | expression op=(MULT|DIV|MOD) expression                    # MultiplicativeExpression
@@ -835,9 +835,6 @@ LTEQ        : '<=';
 GTEQ        : '>=';
 NOTEQ       : '!=';
 
-//LSHIFT      : '<<';
-//RSHIFT      : '>>';
-//RRSHIFT     : '>>>';
 ANDAND      : '&&';
 OROR        : '||';
 PLUS        : '+';

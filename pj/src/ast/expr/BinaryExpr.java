@@ -14,19 +14,44 @@ import visitor.VoidVisitor;
  */
 public class BinaryExpr extends Expression<BinaryExpr> {
 
+  public static final int PLUS = 0;
+  public static final int MINUS = 1;
+  public static final int MULT = 2;
+  public static final int DIV = 3;
+  public static final int MOD = 4;
+  public static final int LSHIFT = 5;
+  public static final int RSHIFT = 6;
+  public static final int RRSHIFT = 7;
+  public static final int LT = 8;
+  public static final int GT = 9;
+  public static final int LTEQ = 10;
+  public static final int GTEQ = 11;
+  public static final int INSTANCEOF = 12;
+  public static final int EQEQ = 13;
+  public static final int NOTEQ = 14;
+  public static final int AND = 15;
+  public static final int OR = 16;
+  public static final int XOR = 17;
+  public static final int ANDAND = 18;
+  public static final int OROR = 19;
+
+
+  public static final String[] symbols = {"+", "-", "*", "/", "%", "<<", ">>", ">>>", "<", ">",
+      "<=", ">=", "is", "==", "!=", "&", "|", "^", "&&", "||"};
+
   private Expression<?> leftExpression_;
   private Expression<?> rightExpression_;
-  private Token operation_;
+  private int operator_;
 
-  public BinaryExpr(Expression<?> leftExpression, Expression<?> rightExpression, Token operation) {
-    this(null, leftExpression, rightExpression, operation);
+  public BinaryExpr(Expression<?> leftExpression, Expression<?> rightExpression, final int operator) {
+    this(null, leftExpression, rightExpression, operator);
   }
 
-  public BinaryExpr(Token token, Expression<?> leftExpression, Expression<?> rightExpression, Token operation) {
+  public BinaryExpr(Token token, Expression<?> leftExpression, Expression<?> rightExpression, final int operator) {
     super(token);
     setLeftExpression(leftExpression);
     setRightExpression(rightExpression);
-    setOperation(operation);
+    setOperator(operator);
   }
 
   public BinaryExpr setLeftExpression(Expression<?> leftExpression) {
@@ -61,16 +86,16 @@ public class BinaryExpr extends Expression<BinaryExpr> {
     return rightExpression_;
   }
 
-  public BinaryExpr setOperation(Token operation) {
-    if (operation == operation_) {
+  public BinaryExpr setOperator(final int operator) {
+    if (operator == operator_) {
       return this;
     }
-    operation_ = operation;
+    operator_ = operator;
     return this;
   }
 
-  public Token getOperation() {
-    return operation_;
+  public int getOperator() {
+    return operator_;
   }
 
   @Override

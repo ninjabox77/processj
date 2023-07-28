@@ -4,6 +4,7 @@ import ast.java.FieldDeclaration;
 import ast.Node;
 import ast.Sequence;
 import ast.types.ASTType;
+import ast.types.ConstructedNode;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -32,15 +33,15 @@ public class RecordDecl extends TopLevelDeclaration<RecordDecl> {
     this(modifiers, type, name, null);
   }
 
-  public RecordDecl(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
+  public RecordDecl(int modifiers, ASTType type, final String name, Sequence<ConstructedNode> implementedNames) {
     this(null, modifiers, type, name, implementedNames, null);
   }
 
-  public RecordDecl(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<FieldDeclaration> declaredFields) {
+  public RecordDecl(int modifiers, ASTType type, final String name, Sequence<ConstructedNode> implementedNames, Sequence<FieldDeclaration> declaredFields) {
     this(null, modifiers, type, name, implementedNames, declaredFields);
   }
 
-  public RecordDecl(Token token, int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<FieldDeclaration> declaredFields) {
+  public RecordDecl(Token token, int modifiers, ASTType type, final String name, Sequence<ConstructedNode> implementedNames, Sequence<FieldDeclaration> declaredFields) {
     super(token, modifiers, type, name, implementedNames);
     setDeclaredFields(declaredFields);
   }

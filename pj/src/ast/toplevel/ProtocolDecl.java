@@ -3,6 +3,7 @@ package ast.toplevel;
 import ast.Node;
 import ast.Sequence;
 import ast.types.ASTType;
+import ast.types.ConstructedNode;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -31,15 +32,15 @@ public class ProtocolDecl extends TopLevelDeclaration<ProtocolDecl> {
     this(modifiers, type, name, null);
   }
 
-  public ProtocolDecl(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames) {
+  public ProtocolDecl(int modifiers, ASTType type, final String name, Sequence<ConstructedNode> implementedNames) {
     this(modifiers, type, name, implementedNames, null);
   }
 
-  public ProtocolDecl(int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<ProtocolCaseDecl> declaredTags) {
+  public ProtocolDecl(int modifiers, ASTType type, final String name, Sequence<ConstructedNode> implementedNames, Sequence<ProtocolCaseDecl> declaredTags) {
     this(null, modifiers, type, name, implementedNames, declaredTags);
   }
 
-  public ProtocolDecl(Token token, int modifiers, ASTType type, final String name, Sequence<TopLevelDeclaration<?>> implementedNames, Sequence<ProtocolCaseDecl> declaredTags) {
+  public ProtocolDecl(Token token, int modifiers, ASTType type, final String name, Sequence<ConstructedNode> implementedNames, Sequence<ProtocolCaseDecl> declaredTags) {
     super(token, modifiers, type, name, implementedNames);
     setDeclaredTags(declaredTags);
   }

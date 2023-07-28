@@ -14,33 +14,41 @@ import visitor.VoidVisitor;
  */
 public class PrefixExpr extends Expression<PrefixExpr> {
 
+  public static final int PLUSPLUS = 0; // ++
+  public static final int MINUSMINUS = 1; // --
+  public static final int PLUS = 2; // +
+  public static final int MINUS = 3; // -
+  public static final int COMP = 4; // ~
+  public static final int NOT = 5; // !
+  private static final String[] symbols = {"++", "--", "+", "-", "~", "!"};
+
   private Expression<?> expression_;
-  private Token operation_;
+  private int operator_;
 
   public PrefixExpr() {
-    this(null, null);
+    this(PLUSPLUS, null);
   }
 
-  public PrefixExpr(Token operation, Expression<?> expression) {
-    this(null, operation, expression);
+  public PrefixExpr(final int operator, Expression<?> expression) {
+    this(null, operator, expression);
   }
 
-  public PrefixExpr(Token token, Token operation, Expression<?> expression) {
+  public PrefixExpr(Token token, final int operator, Expression<?> expression) {
     super(token);
-    setOperation(operation);
+    setOperator(operator);
     setExpression(expression);
   }
 
-  public PrefixExpr setOperation(Token operation) {
-    if (operation == operation_) {
+  public PrefixExpr setOperator(final int operator) {
+    if (operator == operator_) {
       return this;
     }
-    operation_ = operation;
+    operator_ = operator;
     return this;
   }
 
-  public Token getOperation() {
-    return operation_;
+  public int getOperator() {
+    return operator_;
   }
 
   public PrefixExpr setExpression(Expression<?> expression) {

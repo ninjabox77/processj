@@ -569,7 +569,7 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
     final BinaryExpr b2 = (BinaryExpr) arg;
     return objectEquals(b.getLeftExpression(), b2.getLeftExpression()) &&
         objectEquals(b.getRightExpression(), b2.getRightExpression()) &&
-        objectEquals(b.getOperation(), b2.getOperation()) &&
+        objectEquals(b.getOperator(), b2.getOperator()) &&
         objectEquals(b.getComment(), b2.getComment());
   }
 
@@ -732,7 +732,7 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   public Boolean visit(final PostfixExpr p, CodeVisitor arg) {
     final PostfixExpr p2 = (PostfixExpr) arg;
     return objectEquals(p.getExpression(), p2.getExpression()) &&
-        objectEquals(p.getOperation(), p2.getOperation()) &&
+        objectEquals(p.getOperator(), p2.getOperator()) &&
         objectEquals(p.getComment(), p2.getComment());
   }
 
@@ -740,7 +740,7 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   public Boolean visit(final PrefixExpr p, CodeVisitor arg) {
     final PrefixExpr p2 = (PrefixExpr) arg;
     return objectEquals(p.getExpression(), p2.getExpression()) &&
-        objectEquals(p.getOperation(), p2.getOperation()) &&
+        objectEquals(p.getOperator(), p2.getOperator()) &&
         objectEquals(p.getComment(), p2.getComment());
   }
 

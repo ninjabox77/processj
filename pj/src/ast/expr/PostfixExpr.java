@@ -14,33 +14,37 @@ import visitor.VoidVisitor;
  */
 public class PostfixExpr extends Expression<PostfixExpr> {
 
+  public static final int PLUSPLUS = 0; // ++
+  public static final int MINUSMINUS = 1; // --
+  public static final String[] symbols = {"++", "--"};
+
   private Expression<?> expression_;
-  private Token operation_;
+  private int operator_;
 
   public PostfixExpr() {
-    this(null, null);
+    this(PLUSPLUS, null);
   }
 
-  public PostfixExpr(Token operation, Expression<?> expression) {
-    this(null, operation, expression);
+  public PostfixExpr(final int operator, Expression<?> expression) {
+    this(null, operator, expression);
   }
 
-  public PostfixExpr(Token token, Token operation, Expression<?> expression) {
+  public PostfixExpr(Token token, final int operator, Expression<?> expression) {
     super(token);
-    setOperation(operation);
+    setOperator(operator);
     setExpression(expression);
   }
 
-  public PostfixExpr setOperation(Token operation) {
-    if (operation == operation_) {
+  public PostfixExpr setOperator(final int operator) {
+    if (operator == operator_) {
       return this;
     }
-    operation_ = operation;
+    operator_ = operator;
     return this;
   }
 
-  public Token getOperation() {
-    return operation_;
+  public int getOperator() {
+    return operator_;
   }
 
   public PostfixExpr setExpression(Expression<?> expression) {
