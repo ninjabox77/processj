@@ -12,7 +12,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ChannelWriteExpr extends Expression<ChannelWriteExpr> {
+public class ChannelWriteExpr extends CallableExpr {
 
   private Expression<?> channel_;
   private Expression<?> expression_;
@@ -26,7 +26,7 @@ public class ChannelWriteExpr extends Expression<ChannelWriteExpr> {
   }
 
   public ChannelWriteExpr(Token token, Expression<?> channel, Expression<?> expression) {
-    super(token);
+    super(token, null, null, null);
     setChannel(channel);
     setExpression(expression);
   }
@@ -75,7 +75,7 @@ public class ChannelWriteExpr extends Expression<ChannelWriteExpr> {
 
   @Override
   public ChannelWriteExpr setASTType(ASTType type) {
-    return super.setASTType(type);
+    return (ChannelWriteExpr) super.setASTType(type);
   }
 
   @Override

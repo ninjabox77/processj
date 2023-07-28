@@ -214,8 +214,6 @@ public interface GenericVisitor<R, A> {
 
   R visit(final ChannelWriteExpr c, A arg);
 
-  R visit(final PathExpression p, A arg);
-
   R visit(final GroupExpr g, A arg);
 
   R visit(final ArrayAccess a, A arg);

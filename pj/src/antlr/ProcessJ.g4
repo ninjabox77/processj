@@ -318,6 +318,8 @@ statement
  | RETURN expression? SEMI                                      # ReturnStatement
  | BREAK Identifier? SEMI                                       # BreakStatement
  | CONTINUE Identifier? SEMI                                    # ContinueStatement
+ | SKIP_ SEMI                                                   # SkipStatement
+ | STOP SEMI                                                    # StopStatement
  | SEMI                                                         # EmptyStatement
  | expression SEMI                                              # StatementExpression
  | Identifier COLON statement                                   # LabelStatement

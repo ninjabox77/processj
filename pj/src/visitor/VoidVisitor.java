@@ -209,8 +209,6 @@ public interface VoidVisitor<A> {
 
   void visit(final ChannelWriteExpr c, A arg);
 
-  void visit(final PathExpression p, A arg);
-
   void visit(final GroupExpr g, A arg);
 
   void visit(final ArrayAccess a, A arg);

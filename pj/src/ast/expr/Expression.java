@@ -237,30 +237,6 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
     throw new IllegalStateException(String.format("%s is not a BlockExpr, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isChannelReadExpr() {
-    return false;
-  }
-
-  public ChannelReadExpr asChannelReadExpr() {
-    throw new IllegalStateException(String.format("%s is not a ChannelReadExpr, it is a %s", this, getClass().getSimpleName()));
-  }
-
-  public boolean isChannelWriteExpr() {
-    return false;
-  }
-
-  public ChannelWriteExpr asChannelWriteExpr() {
-    throw new IllegalStateException(String.format("%s is not a ChannelWriteExpr, it is a %s", this, getClass().getSimpleName()));
-  }
-
-  public boolean isPathExpression() {
-    return false;
-  }
-
-  public PathExpression asPathExpression() {
-    throw new IllegalStateException(String.format("%s is not a PathExpression, it is a %s", this, getClass().getSimpleName()));
-  }
-
   public boolean isGroupExpr() {
     return false;
   }

@@ -209,8 +209,6 @@ public interface DefaultVisitor<R> {
 
   R visit(final ChannelWriteExpr c);
 
-  R visit(final PathExpression p);
-
   R visit(final GroupExpr g);
 
   R visit(final ArrayAccess a);

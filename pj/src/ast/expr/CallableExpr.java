@@ -151,36 +151,36 @@ public class CallableExpr extends Expression<CallableExpr> {
     return super.remove(node);
   }
 
-  public boolean isReadCallable() {
+  public boolean isChannelReadExpr() {
     return false;
   }
 
-  public ReadCallable asReadCallable() {
-    throw new IllegalStateException(String.format("%s is not a ReadCallable, it is a %s", this, getClass().getSimpleName()));
+  public ChannelReadExpr asChannelReadExpr() {
+    throw new IllegalStateException(String.format("%s is not a ChannelReadExpr, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isWriteCallable() {
+  public boolean isChannelWriteExpr() {
     return false;
   }
 
-  public WriteCallable asWriteCallable() {
-    throw new IllegalStateException(String.format("%s is not a WriteCallable, it is a %s", this, getClass().getSimpleName()));
+  public ChannelWriteExpr asChannelWriteExpr() {
+    throw new IllegalStateException(String.format("%s is not a ChannelWriteExpr, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isSyncCallable() {
+  public boolean isSyncRead() {
     return false;
   }
 
-  public SyncCallable asSyncCallable() {
-    throw new IllegalStateException(String.format("%s is not a SyncCallable, it is a %s", this, getClass().getSimpleName()));
+  public SyncRead asSyncCallable() {
+    throw new IllegalStateException(String.format("%s is not a SyncRead, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isTimeOutCallable() {
+  public boolean isTimeOutRead() {
     return false;
   }
 
-  public TimeOutCallable asTimeOutCallable() {
-    throw new IllegalStateException(String.format("%s is not a TimeOutCallable, it is a %s", this, getClass().getSimpleName()));
+  public TimeOutRead asTimeOutRead() {
+    throw new IllegalStateException(String.format("%s is not a TimeOutRead, it is a %s", this, getClass().getSimpleName()));
   }
 
   @Override

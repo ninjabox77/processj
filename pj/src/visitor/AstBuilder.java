@@ -1012,23 +1012,36 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
 
   @Override
   public CallableExpr visitInvocation(ProcessJParser.InvocationContext ctx) {
-    CallableExpr invocation = new CallableExpr();
     VariableExpr variable = visitIdentifier(ctx.identifier());
-    switch (variable.getName()) {
-      case "timeout" -> invocation = new TimeOutCallable();
-      case "read" -> invocation = new ReadCallable();
-      case "write" -> invocation = new WriteCallable();
+    Expression<?> arguments = visitArguments(ctx.arguments());
+    if (variable.getName().equals("read")) {
+      ChannelReadExpr chanRead = new ChannelReadExpr();
+      if (arguments.isBlockExpr()) {
+        chanRead.setExternalRV(arguments.asBlockExpr());
+      } else {
+        // Note that a channel-read expression must always have an
+        // empty sequence of expression, otherwise, this is an error
+        chanRead.setArguments(Sequence.sequenceList(arguments));
+      }
+      chanRead.setChannel(variable);
+      return configureNode(chanRead, ctx);
+    }
+    if (variable.getName().equals("write")) {
+      ChannelWriteExpr chanWrite = new ChannelWriteExpr();
+      chanWrite.setChannel(variable);
+      chanWrite.setExpression(arguments);
+      return configureNode(chanWrite, ctx);
+    }
+    CallableExpr invocation = new CallableExpr();
+    if (variable.getName().equals("timeout")) {
+      invocation = new TimeOutRead();
     }
     invocation.setIdentifier(variable.getName());
-    Expression<?> expression = visitArguments(ctx.arguments());
-    if (expression.isListExpression()) {
-      if (expression.asListExpression().getValues().isPresent()) {
-        invocation.setArguments(expression.asListExpression().getValues().get());
-      }
-      return configureNode(invocation, ctx);
+    if (arguments.isListExpression()) {
+      invocation.setArguments(arguments.asListExpression().getValues().get());
+    } else {
+      invocation.setArguments(Sequence.sequenceList(arguments));
     }
-    // Extended rendezvous
-    invocation.setArguments(Sequence.sequenceList(expression));
     return configureNode(invocation, ctx);
   }
 

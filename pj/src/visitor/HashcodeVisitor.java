@@ -464,11 +464,6 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final PathExpression p) {
-    return null;
-  }
-
-  @Override
   public Integer visit(final GroupExpr g) {
     return null;
   }

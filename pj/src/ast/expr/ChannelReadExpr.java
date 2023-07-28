@@ -13,12 +13,12 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ChannelReadExpr extends Expression<ChannelReadExpr> {
+public class ChannelReadExpr extends CallableExpr {
 
   private Expression<?> channel_;
   private BlockExpr externalRV_;
 
-  private ChannelReadExpr() {
+  public ChannelReadExpr() {
     this(null);
   }
 
@@ -31,7 +31,7 @@ public class ChannelReadExpr extends Expression<ChannelReadExpr> {
   }
 
   public ChannelReadExpr(Token token, Expression<?> channel, BlockExpr externalRV) {
-    super(token);
+    super(token, null, null, null);
     setChannel(channel);
   }
 
@@ -79,7 +79,7 @@ public class ChannelReadExpr extends Expression<ChannelReadExpr> {
 
   @Override
   public ChannelReadExpr setASTType(ASTType type) {
-    return super.setASTType(type);
+    return (ChannelReadExpr) super.setASTType(type);
   }
 
   @Override

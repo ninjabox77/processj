@@ -813,13 +813,6 @@ public class EqualsVisitor implements GenericVisitor<Boolean, CodeVisitor> {
   }
 
   @Override
-  public Boolean visit(final PathExpression p, CodeVisitor arg) {
-    final PathExpression p2 = (PathExpression) arg;
-    return objectEquals(p.getName(), p2.getName()) &&
-        objectEquals(p.getComment(), p2.getComment());
-  }
-
-  @Override
   public Boolean visit(final GroupExpr g, CodeVisitor arg) {
     final GroupExpr g2 = (GroupExpr) arg;
     return objectEquals(g.getExpression(), g2.getExpression()) &&
