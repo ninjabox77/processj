@@ -13,7 +13,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ObjectCreationExpr extends MethodCallExpr {
+public class ObjectCreationExpr extends MethodCallExpression {
 
   public ObjectCreationExpr() {
     this(null, null, Sequence.sequenceList(), Sequence.sequenceList());

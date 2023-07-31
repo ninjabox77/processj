@@ -1,11 +1,14 @@
 package ast.java;
 
-import ast.Node;
-import ast.VariableDecl;
+import ast.SourceAST;
+import ast.Variable;
+import ast.VariableDeclarator;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
+
+import java.util.Objects;
 
 /**
  * Represents a declaration of a field in a record, a protocol as part of
@@ -13,24 +16,24 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class FieldDeclaration extends BodyDeclaration<FieldDeclaration> {
+public class FieldDeclaration extends BodyDeclaration<FieldDeclaration> implements Variable<FieldDeclaration> {
 
-  private VariableDecl variable_;
+  private VariableDeclarator variable_;
 
   private FieldDeclaration() {
     this(null);
   }
 
-  public FieldDeclaration(VariableDecl variable) {
+  public FieldDeclaration(VariableDeclarator variable) {
     this(null, variable);
   }
 
-  public FieldDeclaration(Token token, VariableDecl variable) {
+  public FieldDeclaration(Token token, VariableDeclarator variable) {
     super(token);
     setVariable(variable);
   }
 
-  public FieldDeclaration setVariable(VariableDecl variable) {
+  public FieldDeclaration setVariable(VariableDeclarator variable) {
     if (variable == variable_) {
       return this;
     }
@@ -42,13 +45,27 @@ public class FieldDeclaration extends BodyDeclaration<FieldDeclaration> {
     return this;
   }
 
-  public VariableDecl getVariable() {
+  public VariableDeclarator getVariable() {
     return variable_;
   }
 
   @Override
   public FieldDeclaration setModifiers(final int modifiers) {
     return super.setModifiers(modifiers);
+  }
+
+  @Override
+  public FieldDeclaration setName(String name) {
+    if (Objects.equals(name, variable_.getName())) {
+      return this;
+    }
+    variable_.setName(name);
+    return this;
+  }
+
+  @Override
+  public String getName() {
+    return variable_.getName();
   }
 
   @Override
@@ -62,12 +79,12 @@ public class FieldDeclaration extends BodyDeclaration<FieldDeclaration> {
   }
 
   @Override
-  public boolean replace(Node node, Node replaceWith) {
+  public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;
     }
     if (node == variable_) {
-      setVariable((VariableDecl) replaceWith);
+      setVariable((VariableDeclarator) replaceWith);
       return true;
     }
     return super.replace(node, replaceWith);

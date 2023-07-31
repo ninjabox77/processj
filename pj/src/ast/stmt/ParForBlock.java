@@ -13,7 +13,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ParForBlock extends ParStmt<ParForBlock> {
+public class ParForBlock extends ParStatement<ParForBlock> {
 
   private Sequence<Expression<?>> initialization_;
   private Expression<?> conditional_;

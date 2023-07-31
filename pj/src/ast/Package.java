@@ -5,8 +5,6 @@ import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
-import java.util.Objects;
-
 /**
  * Represents a package statement.
  *
@@ -45,7 +43,12 @@ public class Package extends AnnotatedNode {
   }
 
   @Override
-  public boolean replace(Node node, Node replaceWith) {
+  public String asString() {
+    return name_.asString();
+  }
+
+  @Override
+  public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;
     }

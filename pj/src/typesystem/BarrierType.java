@@ -21,6 +21,11 @@ public class BarrierType extends Primitive {
   }
 
   @Override
+  public String asString() {
+    return "barrier";
+  }
+
+  @Override
   public boolean isBarrierType() {
     return true;
   }

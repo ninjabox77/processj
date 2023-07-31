@@ -21,6 +21,11 @@ public class ShortType extends Primitive {
   }
 
   @Override
+  public String asString() {
+    return "short";
+  }
+
+  @Override
   public boolean isShortType() {
     return true;
   }

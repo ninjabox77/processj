@@ -1,9 +1,12 @@
+import ast.CompileUnit;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import parser.ProcessJLexer;
 import parser.ProcessJParser;
 import visitor.AstBuilder;
+import visitor.NodePrinter;
 
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -67,7 +70,7 @@ public class Compiler {
     for (int pos = 0; pos < args.length; ) {
       String arg = args[pos++];
       if (arg.charAt(0) != '-') {
-        // Found a 'Xxx.pj' file.
+        // Found a "Xxx.pj" file.
         if (!inputFiles_.contains(arg))
           inputFiles_.add(arg);
       } else {
@@ -125,9 +128,13 @@ public class Compiler {
     if (args.length == 2) {
       System.out.println();
     }
-    ProcessJLexer lex = new ProcessJLexer(CharStreams.fromString("private void foo() { switch (a) { default: hello; } }"));
-    ProcessJParser parser = new ProcessJParser(new CommonTokenStream(lex));
+    ProcessJLexer lex = new ProcessJLexer(CharStreams.fromString("package b;\n import a.b.g::l;\n const int a, b;\n const long[][][] lon;"
+    + "record A { int x; string[][] str; }\n void f(int a) { int t = 89; barrier b; chan<int[][]>[][] c; " +
+        " if (a > b) { } else { } do { } while (a != 5); }"));
+    CommonTokenStream tokens = new CommonTokenStream(lex);
+    ProcessJParser parser = new ProcessJParser(tokens);
     ProcessJParser.CompilationUnitContext init = parser.compilationUnit();
-    new AstBuilder().visitCompilationUnit(init);
+    CompileUnit unit = new AstBuilder().visitCompilationUnit(init);
+    unit.accept(new NodePrinter(new PrintWriter(System.out, true)), null);
   }
 }

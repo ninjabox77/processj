@@ -10,7 +10,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class StringLiteral extends ConstantExpr {
+public class StringLiteral extends ConstantExpression {
 
   public StringLiteral() {
     this("");

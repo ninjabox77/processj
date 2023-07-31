@@ -13,9 +13,9 @@ public interface NodeWithParent<T> {
     return getParentNode().isEmpty();
   }
 
-  Optional<Node> getParentNode();
+  Optional<SourceAST> getParentNode();
 
-  T setParentNode(Node node);
+  T setParentNode(SourceAST node);
 
-  Node getParentNodeForChildren();
+  SourceAST getParentNodeForChildren();
 }

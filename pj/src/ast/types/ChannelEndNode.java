@@ -1,6 +1,6 @@
 package ast.types;
 
-import ast.Node;
+import ast.SourceAST;
 import org.antlr.v4.runtime.Token;
 import typesystem.ChannelEndType;
 import typesystem.Type;
@@ -49,7 +49,7 @@ public class ChannelEndNode extends ASTType {
   }
 
   @Override
-  public boolean replace(Node node, Node replaceWith) {
+  public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;
     }

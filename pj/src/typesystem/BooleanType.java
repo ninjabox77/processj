@@ -21,6 +21,11 @@ public class BooleanType extends Primitive {
   }
 
   @Override
+  public String asString() {
+    return "boolean";
+  }
+
+  @Override
   public boolean isBooleanType() {
     return true;
   }

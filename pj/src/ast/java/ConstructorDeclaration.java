@@ -2,11 +2,10 @@ package ast.java;
 
 import ast.Parameter;
 import ast.Sequence;
-import ast.stmt.BlockStmt;
+import ast.stmt.BlockStatement;
 import ast.types.ASTType;
 import ast.types.PrimitiveNode;
 import org.antlr.v4.runtime.Token;
-import typesystem.Type;
 import typesystem.VoidType;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -24,14 +23,14 @@ public class ConstructorDeclaration extends MethodDeclaration<ConstructorDeclara
   }
 
   public ConstructorDeclaration(final int modifiers, ASTType type, final String name) {
-    this(modifiers, type, name, new BlockStmt());
+    this(modifiers, type, name, new BlockStatement());
   }
 
-  public ConstructorDeclaration(final int modifiers, ASTType type, final String name, BlockStmt body) {
+  public ConstructorDeclaration(final int modifiers, ASTType type, final String name, BlockStatement body) {
     this(null, modifiers, type, name, null, body);
   }
 
-  public ConstructorDeclaration(Token token, final int modifiers, ASTType type, final String name, Sequence<Parameter> parameters, BlockStmt body) {
+  public ConstructorDeclaration(Token token, final int modifiers, ASTType type, final String name, Sequence<Parameter> parameters, BlockStatement body) {
     super(token, modifiers, type, name, parameters, body);
   }
 

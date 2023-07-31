@@ -9,6 +9,7 @@ import ast.java.*;
 import ast.stmt.*;
 import ast.toplevel.*;
 import ast.types.*;
+import control.CompilationUnit;
 import typesystem.*;
 
 public interface VoidVisitor<A> {
@@ -21,9 +22,11 @@ public interface VoidVisitor<A> {
 
   void visit(final ArrayDimension a, A arg);
 
-  void visit(final ClassNode c, A arg);
+  void visit(final BytecodeAST c, A arg);
 
   void visit(final CompileUnit c, A arg);
+
+  void visit(final CompilationUnit c, A arg);
 
   void visit(final Import i, A arg);
 
@@ -35,7 +38,9 @@ public interface VoidVisitor<A> {
 
   void visit(final Sequence<?> s, A arg);
 
-  void visit(final VariableDecl v, A arg);
+  void visit(final VariableDeclarator v, A arg);
+
+  void visit(final Label s, A arg);
 
   /*********************************************************
    * Type nodes
@@ -65,67 +70,67 @@ public interface VoidVisitor<A> {
    * Top-level nodes
    *********************************************************/
 
-  void visit(final ConstantDecl c, A arg);
+  void visit(final ConstantDeclaration c, A arg);
 
-  void visit(final ExternalDecl e, A arg);
+  void visit(final ExternalDeclaration e, A arg);
 
-  void visit(final CallableDecl<?> m, A arg);
+  void visit(final CallableDeclaration<?> m, A arg);
 
   void visit(final ProcedureTopLevel p, A arg);
 
-  void visit(final ProtocolCaseDecl p, A arg);
+  void visit(final ProtocolCaseDeclaration p, A arg);
 
-  void visit(final ProtocolDecl p, A arg);
+  void visit(final ProtocolDeclaration p, A arg);
 
-  void visit(final RecordDecl r, A arg);
-
-  void visit(final TypeVariableDecl t, A arg);
+  void visit(final RecordDeclaration r, A arg);
 
   /*********************************************************
    * Statement nodes
    *********************************************************/
 
-  void visit(final BlockStmt b, A arg);
+  void visit(final BlockStatement b, A arg);
 
-  void visit(final BreakStmt b, A arg);
+  void visit(final BreakStatement b, A arg);
 
-  void visit(final SwitchCaseStmt c, A arg);
+  void visit(final SwitchCaseStatement c, A arg);
 
-  void visit(final ContinueStmt c, A arg);
+  void visit(final ContinueStatement c, A arg);
 
-  void visit(final SkipStmt s, A arg);
+  void visit(final SkipStatement s, A arg);
 
-  void visit(final StopStmt s, A arg);
+  void visit(final StopStatement s, A arg);
 
-  void visit(final DoWhileStmt d, A arg);
+  void visit(final DoWhileStatement d, A arg);
 
-  void visit(final EmptyStmt e, A arg);
+  void visit(final EmptyStatement e, A arg);
 
-  void visit(final ExpressionStmt e, A arg);
+  void visit(final ExpressionStatement e, A arg);
 
-  void visit(final ForEachStmt f, A arg);
+  void visit(final ForEachStatement f, A arg);
 
-  void visit(final ForStmt f, A arg);
+  void visit(final ForStatement f, A arg);
 
   void visit(final Guard g, A arg);
 
-  void visit(final IfStmt i, A arg);
+  void visit(final IfStatement i, A arg);
 
-  void visit(final RegularAltStmt r, A arg);
+  void visit(final AltBlock r, A arg);
 
-  void visit(final ReturnStmt r, A arg);
+  void visit(final ReturnStatement r, A arg);
 
-  void visit(final SwitchStmt s, A arg);
+  void visit(final SwitchStatement s, A arg);
 
-  void visit(final WhileStmt w, A arg);
+  void visit(final WhileStatement w, A arg);
 
-  void visit(final ReplicatedAltStmt r, A arg);
+  void visit(final ReplicatedAltBlock r, A arg);
 
-  void visit(final AltCase a, A arg);
+  void visit(final AltCaseStatement a, A arg);
 
-  void visit(final RegularParBlock r, A arg);
+  void visit(final ParBlock r, A arg);
 
   void visit(final ParForBlock p, A arg);
+
+  void visit(final LabelStatement l, A arg);
 
   /*********************************************************
    * Java nodes
@@ -145,29 +150,31 @@ public interface VoidVisitor<A> {
 
   void visit(final ArrayInitializer a, A arg);
 
-  void visit(final BinaryExpr b, A arg);
+  void visit(final AssignmentExpression a, A arg);
 
-  void visit(final BooleanExpr b, A arg);
+  void visit(final BinaryExpression b, A arg);
+
+  void visit(final BooleanExpression b, A arg);
 
   void visit(final BooleanLiteral b, A arg);
 
-  void visit(final CallableExpr c, A arg);
+  void visit(final CallableExpression c, A arg);
 
-  void visit(final CastExpr c, A arg);
+  void visit(final CastExpression c, A arg);
 
-  void visit(final CharLiteral c, A arg);
+  void visit(final CharacterLiteral c, A arg);
 
-  void visit(final ClassExpr c, A arg);
+  void visit(final ClassExpression c, A arg);
 
   void visit(final ObjectCreationExpr c, A arg);
 
-  void visit(final DeclarationExpr d, A arg);
+  void visit(final DeclarationExpression d, A arg);
 
   void visit(final DoubleLiteral d, A arg);
 
-  void visit(final EmptyExpr e, A arg);
+  void visit(final EmptyExpression e, A arg);
 
-  void visit(final FieldExpr f, A arg);
+  void visit(final FieldExpression f, A arg);
 
   void visit(final IntegerLiteral i, A arg);
 
@@ -175,45 +182,45 @@ public interface VoidVisitor<A> {
 
   void visit(final LongLiteral l, A arg);
 
-  void visit(final MapEntryExpr m, A arg);
+  void visit(final MapEntryExpression m, A arg);
 
-  void visit(final MapExpr m, A arg);
+  void visit(final MapExpression m, A arg);
 
-  void visit(final MethodCallExpr m, A arg);
+  void visit(final MethodCallExpression m, A arg);
 
-  void visit(final NewArrayExpr n, A arg);
+  void visit(final NewArrayExpression n, A arg);
 
   void visit(final NotExpression n, A arg);
 
   void visit(final NullLiteral n, A arg);
 
-  void visit(final PostfixExpr p, A arg);
+  void visit(final PostfixExpression p, A arg);
 
-  void visit(final PrefixExpr p, A arg);
+  void visit(final PrefixExpression p, A arg);
 
-  void visit(final SkipExpr s, A arg);
+  void visit(final SkipExpression s, A arg);
 
-  void visit(final StopExpr s, A arg);
+  void visit(final StopExpression s, A arg);
 
-  void visit(final TernaryExpr t, A arg);
+  void visit(final TernaryExpression t, A arg);
 
-  void visit(final UnaryMinusExpr u, A arg);
+  void visit(final UnaryMinusExpression u, A arg);
 
-  void visit(final UnaryPlusExpr u, A arg);
+  void visit(final UnaryPlusExpression u, A arg);
 
-  void visit(final VariableExpr v, A arg);
+  void visit(final VariableExpression v, A arg);
 
   void visit(final FloatLiteral f, A arg);
 
   void visit(final StringLiteral s, A arg);
 
-  void visit(final BlockExpr b, A arg);
+  void visit(final BlockExpression b, A arg);
 
-  void visit(final ChannelReadExpr c, A arg);
+  void visit(final ChannelReadExpression c, A arg);
 
-  void visit(final ChannelWriteExpr c, A arg);
+  void visit(final ChannelWriteExpression c, A arg);
 
-  void visit(final GroupExpr g, A arg);
+  void visit(final GroupExpression g, A arg);
 
   void visit(final ArrayAccess a, A arg);
 
@@ -232,7 +239,7 @@ public interface VoidVisitor<A> {
   void visit(final LineComment l, A arg);
 
   /*********************************************************
-   * Comments nodes
+   * Type system nodes
    *********************************************************/
 
   void visit(final ArrayType a, A arg);
@@ -281,5 +288,5 @@ public interface VoidVisitor<A> {
 
   void visit(final VoidType v, A arg);
 
-  void visit(final TypeVariable t, A arg);
+  void visit(final NamedType t, A arg);
 }

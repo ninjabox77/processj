@@ -1,13 +1,12 @@
 package ast.java;
 
-import ast.Node;
+import ast.SourceAST;
 import ast.Sequence;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 /**
@@ -98,7 +97,7 @@ public class ClassDeclaration extends TypeDeclaration<ClassDeclaration> {
   }
 
   @Override
-  public boolean replace(Node node, Node replaceWith) {
+  public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;
     }
@@ -122,7 +121,7 @@ public class ClassDeclaration extends TypeDeclaration<ClassDeclaration> {
   }
 
   @Override
-  public boolean remove(Node node) {
+  public boolean remove(SourceAST node) {
     if (node == null) {
       return false;
     }

@@ -57,6 +57,8 @@ public final class Phases {
   // Output of class.
   public static final int OUTPUT = 11;
 
+  public static final int ALL = 11;
+
   public static final String[] info = {
       "startup",
       "initialization",

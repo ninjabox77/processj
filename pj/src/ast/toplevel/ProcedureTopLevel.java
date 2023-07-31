@@ -2,7 +2,7 @@ package ast.toplevel;
 
 import ast.Sequence;
 import ast.Parameter;
-import ast.stmt.BlockStmt;
+import ast.stmt.BlockStatement;
 import ast.types.ASTType;
 import ast.types.ConstructedNode;
 import org.antlr.v4.runtime.Token;
@@ -15,7 +15,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ProcedureTopLevel extends CallableDecl<ProcedureTopLevel> {
+public class ProcedureTopLevel extends CallableDeclaration<ProcedureTopLevel> {
 
   private boolean yields_;
 
@@ -32,14 +32,14 @@ public class ProcedureTopLevel extends CallableDecl<ProcedureTopLevel> {
   }
 
   public ProcedureTopLevel(final int modifiers, ASTType type, final String name, Sequence<ConstructedNode> implementedNames, final boolean yields) {
-    this(modifiers, type, name, implementedNames, new BlockStmt(), yields);
+    this(modifiers, type, name, implementedNames, new BlockStatement(), yields);
   }
 
-  public ProcedureTopLevel(final int modifiers, ASTType type, final String name, Sequence<ConstructedNode> implementedNames, BlockStmt body, final boolean yields) {
+  public ProcedureTopLevel(final int modifiers, ASTType type, final String name, Sequence<ConstructedNode> implementedNames, BlockStatement body, final boolean yields) {
     this(null, modifiers, type, name, implementedNames, null, body, yields);
   }
 
-  public ProcedureTopLevel(Token token, final int modifiers, ASTType type, final String name, Sequence<ConstructedNode> implementedNames, Sequence<Parameter> parameters, BlockStmt body, final boolean yields) {
+  public ProcedureTopLevel(Token token, final int modifiers, ASTType type, final String name, Sequence<ConstructedNode> implementedNames, Sequence<Parameter> parameters, BlockStatement body, final boolean yields) {
     super(token, modifiers, type, name, implementedNames, parameters, body);
     setYields(yields);
   }

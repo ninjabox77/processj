@@ -12,6 +12,7 @@ import ast.java.MethodDeclaration;
 import ast.stmt.*;
 import ast.toplevel.*;
 import ast.types.*;
+import control.CompilationUnit;
 import typesystem.*;
 
 /**
@@ -26,7 +27,7 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   private HashcodeVisitor() {
   }
 
-  public static int hashCode(final Node node) {
+  public static int hashCode(final SourceAST node) {
     return node.accept(INSTANCE);
   }
 
@@ -41,12 +42,17 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final ClassNode c) {
+  public Integer visit(final BytecodeAST c) {
     return null;
   }
 
   @Override
   public Integer visit(final CompileUnit c) {
+    return null;
+  }
+
+  @Override
+  public Integer visit(final CompilationUnit c) {
     return null;
   }
 
@@ -74,12 +80,17 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   public Integer visit(final Sequence<?> s) {
     int hash = 0;
     for (Object object : s)
-      hash += ((CodeVisitor) object).accept(this) * 31;
+      hash += ((Visitor) object).accept(this) * 31;
     return hash;
   }
 
   @Override
-  public Integer visit(final VariableDecl v) {
+  public Integer visit(final VariableDeclarator v) {
+    return null;
+  }
+
+  @Override
+  public Integer visit(final Label s) {
     return null;
   }
 
@@ -134,17 +145,17 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final ConstantDecl c) {
+  public Integer visit(final ConstantDeclaration c) {
     return null;
   }
 
   @Override
-  public Integer visit(final ExternalDecl e) {
+  public Integer visit(final ExternalDeclaration e) {
     return null;
   }
 
   @Override
-  public Integer visit(final CallableDecl<?> m) {
+  public Integer visit(final CallableDeclaration<?> m) {
     return null;
   }
 
@@ -154,77 +165,72 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final ProtocolCaseDecl p) {
+  public Integer visit(final ProtocolCaseDeclaration p) {
     return null;
   }
 
   @Override
-  public Integer visit(final ProtocolDecl p) {
+  public Integer visit(final ProtocolDeclaration p) {
     return null;
   }
 
   @Override
-  public Integer visit(final RecordDecl r) {
+  public Integer visit(final RecordDeclaration r) {
     return null;
   }
 
   @Override
-  public Integer visit(final TypeVariableDecl t) {
+  public Integer visit(final BlockStatement b) {
     return null;
   }
 
   @Override
-  public Integer visit(final BlockStmt b) {
+  public Integer visit(final BreakStatement b) {
     return null;
   }
 
   @Override
-  public Integer visit(final BreakStmt b) {
+  public Integer visit(final SwitchCaseStatement c) {
     return null;
   }
 
   @Override
-  public Integer visit(final SwitchCaseStmt c) {
+  public Integer visit(final ContinueStatement c) {
     return null;
   }
 
   @Override
-  public Integer visit(final ContinueStmt c) {
+  public Integer visit(final SkipStatement s) {
     return null;
   }
 
   @Override
-  public Integer visit(final SkipStmt s) {
+  public Integer visit(final StopStatement s) {
     return null;
   }
 
   @Override
-  public Integer visit(final StopStmt s) {
+  public Integer visit(final DoWhileStatement d) {
     return null;
   }
 
   @Override
-  public Integer visit(final DoWhileStmt d) {
+  public Integer visit(final EmptyStatement e) {
     return null;
   }
 
   @Override
-  public Integer visit(final EmptyStmt e) {
+  public Integer visit(final ExpressionStatement e) {
     return null;
   }
 
   @Override
-  public Integer visit(final ExpressionStmt e) {
+  public Integer visit(final ForEachStatement f) {
     return null;
   }
 
   @Override
-  public Integer visit(final ForEachStmt f) {
-    return null;
-  }
-
-  @Override
-  public Integer visit(final ForStmt f) {
+  public Integer visit(final ForStatement f) {
     return null;
   }
 
@@ -234,47 +240,52 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final IfStmt i) {
+  public Integer visit(final IfStatement i) {
     return null;
   }
 
   @Override
-  public Integer visit(final RegularAltStmt r) {
+  public Integer visit(final AltBlock r) {
     return null;
   }
 
   @Override
-  public Integer visit(final ReturnStmt r) {
+  public Integer visit(final ReturnStatement r) {
     return null;
   }
 
   @Override
-  public Integer visit(final SwitchStmt s) {
+  public Integer visit(final SwitchStatement s) {
     return null;
   }
 
   @Override
-  public Integer visit(final WhileStmt w) {
+  public Integer visit(final WhileStatement w) {
     return null;
   }
 
   @Override
-  public Integer visit(final ReplicatedAltStmt r) {
+  public Integer visit(final ReplicatedAltBlock r) {
     return null;
   }
 
   @Override
-  public Integer visit(final AltCase a) {
+  public Integer visit(final AltCaseStatement a) {
     return null;
   }
 
   @Override
-  public Integer visit(final RegularParBlock r) {
+  public Integer visit(final ParBlock r) {
     return null;
   }
 
   @Override
   public Integer visit(final ParForBlock p) {
+    return null;
+  }
+
+  @Override
+  public Integer visit(final LabelStatement l) {
     return null;
   }
 
@@ -304,12 +315,17 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final BinaryExpr b) {
+  public Integer visit(final AssignmentExpression a) {
     return null;
   }
 
   @Override
-  public Integer visit(final BooleanExpr b) {
+  public Integer visit(final BinaryExpression b) {
+    return null;
+  }
+
+  @Override
+  public Integer visit(final BooleanExpression b) {
     return null;
   }
 
@@ -319,22 +335,22 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final CallableExpr c) {
+  public Integer visit(final CallableExpression c) {
     return null;
   }
 
   @Override
-  public Integer visit(final CastExpr c) {
+  public Integer visit(final CastExpression c) {
     return null;
   }
 
   @Override
-  public Integer visit(final CharLiteral c) {
+  public Integer visit(final CharacterLiteral c) {
     return null;
   }
 
   @Override
-  public Integer visit(final ClassExpr c) {
+  public Integer visit(final ClassExpression c) {
     return null;
   }
 
@@ -344,7 +360,7 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final DeclarationExpr d) {
+  public Integer visit(final DeclarationExpression d) {
     return null;
   }
 
@@ -354,12 +370,12 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final EmptyExpr e) {
+  public Integer visit(final EmptyExpression e) {
     return null;
   }
 
   @Override
-  public Integer visit(final FieldExpr f) {
+  public Integer visit(final FieldExpression f) {
     return null;
   }
 
@@ -379,22 +395,22 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final MapEntryExpr m) {
+  public Integer visit(final MapEntryExpression m) {
     return null;
   }
 
   @Override
-  public Integer visit(final MapExpr m) {
+  public Integer visit(final MapExpression m) {
     return null;
   }
 
   @Override
-  public Integer visit(final MethodCallExpr m) {
+  public Integer visit(final MethodCallExpression m) {
     return null;
   }
 
   @Override
-  public Integer visit(final NewArrayExpr n) {
+  public Integer visit(final NewArrayExpression n) {
     return null;
   }
 
@@ -409,42 +425,42 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final PostfixExpr p) {
+  public Integer visit(final PostfixExpression p) {
     return null;
   }
 
   @Override
-  public Integer visit(final PrefixExpr p) {
+  public Integer visit(final PrefixExpression p) {
     return null;
   }
 
   @Override
-  public Integer visit(final SkipExpr s) {
+  public Integer visit(final SkipExpression s) {
     return null;
   }
 
   @Override
-  public Integer visit(final StopExpr s) {
+  public Integer visit(final StopExpression s) {
     return null;
   }
 
   @Override
-  public Integer visit(final TernaryExpr t) {
+  public Integer visit(final TernaryExpression t) {
     return null;
   }
 
   @Override
-  public Integer visit(final UnaryMinusExpr u) {
+  public Integer visit(final UnaryMinusExpression u) {
     return null;
   }
 
   @Override
-  public Integer visit(final UnaryPlusExpr u) {
+  public Integer visit(final UnaryPlusExpression u) {
     return null;
   }
 
   @Override
-  public Integer visit(final VariableExpr v) {
+  public Integer visit(final VariableExpression v) {
     return null;
   }
 
@@ -459,22 +475,22 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final BlockExpr b) {
+  public Integer visit(final BlockExpression b) {
     return null;
   }
 
   @Override
-  public Integer visit(final ChannelReadExpr c) {
+  public Integer visit(final ChannelReadExpression c) {
     return null;
   }
 
   @Override
-  public Integer visit(final ChannelWriteExpr c) {
+  public Integer visit(final ChannelWriteExpression c) {
     return null;
   }
 
   @Override
-  public Integer visit(final GroupExpr g) {
+  public Integer visit(final GroupExpression g) {
     return null;
   }
 
@@ -630,7 +646,7 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final TypeVariable t) {
+  public Integer visit(final NamedType t) {
     return (t.getComment().isPresent() ? t.getComment().get().accept(this) : 0) * 31;
   }
 }

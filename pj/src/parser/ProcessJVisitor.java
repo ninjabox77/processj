@@ -539,6 +539,13 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitContinueStatement(ProcessJParser.ContinueStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code SeqStatement}
+	 * labeled alternative in {@link ProcessJParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSeqStatement(ProcessJParser.SeqStatementContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code SkipStatement}
 	 * labeled alternative in {@link ProcessJParser#statement}.
 	 * @param ctx the parse tree

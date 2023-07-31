@@ -9,6 +9,7 @@ import ast.java.*;
 import ast.stmt.*;
 import ast.toplevel.*;
 import ast.types.*;
+import control.CompilationUnit;
 import typesystem.*;
 
 public interface DefaultVisitor<R> {
@@ -21,9 +22,11 @@ public interface DefaultVisitor<R> {
 
   R visit(final ArrayDimension a);
 
-  R visit(final ClassNode c);
+  R visit(final BytecodeAST c);
 
   R visit(final CompileUnit c);
+
+  R visit(final CompilationUnit c);
 
   R visit(final Import i);
 
@@ -35,7 +38,9 @@ public interface DefaultVisitor<R> {
 
   R visit(final Sequence<?> s);
 
-  R visit(final VariableDecl v);
+  R visit(final VariableDeclarator v);
+
+  R visit(final Label s);
 
   /*********************************************************
    * Type nodes
@@ -65,67 +70,67 @@ public interface DefaultVisitor<R> {
    * Top-level nodes
    *********************************************************/
 
-  R visit(final ConstantDecl c);
+  R visit(final ConstantDeclaration c);
 
-  R visit(final ExternalDecl e);
+  R visit(final ExternalDeclaration e);
 
-  R visit(final CallableDecl<?> m);
+  R visit(final CallableDeclaration<?> m);
 
   R visit(final ProcedureTopLevel p);
 
-  R visit(final ProtocolCaseDecl p);
+  R visit(final ProtocolCaseDeclaration p);
 
-  R visit(final ProtocolDecl p);
+  R visit(final ProtocolDeclaration p);
 
-  R visit(final RecordDecl r);
-
-  R visit(final TypeVariableDecl t);
+  R visit(final RecordDeclaration r);
 
   /*********************************************************
    * Statement nodes
    *********************************************************/
 
-  R visit(final BlockStmt b);
+  R visit(final BlockStatement b);
 
-  R visit(final BreakStmt b);
+  R visit(final BreakStatement b);
 
-  R visit(final SwitchCaseStmt c);
+  R visit(final SwitchCaseStatement c);
 
-  R visit(final ContinueStmt c);
+  R visit(final ContinueStatement c);
 
-  R visit(final SkipStmt s);
+  R visit(final SkipStatement s);
 
-  R visit(final StopStmt s);
+  R visit(final StopStatement s);
 
-  R visit(final DoWhileStmt d);
+  R visit(final DoWhileStatement d);
 
-  R visit(final EmptyStmt e);
+  R visit(final EmptyStatement e);
 
-  R visit(final ExpressionStmt e);
+  R visit(final ExpressionStatement e);
 
-  R visit(final ForEachStmt f);
+  R visit(final ForEachStatement f);
 
-  R visit(final ForStmt f);
+  R visit(final ForStatement f);
 
   R visit(final Guard g);
 
-  R visit(final IfStmt i);
+  R visit(final IfStatement i);
 
-  R visit(final RegularAltStmt r);
+  R visit(final AltBlock r);
 
-  R visit(final ReturnStmt r);
+  R visit(final ReturnStatement r);
 
-  R visit(final SwitchStmt s);
+  R visit(final SwitchStatement s);
 
-  R visit(final WhileStmt w);
+  R visit(final WhileStatement w);
 
-  R visit(final ReplicatedAltStmt r);
+  R visit(final ReplicatedAltBlock r);
 
-  R visit(final AltCase a);
+  R visit(final AltCaseStatement a);
 
-  R visit(final RegularParBlock r);
+  R visit(final ParBlock r);
 
   R visit(final ParForBlock p);
+
+  R visit(final LabelStatement l);
 
   /*********************************************************
    * Java nodes
@@ -145,29 +150,31 @@ public interface DefaultVisitor<R> {
 
   R visit(final ArrayInitializer a);
 
-  R visit(final BinaryExpr b);
+  R visit(final AssignmentExpression a);
 
-  R visit(final BooleanExpr b);
+  R visit(final BinaryExpression b);
+
+  R visit(final BooleanExpression b);
 
   R visit(final BooleanLiteral b);
 
-  R visit(final CallableExpr c);
+  R visit(final CallableExpression c);
 
-  R visit(final CastExpr c);
+  R visit(final CastExpression c);
 
-  R visit(final CharLiteral c);
+  R visit(final CharacterLiteral c);
 
-  R visit(final ClassExpr c);
+  R visit(final ClassExpression c);
 
   R visit(final ObjectCreationExpr c);
 
-  R visit(final DeclarationExpr d);
+  R visit(final DeclarationExpression d);
 
   R visit(final DoubleLiteral d);
 
-  R visit(final EmptyExpr e);
+  R visit(final EmptyExpression e);
 
-  R visit(final FieldExpr f);
+  R visit(final FieldExpression f);
 
   R visit(final IntegerLiteral i);
 
@@ -175,45 +182,45 @@ public interface DefaultVisitor<R> {
 
   R visit(final LongLiteral l);
 
-  R visit(final MapEntryExpr m);
+  R visit(final MapEntryExpression m);
 
-  R visit(final MapExpr m);
+  R visit(final MapExpression m);
 
-  R visit(final MethodCallExpr m);
+  R visit(final MethodCallExpression m);
 
-  R visit(final NewArrayExpr n);
+  R visit(final NewArrayExpression n);
 
   R visit(final NotExpression n);
 
   R visit(final NullLiteral n);
 
-  R visit(final PostfixExpr p);
+  R visit(final PostfixExpression p);
 
-  R visit(final PrefixExpr p);
+  R visit(final PrefixExpression p);
 
-  R visit(final SkipExpr s);
+  R visit(final SkipExpression s);
 
-  R visit(final StopExpr s);
+  R visit(final StopExpression s);
 
-  R visit(final TernaryExpr t);
+  R visit(final TernaryExpression t);
 
-  R visit(final UnaryMinusExpr u);
+  R visit(final UnaryMinusExpression u);
 
-  R visit(final UnaryPlusExpr u);
+  R visit(final UnaryPlusExpression u);
 
-  R visit(final VariableExpr v);
+  R visit(final VariableExpression v);
 
   R visit(final FloatLiteral f);
 
   R visit(final StringLiteral s);
 
-  R visit(final BlockExpr b);
+  R visit(final BlockExpression b);
 
-  R visit(final ChannelReadExpr c);
+  R visit(final ChannelReadExpression c);
 
-  R visit(final ChannelWriteExpr c);
+  R visit(final ChannelWriteExpression c);
 
-  R visit(final GroupExpr g);
+  R visit(final GroupExpression g);
 
   R visit(final ArrayAccess a);
 
@@ -232,7 +239,7 @@ public interface DefaultVisitor<R> {
   R visit(final LineComment l);
 
   /*********************************************************
-   * Comments nodes
+   * Type system nodes
    *********************************************************/
 
   R visit(final ArrayType a);
@@ -281,5 +288,5 @@ public interface DefaultVisitor<R> {
 
   R visit(final VoidType v);
 
-  R visit(final TypeVariable t);
+  R visit(final NamedType t);
 }

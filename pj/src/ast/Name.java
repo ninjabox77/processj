@@ -67,7 +67,15 @@ public class Name extends AnnotatedNode {
   }
 
   @Override
-  public boolean remove(Node node) {
+  public String asString() {
+    if (qualifier_ != null) {
+      return qualifier_.asString() + "." + identifier_;
+    }
+    return identifier_;
+  }
+
+  @Override
+  public boolean remove(SourceAST node) {
     if (node == null) {
       return false;
     }
@@ -79,7 +87,7 @@ public class Name extends AnnotatedNode {
   }
 
   @Override
-  public boolean replace(Node node, Node replaceWith) {
+  public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;
     }

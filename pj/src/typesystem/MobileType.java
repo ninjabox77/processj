@@ -1,6 +1,6 @@
 package typesystem;
 
-import ast.Node;
+import ast.SourceAST;
 import ast.Sequence;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
@@ -25,20 +25,25 @@ public class MobileType extends CallableType<MobileType> {
   }
 
   public MobileType(Token token, Type type, Sequence<Type> typeArguments, final boolean yields) {
-    super(token, type, typeArguments, null, yields);
+    super(token, type, typeArguments, yields);
   }
 
   public MobileType setTSType(Type retuntType) {
     return super.setTSType(retuntType);
   }
 
-  public MobileType setTypeArguments(Sequence<Type> argumentsType) {
-    return super.setTypeArguments(argumentsType);
+  public MobileType setParameterTypes(Sequence<Type> argumentsType) {
+    return super.setParameterTypes(argumentsType);
   }
 
   @Override
-  public Optional<Sequence<Type>> getTypeArguments() {
-    return super.getTypeArguments();
+  public String asString() {
+    return null;
+  }
+
+  @Override
+  public Optional<Sequence<Type>> getParameterTypes() {
+    return super.getParameterTypes();
   }
 
   @Override
@@ -52,7 +57,7 @@ public class MobileType extends CallableType<MobileType> {
   }
 
   @Override
-  public boolean remove(Node node) {
+  public boolean remove(SourceAST node) {
     return super.remove(node);
   }
 

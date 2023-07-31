@@ -1,23 +1,19 @@
 package control;
 
 import ast.CompileUnit;
-import ast.Sequence;
-import ast.ClassNode;
+import ast.BytecodeAST;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * The compilation unit collects all compilation data as it is generated
  * by the compiler. We use an instance of this class to add additional
- * resources to the compile unit, and force the compilation to be run
+ * resources to the compile unit and force the compilation to be run
  * again if needed.
  *
  * @author Ben
@@ -25,9 +21,9 @@ import java.util.Queue;
 public class CompilationUnit extends ProcessingUnit {
 
   private CompileUnit ast_;
-  private Map<String, CompileUnit> otherSources_;
+  private Map<String, CompileUnit> sources_;
   private Queue<CompileUnit> queueSources_;
-  private Sequence<ClassNode> generatedClasses_;
+  private List<BytecodeAST> generatedClasses_;
 
   public CompilationUnit() {
     this(null);
@@ -45,9 +41,9 @@ public class CompilationUnit extends ProcessingUnit {
 
   @Override
   public void customInitialization() {
-    otherSources_ = new HashMap<>();
+    sources_ = new HashMap<>();
     queueSources_ = new LinkedList<>();
-    generatedClasses_ = Sequence.sequenceList();
+    generatedClasses_ = new LinkedList<>();
   }
 
   public CompilationUnit setCompileUnit(CompileUnit ast) {
@@ -66,38 +62,51 @@ public class CompilationUnit extends ProcessingUnit {
     return ast_;
   }
 
-  public CompilationUnit addSources(final String[] paths) {
-    for (String p : paths) {
-      addSource(new File(p));
+  public void addSources(final String[] files) {
+    for (String f : files) {
+      addSource(new File(f));
     }
-    return this;
   }
 
-  public CompilationUnit addSources(final File[] files) {
+  public void addSources(final File[] files) {
     for (File f : files) {
       addSource(f);
     }
-    return this;
   }
 
-  public CompilationUnit addSource(final File file) {
-    final String path = file.getAbsolutePath();
-    // TODO:
-    return this;
+  public CompileUnit addSource(final File file) {
+    final String f = file.getAbsolutePath();
+    // TODO: ??
+    return null;
+  }
+
+  public void compile() {
+    compile(Phases.ALL);
+  }
+
+  public void compile(int currentPhase) {
+    nextPhase(Phases.INITIALIZATION);
+    while (currentPhase >= phase_ && currentPhase <= Phases.ALL) {
+      // process phase operations
+      // dequeue to bring new sources into phase
+      // completePhase
+      // mark
+      // nextPhase + 1
+    }
   }
 
   @Override
   public <T, A> T accept(GenericVisitor<T, A> v, A arg) {
-    return null;
+    return v.visit(this, arg);
   }
 
   @Override
   public <A> void accept(VoidVisitor<A> v, A arg) {
-
+    v.visit(this, arg);
   }
 
   @Override
   public <T> T accept(DefaultVisitor<T> v) {
-    return null;
+    return v.visit(this);
   }
 }

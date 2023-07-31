@@ -21,6 +21,11 @@ public class TimerType extends Primitive {
   }
 
   @Override
+  public String asString() {
+    return "timer";
+  }
+
+  @Override
   public boolean isTimerType() {
     return true;
   }

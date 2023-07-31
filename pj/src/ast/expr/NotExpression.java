@@ -11,7 +11,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class NotExpression extends BooleanExpr {
+public class NotExpression extends BooleanExpression {
 
   public NotExpression() {
     this(null);

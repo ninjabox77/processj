@@ -1,7 +1,7 @@
 package ast.expr;
 
 import ast.Name;
-import ast.Node;
+import ast.SourceAST;
 import ast.Sequence;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
@@ -97,7 +97,7 @@ public class ProtocolLiteral extends Expression<ProtocolLiteral> {
   }
 
   @Override
-  public boolean remove(Node node) {
+  public boolean remove(SourceAST node) {
     if (node == null) {
       return false;
     }
@@ -113,7 +113,7 @@ public class ProtocolLiteral extends Expression<ProtocolLiteral> {
   }
 
   @Override
-  public boolean replace(Node node, Node replaceWith) {
+  public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;
     }

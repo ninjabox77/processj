@@ -6,7 +6,7 @@ import ast.expr.Expression;
  * A node marked as a variable which are typically VariableExpression,
  * Field, and Parameter.
  */
-public interface Variable<N extends Node> {
+public interface Variable<N extends SourceAST> {
 
   /**
    * Sets the name of the variable.

@@ -21,6 +21,11 @@ public class LongType extends Primitive {
   }
 
   @Override
+  public String asString() {
+    return "long";
+  }
+
+  @Override
   public boolean isLongType() {
     return true;
   }

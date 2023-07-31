@@ -9,7 +9,7 @@ import visitor.VoidVisitor;
 import java.util.Optional;
 
 /**
- * Represents the contents of a compilation step that consists of one
+ * Represents the contents of a single source unit consisting of one
  * package, one or more imports, and one or more top level declarations.
  *
  * @author Ben
@@ -84,7 +84,7 @@ public class CompileUnit extends AnnotatedNode {
   }
 
   @Override
-  public boolean replace(Node node, Node replaceWith) {
+  public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;
     }
@@ -111,7 +111,7 @@ public class CompileUnit extends AnnotatedNode {
   }
 
   @Override
-  public boolean remove(Node node) {
+  public boolean remove(SourceAST node) {
     if (node == null) {
       return false;
     }

@@ -21,6 +21,11 @@ public class ByteType extends Primitive {
   }
 
   @Override
+  public String asString() {
+    return "byte";
+  }
+
+  @Override
   public boolean isByteType() {
     return true;
   }

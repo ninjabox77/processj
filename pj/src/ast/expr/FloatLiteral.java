@@ -10,7 +10,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class FloatLiteral extends ConstantExpr {
+public class FloatLiteral extends ConstantExpression {
 
   public FloatLiteral() {
     this("0.0f");

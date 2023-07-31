@@ -1,6 +1,6 @@
 package ast.types;
 
-import ast.Node;
+import ast.SourceAST;
 import org.antlr.v4.runtime.Token;
 import typesystem.ExternalType;
 import typesystem.Type;
@@ -45,7 +45,7 @@ public class ExternalNode extends ASTType {
   }
 
   @Override
-  public boolean replace(Node node, Node replaceWith) {
+  public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;
     }

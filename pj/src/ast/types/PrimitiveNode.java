@@ -1,6 +1,6 @@
 package ast.types;
 
-import ast.Node;
+import ast.SourceAST;
 import org.antlr.v4.runtime.Token;
 import typesystem.IntegerType;
 import typesystem.Primitive;
@@ -19,7 +19,7 @@ public class PrimitiveNode extends ASTType {
   private Primitive type_;
 
   public PrimitiveNode() {
-    this(new IntegerType());
+    this(null);
   }
 
   public PrimitiveNode(Type type) {
@@ -45,7 +45,7 @@ public class PrimitiveNode extends ASTType {
   }
 
   @Override
-  public boolean replace(Node node, Node replaceWith) {
+  public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;
     }

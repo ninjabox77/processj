@@ -1,6 +1,6 @@
 package typesystem;
 
-import ast.Node;
+import ast.SourceAST;
 import ast.Sequence;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
@@ -67,6 +67,11 @@ public class ExternalType extends Type {
   }
 
   @Override
+  public String asString() {
+    return null;
+  }
+
+  @Override
   public boolean isExternalType() {
     return true;
   }
@@ -77,7 +82,7 @@ public class ExternalType extends Type {
   }
 
   @Override
-  public boolean replace(Node node, Node replaceWith) {
+  public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;
     }

@@ -21,6 +21,11 @@ public class StringType extends Primitive {
   }
 
   @Override
+  public String asString() {
+    return "string";
+  }
+
+  @Override
   public boolean isStringType() {
     return true;
   }

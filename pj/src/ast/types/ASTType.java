@@ -1,7 +1,6 @@
 package ast.types;
 
 import ast.AnnotatedNode;
-import ast.Node;
 import ast.NodeWithTSType;
 import org.antlr.v4.runtime.Token;
 import typesystem.Type;

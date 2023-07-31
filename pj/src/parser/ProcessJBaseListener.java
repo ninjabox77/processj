@@ -1025,6 +1025,18 @@ public class ProcessJBaseListener implements ProcessJListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterSeqStatement(ProcessJParser.SeqStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSeqStatement(ProcessJParser.SeqStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterSkipStatement(ProcessJParser.SkipStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}

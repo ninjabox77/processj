@@ -1,6 +1,6 @@
 package misc;
 
-import ast.ASTNode;
+import ast.CommonAST;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -12,7 +12,7 @@ import java.util.Objects;
  */
 public class ConfigureAST {
 
-  public static <N extends ASTNode<?>> N configureNode(N astNode, ParserRuleContext ctx) {
+  public static <N extends CommonAST<?>> N configureNode(N astNode, ParserRuleContext ctx) {
     Token start = ctx.getStart();
     Token stop = ctx.getStop();
     astNode.setLine(start.getLine());
@@ -38,18 +38,18 @@ public class ConfigureAST {
     return stop;
   }
 
-  public static <N extends ASTNode<?>> N configureNode(N astNode, TerminalNode terminalNode) {
+  public static <N extends CommonAST<?>> N configureNode(N astNode, TerminalNode terminalNode) {
     return configureNode(astNode, terminalNode.getSymbol());
   }
 
-  public static <N extends ASTNode<?>> N configureNode(N astNode, Token token) {
+  public static <N extends CommonAST<?>> N configureNode(N astNode, Token token) {
     astNode.setLine(token.getLine());
     astNode.setStart(token.getCharPositionInLine() + 1);
     astNode.setStop(token.getCharPositionInLine() + 1 + token.getText().length());
     return astNode;
   }
 
-  public static <N extends ASTNode<?>> N configureNode(N astNode, ASTNode<?> src) {
+  public static <N extends CommonAST<?>> N configureNode(N astNode, CommonAST<?> src) {
     astNode.setLine(src.getLine());
     astNode.setStart(src.getStart());
     astNode.setStop(src.getStop());

@@ -58,17 +58,19 @@ public abstract class ProcessingUnit extends AnnotatedNode {
     return isPhaseComplete_;
   }
 
-  public ProcessingUnit completePhase() {
+  public void completePhase() {
     isPhaseComplete_ = true;
-    return this;
   }
 
-  public ProcessingUnit nextPhase(final int phase) {
+  public void nextPhase() {
+    nextPhase(phase_ + 1);
+  }
+
+  public void nextPhase(final int phase) {
     if (!isPhaseComplete_) {
       completePhase();
     }
     phase_ = phase;
     isPhaseComplete_ = false;
-    return this;
   }
 }

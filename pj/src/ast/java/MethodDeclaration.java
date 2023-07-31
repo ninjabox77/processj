@@ -2,9 +2,10 @@ package ast.java;
 
 import ast.Parameter;
 import ast.Sequence;
-import ast.stmt.BlockStmt;
+import ast.stmt.BlockStatement;
 import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
+import scope.VariableScope;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -21,7 +22,7 @@ public class MethodDeclaration<T extends MethodDeclaration<?>> extends BodyDecla
 
   private ASTType type_;
   private String name_;
-  private BlockStmt body_;
+  private BlockStatement body_;
   private Sequence<Parameter> parameters_;
 
   public MethodDeclaration() {
@@ -29,14 +30,14 @@ public class MethodDeclaration<T extends MethodDeclaration<?>> extends BodyDecla
   }
 
   public MethodDeclaration(final int modifiers, ASTType type, final String name) {
-    this(modifiers, type, name, null, new BlockStmt());
+    this(modifiers, type, name, null, new BlockStatement());
   }
 
-  public MethodDeclaration(final int modifiers, ASTType type, final String name, Sequence<Parameter> parameters, BlockStmt body) {
+  public MethodDeclaration(final int modifiers, ASTType type, final String name, Sequence<Parameter> parameters, BlockStatement body) {
     this(null, modifiers, type, name, parameters, body);
   }
 
-  public MethodDeclaration(Token token, final int modifiers, ASTType type, final String name, Sequence<Parameter> parameters, BlockStmt body) {
+  public MethodDeclaration(Token token, final int modifiers, ASTType type, final String name, Sequence<Parameter> parameters, BlockStatement body) {
     super(token, modifiers);
     setModifiers(modifiers);
     setASTType(type);
@@ -80,7 +81,7 @@ public class MethodDeclaration<T extends MethodDeclaration<?>> extends BodyDecla
     return name_;
   }
 
-  public T setBody(BlockStmt body) {
+  public T setBody(BlockStatement body) {
     if (body == body_) {
       return (T) this;
     }
@@ -108,7 +109,7 @@ public class MethodDeclaration<T extends MethodDeclaration<?>> extends BodyDecla
     return Optional.ofNullable(parameters_);
   }
 
-  public BlockStmt getBody() {
+  public BlockStatement getBody() {
     return body_;
   }
 

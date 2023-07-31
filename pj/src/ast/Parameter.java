@@ -83,7 +83,7 @@ public class Parameter extends AnnotatedNode implements Modifier<Parameter>, Var
   }
 
   @Override
-  public boolean replace(Node node, Node replaceWith) {
+  public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;
     }

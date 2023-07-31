@@ -1,6 +1,6 @@
 package ast;
 
-import visitor.CodeVisitor;
+import visitor.Visitor;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -16,9 +16,9 @@ import java.util.stream.Collector;
  *
  * @author Ben
  */
-public class Sequence<N extends Node> implements NodeWithParent<Sequence<N>>, List<N>, Iterable<N>, CodeVisitor {
+public class Sequence<N extends SourceAST> implements NodeWithParent<Sequence<N>>, List<N>, Iterable<N>, Visitor {
   protected List<N> arrayList_ = new ArrayList<>();
-  protected Node parentNode_;
+  protected SourceAST parentNode_;
 
   public Sequence() {
     parentNode_ = null;
@@ -34,19 +34,19 @@ public class Sequence<N extends Node> implements NodeWithParent<Sequence<N>>, Li
   }
 
   @SafeVarargs
-  public static <A extends Node> Sequence<A> sequenceList(A... nodes) {
+  public static <A extends SourceAST> Sequence<A> sequenceList(A... nodes) {
     Sequence<A> sequence = new Sequence<>();
     Collections.addAll(sequence, nodes);
     return sequence;
   }
 
-  public static <A extends Node> Sequence<A> sequence(Collection<A> nodes) {
+  public static <A extends SourceAST> Sequence<A> sequence(Collection<A> nodes) {
     Sequence<A> sequence = new Sequence<>();
     sequence.addAll(nodes);
     return sequence;
   }
 
-  public static <A extends Node> Collector<A, Sequence<A>, Sequence<A>> toSequence() {
+  public static <A extends SourceAST> Collector<A, Sequence<A>, Sequence<A>> toSequence() {
     return Collector.of(Sequence::new, Sequence::add, (list, values) -> {
       list.addAll(values);
       return list;
@@ -118,8 +118,8 @@ public class Sequence<N extends Node> implements NodeWithParent<Sequence<N>>, Li
 
   @Override // List<?>
   public boolean remove(Object object) {
-    if (object instanceof Node) {
-      return remove((Node) object);
+    if (object instanceof SourceAST) {
+      return remove((SourceAST) object);
     }
     return false;
   }
@@ -202,7 +202,7 @@ public class Sequence<N extends Node> implements NodeWithParent<Sequence<N>>, Li
     arrayList_.forEach(action);
   }
 
-  public boolean remove(Node node) {
+  public boolean remove(SourceAST node) {
     int index = arrayList_.indexOf(node);
     if (index != -1) {
       node.setParentNode(null);
@@ -254,7 +254,7 @@ public class Sequence<N extends Node> implements NodeWithParent<Sequence<N>>, Li
     }
   }
 
-  private void setAsParentNodeOf(List<? extends Node> children) {
+  private void setAsParentNodeOf(List<? extends SourceAST> children) {
     if (children != null) {
       for (NodeWithParent<?> node : children) {
         node.setParentNode(getParentNodeForChildren());
@@ -262,26 +262,26 @@ public class Sequence<N extends Node> implements NodeWithParent<Sequence<N>>, Li
     }
   }
 
-  private void setAsParentNodeOf(Node node) {
+  private void setAsParentNodeOf(SourceAST node) {
     if (node != null) {
       node.setParentNode(getParentNodeForChildren());
     }
   }
 
   @Override
-  public Optional<Node> getParentNode() {
+  public Optional<SourceAST> getParentNode() {
     return Optional.ofNullable(parentNode_);
   }
 
   @Override
-  public Sequence<N> setParentNode(Node other) {
+  public Sequence<N> setParentNode(SourceAST other) {
     parentNode_ = other;
     setAsParentNodeOf(arrayList_);
     return this;
   }
 
   @Override
-  public Node getParentNodeForChildren() {
+  public SourceAST getParentNodeForChildren() {
     return parentNode_;
   }
 

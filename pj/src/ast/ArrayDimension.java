@@ -61,7 +61,7 @@ public class ArrayDimension extends AnnotatedNode {
   }
 
   @Override
-  public boolean replace(Node node, Node replaceWith) {
+  public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;
     }

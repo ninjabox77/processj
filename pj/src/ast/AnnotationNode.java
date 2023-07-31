@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * @author Ben
  */
-public class AnnotationNode extends Node {
+public class AnnotationNode extends SourceAST {
 
   private Map<String, Expression<?>> members_;
 

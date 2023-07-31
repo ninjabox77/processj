@@ -21,6 +21,11 @@ public class VoidType extends Type {
   }
 
   @Override
+  public String asString() {
+    return "void";
+  }
+
+  @Override
   public boolean isVoidType() {
     return true;
   }

@@ -7,17 +7,17 @@ import org.antlr.v4.runtime.Token;
  *
  * @author Ben
  */
-public abstract class AnnotatedNode extends Node {
+public abstract class AnnotatedNode extends SourceAST {
 
   /**
    * Indicates if this node (typically an expression) has been rewritten.
    */
-  private boolean rewritten_;
+  private boolean isRewritten_;
 
   /**
    * Indicates if this node was added by the compiler.
    */
-  private boolean fabricated_;
+  private boolean isFabricated_;
 
   private Sequence<AnnotationNode> annotations_;
 
@@ -30,28 +30,30 @@ public abstract class AnnotatedNode extends Node {
     setAnnotations(Sequence.sequenceList());
   }
 
-  public <N extends Node> N setRewritten(final boolean rewritten) {
-    if (rewritten == rewritten_) {
+  @SuppressWarnings("unchecked")
+  public <N extends SourceAST> N setRewritten(final boolean isRewritten) {
+    if (isRewritten == isRewritten_) {
       return (N) this;
     }
-    rewritten_ = rewritten;
+    isRewritten_ = isRewritten;
     return (N) this;
   }
 
   public boolean isRewritten() {
-    return rewritten_;
+    return isRewritten_;
   }
 
-  public <N extends Node> N setFabricated(final boolean fabricated) {
-    if (fabricated == fabricated_) {
+  @SuppressWarnings("unchecked")
+  public <N extends SourceAST> N setFabricated(final boolean isFabricated) {
+    if (isFabricated == isFabricated_) {
       return (N) this;
     }
-    fabricated_ = fabricated;
+    isFabricated_ = isFabricated;
     return (N) this;
   }
 
   public boolean isFabricated() {
-    return fabricated_;
+    return isFabricated_;
   }
 
   public AnnotatedNode setAnnotations(Sequence<AnnotationNode> annotations) {

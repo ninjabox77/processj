@@ -24,20 +24,33 @@ public class ProcedureType extends CallableType<ProcedureType> {
   }
 
   public ProcedureType(Token token, Sequence<Type> typeArguments, final boolean yields) {
-    super(token, new VoidType(), typeArguments, null, yields);
+    super(token, new VoidType(), typeArguments, yields);
   }
 
   public ProcedureType setTSType(Type retuntType) {
     throw new UnsupportedOperationException("Cannot change the return type of a ProcedureType");
   }
 
-  public ProcedureType setTypeArguments(Sequence<Type> argumentsType) {
-    return super.setTypeArguments(argumentsType);
+  public ProcedureType setParameterTypes(Sequence<Type> argumentsType) {
+    return super.setParameterTypes(argumentsType);
   }
 
   @Override
-  public Optional<Sequence<Type>> getTypeArguments() {
-    return super.getTypeArguments();
+  public String asString() {
+    StringBuilder sb = new StringBuilder();
+    var it = parameterTypes_.iterator();
+    while (it.hasNext()) {
+      sb.append(it.next());
+      if (it.hasNext()) {
+        sb.append(",");
+      }
+    }
+    return "(" + sb + ") -> " + returnType_.asString();
+  }
+
+  @Override
+  public Optional<Sequence<Type>> getParameterTypes() {
+    return super.getParameterTypes();
   }
 
   @Override

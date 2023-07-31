@@ -7,8 +7,9 @@ import typesystem.Type;
  *
  * @author Ben
  */
-public interface NodeWithTSType<N extends Node, T extends Type> {
+public interface NodeWithTSType<N extends SourceAST, T extends Type> {
 
+  @SuppressWarnings("unchecked")
   default T getTSType() {
     return (T) this;
   }

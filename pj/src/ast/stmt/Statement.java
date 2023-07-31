@@ -1,9 +1,9 @@
 package ast.stmt;
 
 import ast.AnnotatedNode;
-import ast.Node;
+import ast.Label;
+import ast.SourceAST;
 import ast.Sequence;
-import ast.expr.Expression;
 import org.antlr.v4.runtime.Token;
 
 import java.util.Optional;
@@ -15,23 +15,23 @@ import java.util.Optional;
  */
 public abstract class Statement extends AnnotatedNode {
 
-  private Sequence<Expression<?>> labels_;
+  private Sequence<Label> labels_;
 
   public Statement() {
     this(null, null);
   }
 
-  public Statement(Sequence<Expression<?>> labels) {
+  public Statement(Sequence<Label> labels) {
     this(null, labels);
   }
 
-  public Statement(Token token, Sequence<Expression<?>> statementLabels) {
+  public Statement(Token token, Sequence<Label> statementLabels) {
     super(token);
     setStatementLabels(statementLabels);
     customInitialization();
   }
 
-  public Statement setStatementLabels(Sequence<Expression<?>> labels) {
+  public Statement setStatementLabels(Sequence<Label> labels) {
     if (labels == labels_) {
       return this;
     }
@@ -43,11 +43,11 @@ public abstract class Statement extends AnnotatedNode {
     return this;
   }
 
-  public Optional<Sequence<Expression<?>>> getStatementLabels() {
+  public Optional<Sequence<Label>> getStatementLabels() {
     return Optional.ofNullable(labels_);
   }
 
-  public Statement addStatementLabel(Expression<?> expression) {
+  public Statement addStatementLabel(Label expression) {
     if (labels_ == null) {
       labels_ = Sequence.sequenceList();
     }
@@ -64,140 +64,164 @@ public abstract class Statement extends AnnotatedNode {
     return this;
   }
 
-  public boolean isAltStmt() {
+  public boolean isAltStatement() {
     return false;
   }
 
-  public AltStmt<?> asAltStmt() {
-    throw new IllegalStateException(String.format("%s is not a AltStmt, it is a %s", this, getClass().getSimpleName()));
+  public AltStatement<?> asAltStatement() {
+    throw new IllegalStateException(String.format("%s is not a AltStatement, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isAltCase() {
+  public boolean isAltCaseStatement() {
     return false;
   }
 
-  public AltCase asAltCase() {
-    throw new IllegalStateException(String.format("%s is not a AltCase, it is a %s", this, getClass().getSimpleName()));
+  public AltCaseStatement asAltCaseStatement() {
+    throw new IllegalStateException(String.format("%s is not a AltCaseStatement, it is a %s", this, getClass().getSimpleName()));
   }
 
   public boolean isEmpty() {
     return false;
   }
 
-  public boolean isForStmt() {
+  public boolean isForStatement() {
     return false;
   }
 
-  public ForStmt asForStmt() {
-    throw new IllegalStateException(String.format("%s is not a ForStmt, it is a %s", this, getClass().getSimpleName()));
+  public ForStatement asForStatement() {
+    throw new IllegalStateException(String.format("%s is not a ForStatement, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isWhileStmt() {
+  public boolean isWhileStatement() {
     return false;
   }
 
-  public WhileStmt asWhileStmt() {
-    throw new IllegalStateException(String.format("%s is not a WhileStmt, it is a %s", this, getClass().getSimpleName()));
+  public WhileStatement asWhileStatement() {
+    throw new IllegalStateException(String.format("%s is not a WhileStatement, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isDoWhileStmt() {
+  public boolean isDoWhileStatement() {
     return false;
   }
 
-  public DoWhileStmt asDoWhileStmt() {
-    throw new IllegalStateException(String.format("%s is not a DoWhileStmt, it is a %s", this, getClass().getSimpleName()));
+  public DoWhileStatement asDoWhileStatement() {
+    throw new IllegalStateException(String.format("%s is not a DoWhileStatement, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isBlockStmt() {
+  public boolean isBlockStatement() {
     return false;
   }
 
-  public BlockStmt asBlockStmt() {
-    throw new IllegalStateException(String.format("%s is not a BlockStmt, it is a %s", this, getClass().getSimpleName()));
+  public BlockStatement asBlockStatement() {
+    throw new IllegalStateException(String.format("%s is not a BlockStatement, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isSwitchStmt() {
+  public boolean isSwitchStatement() {
     return false;
   }
 
-  public SwitchStmt asSwitchStmt() {
-    throw new IllegalStateException(String.format("%s is not a SwitchStmt, it is a %s", this, getClass().getSimpleName()));
+  public SwitchStatement asSwitchStatement() {
+    throw new IllegalStateException(String.format("%s is not a SwitchStatement, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isSwitchCaseStmt() {
+  public boolean isSwitchCaseStatement() {
     return false;
   }
 
-  public SwitchCaseStmt asSwitchCaseStmt() {
-    throw new IllegalStateException(String.format("%s is not a SwitchCaseStmt, it is a %s", this, getClass().getSimpleName()));
+  public SwitchCaseStatement asSwitchCaseStatement() {
+    throw new IllegalStateException(String.format("%s is not a SwitchCaseStatement, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isIfStmt() {
+  public boolean isIfStatement() {
     return false;
   }
 
-  public IfStmt asIfStmt() {
-    throw new IllegalStateException(String.format("%s is not a IfStmt, it is a %s", this, getClass().getSimpleName()));
+  public IfStatement asIfStatement() {
+    throw new IllegalStateException(String.format("%s is not a IfStatement, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isEmptyStmt() {
+  public boolean isEmptyStatement() {
     return false;
   }
 
-  public EmptyStmt asEmptyStmt() {
-    throw new IllegalStateException(String.format("%s is not a EmptyStmt, it is a %s", this, getClass().getSimpleName()));
+  public EmptyStatement asEmptyStatement() {
+    throw new IllegalStateException(String.format("%s is not a EmptyStatement, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isContinueStmt() {
+  public boolean isContinueStatement() {
     return false;
   }
 
-  public ContinueStmt asContinueStmt() {
-    throw new IllegalStateException(String.format("%s is not a ContinueStmt, it is a %s", this, getClass().getSimpleName()));
+  public ContinueStatement asContinueStmt() {
+    throw new IllegalStateException(String.format("%s is not a ContinueStatement, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isBreakStmt() {
+  public boolean isBreakStatement() {
     return false;
   }
 
-  public BreakStmt asBreakStmt() {
-    throw new IllegalStateException(String.format("%s is not a BreakStmt, it is a %s", this, getClass().getSimpleName()));
+  public BreakStatement asBreakStatement() {
+    throw new IllegalStateException(String.format("%s is not a BreakStatement, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isReturnStmt() {
+  public boolean isReturnStatement() {
     return false;
   }
 
-  public ReturnStmt asReturnStmt() {
-    throw new IllegalStateException(String.format("%s is not a ReturnStmt, it is a %s", this, getClass().getSimpleName()));
+  public ReturnStatement asReturnStatement() {
+    throw new IllegalStateException(String.format("%s is not a ReturnStatement, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isForEachStmt() {
+  public boolean isForEachStatement() {
     return false;
   }
 
-  public ForEachStmt asForEachStmt() {
-    throw new IllegalStateException(String.format("%s is not a ForEachStmt, it is a %s", this, getClass().getSimpleName()));
+  public ForEachStatement asForEachStatement() {
+    throw new IllegalStateException(String.format("%s is not a ForEachStatement, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isExpressionStmt() {
+  public boolean isExpressionStatement() {
     return false;
   }
 
-  public ExpressionStmt asExpressionStmt() {
-    throw new IllegalStateException(String.format("%s is not a ExpressionStmt, it is a %s", this, getClass().getSimpleName()));
+  public ExpressionStatement asExpressionStatement() {
+    throw new IllegalStateException(String.format("%s is not a ExpressionStatement, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isParStmt() {
+  public boolean isParStatement() {
     return false;
   }
 
-  public ParStmt<?> asParStmt() {
-    throw new IllegalStateException(String.format("%s is not a ParStmt, it is a %s", this, getClass().getSimpleName()));
+  public ParStatement<?> asParStatement() {
+    throw new IllegalStateException(String.format("%s is not a ParStatement, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isSkipStatement() {
+    return false;
+  }
+
+  public SkipStatement asSkipStatement() {
+    throw new IllegalStateException(String.format("%s is not a SkipStatement, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isStopStatement() {
+    return false;
+  }
+
+  public StopStatement asStopStatement() {
+    throw new IllegalStateException(String.format("%s is not a StopStatement, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isLabelStatement() {
+    return false;
+  }
+
+  public LabelStatement asLabelStatement() {
+    throw new IllegalStateException(String.format("%s is not a LabelStatement, it is a %s", this, getClass().getSimpleName()));
   }
 
   @Override
-  public boolean replace(Node node, Node replaceWith) {
+  public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;
     }
@@ -206,7 +230,7 @@ public abstract class Statement extends AnnotatedNode {
     }
     for (int i = 0; i < labels_.size(); ++i) {
       if (node == labels_.get(i)) {
-        labels_.set(i, (Expression<?>) replaceWith);
+        labels_.set(i, (Label) replaceWith);
         return true;
       }
     }
@@ -214,7 +238,7 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   @Override
-  public boolean remove(Node node) {
+  public boolean remove(SourceAST node) {
     if (node == null) {
       return false;
     }

@@ -21,6 +21,11 @@ public class DoubleType extends Primitive {
   }
 
   @Override
+  public String asString() {
+    return "double";
+  }
+
+  @Override
   public boolean isDoubleType() {
     return true;
   }

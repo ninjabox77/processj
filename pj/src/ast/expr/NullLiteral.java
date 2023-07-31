@@ -11,7 +11,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class NullLiteral extends ConstantExpr {
+public class NullLiteral extends ConstantExpression {
 
   public NullLiteral() {
     this("null");

@@ -78,6 +78,11 @@ public class ChannelEndType extends Constructed {
   }
 
   @Override
+  public String asString() {
+    return "chan<" + componentType_.asString() + ">." + (isRead() ? "read" : "write");
+  }
+
+  @Override
   public boolean isChannelEndType() {
     return true;
   }

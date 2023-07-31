@@ -21,6 +21,11 @@ public class CharType extends Primitive {
   }
 
   @Override
+  public String asString() {
+    return "char";
+  }
+
+  @Override
   public boolean isCharType() {
     return true;
   }

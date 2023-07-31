@@ -1,6 +1,6 @@
 package ast.comments;
 
-import ast.Node;
+import ast.SourceAST;
 import org.antlr.v4.runtime.Token;
 
 import java.util.Objects;
@@ -10,11 +10,11 @@ import java.util.Objects;
  *
  * @author Ben
  */
-public abstract class Comment extends Node {
+public abstract class Comment extends SourceAST {
 
   private String content_;
 
-  private Node commentedNode_;
+  private SourceAST commentedNode_;
 
   public Comment(final String content) {
     this(null, content);
@@ -38,7 +38,7 @@ public abstract class Comment extends Node {
     return content_;
   }
 
-  public Comment setCommentedNode(Node commentedNode) {
+  public Comment setCommentedNode(SourceAST commentedNode) {
     if (commentedNode == commentedNode_) {
       return this;
     }
@@ -46,7 +46,7 @@ public abstract class Comment extends Node {
     return this;
   }
 
-  public Node getCommentedNode() {
+  public SourceAST getCommentedNode() {
     return commentedNode_;
   }
 

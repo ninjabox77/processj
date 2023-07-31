@@ -10,7 +10,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class BooleanLiteral extends ConstantExpr {
+public class BooleanLiteral extends ConstantExpression {
 
   public BooleanLiteral() {
     this("false");

@@ -21,6 +21,11 @@ public class FloatType extends Primitive {
   }
 
   @Override
+  public String asString() {
+    return "float";
+  }
+
+  @Override
   public boolean isFloatType() {
     return true;
   }

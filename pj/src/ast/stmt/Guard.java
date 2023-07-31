@@ -1,7 +1,7 @@
 package ast.stmt;
 
 import ast.AnnotatedNode;
-import ast.Node;
+import ast.SourceAST;
 import ast.expr.Expression;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
@@ -60,7 +60,7 @@ public class Guard extends AnnotatedNode {
   }
 
   @Override
-  public boolean replace(Node node, Node replaceWith) {
+  public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;
     }

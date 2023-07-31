@@ -7,7 +7,7 @@ import ast.types.ASTType;
  *
  * @author Ben
  */
-public interface NodeWithASTType<N extends Node, T extends ASTType> {
+public interface NodeWithASTType<N extends SourceAST, T extends ASTType> {
 
   default T getASTType() {
     throw new IllegalStateException(String.format("%s cannot have an optional type, it is a %s", this, getClass().getSimpleName()));

@@ -3,6 +3,7 @@ package ast.java;
 import ast.AnnotatedNode;
 import ast.Modifier;
 import org.antlr.v4.runtime.Token;
+import scope.VariableScope;
 
 /**
  * Represents any declaration that can appear in a class or interface.
@@ -11,7 +12,7 @@ import org.antlr.v4.runtime.Token;
  */
 public abstract class BodyDeclaration<T extends BodyDeclaration<?>> extends AnnotatedNode implements Modifier<T> {
 
-  private int modifiers_;
+  protected int modifiers_;
 
   public BodyDeclaration() {
     this(ACC_PUBLIC);
@@ -42,7 +43,7 @@ public abstract class BodyDeclaration<T extends BodyDeclaration<?>> extends Anno
     return false;
   }
 
-  public MethodDeclaration asMethodDeclaration() {
+  public MethodDeclaration<?> asMethodDeclaration() {
     throw new IllegalStateException(String.format("%s is not a MethodDeclaration, it is a %s", this, getClass().getSimpleName()));
   }
 
@@ -52,6 +53,7 @@ public abstract class BodyDeclaration<T extends BodyDeclaration<?>> extends Anno
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public T setModifiers(int modifiers) {
     if (modifiers == modifiers_) {
       return (T) this;

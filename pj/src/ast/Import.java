@@ -106,7 +106,21 @@ public class Import extends AnnotatedNode {
   }
 
   @Override
-  public boolean replace(Node node, Node replaceWith) {
+  public String asString() {
+    if (isStar_) {
+      return name_.asString() + ".*";
+    }
+    if (alias_ != null && !alias_.isEmpty() && !alias_.equals(fieldName_)) {
+      return name_.asString() + " as " + alias_;
+    }
+    if (alias_ == null || alias_.isEmpty()) {
+      return name_.asString() + "::" + fieldName_;
+    }
+    return name_.asString();
+  }
+
+  @Override
+  public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;
     }

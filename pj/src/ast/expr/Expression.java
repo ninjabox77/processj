@@ -1,7 +1,7 @@
 package ast.expr;
 
 import ast.AnnotatedNode;
-import ast.Node;
+import ast.SourceAST;
 import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 
@@ -42,7 +42,7 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   @Override
-  public boolean replace(Node node, Node replaceWith) {
+  public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;
     }
@@ -53,164 +53,164 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
     return false;
   }
 
-  public boolean isBinaryExpr() {
+  public boolean isBinaryExpression() {
     return false;
   }
 
-  public BinaryExpr asBinaryExpr() {
-    throw new IllegalStateException(String.format("%s is not a BinaryExpr, it is a %s", this, getClass().getSimpleName()));
+  public BinaryExpression asBinaryExpression() {
+    throw new IllegalStateException(String.format("%s is not a BinaryExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isBooleanExpr() {
+  public boolean isBooleanExpression() {
     return false;
   }
 
-  public BooleanExpr asBooleanExpr() {
-    throw new IllegalStateException(String.format("%s is not a BooleanExpr, it is a %s", this, getClass().getSimpleName()));
+  public BooleanExpression asBooleanExpression() {
+    throw new IllegalStateException(String.format("%s is not a BooleanExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isCastExpr() {
+  public boolean isCastExpression() {
     return false;
   }
 
-  public CastExpr asCastExpr() {
-    throw new IllegalStateException(String.format("%s is not a CastExpr, it is a %s", this, getClass().getSimpleName()));
+  public CastExpression asCastExpression() {
+    throw new IllegalStateException(String.format("%s is not a CastExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isConstantExpr() {
+  public boolean isConstantExpression() {
     return false;
   }
 
-  public ConstantExpr asConstantExpr() {
-    throw new IllegalStateException(String.format("%s is not a ConstantExpr, it is a %s", this, getClass().getSimpleName()));
+  public ConstantExpression asConstantExpression() {
+    throw new IllegalStateException(String.format("%s is not a ConstantExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isEmptyExpr() {
+  public boolean isEmptyExpression() {
     return false;
   }
 
-  public EmptyExpr asEmptyExpr() {
-    throw new IllegalStateException(String.format("%s is not an EmptyExpr, it is a %s", this, getClass().getSimpleName()));
+  public EmptyExpression asEmptyExpression() {
+    throw new IllegalStateException(String.format("%s is not a EmptyExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isPrefixExpr() {
+  public boolean isPrefixExpression() {
     return false;
   }
 
-  public PrefixExpr asPrefixExpr() {
-    throw new IllegalStateException(String.format("%s is not a PrefixExpr, it is a %s", this, getClass().getSimpleName()));
+  public PrefixExpression asPrefixExpression() {
+    throw new IllegalStateException(String.format("%s is not a PrefixExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isPostfixExpr() {
+  public boolean isPostfixExpression() {
     return false;
   }
 
-  public PostfixExpr asPostfixExpr() {
-    throw new IllegalStateException(String.format("%s is not a PostfixExpr, it is a %s", this, getClass().getSimpleName()));
+  public PostfixExpression asPostfixExpression() {
+    throw new IllegalStateException(String.format("%s is not a PostfixExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isTernaryExpr() {
+  public boolean isTernaryExpression() {
     return false;
   }
 
-  public TernaryExpr asTernaryExpr() {
-    throw new IllegalStateException(String.format("%s is not a TernaryExpr, it is a %s", this, getClass().getSimpleName()));
+  public TernaryExpression asTernaryExpression() {
+    throw new IllegalStateException(String.format("%s is not a TernaryExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isSkipExpr() {
+  public boolean isSkipExpression() {
     return false;
   }
 
-  public SkipExpr asSkipExpr() {
-    throw new IllegalStateException(String.format("%s is not a SkipExpr, it is a %s", this, getClass().getSimpleName()));
+  public SkipExpression asSkipExpression() {
+    throw new IllegalStateException(String.format("%s is not a SkipExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isStopExpr() {
+  public boolean isStopExpression() {
     return false;
   }
 
-  public StopExpr asStopExpr() {
-    throw new IllegalStateException(String.format("%s is not a StopExpr, it is a %s", this, getClass().getSimpleName()));
+  public StopExpression asStopExpression() {
+    throw new IllegalStateException(String.format("%s is not a StopExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isCallableExpr() {
+  public boolean isCallableExpression() {
     return false;
   }
 
-  public CallableExpr asCallableExpr() {
-    throw new IllegalStateException(String.format("%s is not a CallableExpr, it is a %s", this, getClass().getSimpleName()));
+  public CallableExpression asCallableExpression() {
+    throw new IllegalStateException(String.format("%s is not a CallableExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isVariableExpr() {
+  public boolean isVariableExpression() {
     return false;
   }
 
-  public VariableExpr asVariableExpr() {
+  public VariableExpression asVariableExpression() {
     throw new IllegalStateException(String.format("%s is not a VariableExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isDeclarationExpr() {
+  public boolean isDeclarationExpression() {
     return false;
   }
 
-  public DeclarationExpr asDeclarationExpr() {
-    throw new IllegalStateException(String.format("%s is not a DeclarationExpr, it is a %s", this, getClass().getSimpleName()));
+  public DeclarationExpression asDeclarationExpression() {
+    throw new IllegalStateException(String.format("%s is not a DeclarationExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isUnaryMinusExpr() {
+  public boolean isUnaryMinusExpression() {
     return false;
   }
 
-  public UnaryMinusExpr asUnaryMinusExpr() {
-    throw new IllegalStateException(String.format("%s is not a UnaryMinusExpr, it is a %s", this, getClass().getSimpleName()));
+  public UnaryMinusExpression asUnaryMinusExpression() {
+    throw new IllegalStateException(String.format("%s is not a UnaryMinusExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isUnaryPlusExpr() {
+  public boolean isUnaryPlusExpression() {
     return false;
   }
 
-  public UnaryPlusExpr asUnaryPlusExpr() {
-    throw new IllegalStateException(String.format("%s is not a UnaryPlusExpr, it is a %s", this, getClass().getSimpleName()));
+  public UnaryPlusExpression asUnaryPlusExpression() {
+    throw new IllegalStateException(String.format("%s is not a UnaryPlusExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isFieldExpr() {
+  public boolean isFieldExpression() {
     return false;
   }
 
-  public FieldExpr asFieldExpr() {
-    throw new IllegalStateException(String.format("%s is not a FieldExpr, it is a %s", this, getClass().getSimpleName()));
+  public FieldExpression asFieldExpression() {
+    throw new IllegalStateException(String.format("%s is not a FieldExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isClassExpr() {
+  public boolean isClassExpression() {
     return false;
   }
 
-  public ClassExpr asClassExpr() {
-    throw new IllegalStateException(String.format("%s is not a ClassExpr, it is a %s", this, getClass().getSimpleName()));
+  public ClassExpression asClassExpression() {
+    throw new IllegalStateException(String.format("%s is not a ClassExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isMapEntryExpr() {
+  public boolean isMapEntryExpression() {
     return false;
   }
 
-  public MapEntryExpr asMapEntryExpr() {
-    throw new IllegalStateException(String.format("%s is not a MapEntryExpr, it is a %s", this, getClass().getSimpleName()));
+  public MapEntryExpression asMapEntryExpression() {
+    throw new IllegalStateException(String.format("%s is not a MapEntryExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isMapExp() {
+  public boolean isMapExpression() {
     return false;
   }
 
-  public MapExpr asMapExpr() {
-    throw new IllegalStateException(String.format("%s is not a MapExpr, it is a %s", this, getClass().getSimpleName()));
+  public MapExpression asMapExpression() {
+    throw new IllegalStateException(String.format("%s is not a MapExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isMethodCallExpr() {
+  public boolean isMethodCallExpression() {
     return false;
   }
 
-  public MethodCallExpr asMethodCallExpr() {
-    throw new IllegalStateException(String.format("%s is not a MethodCallExpr, it is a %s", this, getClass().getSimpleName()));
+  public MethodCallExpression asMethodCallExpression() {
+    throw new IllegalStateException(String.format("%s is not a MethodCallExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
   public boolean isListExpression() {
@@ -221,28 +221,28 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
     throw new IllegalStateException(String.format("%s is not a ListExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isNewArrayExpr() {
+  public boolean isNewArrayExpression() {
     return false;
   }
 
-  public NewArrayExpr asNewArrayExpr() {
-    throw new IllegalStateException(String.format("%s is not a NewArrayExpr, it is a %s", this, getClass().getSimpleName()));
+  public NewArrayExpression asNewArrayExpression() {
+    throw new IllegalStateException(String.format("%s is not a NewArrayExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isBlockExpr() {
+  public boolean isBlockExpression() {
     return false;
   }
 
-  public BlockExpr asBlockExpr() {
-    throw new IllegalStateException(String.format("%s is not a BlockExpr, it is a %s", this, getClass().getSimpleName()));
+  public BlockExpression asBlockExpression() {
+    throw new IllegalStateException(String.format("%s is not a BlockExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isGroupExpr() {
+  public boolean isGroupExpression() {
     return false;
   }
 
-  public GroupExpr asGroupExpr() {
-    throw new IllegalStateException(String.format("%s is not a GroupExpr, it is a %s", this, getClass().getSimpleName()));
+  public GroupExpression asGroupExpression() {
+    throw new IllegalStateException(String.format("%s is not a GroupExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
   public boolean isArrayAccess() {

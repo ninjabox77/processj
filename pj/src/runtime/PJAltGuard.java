@@ -17,7 +17,7 @@ public class PJAltGuard {
   /**
    * Number of elements in the set.
    */
-  private int size_;
+  private final int size_;
 
   /**
    * A set of indices that belong to a replicated alt statement.

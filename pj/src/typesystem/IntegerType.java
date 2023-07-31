@@ -21,6 +21,11 @@ public class IntegerType extends Primitive {
   }
 
   @Override
+  public String asString() {
+    return "int";
+  }
+
+  @Override
   public boolean isIntegerType() {
     return true;
   }

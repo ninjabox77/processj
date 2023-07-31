@@ -7,7 +7,7 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public interface NodeWithLabel<N extends Node> {
+public interface NodeWithLabel<N extends SourceAST> {
 
   Optional<String> getLabel();
 

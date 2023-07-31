@@ -21,6 +21,11 @@ public class UnknownType extends Type {
   }
 
   @Override
+  public String asString() {
+    return "?";
+  }
+
+  @Override
   public boolean isUnknownType() {
     return true;
   }

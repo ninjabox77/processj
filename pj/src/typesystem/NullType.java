@@ -21,6 +21,11 @@ public class NullType extends Type {
   }
 
   @Override
+  public String asString() {
+    return "null";
+  }
+
+  @Override
   public <T, A> T accept(GenericVisitor<T, A> v, A arg) {
     return v.visit(this, arg);
   }

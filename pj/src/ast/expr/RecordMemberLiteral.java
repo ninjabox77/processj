@@ -2,7 +2,7 @@ package ast.expr;
 
 import ast.AnnotatedNode;
 import ast.Name;
-import ast.Node;
+import ast.SourceAST;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -65,7 +65,7 @@ public class RecordMemberLiteral extends AnnotatedNode {
   }
 
   @Override
-  public boolean replace(Node node, Node replaceWith) {
+  public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;
     }

@@ -4,6 +4,7 @@ import ast.*;
 import ast.types.ASTType;
 import ast.types.ConstructedNode;
 import org.antlr.v4.runtime.Token;
+import scope.VariableScope;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -18,7 +19,7 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
   protected int modifiers_;
   protected ASTType type_;
   protected String name_;
-  private Sequence<ConstructedNode> implementedNames_;
+  protected Sequence<ConstructedNode> implementedNames_;
 
   public TopLevelDeclaration() {
     this(null, null);
@@ -45,6 +46,7 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
     customInitialization();
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public T setASTType(ASTType type) {
     if (type == type_) {
@@ -63,6 +65,7 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
     return type_;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public T setModifiers(final int modifier) {
     if (modifier == modifiers_) {
@@ -77,6 +80,7 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
     return modifiers_;
   }
 
+  @SuppressWarnings("unchecked")
   public T setName(final String name) {
     if (Objects.equals(name, name_)) {
       return (T) this;
@@ -89,6 +93,7 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
     return name_;
   }
 
+  @SuppressWarnings("unchecked")
   public T setImplementedNames(Sequence<ConstructedNode> implementNames) {
     if (implementNames == implementedNames_) {
       return (T) this;
@@ -106,23 +111,24 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
   }
 
   @Override
-  public boolean remove(Node node) {
+  public boolean remove(SourceAST node) {
     if (node == null) {
       return false;
     }
-    if (implementedNames_ != null) {
-      for (int i = 0; i < implementedNames_.size(); ++i) {
-        if (node == implementedNames_.get(i)) {
-          implementedNames_.remove(i);
-          return true;
-        }
+    if (implementedNames_ == null) {
+      return false;
+    }
+    for (int i = 0; i < implementedNames_.size(); ++i) {
+      if (node == implementedNames_.get(i)) {
+        implementedNames_.remove(i);
+        return true;
       }
     }
     return false;
   }
 
   @Override
-  public boolean replace(Node node, Node replaceWith) {
+  public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;
     }
@@ -130,54 +136,47 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
       setASTType((ASTType) replaceWith);
       return true;
     }
-    if (implementedNames_ != null) {
-      for (int i = 0; i < implementedNames_.size(); ++i) {
-        if (node == implementedNames_.get(i)) {
-          implementedNames_.set(i, (ConstructedNode) replaceWith);
-          return true;
-        }
+    if (implementedNames_ == null) {
+      return false;
+    }
+    for (int i = 0; i < implementedNames_.size(); ++i) {
+      if (node == implementedNames_.get(i)) {
+        implementedNames_.set(i, (ConstructedNode) replaceWith);
+        return true;
       }
     }
     return false;
   }
 
-  public boolean isConstantDecl() {
+  public boolean isConstantDeclaration() {
     return false;
   }
 
-  public ConstantDecl asConstantDecl() {
-    throw new IllegalStateException(String.format("%s is not a VariableDeclaration, it is a %s", this, getClass().getSimpleName()));
+  public ConstantDeclaration asConstantDeclaration() {
+    throw new IllegalStateException(String.format("%s is not a ConstantDeclaration, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isRecordDecl() {
+  public boolean isRecordDeclaration() {
     return false;
   }
 
-  public RecordDecl asRecordDecl() {
+  public RecordDeclaration asRecordDeclaration() {
     throw new IllegalStateException(String.format("%s is not a RecordDeclaration, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isProtocolDecl() {
+  public boolean isProtocolDeclaration() {
     return false;
   }
 
-  public ProtocolDecl asProtocolDecl() {
+  public ProtocolDeclaration asProtocolDeclaration() {
     throw new IllegalStateException(String.format("%s is not a ProtocolDeclaration, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isCallableDecl() {
+  public boolean isCallableDeclaration() {
     return false;
   }
 
-  public CallableDecl<?> asCallableDecl() {
-    throw new IllegalStateException(String.format("%s is not a MethodCallDeclaration, it is a %s", this, getClass().getSimpleName()));
-  }
-
-  public boolean isTypeVariableDecl() {
-    return false;
-  }
-
-  public TypeVariableDecl asTypeVariableDecl() {
-    throw new IllegalStateException(String.format("%s is not a TypeDeclarationTopLevel, it is a %s", this, getClass().getSimpleName()));
+  public CallableDeclaration<?> asCallableDeclaration() {
+    throw new IllegalStateException(String.format("%s is not a CallableDeclaration, it is a %s", this, getClass().getSimpleName()));
   }
 }

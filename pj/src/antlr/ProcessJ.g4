@@ -30,7 +30,7 @@ importDeclaration
  ;
 
 singleTypeImportDeclaration
- : IMPORT annotation* typeName DCOLON Identifier SEMI
+ : IMPORT annotation* typeName (DCOLON Identifier)? SEMI
  ;
 
 singleTypeMultiImportDeclaration
@@ -103,7 +103,7 @@ body
  ;
 
 recordTypeDeclaration
- : modifier* RECORD Identifier extends? recordBody
+ : modifier* RECORD Identifier extends? recordBody SEMI?
  ;
 
 extends
@@ -127,7 +127,7 @@ recordMemberDeclarator
  ;
 
 protocolTypeDeclaration
- : modifier* PROTOCOL Identifier extends? (protocolBody | SEMI)
+ : modifier* PROTOCOL Identifier extends? (protocolBody SEMI? | SEMI)
  ;
 
 protocolBody
@@ -224,7 +224,7 @@ annotation
  ;
 
 normalAnnotation
- : AT typeName LPAREN elementValuePairList RPAREN
+ : EACH typeName LPAREN elementValuePairList RPAREN
  ;
 
 elementValuePairList
@@ -241,11 +241,11 @@ elementValue
  ;
 
 markerAnnotation
- : AT typeName
+ : EACH typeName
  ;
 
 singleElementAnnotation
- : AT typeName LPAREN elementValue RPAREN
+ : EACH typeName LPAREN elementValue RPAREN
  ;
 
 typeName
@@ -304,25 +304,26 @@ variableDeclarator
  ;
 
 statement
- : block                                                        # BlockAsStatement
- | ASSERT expression (COLON expression)? SEMI                   # AssertStatement
- | IF parExpression statement (ELSE statement)?                 # IfStatement
- | FOR LPAREN forControl RPAREN statement                       # ForStatement
- | PRI? ALT altBody                                             # AltStatement
- | PRI? ALT LPAREN forControl RPAREN altBody                    # AltForStatement
- | PAR (ENROLL expressionList)? statement                       # ParStatement
- | PAR LPAREN forControl RPAREN statement                       # ParForStatement
- | WHILE parExpression statement                                # WhileStatement
- | DO statement WHILE parExpression SEMI                        # DoStatement
+ : block                                                                       # BlockAsStatement
+ | ASSERT expression (COLON expression)? SEMI                                  # AssertStatement
+ | IF parExpression statement (ELSE statement)?                                # IfStatement
+ | FOR LPAREN forControl RPAREN statement                                      # ForStatement
+ | PRI? ALT altBody                                                            # AltStatement
+ | PRI? ALT LPAREN forControl RPAREN altBody                                   # AltForStatement
+ | PAR (ENROLL expressionList)? statement                                      # ParStatement
+ | PAR LPAREN forControl RPAREN statement                                      # ParForStatement
+ | WHILE parExpression statement                                               # WhileStatement
+ | DO statement WHILE parExpression SEMI                                       # DoStatement
  | SWITCH parExpression LBRACE switchBlockStatementGroup* switchLabel* RBRACE  # SwitchStatement
- | RETURN expression? SEMI                                      # ReturnStatement
- | BREAK Identifier? SEMI                                       # BreakStatement
- | CONTINUE Identifier? SEMI                                    # ContinueStatement
- | SKIP_ SEMI                                                   # SkipStatement
- | STOP SEMI                                                    # StopStatement
- | SEMI                                                         # EmptyStatement
- | expression SEMI                                              # StatementExpression
- | Identifier COLON statement                                   # LabelStatement
+ | RETURN expression? SEMI                                                     # ReturnStatement
+ | BREAK Identifier? SEMI                                                      # BreakStatement
+ | CONTINUE Identifier? SEMI                                                   # ContinueStatement
+ | SEQ block                                                                   # SeqStatement
+ | SKIP_ SEMI                                                                  # SkipStatement
+ | STOP SEMI                                                                   # StopStatement
+ | SEMI                                                                        # EmptyStatement
+ | expression SEMI                                                             # StatementExpression
+ | (Identifier COLON)+ statement                                               # LabelStatement
  ;
 
 switchBlockStatementGroup
@@ -366,7 +367,8 @@ arguments
  ;
 
 altBody
- : LBRACE altCase altCase* RBRACE
+ : altCase
+ | LBRACE altCase altCase* RBRACE
  ;
 
 altCase
@@ -432,7 +434,6 @@ creator
  | recordExpression
  | protocolExpression
  | classExpression)
-// | Identifier
  ;
 
 creatorName
@@ -529,8 +530,7 @@ TIMEOUT     : 'timeout';
 SKIP_       : 'skip';
 STOP        : 'stop';
 IS          : 'is';
-PRAGMA      : '#pragma';
-AT          : '@';
+EACH        : '@';
 
 IF          : 'if';
 ELSE        : 'else';
@@ -814,7 +814,6 @@ DOT         : '.';
 ELLIPSIS    : '...';
 
 // Operators.
-
 EQ          : '=';
 MULTEQ      : '*=';
 DIVEQ       : '/=';

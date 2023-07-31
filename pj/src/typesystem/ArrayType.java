@@ -1,6 +1,6 @@
 package typesystem;
 
-import ast.Node;
+import ast.SourceAST;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -45,7 +45,12 @@ public class ArrayType extends Constructed {
   }
 
   @Override
-  public boolean replace(Node node, Node replaceWith) {
+  public String asString() {
+    return "[" + componentType_.asString() + ";";
+  }
+
+  @Override
+  public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;
     }
