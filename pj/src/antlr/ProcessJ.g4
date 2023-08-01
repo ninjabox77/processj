@@ -387,6 +387,7 @@ expression
  | name=expression '[' index=expression ']'                    # ArrayAccessExpression
  | expression '.' (identifier | invocation)                    # MemberAccessExpression
  | invocation                                                  # InvocationExpression
+ | expression '::' (identifier | invocation)                   # ImportAccessExpression
  | expression op=('++'|'--')                                   # PostfixExpression
  | op=('++'|'--'|'+'|'-'|'~'|'!') expression                   # PrefixExpression
  | '(' primitiveType ')' expression                            # CastExpression

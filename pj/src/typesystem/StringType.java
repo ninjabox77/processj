@@ -17,7 +17,7 @@ public class StringType extends Primitive {
   }
 
   public StringType(Token token) {
-    super(token);
+    super(token, STRING_KIND);
   }
 
   @Override

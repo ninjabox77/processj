@@ -20,6 +20,24 @@ public class VoidType extends Type {
     super(token);
   }
 
+  // α =T β ⇔ Void?(α) ∧ Void?(β)
+  @Override
+  public boolean typeEqual(Type other) {
+    return other.isVoidType();
+  }
+
+  // α ∼T β ⇔ α =T β
+  @Override
+  public boolean typeEquivalent(Type other) {
+    return typeEqual(other);
+  }
+
+  // α :=T β ⇔ α =T β
+  @Override
+  public boolean typeAssignmentCompatible(Type other) {
+    return typeEqual(other);
+  }
+
   @Override
   public String asString() {
     return "void";

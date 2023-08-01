@@ -24,7 +24,7 @@ public interface VoidVisitor<A> {
 
   void visit(final BytecodeAST c, A arg);
 
-  void visit(final CompileUnit c, A arg);
+  void visit(final Compilation c, A arg);
 
   void visit(final CompilationUnit c, A arg);
 
@@ -74,9 +74,7 @@ public interface VoidVisitor<A> {
 
   void visit(final ExternalDeclaration e, A arg);
 
-  void visit(final CallabelDeclaration<?> m, A arg);
-
-  void visit(final ProcedureTopLevel p, A arg);
+  void visit(final ProcedureDeclaration p, A arg);
 
   void visit(final ProtocolCaseDeclaration p, A arg);
 
@@ -89,6 +87,8 @@ public interface VoidVisitor<A> {
    *********************************************************/
 
   void visit(final BlockStatement b, A arg);
+
+  void visit(final SequentialBlock s, A arg);
 
   void visit(final BreakStatement b, A arg);
 
@@ -150,6 +150,8 @@ public interface VoidVisitor<A> {
 
   void visit(final ArrayInitializer a, A arg);
 
+  void visit(final TupleExpression t, A arg);
+
   void visit(final AssignmentExpression a, A arg);
 
   void visit(final BinaryExpression b, A arg);
@@ -158,7 +160,7 @@ public interface VoidVisitor<A> {
 
   void visit(final BooleanLiteral b, A arg);
 
-  void visit(final CallabelExpression c, A arg);
+  void visit(final Invocation c, A arg);
 
   void visit(final CastExpression c, A arg);
 

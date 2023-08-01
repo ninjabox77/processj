@@ -1232,6 +1232,18 @@ public interface ProcessJListener extends ParseTreeListener {
 	 */
 	void exitExclusiveExpression(ProcessJParser.ExclusiveExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code ImportAccessExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterImportAccessExpression(ProcessJParser.ImportAccessExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ImportAccessExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitImportAccessExpression(ProcessJParser.ImportAccessExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code AndExpression}
 	 * labeled alternative in {@link ProcessJParser#expression}.
 	 * @param ctx the parse tree

@@ -61,6 +61,14 @@ public class BlockStatement extends Statement {
     return statements_;
   }
 
+  public boolean isSequentialBlock() {
+    return false;
+  }
+
+  public SequentialBlock asSequentialBlock() {
+    throw new IllegalStateException(String.format("%s is not a SequentialBlock, it is a %s", this, getClass().getSimpleName()));
+  }
+
   @Override
   public boolean isEmpty() {
     return statements_.isEmpty();

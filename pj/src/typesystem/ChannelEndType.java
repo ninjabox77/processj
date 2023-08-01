@@ -93,6 +93,21 @@ public class ChannelEndType extends Constructed {
   }
 
   @Override
+  public boolean typeEqual(Type other) {
+    return false;
+  }
+
+  @Override
+  public boolean typeEquivalent(Type other) {
+    return false;
+  }
+
+  @Override
+  public boolean typeAssignmentCompatible(Type other) {
+    return false;
+  }
+
+  @Override
   public <T, A> T accept(GenericVisitor<T, A> v, A arg) {
     return v.visit(this, arg);
   }

@@ -17,7 +17,7 @@ public class BooleanType extends Primitive {
   }
 
   public BooleanType(Token token) {
-    super(token);
+    super(token, BOOLEAN_KIND);
   }
 
   @Override

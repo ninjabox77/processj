@@ -11,61 +11,61 @@ import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
+import java.util.Objects;
+
 /**
  * Represents a procedure or a mobile declaration.
  *
  * @author Ben
  */
-public abstract class CallabelDeclaration<T extends CallabelDeclaration<?>> extends TopLevelDeclaration<T> {
+public class ProcedureDeclaration extends TopLevelDeclaration<ProcedureDeclaration> {
 
   private Sequence<Parameter> parameters_;
   private BlockStatement body_;
   private boolean yields_;
   protected VariableScope variableScope_;
 
-  public CallabelDeclaration() {
+  public ProcedureDeclaration() {
     this(null, null);
   }
 
-  public CallabelDeclaration(NodeType type, final String name) {
+  public ProcedureDeclaration(NodeType type, final String name) {
     this(ACC_PUBLIC, type, name);
   }
 
-  public CallabelDeclaration(int modifiers, NodeType type, final String name) {
+  public ProcedureDeclaration(int modifiers, NodeType type, final String name) {
     this(modifiers, type, name, null);
   }
 
-  public CallabelDeclaration(int modifiers, NodeType type, final String name, Sequence<ConstructedNode> implementedNames) {
+  public ProcedureDeclaration(int modifiers, NodeType type, final String name, Sequence<ConstructedNode> implementedNames) {
     this(modifiers, type, name, implementedNames, new BlockStatement());
   }
 
-  public CallabelDeclaration(int modifiers, NodeType type, final String name, Sequence<ConstructedNode> implementedNames, BlockStatement body) {
+  public ProcedureDeclaration(int modifiers, NodeType type, final String name, Sequence<ConstructedNode> implementedNames, BlockStatement body) {
     this(null, modifiers, type, name, implementedNames, null, body);
   }
 
-  public CallabelDeclaration(Token token, int modifiers, NodeType type, final String name, Sequence<ConstructedNode> implementedNames, Sequence<Parameter> parameters, BlockStatement body) {
+  public ProcedureDeclaration(Token token, int modifiers, NodeType type, final String name, Sequence<ConstructedNode> implementedNames, Sequence<Parameter> parameters, BlockStatement body) {
     super(token, modifiers, type, name, implementedNames);
     setParameters(parameters);
     setBody(body);
   }
 
-  @SuppressWarnings("unchecked")
-  public T setVariableScope(VariableScope variableScope) {
+  public ProcedureDeclaration setVariableScope(VariableScope variableScope) {
     if (variableScope == variableScope_) {
-      return (T) this;
+      return this;
     }
     variableScope_ = variableScope;
-    return (T) this;
+    return this;
   }
 
   public VariableScope getVariableScope() {
     return variableScope_;
   }
 
-  @SuppressWarnings("unchecked")
-  public T setParameters(Sequence<Parameter> parameters) {
+  public ProcedureDeclaration setParameters(Sequence<Parameter> parameters) {
     if (parameters == parameters_) {
-      return (T) this;
+      return this;
     }
     if (parameters_ != null) {
       parameters_.setParentNode(null);
@@ -74,45 +74,45 @@ public abstract class CallabelDeclaration<T extends CallabelDeclaration<?>> exte
     setAsParentNodeOf(parameters);
     variableScope_ = new VariableScope();
     parameters_.forEach(p -> variableScope_.putDeclaredVariable(p));
-    return (T) this;
+    return this;
   }
 
   public Sequence<Parameter> getParameters() {
     return parameters_;
   }
 
-  @SuppressWarnings("unchecked")
-  public T setBody(BlockStatement body) {
+  public Parameter getParameter(int index) {
+    Objects.checkIndex(index, parameters_.size());
+    return parameters_.get(index);
+  }
+
+  public ProcedureDeclaration setBody(BlockStatement body) {
     if (body == body_) {
-      return (T) this;
+      return this;
     }
     if (body_ != null) {
       body_.setParentNode(null);
     }
     body_ = body;
     setAsParentNodeOf(body);
-    return (T) this;
+    return this;
   }
 
   public BlockStatement getBody() {
     return body_;
   }
 
-  public boolean isProcedureTopLevel() {
-    return false;
-  }
-
-  public ProcedureTopLevel asProcedureTopLevel() {
-    throw new IllegalStateException(String.format("%s is not a ProcedureDeclaration, it is a %s", this, getClass().getSimpleName()));
+  public boolean doesYield() {
+    return yields_;
   }
 
   @Override
-  public boolean isCallableDeclaration() {
+  public boolean isProcedureDeclaration() {
     return true;
   }
 
   @Override
-  public CallabelDeclaration<?> asCallableDeclaration() {
+  public ProcedureDeclaration asProcedureDeclaration() {
     return this;
   }
 

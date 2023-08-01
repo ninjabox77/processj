@@ -154,20 +154,16 @@ public class MethodCallExpression extends Expression<MethodCallExpression> {
       setMethodExpression((Expression<?>) replaceWith);
       return true;
     }
-    if (arguments_ != null) {
-      for (int i = 0; i < arguments_.size(); ++i) {
-        if (node == arguments_.get(i)) {
-          arguments_.set(i, (Expression<?>) replaceWith);
-          return true;
-        }
+    for (int i = 0; i < arguments_.size(); ++i) {
+      if (node == arguments_.get(i)) {
+        arguments_.set(i, (Expression<?>) replaceWith);
+        return true;
       }
     }
-    if (typeArguments_ != null) {
-      for (int i = 0; i < typeArguments_.size(); ++i) {
-        if (node == typeArguments_.get(i)) {
-          typeArguments_.set(i, (Type) replaceWith);
-          return true;
-        }
+    for (int i = 0; i < typeArguments_.size(); ++i) {
+      if (node == typeArguments_.get(i)) {
+        typeArguments_.set(i, (Type) replaceWith);
+        return true;
       }
     }
     return false;
@@ -182,20 +178,16 @@ public class MethodCallExpression extends Expression<MethodCallExpression> {
       setMethodExpression(null);
       return true;
     }
-    if (arguments_ != null) {
-      for (int i = 0; i < arguments_.size(); ++i) {
-        if (node == arguments_.get(i)) {
-          arguments_.remove(i);
-          return true;
-        }
+    for (int i = 0; i < arguments_.size(); ++i) {
+      if (node == arguments_.get(i)) {
+        arguments_.remove(i);
+        return true;
       }
     }
-    if (typeArguments_ != null) {
-      for (int i = 0; i < typeArguments_.size(); ++i) {
-        if (node == typeArguments_.get(i)) {
-          typeArguments_.remove(i);
-          return true;
-        }
+    for (int i = 0; i < typeArguments_.size(); ++i) {
+      if (node == typeArguments_.get(i)) {
+        typeArguments_.remove(i);
+        return true;
       }
     }
     return false;

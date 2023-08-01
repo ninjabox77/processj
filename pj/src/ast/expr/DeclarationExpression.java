@@ -1,11 +1,14 @@
 package ast.expr;
 
+import ast.Variable;
 import ast.VariableDeclarator;
 import ast.types.NodeType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
+
+import java.util.Objects;
 
 /**
  * Represents one or more local variables. Normally, this is a single
@@ -17,44 +20,68 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class DeclarationExpression extends Expression<DeclarationExpression> {
+public class DeclarationExpression extends Expression<DeclarationExpression> implements Variable<DeclarationExpression> {
 
-  private VariableDeclarator declaration_;
+  private VariableDeclarator variable_;
 
   public DeclarationExpression() {
     this(null);
   }
 
-  public DeclarationExpression(VariableDeclarator declaration) {
-    this(null, declaration);
+  public DeclarationExpression(VariableDeclarator variable) {
+    this(null, variable);
   }
 
-  public DeclarationExpression(Token token, VariableDeclarator declaration) {
+  public DeclarationExpression(Token token, VariableDeclarator variable) {
     super(token);
-    setDeclaration(declaration);
+    setVariable(variable);
   }
 
   @Override
   public void customInitialization() {
-    if (declaration_ != null) {
-      setNodeType(declaration_.getNodeType());
+    if (variable_ != null) {
+      setNodeType(variable_.getNodeType());
     }
   }
 
-  public DeclarationExpression setDeclaration(VariableDeclarator declaration) {
-    if (declaration == declaration_) {
+  public DeclarationExpression setVariable(VariableDeclarator declaration) {
+    if (declaration == variable_) {
       return this;
     }
-    if (declaration_ != null) {
-      declaration_.setParentNode(null);
+    if (variable_ != null) {
+      variable_.setParentNode(null);
     }
-    declaration_ = declaration;
+    variable_ = declaration;
     setAsParentNodeOf(declaration);
     return this;
   }
 
-  public VariableDeclarator getDeclaration() {
-    return declaration_;
+  public VariableDeclarator getVariable() {
+    return variable_;
+  }
+
+
+  @Override
+  public DeclarationExpression setName(String name) {
+    if (!Objects.equals(variable_.getName(), name)) {
+      variable_.setName(name);
+    }
+    return this;
+  }
+
+  @Override
+  public String getName() {
+    return variable_.getName();
+  }
+
+  @Override
+  public boolean hasInitialExpression() {
+    return variable_.getRightExpression() != null;
+  }
+
+  @Override
+  public Expression<?> getInitialExpression() {
+    return hasInitialExpression() ? variable_.getRightExpression() : null;
   }
 
   @Override

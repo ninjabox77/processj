@@ -47,7 +47,7 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final CompileUnit c) {
+  public Integer visit(final Compilation c) {
     return null;
   }
 
@@ -155,12 +155,7 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final CallabelDeclaration<?> m) {
-    return null;
-  }
-
-  @Override
-  public Integer visit(final ProcedureTopLevel p) {
+  public Integer visit(final ProcedureDeclaration p) {
     return null;
   }
 
@@ -181,6 +176,11 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
 
   @Override
   public Integer visit(final BlockStatement b) {
+    return null;
+  }
+
+  @Override
+  public Integer visit(final SequentialBlock s) {
     return null;
   }
 
@@ -315,6 +315,11 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
+  public Integer visit(final TupleExpression t) {
+    return null;
+  }
+
+  @Override
   public Integer visit(final AssignmentExpression a) {
     return null;
   }
@@ -335,7 +340,7 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final CallabelExpression c) {
+  public Integer visit(final Invocation c) {
     return null;
   }
 

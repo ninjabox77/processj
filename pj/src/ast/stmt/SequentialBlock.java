@@ -1,37 +1,37 @@
-package typesystem;
+package ast.stmt;
 
+import ast.Sequence;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
 /**
- * Represents the timer type.
+ * Represents a seq { ... } block
  *
  * @author Ben
  */
-public class BarrierType extends Primitive {
+public class SequentialBlock extends BlockStatement {
 
-  public BarrierType() {
-    this(null);
+  public SequentialBlock() {
+    this(Sequence.sequenceList());
   }
 
-  public BarrierType(Token token) {
-    super(token, BARRIER_KIND);
+  public SequentialBlock(Sequence<Statement> statements) {
+    this(null, statements);
+  }
+
+  public SequentialBlock(Token token, Sequence<Statement> statements) {
+    super(token, statements);
   }
 
   @Override
-  public String asString() {
-    return "barrier";
-  }
-
-  @Override
-  public boolean isBarrierType() {
+  public boolean isSequentialBlock() {
     return true;
   }
 
   @Override
-  public BarrierType asBarrierType() {
+  public SequentialBlock asSequentialBlock() {
     return this;
   }
 

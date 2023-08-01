@@ -42,11 +42,6 @@ public class MobileType extends CallableType<MobileType> {
   }
 
   @Override
-  public Optional<Sequence<Type>> getParameterTypes() {
-    return super.getParameterTypes();
-  }
-
-  @Override
   public boolean isMobileType() {
     return true;
   }
@@ -57,8 +52,18 @@ public class MobileType extends CallableType<MobileType> {
   }
 
   @Override
-  public boolean remove(SourceAST node) {
-    return super.remove(node);
+  public boolean typeEqual(Type other) {
+    return false;
+  }
+
+  @Override
+  public boolean typeEquivalent(Type other) {
+    return false;
+  }
+
+  @Override
+  public boolean typeAssignmentCompatible(Type other) {
+    return false;
   }
 
   @Override

@@ -17,7 +17,7 @@ public class FloatType extends Primitive {
   }
 
   public FloatType(Token token) {
-    super(token);
+    super(token, FLOAT_KIND);
   }
 
   @Override

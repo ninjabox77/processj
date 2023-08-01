@@ -24,7 +24,7 @@ public class ProtocolLiteral extends Expression<ProtocolLiteral> {
   }
 
   public ProtocolLiteral(Name name, Name tag) {
-    this(name, tag, null);
+    this(name, tag, Sequence.sequenceList());
   }
 
   public ProtocolLiteral(Name name, Name tag, Sequence<RecordMemberLiteral> members) {
@@ -101,12 +101,10 @@ public class ProtocolLiteral extends Expression<ProtocolLiteral> {
     if (node == null) {
       return false;
     }
-    if (members_ != null) {
-      for (int i = 0; i < members_.size(); ++i) {
-        if (node == members_.get(i)) {
-          members_.remove(i);
-          return true;
-        }
+    for (int i = 0; i < members_.size(); ++i) {
+      if (node == members_.get(i)) {
+        members_.remove(i);
+        return true;
       }
     }
     return false;
@@ -125,12 +123,10 @@ public class ProtocolLiteral extends Expression<ProtocolLiteral> {
       setTag((Name) replaceWith);
       return true;
     }
-    if (members_ != null) {
-      for (int i = 0; i < members_.size(); ++i) {
-        if (node == members_.get(i)) {
-          members_.set(i, (RecordMemberLiteral) replaceWith);
-          return true;
-        }
+    for (int i = 0; i < members_.size(); ++i) {
+      if (node == members_.get(i)) {
+        members_.set(i, (RecordMemberLiteral) replaceWith);
+        return true;
       }
     }
     return false;

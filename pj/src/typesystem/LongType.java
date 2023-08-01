@@ -17,7 +17,7 @@ public class LongType extends Primitive {
   }
 
   public LongType(Token token) {
-    super(token);
+    super(token, LONG_KIND);
   }
 
   @Override

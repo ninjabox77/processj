@@ -1,6 +1,5 @@
 package ast.expr;
 
-import ast.Sequence;
 import org.antlr.v4.runtime.Token;
 
 /**
@@ -8,26 +7,22 @@ import org.antlr.v4.runtime.Token;
  *
  * @author Ben
  */
-public class SyncReadExpression extends CallabelExpression {
+public class SyncReadExpression extends Invocation {
 
   public SyncReadExpression() {
-    this(null, (Expression<?>) null);
+    this(null, new TupleExpression());
   }
 
-  public SyncReadExpression(Expression<?> methodExpression, Expression<?>... arguments) {
-    this(methodExpression, Sequence.sequenceList(arguments));
+  public SyncReadExpression(Expression<?> scope, Expression<?> arguments) {
+    this(null, scope, arguments);
   }
 
-  public SyncReadExpression(Expression<?> methodExpression, Sequence<Expression<?>> arguments) {
-    this(null, methodExpression, arguments);
+  public SyncReadExpression(final String identifier, Expression<?> scope, Expression<?> arguments) {
+    this(null, identifier, scope, arguments);
   }
 
-  public SyncReadExpression(final String identifier, Expression<?> methodExpression, Sequence<Expression<?>> arguments) {
-    this(null, identifier, methodExpression, arguments);
-  }
-
-  public SyncReadExpression(Token token, final String identifier, Expression<?> methodExpression, Sequence<Expression<?>> arguments) {
-    super(token, methodExpression, identifier, arguments);
+  public SyncReadExpression(Token token, final String identifier, Expression<?> scope, Expression<?> arguments) {
+    super(token, scope, identifier, arguments);
   }
 
   @Override

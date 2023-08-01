@@ -1,5 +1,8 @@
 package ast;
 
+import ast.expr.Expression;
+import ast.expr.TupleExpression;
+import ast.toplevel.ProcedureDeclaration;
 import ast.toplevel.TopLevelDeclaration;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
@@ -9,33 +12,46 @@ import visitor.VoidVisitor;
 import java.util.Optional;
 
 /**
- * Represents the contents of a single source unit consisting of one
- * package, one or more imports, and one or more top level declarations.
+ * Represents the contents of a single source file consisting of one
+ * package, one or more imports, and one or more top-level declarations.
  *
  * @author Ben
  */
-public class CompileUnit extends AnnotatedNode {
+public class Compilation extends AnnotatedNode {
 
+  private String file_;
   private Package package_;
   private Sequence<Import> imports_;
   private Sequence<TopLevelDeclaration<?>> typeDeclarations_;
 
-  public CompileUnit() {
+  public Compilation(final String file) {
+    setFile(file);
+  }
+
+  public Compilation() {
     this(null, null, null);
   }
 
-  public CompileUnit(Package packet, Sequence<Import> imports, Sequence<TopLevelDeclaration<?>> typeDeclarations) {
+  public Compilation(Package packet, Sequence<Import> imports, Sequence<TopLevelDeclaration<?>> typeDeclarations) {
     this(null, packet, imports, typeDeclarations);
   }
 
-  public CompileUnit(Token token, Package packet, Sequence<Import> imports, Sequence<TopLevelDeclaration<?>> typeDeclarations) {
+  public Compilation(Token token, Package packet, Sequence<Import> imports, Sequence<TopLevelDeclaration<?>> typeDeclarations) {
     super(token);
     setPackage(packet);
     setImports(imports);
     setTypeDeclarations(typeDeclarations);
   }
 
-  public CompileUnit setPackage(Package packet) {
+  public void setFile(final String file) {
+    file_ = file;
+  }
+
+  public String getFile() {
+    return file_;
+  }
+
+  public Compilation setPackage(Package packet) {
     if (packet == package_) {
       return this;
     }
@@ -51,7 +67,7 @@ public class CompileUnit extends AnnotatedNode {
     return package_;
   }
 
-  public CompileUnit setImports(Sequence<Import> imports) {
+  public Compilation setImports(Sequence<Import> imports) {
     if (imports == imports_) {
       return this;
     }
@@ -67,7 +83,7 @@ public class CompileUnit extends AnnotatedNode {
     return Optional.ofNullable(imports_);
   }
 
-  public CompileUnit setTypeDeclarations(Sequence<TopLevelDeclaration<?>> typeDeclarations) {
+  public Compilation setTypeDeclarations(Sequence<TopLevelDeclaration<?>> typeDeclarations) {
     if (typeDeclarations == typeDeclarations_) {
       return this;
     }
@@ -81,6 +97,40 @@ public class CompileUnit extends AnnotatedNode {
 
   public Optional<Sequence<TopLevelDeclaration<?>>> getTypeDeclarations() {
     return Optional.ofNullable(typeDeclarations_);
+  }
+
+  public boolean hasPossibleProcedure(final String name, final Expression<?> arguments) {
+    int count = 0;
+    if (arguments.isListExpression()) {
+      count = ((TupleExpression) arguments).getValues().size();
+    }
+    for (TopLevelDeclaration<?> decl : typeDeclarations_) {
+      if (decl.isProcedureDeclaration()) {
+        ProcedureDeclaration procedure = decl.asProcedureDeclaration();
+        if (procedure.getName().equals(name) && hasCompatibleNumberOfArguments(procedure, count)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  public boolean hasCompatibleType(TupleExpression args, ProcedureDeclaration procedure, int idx) {
+    int lastParamIndex = procedure.getParameters().size() - 1;
+    return (idx <= lastParamIndex && args.getValue(idx).getNodeType().equals(procedure.getParameter(idx).getNodeType()))
+        || (idx >= lastParamIndex && isPossibleVarArgs(procedure, lastParamIndex) &&
+        (args.getValue(idx).getNodeType().getTSType().typeEqual(procedure.getParameter(lastParamIndex).getNodeType().getTSType())
+            || args.getValue(idx).getNodeType().getTSType().typeEquivalent(procedure.getParameter(lastParamIndex).getNodeType().getTSType())
+            || args.getValue(idx).getNodeType().getTSType().typeAssignmentCompatible(procedure.getParameter(lastParamIndex).getNodeType().getTSType())));
+  }
+
+  public boolean hasCompatibleNumberOfArguments(ProcedureDeclaration procedure, final int count) {
+    int lastParamIndex = procedure.getParameters().size() - 1;
+    return count == procedure.getParameters().size() || (count >= lastParamIndex && isPossibleVarArgs(procedure, lastParamIndex));
+  }
+
+  public boolean isPossibleVarArgs(ProcedureDeclaration fd, final int lastParamIndex) {
+    return lastParamIndex >= 0 && fd.getParameter(lastParamIndex).getNodeType().isArrayNode();
   }
 
   @Override

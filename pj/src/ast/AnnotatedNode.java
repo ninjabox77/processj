@@ -10,6 +10,11 @@ import org.antlr.v4.runtime.Token;
 public abstract class AnnotatedNode extends SourceAST {
 
   /**
+   * Declaring file/compilation.
+   */
+  private Compilation declaringCompilation_;
+
+  /**
    * Indicates if this node (typically an expression) has been rewritten.
    */
   private boolean isRewritten_;
@@ -85,5 +90,13 @@ public abstract class AnnotatedNode extends SourceAST {
     for (AnnotationNode annotation : annotations) {
       addAnnotation(annotation);
     }
+  }
+
+  public void setDeclaringCompilation(Compilation declaringCompilation) {
+    declaringCompilation_ = declaringCompilation;
+  }
+
+  public Compilation getDeclaringCompilation() {
+    return declaringCompilation_;
   }
 }

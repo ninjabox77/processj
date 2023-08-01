@@ -4,10 +4,13 @@ import ast.SourceAST;
 import ast.Sequence;
 import ast.types.NodeType;
 import org.antlr.v4.runtime.Token;
+import org.jetbrains.annotations.NotNull;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
+import java.util.Iterator;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -15,12 +18,12 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public class ListExpression<T extends ListExpression<?>> extends Expression<T> {
+public class ListExpression<T extends ListExpression<?>> extends Expression<T> implements Iterable<Expression<?>> {
 
-  private Sequence<Expression<?>> values_;
+  protected Sequence<Expression<?>> values_;
 
   public ListExpression() {
-    this(null);
+    this(Sequence.sequenceList());
   }
 
   public ListExpression(Sequence<Expression<?>> values) {
@@ -44,8 +47,13 @@ public class ListExpression<T extends ListExpression<?>> extends Expression<T> {
     return (T) this;
   }
 
-  public Optional<Sequence<Expression<?>>> getValues() {
-    return Optional.ofNullable(values_);
+  public Sequence<Expression<?>> getValues() {
+    return values_;
+  }
+
+  public Expression<?> getValue(int index) {
+    Objects.checkIndex(index, values_.size());
+    return values_.get(index);
   }
 
   public boolean isArrayInitializer() {
@@ -53,7 +61,15 @@ public class ListExpression<T extends ListExpression<?>> extends Expression<T> {
   }
 
   public ArrayInitializer asArrayInitializer() {
-    throw new IllegalStateException(String.format("%s is not an ArrayInitializer, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not a ArrayInitializer, it is a %s", this, getClass().getSimpleName()));
+  }
+
+  public boolean isTupleExpression() {
+    return false;
+  }
+
+  public TupleExpression asTupleExpression() {
+    throw new IllegalStateException(String.format("%s is not a TupleExpression, it is a %s", this, getClass().getSimpleName()));
   }
 
   @Override
@@ -76,12 +92,10 @@ public class ListExpression<T extends ListExpression<?>> extends Expression<T> {
     if (node == null) {
       return false;
     }
-    if (values_ != null) {
-      for (int i = 0; i < values_.size(); ++i) {
-        if (node == values_.get(i)) {
-          values_.set(i, (Expression<?>) replaceWith);
-          return true;
-        }
+    for (int i = 0; i < values_.size(); ++i) {
+      if (node == values_.get(i)) {
+        values_.set(i, (Expression<?>) replaceWith);
+        return true;
       }
     }
     return false;
@@ -92,19 +106,17 @@ public class ListExpression<T extends ListExpression<?>> extends Expression<T> {
     if (node == null) {
       return false;
     }
-    if (values_ != null) {
-      for (int i = 0; i < values_.size(); ++i) {
-        if (node == values_.get(i)) {
-          values_.remove(i);
-          return true;
-        }
+    for (int i = 0; i < values_.size(); ++i) {
+      if (node == values_.get(i)) {
+        values_.remove(i);
+        return true;
       }
     }
     return false;
   }
 
   @Override
-  public <T, A> T accept(GenericVisitor<T, A> v, A arg) {
+  public <L, A> L accept(GenericVisitor<L, A> v, A arg) {
     return v.visit(this, arg);
   }
 
@@ -114,7 +126,13 @@ public class ListExpression<T extends ListExpression<?>> extends Expression<T> {
   }
 
   @Override
-  public <T> T accept(DefaultVisitor<T> v) {
+  public <L> L accept(DefaultVisitor<L> v) {
     return v.visit(this);
+  }
+
+  @NotNull
+  @Override
+  public Iterator<Expression<?>> iterator() {
+    return values_.iterator();
   }
 }

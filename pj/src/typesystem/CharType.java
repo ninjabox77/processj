@@ -17,7 +17,7 @@ public class CharType extends Primitive {
   }
 
   public CharType(Token token) {
-    super(token);
+    super(token, CHAR_KIND);
   }
 
   @Override

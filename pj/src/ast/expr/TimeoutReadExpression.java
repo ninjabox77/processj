@@ -1,6 +1,5 @@
 package ast.expr;
 
-import ast.Sequence;
 import org.antlr.v4.runtime.Token;
 
 /**
@@ -8,26 +7,22 @@ import org.antlr.v4.runtime.Token;
  *
  * @author Ben
  */
-public class TimeoutReadExpression extends CallabelExpression {
+public class TimeoutReadExpression extends Invocation {
 
   public TimeoutReadExpression() {
-    this(null, (Expression<?>) null);
+    this(null, new TupleExpression());
   }
 
-  public TimeoutReadExpression(Expression<?> methodExpression, Expression<?>... arguments) {
-    this(methodExpression, Sequence.sequenceList(arguments));
+  public TimeoutReadExpression(Expression<?> scope, Expression<?> arguments) {
+    this(null, scope, arguments);
   }
 
-  public TimeoutReadExpression(Expression<?> methodExpression, Sequence<Expression<?>> arguments) {
-    this(null, methodExpression, arguments);
+  public TimeoutReadExpression(final String identifier, Expression<?> scope, Expression<?> arguments) {
+    this(null, identifier, scope, arguments);
   }
 
-  public TimeoutReadExpression(final String identifier, Expression<?> methodExpression, Sequence<Expression<?>> arguments) {
-    this(null, identifier, methodExpression, arguments);
-  }
-
-  public TimeoutReadExpression(Token token, final String identifier, Expression<?> methodExpression, Sequence<Expression<?>> arguments) {
-    super(token, methodExpression, identifier, arguments);
+  public TimeoutReadExpression(Token token, final String identifier, Expression<?> scope, Expression<?> arguments) {
+    super(token, scope, identifier, arguments);
   }
 
   @Override

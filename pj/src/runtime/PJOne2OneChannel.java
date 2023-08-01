@@ -51,8 +51,8 @@ public class PJOne2OneChannel<T> extends PJChannel<T> {
   @Override
   public T preReadRendezvous(PJProcess process) {
     T data = data_;
-    data = null;
-    return data_;
+    data_ = null;
+    return data;
   }
 
   @Override

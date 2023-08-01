@@ -1,6 +1,6 @@
 package control;
 
-import ast.CompileUnit;
+import ast.Compilation;
 
 /**
  * An interface used to execute different types of operations during
@@ -10,5 +10,5 @@ import ast.CompileUnit;
  */
 public interface PhaseOperation {
 
-  void doPhaseOperation(CompileUnit unit);
+  void doPhaseOperation(Compilation unit);
 }

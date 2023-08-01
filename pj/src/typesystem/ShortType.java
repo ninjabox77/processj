@@ -17,7 +17,7 @@ public class ShortType extends Primitive {
   }
 
   public ShortType(Token token) {
-    super(token);
+    super(token, SHORT_KIND);
   }
 
   @Override

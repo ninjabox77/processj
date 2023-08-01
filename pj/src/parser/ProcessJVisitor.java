@@ -737,6 +737,13 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExclusiveExpression(ProcessJParser.ExclusiveExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code ImportAccessExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitImportAccessExpression(ProcessJParser.ImportAccessExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code AndExpression}
 	 * labeled alternative in {@link ProcessJParser#expression}.
 	 * @param ctx the parse tree

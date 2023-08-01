@@ -32,8 +32,8 @@ public class PJBarrier {
   /**
    * The -1 represents the process that declared the barrier.
    */
-  public synchronized void enroll(int m) {
-    enrolledCount_ = enrolledCount_ + m - 1;
+  public synchronized void enroll(int b) {
+    enrolledCount_ = enrolledCount_ + b - 1;
   }
 
   public synchronized void resign() {

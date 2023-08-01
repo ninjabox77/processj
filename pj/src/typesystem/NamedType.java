@@ -27,6 +27,7 @@ public class NamedType extends Constructed {
 
   public NamedType(Token token, Name name) {
     super(token);
+    setName(name);
   }
 
   public NamedType setName(Name name) {
@@ -58,6 +59,28 @@ public class NamedType extends Constructed {
   @Override
   public NamedType asNamedType() {
     return this;
+  }
+
+  @Override
+  public boolean typeEqual(Type other) {
+    if (!other.isConstructedType()) {
+      return false;
+    }
+    if (!other.asConstructedType().isNamedType()) {
+      return false;
+    }
+    NamedType nt = other.asConstructedType().asNamedType();
+    return name_.asString().equals(nt.name_.asString());
+  }
+
+  @Override
+  public boolean typeEquivalent(Type other) {
+    return typeEqual(other);
+  }
+
+  @Override
+  public boolean typeAssignmentCompatible(Type other) {
+    return typeEqual(other);
   }
 
   @Override

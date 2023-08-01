@@ -19,5 +19,6 @@ void main(string...args) {
       v = c1.read() : println("Value read on c1: " + v);
       v = c2.read() : println("Value read on c2: " + v);
     }
+    x = in.read({println(v);});
   }
 }

@@ -8,8 +8,6 @@ import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
 
-import java.util.Optional;
-
 /**
  * Represents a map expression in Java.
  *
@@ -20,7 +18,7 @@ public class MapExpression extends Expression<MapExpression> {
   private Sequence<MapEntryExpression> mapEntryExpression_;
 
   public MapExpression() {
-    this(null);
+    this(Sequence.sequenceList());
   }
 
   public MapExpression(Sequence<MapEntryExpression> mapEntryExpression) {
@@ -44,8 +42,8 @@ public class MapExpression extends Expression<MapExpression> {
     return this;
   }
 
-  public Optional<Sequence<MapEntryExpression>> getMapEntry() {
-    return Optional.ofNullable(mapEntryExpression_);
+  public Sequence<MapEntryExpression> getMapEntry() {
+    return mapEntryExpression_;
   }
 
   @Override
@@ -68,12 +66,10 @@ public class MapExpression extends Expression<MapExpression> {
     if (node == null) {
       return false;
     }
-    if (mapEntryExpression_ != null) {
-      for (int i = 0; i < mapEntryExpression_.size(); ++i) {
-        if (node == mapEntryExpression_.get(i)) {
-          mapEntryExpression_.set(i, (MapEntryExpression) replaceWith);
-          return true;
-        }
+    for (int i = 0; i < mapEntryExpression_.size(); ++i) {
+      if (node == mapEntryExpression_.get(i)) {
+        mapEntryExpression_.set(i, (MapEntryExpression) replaceWith);
+        return true;
       }
     }
     return false;
@@ -84,12 +80,10 @@ public class MapExpression extends Expression<MapExpression> {
     if (node == null) {
       return false;
     }
-    if (mapEntryExpression_ != null) {
-      for (int i = 0; i < mapEntryExpression_.size(); ++i) {
-        if (node == mapEntryExpression_.get(i)) {
-          mapEntryExpression_.remove(i);
-          return true;
-        }
+    for (int i = 0; i < mapEntryExpression_.size(); ++i) {
+      if (node == mapEntryExpression_.get(i)) {
+        mapEntryExpression_.remove(i);
+        return true;
       }
     }
     return false;

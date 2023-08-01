@@ -18,7 +18,7 @@ public class Parameter extends AnnotatedNode implements Modifier<Parameter>, Var
   private int modifiers_;
   private NodeType type_;
   private String name_;
-  private boolean isVarargs_;
+  private boolean isVarArgs_;
 
   public Parameter() {
     this(null, null);
@@ -38,16 +38,16 @@ public class Parameter extends AnnotatedNode implements Modifier<Parameter>, Var
     setName(name);
   }
 
-  public Parameter setVarargs(boolean isVarargs) {
-    if (isVarargs == isVarargs_) {
+  public Parameter setVarArgs(boolean isVarargs) {
+    if (isVarargs == isVarArgs_) {
       return this;
     }
-    isVarargs_ = isVarargs;
+    isVarArgs_ = isVarargs;
     return this;
   }
 
-  public boolean isVarargs() {
-    return isVarargs_;
+  public boolean isVarArgs() {
+    return isVarArgs_;
   }
 
   public Parameter setNodeType(NodeType type) {

@@ -26,7 +26,7 @@ public class SwitchStatement extends Statement {
   }
 
   public SwitchStatement(Expression<?> selector) {
-    this(selector, null);
+    this(selector, Sequence.sequenceList());
   }
 
   public SwitchStatement(Expression<?> selector, Sequence<SwitchCaseStatement> switchCases) {
@@ -72,8 +72,8 @@ public class SwitchStatement extends Statement {
     return this;
   }
 
-  public Optional<Sequence<SwitchCaseStatement>> getSwitchCases() {
-    return Optional.ofNullable(switchCases_);
+  public Sequence<SwitchCaseStatement> getSwitchCases() {
+    return switchCases_;
   }
 
   public SwitchStatement setDefaultStmt(Statement defaultStmt) {
@@ -125,12 +125,10 @@ public class SwitchStatement extends Statement {
       setSelector((Expression<?>) replaceWith);
       return true;
     }
-    if (switchCases_ != null) {
-      for (int i = 0; i < switchCases_.size(); ++i) {
-        if (node == switchCases_.get(i)) {
-          switchCases_.set(i, (SwitchCaseStatement) replaceWith);
-          return true;
-        }
+    for (int i = 0; i < switchCases_.size(); ++i) {
+      if (node == switchCases_.get(i)) {
+        switchCases_.set(i, (SwitchCaseStatement) replaceWith);
+        return true;
       }
     }
     if (node == defaultStmt_) {

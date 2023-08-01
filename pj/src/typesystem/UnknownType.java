@@ -21,6 +21,21 @@ public class UnknownType extends Type {
   }
 
   @Override
+  public boolean typeEqual(Type other) {
+    return false;
+  }
+
+  @Override
+  public boolean typeEquivalent(Type other) {
+    return false;
+  }
+
+  @Override
+  public boolean typeAssignmentCompatible(Type other) {
+    return false;
+  }
+
+  @Override
   public String asString() {
     return "?";
   }

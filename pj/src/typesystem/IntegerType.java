@@ -13,11 +13,11 @@ import visitor.VoidVisitor;
 public class IntegerType extends Primitive {
 
   public IntegerType() {
-    this(null);
+    this(null, INT_KIND);
   }
 
-  public IntegerType(Token token) {
-    super(token);
+  public IntegerType(Token token, final int kind) {
+    super(token, kind);
   }
 
   @Override

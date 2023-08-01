@@ -10,7 +10,6 @@ import ast.types.*;
 import misc.Tuple;
 import misc.Tuple1;
 import misc.Tuple2;
-import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Opcodes;
 import parser.ProcessJBaseVisitor;
 import parser.ProcessJParser;
@@ -37,7 +36,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   }
 
   @Override
-  public CompileUnit visitCompilationUnit(ProcessJParser.CompilationUnitContext ctx) {
+  public Compilation visitCompilationUnit(ProcessJParser.CompilationUnitContext ctx) {
     Package _package = null;
     if (ctx.packageDeclaration() != null) {
       _package = visitPackageDeclaration(ctx.packageDeclaration());
@@ -54,7 +53,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
         typeDecls.add((TopLevelDeclaration<?>) obj);
       }
     });
-    CompileUnit compileUnit = new CompileUnit(_package, imports, typeDecls);
+    Compilation compileUnit = new Compilation(_package, imports, typeDecls);
     return configureNode(compileUnit, ctx);
   }
 
@@ -154,7 +153,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   }
 
   @Override
-  public ProcedureTopLevel visitProcedureTypeDeclaration(ProcessJParser.ProcedureTypeDeclarationContext ctx) {
+  public ProcedureDeclaration visitProcedureTypeDeclaration(ProcessJParser.ProcedureTypeDeclarationContext ctx) {
     int modifiers = 0;
     for (int i = 0; i < ctx.modifier().size(); ++i) {
       modifiers += visitModifier(ctx.modifier(i));
@@ -165,7 +164,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     if (ctx.formarlParameterList() != null) {
       parameters.addAll(visitFormarlParameterList(ctx.formarlParameterList()));
     }
-    ProcedureTopLevel procedure = new ProcedureTopLevel();
+    ProcedureDeclaration procedure = new ProcedureDeclaration();
     procedure.setModifiers(modifiers);
     procedure.setNodeType(type);
     procedure.setName(identifier);
@@ -489,7 +488,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
         parameter.setName(t2.getV1());
         configureNode(parameter, ctx);
       }
-      parameter.setVarargs(true);
+      parameter.setVarArgs(true);
       return parameter;
     }
     return visitFormalParameter(ctx.formalParameter());
@@ -1136,23 +1135,19 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
       FieldExpression fieldExpr = new FieldExpression(scope, identifier.getName());
       return configureNode(fieldExpr, ctx);
     }
-    CallabelExpression invocation = visitInvocation(ctx.invocation());
-    invocation.setMethodExpression(scope);
+    Invocation invocation = visitInvocation(ctx.invocation());
+    invocation.setScope(scope);
     return configureNode(invocation, ctx);
   }
 
   @Override
-  public CallabelExpression visitInvocation(ProcessJParser.InvocationContext ctx) {
+  public Invocation visitInvocation(ProcessJParser.InvocationContext ctx) {
     VariableExpression variable = visitIdentifier(ctx.identifier());
     Expression<?> arguments = visitArguments(ctx.arguments());
     if (variable.getName().equals("read")) {
       ChannelReadExpression chanRead = new ChannelReadExpression();
       if (arguments.isBlockExpression()) {
-        chanRead.setExtendedRV(arguments.asBlockExpression());
-      } else {
-        // Note that a channel-read expression must always have an
-        // empty sequence of expression, otherwise, this is an error
-        chanRead.setArguments(Sequence.sequenceList(arguments));
+        chanRead.setArguments(arguments.asBlockExpression());
       }
       chanRead.setChannel(variable);
       return configureNode(chanRead, ctx);
@@ -1160,21 +1155,15 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     if (variable.getName().equals("write")) {
       ChannelWriteExpression chanWrite = new ChannelWriteExpression();
       chanWrite.setChannel(variable);
-      chanWrite.setExpression(arguments);
+      chanWrite.setArguments(arguments);
       return configureNode(chanWrite, ctx);
     }
-    CallabelExpression invocation = new CallabelExpression();
+    Invocation invocation = new Invocation();
     if (variable.getName().equals("timeout")) {
       invocation = new TimeoutReadExpression();
     }
     invocation.setIdentifier(variable.getName());
-    if (arguments.isListExpression()) {
-      if (arguments.asListExpression().getValues().isPresent()) {
-        invocation.setArguments(arguments.asListExpression().getValues().get());
-      }
-    } else {
-      invocation.setArguments(Sequence.sequenceList(arguments));
-    }
+    invocation.setArguments(arguments);
     return configureNode(invocation, ctx);
   }
 
@@ -1184,7 +1173,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
       BlockExpression block = new BlockExpression(visitBlock(ctx.block()).getStatements());
       return configureNode(block, ctx);
     }
-    ListExpression<?> arguments = new ListExpression<>();
+    TupleExpression arguments = new TupleExpression();
     if (ctx.expressionList() != null) {
       arguments.setValues(visitExpressionList(ctx.expressionList()));
     }

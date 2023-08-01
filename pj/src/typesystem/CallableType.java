@@ -19,7 +19,7 @@ public abstract class CallableType<T extends CallableType<?>> extends Constructe
   protected Sequence<Type> parameterTypes_;
 
   public CallableType() {
-    this(null, new VoidType(), null, false);
+    this(null, new VoidType(), Sequence.sequenceList(), false);
   }
 
   public CallableType(Type type, Sequence<Type> parameterTypes, final boolean yields) {
@@ -64,8 +64,8 @@ public abstract class CallableType<T extends CallableType<?>> extends Constructe
     return (T) this;
   }
 
-  public Optional<Sequence<Type>> getParameterTypes() {
-    return Optional.ofNullable(parameterTypes_);
+  public Sequence<Type> getParameterTypes() {
+    return parameterTypes_;
   }
 
   @SuppressWarnings("unchecked")
@@ -130,20 +130,16 @@ public abstract class CallableType<T extends CallableType<?>> extends Constructe
     if (node == null) {
       return false;
     }
-    if (parameterTypes_ != null) {
-      for (int i = 0; i < parameterTypes_.size(); ++i) {
-        if (node == parameterTypes_.get(i)) {
-          parameterTypes_.remove(i);
-          return true;
-        }
+    for (int i = 0; i < parameterTypes_.size(); ++i) {
+      if (node == parameterTypes_.get(i)) {
+        parameterTypes_.remove(i);
+        return true;
       }
     }
-    if (implementedTypes_ != null) {
-      for (int i = 0; i < implementedTypes_.size(); ++i) {
-        if (node == implementedTypes_.get(i)) {
-          implementedTypes_.remove(i);
-          return true;
-        }
+    for (int i = 0; i < implementedTypes_.size(); ++i) {
+      if (node == implementedTypes_.get(i)) {
+        implementedTypes_.remove(i);
+        return true;
       }
     }
     return false;

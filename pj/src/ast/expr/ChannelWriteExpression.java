@@ -12,10 +12,9 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ChannelWriteExpression extends CallabelExpression {
+public class ChannelWriteExpression extends Invocation {
 
   private Expression<?> channel_;
-  private Expression<?> expression_;
 
   public ChannelWriteExpression() {
     this(null, null);
@@ -26,9 +25,8 @@ public class ChannelWriteExpression extends CallabelExpression {
   }
 
   public ChannelWriteExpression(Token token, Expression<?> channel, Expression<?> expression) {
-    super(token, null, null, null);
+    super(token, null, null, expression);
     setChannel(channel);
-    setExpression(expression);
   }
 
   public ChannelWriteExpression setChannel(Expression<?> channel) {
@@ -45,22 +43,6 @@ public class ChannelWriteExpression extends CallabelExpression {
 
   public Expression<?> getChannel() {
     return channel_;
-  }
-
-  public ChannelWriteExpression setExpression(Expression<?> expression) {
-    if (expression == expression_) {
-      return this;
-    }
-    if (expression_ != null) {
-      expression_.setParentNode(null);
-    }
-    expression_ = expression;
-    setAsParentNodeOf(expression);
-    return this;
-  }
-
-  public Expression<?> getExpression() {
-    return expression_;
   }
 
   @Override
@@ -87,8 +69,8 @@ public class ChannelWriteExpression extends CallabelExpression {
       setChannel((Expression<?>) replaceWith);
       return true;
     }
-    if (node == expression_) {
-      setExpression((Expression<?>) replaceWith);
+    if (node == arguments_) {
+      setArguments((Expression<?>) replaceWith);
       return true;
     }
     return false;

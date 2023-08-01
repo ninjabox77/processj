@@ -69,7 +69,8 @@ public abstract class TypeDeclaration<T extends TypeDeclaration<?>> extends Anno
   }
 
   public ClassDeclaration asClassDeclaration() {
-    throw new IllegalStateException(String.format("%s is not a ClassDeclaration, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not a ClassDeclaration, it is a %s",
+        this, getClass().getSimpleName()));
   }
 
   @Override

@@ -72,6 +72,21 @@ public class ArrayType extends Constructed {
   }
 
   @Override
+  public boolean typeEqual(Type other) {
+    return false;
+  }
+
+  @Override
+  public boolean typeEquivalent(Type other) {
+    return false;
+  }
+
+  @Override
+  public boolean typeAssignmentCompatible(Type other) {
+    return false;
+  }
+
+  @Override
   public Type getElementType() {
     return getComponentType().getElementType();
   }

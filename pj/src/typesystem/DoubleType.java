@@ -17,7 +17,7 @@ public class DoubleType extends Primitive {
   }
 
   public DoubleType(Token token) {
-    super(token);
+    super(token, DOUBLE_KIND);
   }
 
   @Override

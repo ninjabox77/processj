@@ -82,6 +82,35 @@ public class ProtocolType extends Constructed {
   }
 
   @Override
+  public boolean typeEqual(Type other) {
+    if (!other.isConstructedType()) {
+      return false;
+    }
+    if (!other.asConstructedType().isProtocolType()) {
+      return false;
+    }
+    ProtocolType pt = other.asConstructedType().asProtocolType();
+    return name_.equals(pt.name_);
+  }
+
+  @Override
+  public boolean typeEquivalent(Type other) {
+    return typeEqual(other);
+  }
+
+  @Override
+  public boolean typeAssignmentCompatible(Type other) {
+    if (!other.isConstructedType()) {
+      return false;
+    }
+    if (!other.asConstructedType().isProtocolType()) {
+      return false;
+    }
+    ProtocolType pt = other.asConstructedType().asProtocolType();
+    return pt.extendsType(this);
+  }
+
+  @Override
   public boolean remove(SourceAST node) {
     if (node == null) {
       return false;

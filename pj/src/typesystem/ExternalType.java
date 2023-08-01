@@ -82,6 +82,21 @@ public class ExternalType extends Type {
   }
 
   @Override
+  public boolean typeEqual(Type other) {
+    return false;
+  }
+
+  @Override
+  public boolean typeEquivalent(Type other) {
+    return false;
+  }
+
+  @Override
+  public boolean typeAssignmentCompatible(Type other) {
+    return false;
+  }
+
+  @Override
   public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;

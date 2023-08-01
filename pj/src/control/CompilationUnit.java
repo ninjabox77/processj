@@ -1,7 +1,8 @@
 package control;
 
-import ast.CompileUnit;
+import ast.Compilation;
 import ast.BytecodeAST;
+import ast.java.ClassDeclaration;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -20,20 +21,22 @@ import java.util.*;
  */
 public class CompilationUnit extends ProcessingUnit {
 
-  private CompileUnit ast_;
-  private Map<String, CompileUnit> sources_;
-  private Queue<CompileUnit> queueSources_;
-  private List<BytecodeAST> generatedClasses_;
+  private Compilation ast_;
+  private Map<String, Compilation> compilations_;
+  private Queue<Compilation> queueSources_;
+  private List<String> sources_;
+  private List<ClassDeclaration> classes_;
+  private List<BytecodeAST> bytecodeASTS_;
 
   public CompilationUnit() {
     this(null);
   }
 
-  public CompilationUnit(CompileUnit ast) {
+  public CompilationUnit(Compilation ast) {
     this(null, ast);
   }
 
-  public CompilationUnit(Token token, CompileUnit ast) {
+  public CompilationUnit(Token token, Compilation ast) {
     super(token);
     setCompileUnit(ast);
     customInitialization();
@@ -41,12 +44,14 @@ public class CompilationUnit extends ProcessingUnit {
 
   @Override
   public void customInitialization() {
-    sources_ = new HashMap<>();
+    compilations_ = new HashMap<>();
     queueSources_ = new LinkedList<>();
-    generatedClasses_ = new LinkedList<>();
+    sources_ = new LinkedList<>();
+    classes_ = new LinkedList<>();
+    bytecodeASTS_ = new LinkedList<>();
   }
 
-  public CompilationUnit setCompileUnit(CompileUnit ast) {
+  public CompilationUnit setCompileUnit(Compilation ast) {
     if (ast == ast_) {
       return this;
     }
@@ -58,14 +63,18 @@ public class CompilationUnit extends ProcessingUnit {
     return this;
   }
 
-  public CompileUnit getCompileUnit() {
+  public Compilation getCompileUnit() {
     return ast_;
   }
 
   public void addSources(final String[] files) {
     for (String f : files) {
-      addSource(new File(f));
+      addSource(f);
     }
+  }
+
+  public Compilation addSource(final String file) {
+    return addSource(new Compilation(file));
   }
 
   public void addSources(final File[] files) {
@@ -74,10 +83,27 @@ public class CompilationUnit extends ProcessingUnit {
     }
   }
 
-  public CompileUnit addSource(final File file) {
-    final String f = file.getAbsolutePath();
-    // TODO: ??
-    return null;
+  public Compilation addSource(final File file) {
+    return addSource(new Compilation(file.getName()));
+  }
+
+  public Compilation addSource(Compilation source) {
+    final String file = source.getFile();
+    for (Compilation cu : queueSources_) {
+      if (cu.getFile().equals(file)) {
+        return cu;
+      }
+    }
+    queueSources_.add(source);
+    return source;
+  }
+
+  public Collection<String> getSources() {
+    return Collections.unmodifiableList(sources_);
+  }
+
+  public Compilation getCompilation() {
+    return ast_;
   }
 
   public void compile() {

@@ -15,6 +15,24 @@ public abstract class Type extends AnnotatedNode {
     customInitialization();
   }
 
+  public abstract boolean typeEqual(Type other);
+
+  public abstract boolean typeEquivalent(Type other);
+
+  public abstract boolean typeAssignmentCompatible(Type other);
+
+  public boolean typeLessThan(Type other) {
+    return false;
+  }
+
+  public boolean typeLessThanEqual(Type other) {
+    return false;
+  }
+
+  public Type typeCeiling(Type other) {
+    return this;
+  }
+
   /**
    * Finds the element type without ArrayTypes.
    */
@@ -34,7 +52,8 @@ public abstract class Type extends AnnotatedNode {
   }
 
   public Primitive asPrimitiveType() {
-    throw new IllegalStateException(String.format("%s is not a Primitive type, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not a Primitive type, it is a %s",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isConstructedType() {
@@ -42,7 +61,8 @@ public abstract class Type extends AnnotatedNode {
   }
 
   public Constructed asConstructedType() {
-    throw new IllegalStateException(String.format("%s is not a Constructed type, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not a Constructed type, it is a %s",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isVoidType() {
@@ -50,7 +70,8 @@ public abstract class Type extends AnnotatedNode {
   }
 
   public VoidType asVoidType() {
-    throw new IllegalStateException(String.format("%s is not a VoidType, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not a VoidType, it is a %s",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isNullType() {
@@ -58,7 +79,8 @@ public abstract class Type extends AnnotatedNode {
   }
 
   public NullType asNullType() {
-    throw new IllegalStateException(String.format("%s is not a NullType, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not a NullType, it is a %s",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isUnknownType() {
@@ -66,7 +88,8 @@ public abstract class Type extends AnnotatedNode {
   }
 
   public UnknownType asUnknownType() {
-    throw new IllegalStateException(String.format("%s is not an UnknownType, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not an UnknownType, it is a %s",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isExternalType() {
@@ -74,6 +97,7 @@ public abstract class Type extends AnnotatedNode {
   }
 
   public ExternalType asExternalType() {
-    throw new IllegalStateException(String.format("%s is not an ExternalType, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not an ExternalType, it is a %s",
+        this, getClass().getSimpleName()));
   }
 }

@@ -17,7 +17,7 @@ public class ByteType extends Primitive {
   }
 
   public ByteType(Token token) {
-    super(token);
+    super(token, BYTE_KIND);
   }
 
   @Override

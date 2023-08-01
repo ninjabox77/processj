@@ -17,7 +17,7 @@ public class TimerType extends Primitive {
   }
 
   public TimerType(Token token) {
-    super(token);
+    super(token, TIMER_KIND);
   }
 
   @Override

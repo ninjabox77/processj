@@ -169,11 +169,11 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
     throw new IllegalStateException(String.format("%s is not a ProtocolDeclaration, it is a %s", this, getClass().getSimpleName()));
   }
 
-  public boolean isCallableDeclaration() {
+  public boolean isProcedureDeclaration() {
     return false;
   }
 
-  public CallabelDeclaration<?> asCallableDeclaration() {
-    throw new IllegalStateException(String.format("%s is not a CallableDeclaration, it is a %s", this, getClass().getSimpleName()));
+  public ProcedureDeclaration asProcedureDeclaration() {
+    throw new IllegalStateException(String.format("%s is not a ProcedureDeclaration, it is a %s", this, getClass().getSimpleName()));
   }
 }

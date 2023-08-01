@@ -51,7 +51,8 @@ public abstract class AltStatement<A extends AltStatement<?>> extends Statement 
   }
 
   public AltBlock asAltBlock() {
-    throw new IllegalStateException(String.format("%s is not a AltBlock, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not a AltBlock, it is a %s",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isReplicatedAltBlock() {
@@ -59,7 +60,8 @@ public abstract class AltStatement<A extends AltStatement<?>> extends Statement 
   }
 
   public ReplicatedAltBlock asReplicatedAltBlock() {
-    throw new IllegalStateException(String.format("%s is not a ReplicatedAltBlock, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not a ReplicatedAltBlock, it is a %s",
+        this, getClass().getSimpleName()));
   }
 
   @Override

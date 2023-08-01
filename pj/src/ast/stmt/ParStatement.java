@@ -78,7 +78,8 @@ public abstract class ParStatement<P extends ParStatement<P>> extends Statement 
   }
 
   public ParBlock asParBlock() {
-    throw new IllegalStateException(String.format("%s is not a ParBlock, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not a ParBlock, it is a %s",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isParForBlock() {
@@ -86,7 +87,8 @@ public abstract class ParStatement<P extends ParStatement<P>> extends Statement 
   }
 
   public ParForBlock asParForBlock() {
-    throw new IllegalStateException(String.format("%s is not a ParForBlock, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("%s is not a ParForBlock, it is a %s",
+        this, getClass().getSimpleName()));
   }
 
   @Override

@@ -29,7 +29,7 @@ public interface GenericVisitor<R, A> {
 
   R visit(final BytecodeAST c, A arg);
 
-  R visit(final CompileUnit c, A arg);
+  R visit(final Compilation c, A arg);
 
   R visit(final CompilationUnit c, A arg);
 
@@ -79,9 +79,7 @@ public interface GenericVisitor<R, A> {
 
   R visit(final ExternalDeclaration e, A arg);
 
-  R visit(final CallabelDeclaration<?> m, A arg);
-
-  R visit(final ProcedureTopLevel p, A arg);
+  R visit(final ProcedureDeclaration p, A arg);
 
   R visit(final ProtocolCaseDeclaration p, A arg);
 
@@ -94,6 +92,8 @@ public interface GenericVisitor<R, A> {
    *********************************************************/
 
   R visit(final BlockStatement b, A arg);
+
+  R visit(final SequentialBlock s, A arg);
 
   R visit(final BreakStatement b, A arg);
 
@@ -154,6 +154,9 @@ public interface GenericVisitor<R, A> {
    *********************************************************/
 
   R visit(final ArrayInitializer a, A arg);
+
+  R visit(final TupleExpression t, A arg);
+
   R visit(final AssignmentExpression a, A arg);
 
   R visit(final BinaryExpression b, A arg);
@@ -162,7 +165,7 @@ public interface GenericVisitor<R, A> {
 
   R visit(final BooleanLiteral b, A arg);
 
-  R visit(final CallabelExpression c, A arg);
+  R visit(final Invocation c, A arg);
 
   R visit(final CastExpression c, A arg);
 

@@ -3,6 +3,7 @@ package ast.java;
 import ast.SourceAST;
 import ast.Variable;
 import ast.VariableDeclarator;
+import ast.expr.Expression;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -66,6 +67,16 @@ public class FieldDeclaration extends BodyDeclaration<FieldDeclaration> implemen
   @Override
   public String getName() {
     return variable_.getName();
+  }
+
+  @Override
+  public boolean hasInitialExpression() {
+    return variable_.getRightExpression() != null;
+  }
+
+  @Override
+  public Expression<?> getInitialExpression() {
+    return hasInitialExpression() ? variable_.getRightExpression() : null;
   }
 
   @Override

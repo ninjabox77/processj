@@ -56,7 +56,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public BinaryExpression asBinaryExpression() {
-    throw new IllegalStateException(String.format("%s is not a BinaryExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a BinaryExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isBooleanExpression() {
@@ -64,7 +65,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public BooleanExpression asBooleanExpression() {
-    throw new IllegalStateException(String.format("%s is not a BooleanExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a BooleanExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isCastExpression() {
@@ -72,7 +74,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public CastExpression asCastExpression() {
-    throw new IllegalStateException(String.format("%s is not a CastExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a CastExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isConstantExpression() {
@@ -80,7 +83,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public ConstantExpression asConstantExpression() {
-    throw new IllegalStateException(String.format("%s is not a ConstantExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a ConstantExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isEmptyExpression() {
@@ -88,7 +92,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public EmptyExpression asEmptyExpression() {
-    throw new IllegalStateException(String.format("%s is not a EmptyExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a EmptyExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isPrefixExpression() {
@@ -96,7 +101,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public PrefixExpression asPrefixExpression() {
-    throw new IllegalStateException(String.format("%s is not a PrefixExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a PrefixExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isPostfixExpression() {
@@ -104,7 +110,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public PostfixExpression asPostfixExpression() {
-    throw new IllegalStateException(String.format("%s is not a PostfixExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a PostfixExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isTernaryExpression() {
@@ -112,7 +119,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public TernaryExpression asTernaryExpression() {
-    throw new IllegalStateException(String.format("%s is not a TernaryExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a TernaryExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isSkipExpression() {
@@ -120,7 +128,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public SkipExpression asSkipExpression() {
-    throw new IllegalStateException(String.format("%s is not a SkipExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a SkipExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isStopExpression() {
@@ -128,15 +137,17 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public StopExpression asStopExpression() {
-    throw new IllegalStateException(String.format("%s is not a StopExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a StopExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
-  public boolean isCallableExpression() {
+  public boolean isInvocation() {
     return false;
   }
 
-  public CallabelExpression asCallableExpression() {
-    throw new IllegalStateException(String.format("%s is not a CallableExpression, it is a %s", this, getClass().getSimpleName()));
+  public Invocation asInvocation() {
+    throw new IllegalStateException(String.format("\"%s\" is not a Invocation, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isVariableExpression() {
@@ -144,7 +155,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public VariableExpression asVariableExpression() {
-    throw new IllegalStateException(String.format("%s is not a VariableExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a VariableExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isDeclarationExpression() {
@@ -152,7 +164,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public DeclarationExpression asDeclarationExpression() {
-    throw new IllegalStateException(String.format("%s is not a DeclarationExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a DeclarationExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isUnaryMinusExpression() {
@@ -160,7 +173,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public UnaryMinusExpression asUnaryMinusExpression() {
-    throw new IllegalStateException(String.format("%s is not a UnaryMinusExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a UnaryMinusExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isUnaryPlusExpression() {
@@ -168,7 +182,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public UnaryPlusExpression asUnaryPlusExpression() {
-    throw new IllegalStateException(String.format("%s is not a UnaryPlusExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a UnaryPlusExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isFieldExpression() {
@@ -176,7 +191,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public FieldExpression asFieldExpression() {
-    throw new IllegalStateException(String.format("%s is not a FieldExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a FieldExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isClassExpression() {
@@ -184,7 +200,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public ClassExpression asClassExpression() {
-    throw new IllegalStateException(String.format("%s is not a ClassExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a ClassExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isMapEntryExpression() {
@@ -192,7 +209,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public MapEntryExpression asMapEntryExpression() {
-    throw new IllegalStateException(String.format("%s is not a MapEntryExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a MapEntryExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isMapExpression() {
@@ -200,7 +218,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public MapExpression asMapExpression() {
-    throw new IllegalStateException(String.format("%s is not a MapExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a MapExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isMethodCallExpression() {
@@ -208,7 +227,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public MethodCallExpression asMethodCallExpression() {
-    throw new IllegalStateException(String.format("%s is not a MethodCallExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a MethodCallExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isListExpression() {
@@ -216,7 +236,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public ListExpression<?> asListExpression() {
-    throw new IllegalStateException(String.format("%s is not a ListExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a ListExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isNewArrayExpression() {
@@ -224,7 +245,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public NewArrayExpression asNewArrayExpression() {
-    throw new IllegalStateException(String.format("%s is not a NewArrayExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a NewArrayExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isBlockExpression() {
@@ -232,7 +254,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public BlockExpression asBlockExpression() {
-    throw new IllegalStateException(String.format("%s is not a BlockExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a BlockExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isGroupExpression() {
@@ -240,7 +263,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public GroupExpression asGroupExpression() {
-    throw new IllegalStateException(String.format("%s is not a GroupExpression, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a GroupExpression, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isArrayAccess() {
@@ -248,7 +272,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public ArrayAccess asArrayAccess() {
-    throw new IllegalStateException(String.format("%s is not an ArrayAccess, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not an ArrayAccess, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isRecordLiteral() {
@@ -256,7 +281,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public RecordLiteral asRecordLiteral() {
-    throw new IllegalStateException(String.format("%s is not a RecordLiteral, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a RecordLiteral, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isProtocolLiteral() {
@@ -264,6 +290,7 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
   }
 
   public ProtocolLiteral asProtocolLiteral() {
-    throw new IllegalStateException(String.format("%s is not a ProtocolLiteral, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a ProtocolLiteral, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 }

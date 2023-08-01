@@ -24,7 +24,7 @@ public interface DefaultVisitor<R> {
 
   R visit(final BytecodeAST c);
 
-  R visit(final CompileUnit c);
+  R visit(final Compilation c);
 
   R visit(final CompilationUnit c);
 
@@ -74,9 +74,7 @@ public interface DefaultVisitor<R> {
 
   R visit(final ExternalDeclaration e);
 
-  R visit(final CallabelDeclaration<?> m);
-
-  R visit(final ProcedureTopLevel p);
+  R visit(final ProcedureDeclaration p);
 
   R visit(final ProtocolCaseDeclaration p);
 
@@ -89,6 +87,8 @@ public interface DefaultVisitor<R> {
    *********************************************************/
 
   R visit(final BlockStatement b);
+
+  R visit(final SequentialBlock s);
 
   R visit(final BreakStatement b);
 
@@ -150,6 +150,8 @@ public interface DefaultVisitor<R> {
 
   R visit(final ArrayInitializer a);
 
+  R visit(final TupleExpression t);
+
   R visit(final AssignmentExpression a);
 
   R visit(final BinaryExpression b);
@@ -158,7 +160,7 @@ public interface DefaultVisitor<R> {
 
   R visit(final BooleanLiteral b);
 
-  R visit(final CallabelExpression c);
+  R visit(final Invocation c);
 
   R visit(final CastExpression c);
 

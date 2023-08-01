@@ -21,6 +21,21 @@ public class NullType extends Type {
   }
 
   @Override
+  public boolean typeEqual(Type other) {
+    return other.isNullType();
+  }
+
+  @Override
+  public boolean typeEquivalent(Type other) {
+    return typeEqual(other);
+  }
+
+  @Override
+  public boolean typeAssignmentCompatible(Type other) {
+    return typeEquivalent(other);
+  }
+
+  @Override
   public String asString() {
     return "null";
   }

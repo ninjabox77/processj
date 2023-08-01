@@ -1,7 +1,6 @@
 package ast.expr;
 
 import ast.SourceAST;
-import ast.Sequence;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -19,49 +18,49 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public class CallabelExpression extends Expression<CallabelExpression> {
+public class Invocation extends Expression<Invocation> {
 
-  private Expression<?> methodExpression_;
-  private Sequence<Expression<?>> arguments_;
-  private boolean implicitThis_;
-  private String identifier_;
+  protected Expression<?> scope_;
+  protected Expression<?> arguments_;
+  protected boolean implicitThis_;
+  protected String identifier_;
 
-  public CallabelExpression() {
+  public Invocation() {
     this(null, null);
   }
 
-  public CallabelExpression(Expression<?> methodExpression, String identifier) {
-    this(methodExpression, identifier, new EmptyExpression());
+  public Invocation(Expression<?> scope, String identifier) {
+    this(scope, identifier, new TupleExpression());
   }
 
-  public CallabelExpression(Expression<?> methodExpression, String identifier, Expression<?>... arguments) {
-    this(null, methodExpression, identifier, Sequence.sequenceList(arguments));
+  public Invocation(Expression<?> methodExpression, String identifier, Expression<?> arguments) {
+    this(null, methodExpression, identifier, arguments);
   }
 
-  public CallabelExpression(Token token, Expression<?> methodExpression, String identifier, Sequence<Expression<?>> arguments) {
+  public Invocation(Token token, Expression<?> scope, String identifier, Expression<?> arguments) {
     super(token);
-    setMethodExpression(methodExpression);
+    setScope(scope);
     setIdentifier(identifier);
     setArguments(arguments);
   }
 
-  public CallabelExpression setMethodExpression(Expression<?> methodExpression) {
-    if (methodExpression == methodExpression_) {
+  public Invocation setScope(Expression<?> scope) {
+    if (scope == scope_) {
       return this;
     }
-    if (methodExpression_ != null) {
-      methodExpression_.setParentNode(null);
+    if (scope_ != null) {
+      scope_.setParentNode(null);
     }
-    methodExpression_ = methodExpression;
-    setAsParentNodeOf(methodExpression);
+    scope_ = scope;
+    setAsParentNodeOf(scope);
     return this;
   }
 
-  public Optional<Expression<?>> getMethodExpression() {
-    return Optional.ofNullable(methodExpression_);
+  public Optional<Expression<?>> getScope() {
+    return Optional.ofNullable(scope_);
   }
 
-  public CallabelExpression setIdentifier(final String identifier) {
+  public Invocation setIdentifier(final String identifier) {
     if (Objects.equals(identifier, identifier_)) {
       return this;
     }
@@ -73,7 +72,7 @@ public class CallabelExpression extends Expression<CallabelExpression> {
     return identifier_;
   }
 
-  public CallabelExpression setImplicitThis(final boolean implicitThis) {
+  public Invocation setImplicitThis(final boolean implicitThis) {
     if (implicitThis == implicitThis_) {
       return this;
     }
@@ -82,10 +81,10 @@ public class CallabelExpression extends Expression<CallabelExpression> {
   }
 
   public boolean isImplicitThis() {
-    return implicitThis_ || getMethodExpression().isPresent();
+    return implicitThis_ || getScope().isPresent();
   }
 
-  public CallabelExpression setArguments(Sequence<Expression<?>> arguments) {
+  public Invocation setArguments(Expression<?> arguments) {
     if (arguments == arguments_) {
       return this;
     }
@@ -97,17 +96,17 @@ public class CallabelExpression extends Expression<CallabelExpression> {
     return this;
   }
 
-  public Sequence<Expression<?>> getArguments() {
+  public Expression<?> getArguments() {
     return arguments_;
   }
 
   @Override
-  public boolean isCallableExpression() {
+  public boolean isInvocation() {
     return true;
   }
 
   @Override
-  public CallabelExpression asCallableExpression() {
+  public Invocation asInvocation() {
     return this;
   }
 
@@ -116,16 +115,14 @@ public class CallabelExpression extends Expression<CallabelExpression> {
     if (node == null) {
       return false;
     }
-    if (node == methodExpression_) {
-      setMethodExpression((Expression<?>) replaceWith);
+    if (node == scope_) {
+      setScope((Expression<?>) replaceWith);
       return true;
     }
     if (arguments_ != null) {
-      for (int i = 0; i < arguments_.size(); ++i) {
-        if (node == arguments_.get(i)) {
-          arguments_.set(i, (Expression<?>) replaceWith);
-          return true;
-        }
+      if (arguments_.isListExpression()) {
+        ListExpression<?> tuple = arguments_.asListExpression();
+        return tuple.replace(node, replaceWith);
       }
     }
     return false;
@@ -136,16 +133,14 @@ public class CallabelExpression extends Expression<CallabelExpression> {
     if (node == null) {
       return false;
     }
-    if (node == methodExpression_) {
-      setMethodExpression(null);
+    if (node == scope_) {
+      setScope(null);
       return true;
     }
     if (arguments_ != null) {
-      for (int i = 0; i < arguments_.size(); ++i) {
-        if (node == arguments_.get(i)) {
-          arguments_.remove(i);
-          return true;
-        }
+      if (arguments_.isListExpression()) {
+        ListExpression<?> tuple = arguments_.asListExpression();
+        return tuple.remove(node);
       }
     }
     return false;

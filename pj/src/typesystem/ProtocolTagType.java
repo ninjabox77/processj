@@ -90,6 +90,21 @@ public class ProtocolTagType extends Constructed {
   }
 
   @Override
+  public boolean typeEqual(Type other) {
+    return false;
+  }
+
+  @Override
+  public boolean typeEquivalent(Type other) {
+    return false;
+  }
+
+  @Override
+  public boolean typeAssignmentCompatible(Type other) {
+    return false;
+  }
+
+  @Override
   public boolean remove(SourceAST node) {
     if (node == null) {
       return false;

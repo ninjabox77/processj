@@ -12,16 +12,15 @@ import java.util.Optional;
 
 /**
  * Represents a field access which contains a reference to a variable
- * object that points to the field's declaration. The fieldExpression
- * represents the instance of the class that was used to access the field.
- * If it is null, then this indicates that it was implicitly accessed
- * using "this".
+ * object that points to the field's declaration. The scope represents
+ * the instance of the class that was used to access the field. If it is
+ * null, then this indicates that it was implicitly accessed using "this".
  *
  * @author Ben
  */
 public class FieldExpression extends Expression<FieldExpression> {
 
-  private Expression<?> fieldExpression_;
+  private Expression<?> scope_;
   private boolean implicitThis_;
   private String identifier_;
 
@@ -29,30 +28,30 @@ public class FieldExpression extends Expression<FieldExpression> {
     this(null, null);
   }
 
-  public FieldExpression(Expression<?> fieldExpression, final String identifier) {
-    this(null, fieldExpression, identifier);
+  public FieldExpression(Expression<?> scope, final String identifier) {
+    this(null, scope, identifier);
   }
 
-  public FieldExpression(Token token, Expression<?> fieldExpression, final String identifier) {
+  public FieldExpression(Token token, Expression<?> scope, final String identifier) {
     super(token);
-    setFieldExpression(fieldExpression);
+    setScope(scope);
     setIdentifier(identifier);
   }
 
-  public FieldExpression setFieldExpression(Expression<?> fieldExpression) {
-    if (fieldExpression == fieldExpression_) {
+  public FieldExpression setScope(Expression<?> fieldExpression) {
+    if (fieldExpression == scope_) {
       return this;
     }
-    if (fieldExpression_ != null) {
-      fieldExpression_.setParentNode(null);
+    if (scope_ != null) {
+      scope_.setParentNode(null);
     }
-    fieldExpression_ = fieldExpression;
+    scope_ = fieldExpression;
     setAsParentNodeOf(fieldExpression);
     return this;
   }
 
-  public Optional<Expression<?>> getFieldExpression() {
-    return Optional.ofNullable(fieldExpression_);
+  public Optional<Expression<?>> getScope() {
+    return Optional.ofNullable(scope_);
   }
 
   public FieldExpression setIdentifier(final String identifier) {
@@ -76,7 +75,7 @@ public class FieldExpression extends Expression<FieldExpression> {
   }
 
   public boolean isImplicitThis() {
-    return implicitThis_ || getFieldExpression().isPresent();
+    return implicitThis_ || getScope().isPresent();
   }
 
   @Override
@@ -99,8 +98,8 @@ public class FieldExpression extends Expression<FieldExpression> {
     if (node == null) {
       return false;
     }
-    if (node == fieldExpression_) {
-      setFieldExpression((Expression<?>) replaceWith);
+    if (node == scope_) {
+      setScope((Expression<?>) replaceWith);
       return true;
     }
     return false;

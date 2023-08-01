@@ -22,7 +22,7 @@ public class PJAltGuard {
   /**
    * A set of indices that belong to a replicated alt statement.
    */
-  private Integer[] indices_;
+  private final Integer[] indices_;
 
   /**
    * The current selected index.
@@ -50,6 +50,9 @@ public class PJAltGuard {
   }
 
   public int nextIndex() {
+    if (nextIndex_ < 0 || nextIndex_ >= indices_.length) {
+      throw new IllegalArgumentException("Illegal index. The index should be between 0 and " + (indices_.length - 1));
+    }
     return indices_[nextIndex_++];
   }
 
@@ -63,13 +66,10 @@ public class PJAltGuard {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
     if (obj == this) {
       return true;
     }
-    if (getClass() != obj.getClass()) {
+    if (obj != null && getClass() != obj.getClass()) {
       return false;
     }
     PJAltGuard other = (PJAltGuard) obj;

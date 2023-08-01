@@ -12,10 +12,9 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ChannelReadExpression extends CallabelExpression {
+public class ChannelReadExpression extends Invocation {
 
   private Expression<?> channel_;
-  private BlockExpression externalRV_;
 
   public ChannelReadExpression() {
     this(null);
@@ -30,7 +29,7 @@ public class ChannelReadExpression extends CallabelExpression {
   }
 
   public ChannelReadExpression(Token token, Expression<?> channel, BlockExpression externalRV) {
-    super(token, null, null, null);
+    super(token, null, null, externalRV);
     setChannel(channel);
   }
 
@@ -60,22 +59,6 @@ public class ChannelReadExpression extends CallabelExpression {
     return this;
   }
 
-  public ChannelReadExpression setExtendedRV(BlockExpression externalRV) {
-    if (externalRV == externalRV_) {
-      return this;
-    }
-    if (externalRV_ != null) {
-      externalRV_.setParentNode(null);
-    }
-    externalRV_ = externalRV;
-    setAsParentNodeOf(externalRV);
-    return this;
-  }
-
-  public BlockExpression getExtendedRV() {
-    return externalRV_;
-  }
-
   @Override
   public ChannelReadExpression setNodeType(NodeType type) {
     return (ChannelReadExpression) super.setNodeType(type);
@@ -90,8 +73,8 @@ public class ChannelReadExpression extends CallabelExpression {
       setChannel((Expression<?>) replaceWith);
       return true;
     }
-    if (node == externalRV_) {
-      setExtendedRV((BlockExpression) replaceWith);
+    if (node == arguments_) {
+      setArguments((Expression<?>) replaceWith);
       return true;
     }
     return false;

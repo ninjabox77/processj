@@ -23,7 +23,7 @@ public class RecordLiteral extends Expression<RecordLiteral> {
   }
 
   public RecordLiteral(Name name) {
-    this(name, null);
+    this(name, Sequence.sequenceList());
   }
 
   public RecordLiteral(Name name, Sequence<RecordMemberLiteral> members) {
@@ -83,12 +83,10 @@ public class RecordLiteral extends Expression<RecordLiteral> {
     if (node == null) {
       return false;
     }
-    if (members_ != null) {
-      for (int i = 0; i < members_.size(); ++i) {
-        if (node == members_.get(i)) {
-          members_.remove(i);
-          return true;
-        }
+    for (int i = 0; i < members_.size(); ++i) {
+      if (node == members_.get(i)) {
+        members_.remove(i);
+        return true;
       }
     }
     return false;
@@ -103,12 +101,10 @@ public class RecordLiteral extends Expression<RecordLiteral> {
       setName((Name) replaceWith);
       return true;
     }
-    if (members_ != null) {
-      for (int i = 0; i < members_.size(); ++i) {
-        if (node == members_.get(i)) {
-          members_.set(i, (RecordMemberLiteral) replaceWith);
-          return true;
-        }
+    for (int i = 0; i < members_.size(); ++i) {
+      if (node == members_.get(i)) {
+        members_.set(i, (RecordMemberLiteral) replaceWith);
+        return true;
       }
     }
     return false;

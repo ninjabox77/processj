@@ -14,7 +14,7 @@ import java.util.Objects;
  *
  * @author Ben
  */
-public class VariableDeclarator extends AnnotatedNode implements Variable<VariableDeclarator>, Modifier<VariableDeclarator> {
+public class VariableDeclarator extends AnnotatedNode implements Modifier<VariableDeclarator> {
 
   private int modifiers_;
   private NodeType type_;
@@ -45,7 +45,6 @@ public class VariableDeclarator extends AnnotatedNode implements Variable<Variab
     setRightExpression(rightExpression);
   }
 
-  @Override
   public String getName() {
     return name_;
   }
@@ -80,7 +79,6 @@ public class VariableDeclarator extends AnnotatedNode implements Variable<Variab
     return type_;
   }
 
-  @Override
   public VariableDeclarator setName(String name) {
     if (Objects.equals(name, name_)) {
       return this;

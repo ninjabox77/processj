@@ -20,6 +20,7 @@ public abstract class Constructed extends Type {
 
   public Constructed(Token token) {
     super(token);
+    setImplementedTypes(Sequence.sequenceList());
   }
 
   public Constructed setImplementedTypes(Sequence<Type> implementedTypes) {
@@ -32,6 +33,17 @@ public abstract class Constructed extends Type {
     implementedTypes_ = implementedTypes;
     setAsParentNodeOf(implementedTypes);
     return this;
+  }
+
+  public boolean extendsType(Type type) {
+    if (typeEqual(type)) {
+      return true;
+    }
+    boolean b = false;
+    for (Type t : implementedTypes_) {
+      b = ((RecordType) t).extendsType(type) || b;
+    }
+    return b;
   }
 
   public Optional<Sequence<Type>> getImplementedTypes() {

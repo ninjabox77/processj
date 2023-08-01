@@ -80,6 +80,39 @@ public class RecordType extends Constructed {
     return this;
   }
 
+  // α =T β ⇔ Record?(α) ∧ Record?(β) ∧ (name1 = name2)
+  // We implement NAME EQUALITY not structural equality
+  @Override
+  public boolean typeEqual(Type other) {
+    if (!other.isConstructedType()) {
+      return false;
+    }
+    if (!other.asConstructedType().isRecordType()) {
+      return false;
+    }
+    RecordType rt = other.asConstructedType().asRecordType();
+    return name_.equals(rt.name_);
+  }
+
+  // α∼T β ⇔ α =T β
+  @Override
+  public boolean typeEquivalent(Type other) {
+    return typeEqual(other);
+  }
+
+  // α :=T β ⇔ α ∼T β ⇔ α =T β
+  @Override
+  public boolean typeAssignmentCompatible(Type other) {
+    if (!other.isConstructedType()) {
+      return false;
+    }
+    if (!other.asConstructedType().isRecordType()) {
+      return false;
+    }
+    RecordType rt = other.asConstructedType().asRecordType();
+    return rt.extendsType(this);
+  }
+
   @Override
   public boolean remove(SourceAST node) {
     if (node == null) {

@@ -4,7 +4,7 @@ import ast.expr.Expression;
 
 /**
  * A node marked as a variable which are typically VariableExpression,
- * Field, and Parameter.
+ * FieldDeclaration, Parameter, and DeclarationExpression.
  */
 public interface Variable<N extends SourceAST> {
 

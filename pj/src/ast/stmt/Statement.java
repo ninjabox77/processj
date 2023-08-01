@@ -18,7 +18,7 @@ public abstract class Statement extends AnnotatedNode {
   private Sequence<Label> labels_;
 
   public Statement() {
-    this(null, null);
+    this(null, Sequence.sequenceList());
   }
 
   public Statement(Sequence<Label> labels) {
@@ -69,7 +69,8 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public AltStatement<?> asAltStatement() {
-    throw new IllegalStateException(String.format("%s is not a AltStatement, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a AltStatement, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isAltCaseStatement() {
@@ -77,7 +78,8 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public AltCaseStatement asAltCaseStatement() {
-    throw new IllegalStateException(String.format("%s is not a AltCaseStatement, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a AltCaseStatement, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isEmpty() {
@@ -89,7 +91,8 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public ForStatement asForStatement() {
-    throw new IllegalStateException(String.format("%s is not a ForStatement, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a ForStatement, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isWhileStatement() {
@@ -97,7 +100,8 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public WhileStatement asWhileStatement() {
-    throw new IllegalStateException(String.format("%s is not a WhileStatement, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a WhileStatement, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isDoWhileStatement() {
@@ -105,7 +109,8 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public DoWhileStatement asDoWhileStatement() {
-    throw new IllegalStateException(String.format("%s is not a DoWhileStatement, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a DoWhileStatement, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isBlockStatement() {
@@ -113,7 +118,8 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public BlockStatement asBlockStatement() {
-    throw new IllegalStateException(String.format("%s is not a BlockStatement, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a BlockStatement, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isSwitchStatement() {
@@ -121,7 +127,8 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public SwitchStatement asSwitchStatement() {
-    throw new IllegalStateException(String.format("%s is not a SwitchStatement, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a SwitchStatement, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isSwitchCaseStatement() {
@@ -129,7 +136,8 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public SwitchCaseStatement asSwitchCaseStatement() {
-    throw new IllegalStateException(String.format("%s is not a SwitchCaseStatement, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a SwitchCaseStatement, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isIfStatement() {
@@ -137,7 +145,8 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public IfStatement asIfStatement() {
-    throw new IllegalStateException(String.format("%s is not a IfStatement, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a IfStatement, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isEmptyStatement() {
@@ -145,7 +154,8 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public EmptyStatement asEmptyStatement() {
-    throw new IllegalStateException(String.format("%s is not a EmptyStatement, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a EmptyStatement, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isContinueStatement() {
@@ -153,7 +163,8 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public ContinueStatement asContinueStmt() {
-    throw new IllegalStateException(String.format("%s is not a ContinueStatement, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a ContinueStatement, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isBreakStatement() {
@@ -161,7 +172,8 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public BreakStatement asBreakStatement() {
-    throw new IllegalStateException(String.format("%s is not a BreakStatement, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a BreakStatement, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isReturnStatement() {
@@ -169,7 +181,8 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public ReturnStatement asReturnStatement() {
-    throw new IllegalStateException(String.format("%s is not a ReturnStatement, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a ReturnStatement, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isForEachStatement() {
@@ -177,7 +190,8 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public ForEachStatement asForEachStatement() {
-    throw new IllegalStateException(String.format("%s is not a ForEachStatement, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a ForEachStatement, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isExpressionStatement() {
@@ -185,7 +199,8 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public ExpressionStatement asExpressionStatement() {
-    throw new IllegalStateException(String.format("%s is not a ExpressionStatement, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a ExpressionStatement, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isParStatement() {
@@ -193,7 +208,8 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public ParStatement<?> asParStatement() {
-    throw new IllegalStateException(String.format("%s is not a ParStatement, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a ParStatement, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isSkipStatement() {
@@ -201,7 +217,8 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public SkipStatement asSkipStatement() {
-    throw new IllegalStateException(String.format("%s is not a SkipStatement, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a SkipStatement, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isStopStatement() {
@@ -209,7 +226,8 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public StopStatement asStopStatement() {
-    throw new IllegalStateException(String.format("%s is not a StopStatement, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a StopStatement, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   public boolean isLabelStatement() {
@@ -217,15 +235,13 @@ public abstract class Statement extends AnnotatedNode {
   }
 
   public LabelStatement asLabelStatement() {
-    throw new IllegalStateException(String.format("%s is not a LabelStatement, it is a %s", this, getClass().getSimpleName()));
+    throw new IllegalStateException(String.format("\"%s\" is not a LabelStatement, it is a \"%s\"",
+        this, getClass().getSimpleName()));
   }
 
   @Override
   public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
-      return false;
-    }
-    if (labels_ == null) {
       return false;
     }
     for (int i = 0; i < labels_.size(); ++i) {
@@ -240,9 +256,6 @@ public abstract class Statement extends AnnotatedNode {
   @Override
   public boolean remove(SourceAST node) {
     if (node == null) {
-      return false;
-    }
-    if (labels_ == null) {
       return false;
     }
     for (int i = 0; i < labels_.size(); ++i) {
