@@ -1,0 +1,6 @@
+package A;
+
+public const int x = 10; // visible anywhere
+protected const int y = 20; // visible in package A only
+private const int z = 30; // visible in this file only
+const int w = 40; // no modifier = private

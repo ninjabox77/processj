@@ -1,7 +1,6 @@
 package ast.types;
 
 import ast.AnnotatedNode;
-import ast.NodeWithTSType;
 import org.antlr.v4.runtime.Token;
 import typesystem.Type;
 
@@ -10,16 +9,20 @@ import typesystem.Type;
  *
  * @author Ben
  */
-public abstract class ASTType extends AnnotatedNode implements NodeWithTSType<ASTType, Type> {
+public abstract class NodeType extends AnnotatedNode {
 
-  public ASTType() {
+  public NodeType() {
     this(null);
     customInitialization();
   }
 
-  public ASTType(Token token) {
+  public NodeType(Token token) {
     super(token);
   }
+
+  public abstract NodeType setTSType(Type type);
+
+  public abstract Type getTSType();
 
   public boolean isArrayNode() {
     return false;

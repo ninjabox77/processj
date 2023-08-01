@@ -1,0 +1,6 @@
+
+public void f(const int x) {
+  const int y = 10; // y cannot be assigned to
+  y = x; // illegal
+  x = y; // also illegal
+}

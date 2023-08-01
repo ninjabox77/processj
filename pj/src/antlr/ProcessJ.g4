@@ -10,7 +10,7 @@ compilationUnit
  ;
 
 packageDeclaration
- : packageModifier* PACKAGE packageName SEMI
+ : packageModifier* 'package' packageName ';'
  ;
 
 packageModifier
@@ -19,7 +19,7 @@ packageModifier
 
 packageName
  : Identifier
- | packageName DOT Identifier
+ | packageName '.' Identifier
  ;
 
 importDeclaration
@@ -30,19 +30,19 @@ importDeclaration
  ;
 
 singleTypeImportDeclaration
- : IMPORT annotation* typeName (DCOLON Identifier)? SEMI
+ : 'import' annotation* typeName ('::' Identifier)? ';'
  ;
 
 singleTypeMultiImportDeclaration
- : IMPORT annotation* typeName DOT MULT SEMI
+ : 'import' annotation* typeName '.' '*' ';'
  ;
 
 singleStaticImportDeclaration
- : IMPORT annotation* STATIC typeName DOT Identifier SEMI
+ : 'import' annotation* 'static' typeName '.' Identifier ';'
  ;
 
 singleStaticMultiImportDeclaration
- : IMPORT annotation* STATIC typeName DOT MULT SEMI
+ : 'import' annotation* 'static' typeName '.' '*' ';'
  ;
 
 typeDeclaration
@@ -54,42 +54,41 @@ typeDeclaration
  ;
 
 externDeclaration
- : modifier* EXTERN Identifier EQ classType SEMI
+ : modifier* 'extern' Identifier '=' classType ';'
  ;
 
 procedureTypeDeclaration
- : modifier* type_ Identifier LPAREN formarlParameterList? RPAREN body?
+ : modifier* type_ Identifier '(' formarlParameterList? ')' (body | ';')
  ;
 
 modifier
- : MOBILE
- | CONST
- | NATIVE
- | PUBLIC
- | PRIVATE
- | PROTECTED
+ : 'mobile'
+ | 'const'
+ | 'native'
+ | 'public'
+ | 'private'
+ | 'protected'
  ;
 
 formarlParameterList
- : formalParameters COMMA lastFormalDeclaration
+ : formalParameters ',' lastFormalDeclaration
  | lastFormalDeclaration
  ;
 
 formalParameters
- : formalParameter (COMMA formalParameter)*
+ : formalParameter (',' formalParameter)*
  ;
 
 formalParameter
- : variableModifier* type_ variableDeclaratorIdentifier
+ : annotation* variableModifier? type_ variableDeclaratorIdentifier
  ;
 
 variableModifier
- : annotation
- | CONST
+ : 'const'
  ;
 
 lastFormalDeclaration
- : variableModifier* type_ annotation* ELLIPSIS variableDeclaratorIdentifier
+ : annotation* variableModifier? type_ annotation* '...' variableDeclaratorIdentifier
  | formalParameter
  ;
 
@@ -99,27 +98,27 @@ variableDeclaratorIdentifier
 
 body
  : block
- | SEMI
+ | ';'
  ;
 
 recordTypeDeclaration
- : modifier* RECORD Identifier extends? recordBody SEMI?
+ : modifier* 'record' Identifier extends? recordBody ';'?
  ;
 
 extends
- : EXTENDS typeVariable (COMMA typeVariable)*
+ : 'extends' typeVariable (',' typeVariable)*
  ;
 
 recordBody
- : LBRACE recordMemberDeclaration* RBRACE
+ : '{' recordMemberDeclaration* '}'
  ;
 
 recordMemberDeclaration
- : type_ recordMemberDeclarators SEMI
+ : type_ recordMemberDeclarators ';'
  ;
 
 recordMemberDeclarators
- : recordMemberDeclarator (COMMA recordMemberDeclarator)*
+ : recordMemberDeclarator (',' recordMemberDeclarator)*
  ;
 
 recordMemberDeclarator
@@ -127,30 +126,30 @@ recordMemberDeclarator
  ;
 
 protocolTypeDeclaration
- : modifier* PROTOCOL Identifier extends? (protocolBody SEMI? | SEMI)
+ : modifier* 'protocol' Identifier extends? (protocolBody ';'? | ';')
  ;
 
 protocolBody
- : LBRACE protocolCase* RBRACE
+ : '{' protocolCase* '}'
  ;
 
 protocolCase
- : Identifier COLON recordBody
+ : Identifier ':' recordBody
  ;
 
 type_
  : primitiveType
  | referenceType
  | annotation* classType
- | VOID
+ | 'void'
  ;
 
 primitiveType
  : numericType
- | BOOLEAN
- | STRING
- | BARRIER
- | TIMER
+ | 'boolean'
+ | 'string'
+ | 'barrier'
+ | 'timer'
  ;
 
 referenceType
@@ -166,16 +165,16 @@ numericType
  ;
 
 integralType
- : BYTE
- | SHORT
- | INT
- | LONG
- | CHAR
+ : 'byte'
+ | 'short'
+ | 'int'
+ | 'long'
+ | 'char'
  ;
 
 floatingPointType
- : FLOAT
- | DOUBLE
+ : 'float'
+ | 'double'
  ;
 
 arrayType
@@ -186,35 +185,35 @@ arrayType
 
 classType
  : annotation* Identifier typeArguments?                # IdentifierArguments
- | classType DOT annotation* Identifier typeArguments?  # ClassDotIdentifierArguments
+ | classType '.' annotation* Identifier typeArguments?  # ClassDotIdentifierArguments
  ;
 
 typeArguments
- : LT typeArgument (COMMA typeArgument)* GT
+ : '<' typeArgument (',' typeArgument)* '>'
  ;
 
 typeArgument
- : annotation* (classType | primitiveType) (LBRACK RBRACK)*
+ : annotation* (classType | primitiveType) ('[' ']')*
  ;
 
 channelType
- : SHARED READ CHAN LT type_ GT         # ChannelSharedReadType
- | SHARED WRITE CHAN LT type_ GT        # ChannelSharedWriteType
- | SHARED CHAN LT type_ GT              # ChannelSharedType
- | CHAN LT type_ GT                     # ChannelType_
- | CHAN LT type_ GT DOT READ            # ChannelDotRead
- | CHAN LT type_ GT DOT WRITE           # ChannelDotWrite
- | SHARED CHAN LT type_ GT DOT READ     # ChannelSharedDotRead
- | SHARED CHAN LT type_ GT DOT WRITE    # ChannelSharedDotWrite
+ : 'shared' 'read' 'chan' '<' type_ '>'         # ChannelSharedReadType
+ | 'shared' 'write' 'chan' '<' type_ '>'        # ChannelSharedWriteType
+ | 'shared' 'chan' '<' type_ '>'                # ChannelSharedType
+ | 'chan' '<' type_ '>'                         # ChannelType_
+ | 'chan' '<' type_ '>' '.' 'read'              # ChannelDotRead
+ | 'chan' '<' type_ '>' '.' 'write'             # ChannelDotWrite
+ | 'shared' 'chan' '<' type_ '>' '.' 'read'     # ChannelSharedDotRead
+ | 'shared' 'chan' '<' type_ '>' '.' 'write'    # ChannelSharedDotWrite
  ;
 
 typeVariable
- : Identifier                  //# TypeVariableIdentifier
- | typeName DCOLON Identifier  //# TypeVariablePackageDotIdentifier
+ : Identifier
+ | typeName '::' Identifier
  ;
 
 dims
- : annotation* LBRACK RBRACK (annotation* LBRACK RBRACK)*
+ : annotation* '[' ']' (annotation* '[' ']')*
  ;
 
 annotation
@@ -224,15 +223,15 @@ annotation
  ;
 
 normalAnnotation
- : EACH typeName LPAREN elementValuePairList RPAREN
+ : '@' typeName '(' elementValuePairList ')'
  ;
 
 elementValuePairList
- : elementValuePair (COMMA elementValuePair)*
+ : elementValuePair (',' elementValuePair)*
  ;
 
 elementValuePair
- : Identifier EQ elementValue
+ : Identifier '=' elementValue
  ;
 
 elementValue
@@ -241,28 +240,28 @@ elementValue
  ;
 
 markerAnnotation
- : EACH typeName
+ : '@' typeName
  ;
 
 singleElementAnnotation
- : EACH typeName LPAREN elementValue RPAREN
+ : '@' typeName '(' elementValue ')'
  ;
 
 typeName
  : Identifier
- | typeName DOT Identifier
+ | typeName '.' Identifier
  ;
 
  constantDeclaration
-  : modifier* type_ constantDeclarators SEMI
+  : modifier* type_ constantDeclarators ';'
   ;
 
 constantDeclarators
- : constantDeclarator (COMMA constantDeclarator)*
+ : constantDeclarator (',' constantDeclarator)*
  ;
 
 constantDeclarator
- : variableDeclaratorIdentifier (EQ variableInitializer)?
+ : variableDeclaratorIdentifier ('=' variableInitializer)?
  ;
 
 variableInitializer
@@ -271,15 +270,15 @@ variableInitializer
  ;
 
 arrayInitializer
- : LBRACE variableInitializerList? COMMA? RBRACE
+ : '{' variableInitializerList? ','? '}'
  ;
 
 variableInitializerList
- : variableInitializer (COMMA variableInitializer)*
+ : variableInitializer (',' variableInitializer)*
  ;
 
 block
- : LBRACE blockStatement* RBRACE
+ : '{' blockStatement* '}'
  ;
 
 blockStatement
@@ -288,42 +287,42 @@ blockStatement
  ;
 
 localVariableDeclarationStatement
- : localVariableDeclaration SEMI
+ : localVariableDeclaration ';'
  ;
 
 localVariableDeclaration
- : variableModifier* type_ variableDeclaratorList
+ : annotation* variableModifier? type_ variableDeclaratorList
  ;
 
 variableDeclaratorList
- : variableDeclarator (COMMA variableDeclarator)*
+ : variableDeclarator (',' variableDeclarator)*
  ;
 
 variableDeclarator
- : variableDeclaratorIdentifier (EQ variableInitializer)?
+ : variableDeclaratorIdentifier ('=' variableInitializer)?
  ;
 
 statement
  : block                                                                       # BlockAsStatement
- | ASSERT expression (COLON expression)? SEMI                                  # AssertStatement
- | IF parExpression statement (ELSE statement)?                                # IfStatement
- | FOR LPAREN forControl RPAREN statement                                      # ForStatement
- | PRI? ALT altBody                                                            # AltStatement
- | PRI? ALT LPAREN forControl RPAREN altBody                                   # AltForStatement
- | PAR (ENROLL expressionList)? statement                                      # ParStatement
- | PAR LPAREN forControl RPAREN statement                                      # ParForStatement
- | WHILE parExpression statement                                               # WhileStatement
- | DO statement WHILE parExpression SEMI                                       # DoStatement
- | SWITCH parExpression LBRACE switchBlockStatementGroup* switchLabel* RBRACE  # SwitchStatement
- | RETURN expression? SEMI                                                     # ReturnStatement
- | BREAK Identifier? SEMI                                                      # BreakStatement
- | CONTINUE Identifier? SEMI                                                   # ContinueStatement
- | SEQ block                                                                   # SeqStatement
- | SKIP_ SEMI                                                                  # SkipStatement
- | STOP SEMI                                                                   # StopStatement
- | SEMI                                                                        # EmptyStatement
- | expression SEMI                                                             # StatementExpression
- | (Identifier COLON)+ statement                                               # LabelStatement
+ | 'assert' expression (':' expression)? ';'                                   # AssertStatement
+ | 'if' parExpression statement ('else' statement)?                            # IfStatement
+ | 'for' '(' forControl ')' statement                                          # ForStatement
+ | 'pri'? 'alt' altBody                                                        # AltStatement
+ | 'pri'? 'alt' '(' forControl ')' altBody                                     # AltForStatement
+ | 'par' ('enroll' expressionList)? statement                                  # ParStatement
+ | 'par' '(' forControl ')' statement                                          # ParForStatement
+ | 'while' parExpression statement                                             # WhileStatement
+ | 'do' statement 'while' parExpression ';'                                    # DoStatement
+ | 'switch' parExpression '{' switchBlockStatementGroup* switchLabel* '}'      # SwitchStatement
+ | 'return' expression? ';'                                                    # ReturnStatement
+ | 'break' Identifier? ';'                                                     # BreakStatement
+ | 'continue' Identifier? ';'                                                  # ContinueStatement
+ | 'seq' block                                                                 # SeqStatement
+ | 'skip' ';'                                                                  # SkipStatement
+ | 'stop' ';'                                                                  # StopStatement
+ | ';'                                                                         # EmptyStatement
+ | expression ';'                                                              # StatementExpression
+ | (Identifier ':')+ statement                                                 # LabelStatement
  ;
 
 switchBlockStatementGroup
@@ -331,13 +330,13 @@ switchBlockStatementGroup
  ;
 
 switchLabel
- : CASE expression COLON
- | DEFAULT COLON
+ : 'case' expression ':'
+ | 'default' ':'
  ;
 
 forControl
  : enhancedForControl
- | forInit? SEMI expression? SEMI forUpdate=expressionList?
+ | forInit? ';' expression? ';' forUpdate=expressionList?
  ;
 
 forInit
@@ -346,15 +345,15 @@ forInit
  ;
 
 enhancedForControl
- : variableModifier* type_ variableDeclaratorIdentifier COLON expression
+ : variableModifier? type_ variableDeclaratorIdentifier ':' expression
  ;
 
 parExpression
- : LPAREN expression RPAREN
+ : '(' expression ')'
  ;
 
 expressionList
- : expression (COMMA expression)*
+ : expression (',' expression)*
  ;
 
 invocation
@@ -362,68 +361,68 @@ invocation
  ;
 
 arguments
- : LPAREN expressionList? RPAREN
- | LPAREN block RPAREN
+ : '(' expressionList? ')'
+ | '(' block ')'
  ;
 
 altBody
  : altCase
- | LBRACE altCase altCase* RBRACE
+ | '{' altCase altCase* '}'
  ;
 
 altCase
- : parExpression ANDAND altGuard COLON statement
- | altGuard COLON statement
+ : parExpression '&&' altGuard ':' statement
+ | altGuard ':' statement
  | altStatement=statement
  ;
 
 altGuard
- : SKIP_
+ : 'skip'
  | assignExpr=expression
  ;
 
 expression
- : primary                                                    # PrimaryExpression
- | annotation+ expression                                     # AnnotatedExpression
- | expression LBRACK expression RBRACK                        # ArrayAccexxExpression
- | expression DOT (identifier | invocation)                   # MemberAccessExpression
- | invocation                                                 # InvocationExpression
- | expression op=(DPLUS|DMINUS)                               # PostfixExpression
- | op=(DPLUS|DMINUS|PLUS|MINUS|COMP|NOT) expression           # PrefixExpression
- | LPAREN primitiveType RPAREN expression                     # CastExpression
- | NEW creator                                                # ObjectCreationExpression
- | expression op=(MULT|DIV|MOD) expression                    # MultiplicativeExpression
- | expression op=(PLUS|MINUS) expression                      # AdditiveExpression
- | expression ('<' '<'|'>' '>' '>'|'>' '>') expression        # ShiftExpression
- | expression op=(LTEQ|GTEQ|GT|LT) expression                 # RelationalExpression
- | expression IS expression                                   # InstanceofExpression
- | expression op=(EQEQ|NOTEQ) expression                      # EqualityExpression
- | expression AND expression                                  # AndExpression
- | expression XOR expression                                  # ExclusiveExpression
- | expression OR expression                                   # InclusiveExpression
- | expression ANDAND expression                               # LogicalAndExpression
- | expression OROR expression                                 # LogicalOrExpression
- | <assoc=right> expression QUEST expression COLON expression # TernaryExpression
- | <assoc=right> expression assignOp expression               # AssignmentExpression
+ : primary                                                     # PrimaryExpression
+ | annotation+ expression                                      # AnnotatedExpression
+ | name=expression '[' index=expression ']'                    # ArrayAccessExpression
+ | expression '.' (identifier | invocation)                    # MemberAccessExpression
+ | invocation                                                  # InvocationExpression
+ | expression op=('++'|'--')                                   # PostfixExpression
+ | op=('++'|'--'|'+'|'-'|'~'|'!') expression                   # PrefixExpression
+ | '(' primitiveType ')' expression                            # CastExpression
+ | 'new' creator                                               # ObjectCreationExpression
+ | expression op=('*'|'/'|'%') expression                      # MultiplicativeExpression
+ | expression op=('+'|'-') expression                          # AdditiveExpression
+ | expression ('<' '<'|'>' '>' '>'|'>' '>') expression         # ShiftExpression
+ | expression op=('<='|'>='|'>'|'<') expression                # RelationalExpression
+ | expression 'is' expression                                  # InstanceofExpression
+ | expression op=('=='|'!=') expression                        # EqualityExpression
+ | expression '&' expression                                   # AndExpression
+ | expression '^' expression                                   # ExclusiveExpression
+ | expression '|' expression                                   # InclusiveExpression
+ | expression '&&' expression                                  # LogicalAndExpression
+ | expression '||' expression                                  # LogicalOrExpression
+ | <assoc=right> expression '?' expression ':' expression      # TernaryExpression
+ | <assoc=right> expression assignOp expression                # AssignmentExpression
  ;
 
 assignOp
- : EQ
- | MULTEQ
- | DIVEQ
- | MODEQ
- | PLUSEQ
- | MINUSEQ
- | LSHIFTEQ
- | RSHIFTEQ
- | RRSHIFTEQ
- | ANDEQ
- | XOREQ
- | OREQ
+ : '='
+ | '*='
+ | '/='
+ | '%='
+ | '+='
+ | '-='
+ | '<<='
+ | '>>='
+ | '>>>='
+ | '&='
+ | '^='
+ | '|='
  ;
 
 primary
- : LPAREN expression RPAREN
+ : '(' expression ')'
  | literal
  | identifier
  ;
@@ -443,28 +442,28 @@ creatorName
  ;
 
 arrayExpression
- : (LBRACK RBRACK)+ arrayInitializer
- | (LBRACK expression RBRACK)+ (LBRACK RBRACK)*
+ : ('[' ']')+ arrayInitializer
+ | ('[' expression ']')+ ('[' ']')*
  ;
 
 recordExpression
- : LBRACE recordExpressionList* RBRACE
+ : '{' recordExpressionList* '}'
  ;
 
 recordExpressionList
- : annotation? DOT? Identifier EQ expression COMMA?
+ : annotation? '.'? Identifier '=' expression ','?
  ;
 
 protocolExpression
- : LBRACE protocolExpressionList RBRACE
+ : '{' protocolExpressionList '}'
  ;
 
 protocolExpressionList
- : DOT? Identifier tagExpressionList //(COMMA DOT? Identifier tagExpressionList)*
+ : '.'? Identifier tagExpressionList
  ;
 
 tagExpressionList
- : COLON LBRACE? recordExpressionList* RBRACE?
+ : ':' '{'? recordExpressionList* '}'?
  ;
 
 //externalExpression
@@ -476,7 +475,7 @@ classExpression
  ;
 
 typeArgumentsOrDiamond
- : LT QUEST GT
+ : '<' '?' '>'
  | typeArguments
  ;
 
@@ -492,10 +491,10 @@ literal
 
 identifier
  : Identifier
- | TIMEOUT
- | READ
- | WRITE
- | SYNC
+ | 'timeout'
+ | 'read'
+ | 'write'
+ | 'sync'
  ;
 
 // ==----------------------------------------------==

@@ -1,6 +1,6 @@
 package ast.expr;
 
-import ast.types.ASTType;
+import ast.types.NodeType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -36,8 +36,8 @@ public class DoubleLiteral extends ConstantExpression {
   }
 
   @Override
-  public DoubleLiteral setASTType(ASTType type) {
-    return (DoubleLiteral) super.setASTType(type);
+  public DoubleLiteral setNodeType(NodeType type) {
+    return (DoubleLiteral) super.setNodeType(type);
   }
 
   @Override

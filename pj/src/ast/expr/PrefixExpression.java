@@ -1,7 +1,7 @@
 package ast.expr;
 
 import ast.SourceAST;
-import ast.types.ASTType;
+import ast.types.NodeType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -21,6 +21,8 @@ public class PrefixExpression extends Expression<PrefixExpression> {
   public static final int COMP = 4; // ~
   public static final int NOT = 5; // !
   private static final String[] symbols = {"++", "--", "+", "-", "~", "!"};
+
+  public String opString() { return symbols[operator_]; }
 
   private Expression<?> expression_;
   private int operator_;
@@ -78,8 +80,8 @@ public class PrefixExpression extends Expression<PrefixExpression> {
   }
 
   @Override
-  public PrefixExpression setASTType(ASTType type) {
-    return super.setASTType(type);
+  public PrefixExpression setNodeType(NodeType type) {
+    return super.setNodeType(type);
   }
 
   @Override

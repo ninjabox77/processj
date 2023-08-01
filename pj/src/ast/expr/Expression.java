@@ -2,7 +2,7 @@ package ast.expr;
 
 import ast.AnnotatedNode;
 import ast.SourceAST;
-import ast.types.ASTType;
+import ast.types.NodeType;
 import org.antlr.v4.runtime.Token;
 
 /**
@@ -12,7 +12,7 @@ import org.antlr.v4.runtime.Token;
  */
 public abstract class Expression<E extends Expression<?>> extends AnnotatedNode {
 
-  private ASTType type_;
+  private NodeType type_;
 
   public Expression() {
     this(null);
@@ -23,8 +23,7 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
     customInitialization();
   }
 
-  @Override
-  public E setASTType(ASTType type) {
+  public E setNodeType(NodeType type) {
     if (type == type_) {
       return (E) this;
     }
@@ -36,8 +35,7 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
     return (E) this;
   }
 
-  @Override
-  public ASTType getASTType() {
+  public NodeType getNodeType() {
     return type_;
   }
 
@@ -47,7 +45,7 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
       return false;
     }
     if (node == type_) {
-      setASTType((ASTType) replaceWith);
+      setNodeType((NodeType) replaceWith);
       return true;
     }
     return false;
@@ -137,7 +135,7 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
     return false;
   }
 
-  public CallableExpression asCallableExpression() {
+  public CallabelExpression asCallableExpression() {
     throw new IllegalStateException(String.format("%s is not a CallableExpression, it is a %s", this, getClass().getSimpleName()));
   }
 

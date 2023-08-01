@@ -12,7 +12,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ErrorNode extends ASTType {
+public class ErrorNode extends NodeType {
 
   private Type type_;
 

@@ -3,7 +3,7 @@ package ast.toplevel;
 import ast.Sequence;
 import ast.Parameter;
 import ast.stmt.BlockStatement;
-import ast.types.ASTType;
+import ast.types.NodeType;
 import ast.types.ConstructedNode;
 import org.antlr.v4.runtime.Token;
 import scope.VariableScope;
@@ -16,34 +16,34 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public abstract class CallableDeclaration<T extends CallableDeclaration<?>> extends TopLevelDeclaration<T> {
+public abstract class CallabelDeclaration<T extends CallabelDeclaration<?>> extends TopLevelDeclaration<T> {
 
   private Sequence<Parameter> parameters_;
   private BlockStatement body_;
   private boolean yields_;
   protected VariableScope variableScope_;
 
-  public CallableDeclaration() {
+  public CallabelDeclaration() {
     this(null, null);
   }
 
-  public CallableDeclaration(ASTType type, final String name) {
+  public CallabelDeclaration(NodeType type, final String name) {
     this(ACC_PUBLIC, type, name);
   }
 
-  public CallableDeclaration(int modifiers, ASTType type, final String name) {
+  public CallabelDeclaration(int modifiers, NodeType type, final String name) {
     this(modifiers, type, name, null);
   }
 
-  public CallableDeclaration(int modifiers, ASTType type, final String name, Sequence<ConstructedNode> implementedNames) {
+  public CallabelDeclaration(int modifiers, NodeType type, final String name, Sequence<ConstructedNode> implementedNames) {
     this(modifiers, type, name, implementedNames, new BlockStatement());
   }
 
-  public CallableDeclaration(int modifiers, ASTType type, final String name, Sequence<ConstructedNode> implementedNames, BlockStatement body) {
+  public CallabelDeclaration(int modifiers, NodeType type, final String name, Sequence<ConstructedNode> implementedNames, BlockStatement body) {
     this(null, modifiers, type, name, implementedNames, null, body);
   }
 
-  public CallableDeclaration(Token token, int modifiers, ASTType type, final String name, Sequence<ConstructedNode> implementedNames, Sequence<Parameter> parameters, BlockStatement body) {
+  public CallabelDeclaration(Token token, int modifiers, NodeType type, final String name, Sequence<ConstructedNode> implementedNames, Sequence<Parameter> parameters, BlockStatement body) {
     super(token, modifiers, type, name, implementedNames);
     setParameters(parameters);
     setBody(body);
@@ -112,7 +112,7 @@ public abstract class CallableDeclaration<T extends CallableDeclaration<?>> exte
   }
 
   @Override
-  public CallableDeclaration<?> asCallableDeclaration() {
+  public CallabelDeclaration<?> asCallableDeclaration() {
     return this;
   }
 

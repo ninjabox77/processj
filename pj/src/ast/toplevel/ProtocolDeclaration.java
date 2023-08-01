@@ -2,7 +2,7 @@ package ast.toplevel;
 
 import ast.SourceAST;
 import ast.Sequence;
-import ast.types.ASTType;
+import ast.types.NodeType;
 import ast.types.ConstructedNode;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
@@ -24,23 +24,23 @@ public class ProtocolDeclaration extends TopLevelDeclaration<ProtocolDeclaration
     this(null, null);
   }
 
-  public ProtocolDeclaration(ASTType type, final String name) {
+  public ProtocolDeclaration(NodeType type, final String name) {
     this(ACC_PRIVATE, type, name);
   }
 
-  public ProtocolDeclaration(int modifiers, ASTType type, final String name) {
+  public ProtocolDeclaration(int modifiers, NodeType type, final String name) {
     this(modifiers, type, name, null);
   }
 
-  public ProtocolDeclaration(int modifiers, ASTType type, final String name, Sequence<ConstructedNode> implementedNames) {
+  public ProtocolDeclaration(int modifiers, NodeType type, final String name, Sequence<ConstructedNode> implementedNames) {
     this(modifiers, type, name, implementedNames, null);
   }
 
-  public ProtocolDeclaration(int modifiers, ASTType type, final String name, Sequence<ConstructedNode> implementedNames, Sequence<ProtocolCaseDeclaration> declaredTags) {
+  public ProtocolDeclaration(int modifiers, NodeType type, final String name, Sequence<ConstructedNode> implementedNames, Sequence<ProtocolCaseDeclaration> declaredTags) {
     this(null, modifiers, type, name, implementedNames, declaredTags);
   }
 
-  public ProtocolDeclaration(Token token, int modifiers, ASTType type, final String name, Sequence<ConstructedNode> implementedNames, Sequence<ProtocolCaseDeclaration> declaredTags) {
+  public ProtocolDeclaration(Token token, int modifiers, NodeType type, final String name, Sequence<ConstructedNode> implementedNames, Sequence<ProtocolCaseDeclaration> declaredTags) {
     super(token, modifiers, type, name, implementedNames);
     setDeclaredTags(declaredTags);
   }

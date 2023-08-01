@@ -1,0 +1,10 @@
+
+void main(string...args {
+  int[][] a = new int[100][100];  // legal
+  int[][] b = new int[100][];     // legal
+  //int[][] c = new int[][];        // illegal
+
+  int[][] a = new int[100][1000]; // a 100x1000 2D array
+  int x = a.length;
+  int y = a[0].length;
+}

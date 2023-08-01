@@ -1,0 +1,9 @@
+
+public void main(string...args) {
+  int numbers[] = new int[100];    // legal
+  int[] numbers[] = new int[100];  // legal
+  int[][] a = new int[100][100];   // legal
+  int[] a[] = new int[100][100];   // legal
+  int[][] b = new int[100][];      // legal
+  //int[][] c = new int[][];         // illegal
+}

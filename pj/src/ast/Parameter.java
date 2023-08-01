@@ -1,6 +1,6 @@
 package ast;
 
-import ast.types.ASTType;
+import ast.types.NodeType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -16,7 +16,7 @@ import java.util.Objects;
 public class Parameter extends AnnotatedNode implements Modifier<Parameter>, Variable<Parameter> {
 
   private int modifiers_;
-  private ASTType type_;
+  private NodeType type_;
   private String name_;
   private boolean isVarargs_;
 
@@ -24,17 +24,17 @@ public class Parameter extends AnnotatedNode implements Modifier<Parameter>, Var
     this(null, null);
   }
 
-  public Parameter(ASTType type, final String name) {
+  public Parameter(NodeType type, final String name) {
     this(ACC_NATIVE, type, name);
   }
 
-  public Parameter(final int modifiers, ASTType type, final String name) {
+  public Parameter(final int modifiers, NodeType type, final String name) {
     this(null, modifiers, type, name);
   }
 
-  public Parameter(Token token, final int modifiers, ASTType type, final String name) {
+  public Parameter(Token token, final int modifiers, NodeType type, final String name) {
     super(token);
-    setASTType(type);
+    setNodeType(type);
     setName(name);
   }
 
@@ -50,8 +50,7 @@ public class Parameter extends AnnotatedNode implements Modifier<Parameter>, Var
     return isVarargs_;
   }
 
-  @Override
-  public Parameter setASTType(ASTType type) {
+  public Parameter setNodeType(NodeType type) {
     if (type == type_) {
       return this;
     }
@@ -63,8 +62,7 @@ public class Parameter extends AnnotatedNode implements Modifier<Parameter>, Var
     return this;
   }
 
-  @Override
-  public ASTType getASTType() {
+  public NodeType getNodeType() {
     return type_;
   }
 
@@ -88,7 +86,7 @@ public class Parameter extends AnnotatedNode implements Modifier<Parameter>, Var
       return false;
     }
     if (node == type_) {
-      setASTType((ASTType) replaceWith);
+      setNodeType((NodeType) replaceWith);
       return true;
     }
     return false;

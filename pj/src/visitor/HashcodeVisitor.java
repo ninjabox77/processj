@@ -155,7 +155,7 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final CallableDeclaration<?> m) {
+  public Integer visit(final CallabelDeclaration<?> m) {
     return null;
   }
 
@@ -335,7 +335,7 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   }
 
   @Override
-  public Integer visit(final CallableExpression c) {
+  public Integer visit(final CallabelExpression c) {
     return null;
   }
 
@@ -604,7 +604,7 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   @Override
   public Integer visit(final ProtocolType p) {
     return p.getName().hashCode() * 31 +
-        (p.getTypeFields().isPresent() ? p.getTypeFields().get().accept(this) : 0) * 31 +
+        (p.getFieldTypes().isPresent() ? p.getFieldTypes().get().accept(this) : 0) * 31 +
         (p.getComment().isPresent() ? p.getComment().get().accept(this) : 0) * 31;
   }
 

@@ -16,7 +16,7 @@ import java.util.stream.Collector;
  *
  * @author Ben
  */
-public class Sequence<N extends SourceAST> implements NodeWithParent<Sequence<N>>, List<N>, Iterable<N>, Visitor {
+public class Sequence<N extends SourceAST> implements HasParent<Sequence<N>>, List<N>, Iterable<N>, Visitor {
   protected List<N> arrayList_ = new ArrayList<>();
   protected SourceAST parentNode_;
 
@@ -256,7 +256,7 @@ public class Sequence<N extends SourceAST> implements NodeWithParent<Sequence<N>
 
   private void setAsParentNodeOf(List<? extends SourceAST> children) {
     if (children != null) {
-      for (NodeWithParent<?> node : children) {
+      for (HasParent<?> node : children) {
         node.setParentNode(getParentNodeForChildren());
       }
     }

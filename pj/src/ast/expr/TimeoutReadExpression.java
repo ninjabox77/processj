@@ -8,7 +8,7 @@ import org.antlr.v4.runtime.Token;
  *
  * @author Ben
  */
-public class TimeoutReadExpression extends CallableExpression {
+public class TimeoutReadExpression extends CallabelExpression {
 
   public TimeoutReadExpression() {
     this(null, (Expression<?>) null);

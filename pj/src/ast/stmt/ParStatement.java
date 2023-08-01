@@ -15,28 +15,28 @@ import java.util.Optional;
 public abstract class ParStatement<P extends ParStatement<P>> extends Statement {
 
   private Sequence<Expression<?>> barriers_;
-  private Sequence<Statement> statements_;
+  private Statement loopBlock_;
 
   public ParStatement() {
     this(null);
   }
 
-  public ParStatement(Sequence<Statement> statements) {
-    this((Sequence<Expression<?>>) null, statements);
+  public ParStatement(Statement loopBlock) {
+    this((Sequence<Expression<?>>) null, loopBlock);
   }
 
-  public ParStatement(Sequence<Expression<?>> barriers, Sequence<Statement> statements) {
-    this(null, barriers, statements);
+  public ParStatement(Sequence<Expression<?>> barriers, Statement loopBlock) {
+    this(null, barriers, loopBlock);
   }
 
-  public ParStatement(Token token, Sequence<Statement> statements) {
-    this(token, null, statements);
+  public ParStatement(Token token, Statement loopBlock) {
+    this(token, null, loopBlock);
   }
 
-  public ParStatement(Token token, Sequence<Expression<?>> barriers, Sequence<Statement> statements) {
+  public ParStatement(Token token, Sequence<Expression<?>> barriers, Statement loopBlock) {
     super(token, null);
     setBarriers(barriers);
-    setStatemetns(statements);
+    setLoopBlock(loopBlock);
   }
 
   @SuppressWarnings("unchecked")
@@ -57,20 +57,20 @@ public abstract class ParStatement<P extends ParStatement<P>> extends Statement 
   }
 
   @SuppressWarnings("unchecked")
-  public P setStatemetns(Sequence<Statement> statements) {
-    if (statements == statements_) {
+  public P setLoopBlock(Statement loopBlock) {
+    if (loopBlock == loopBlock_) {
       return (P) this;
     }
-    if (statements_ != null) {
-      statements_.setParentNode(null);
+    if (loopBlock_ != null) {
+      loopBlock_.setParentNode(null);
     }
-    statements_ = statements;
-    setAsParentNodeOf(statements);
+    loopBlock_ = loopBlock;
+    setAsParentNodeOf(loopBlock);
     return (P) this;
   }
 
-  public Sequence<Statement> getStatements() {
-    return statements_;
+  public Statement getLoopBlock() {
+    return loopBlock_;
   }
 
   public boolean isParBlock() {
@@ -102,14 +102,6 @@ public abstract class ParStatement<P extends ParStatement<P>> extends Statement 
         }
       }
     }
-    if (statements_ != null) {
-      for (int i = 0; i < statements_.size(); ++i) {
-        if (node == statements_.get(i)) {
-          statements_.remove(i);
-          return true;
-        }
-      }
-    }
     return false;
   }
 
@@ -126,13 +118,9 @@ public abstract class ParStatement<P extends ParStatement<P>> extends Statement 
         }
       }
     }
-    if (statements_ != null) {
-      for (int i = 0; i < statements_.size(); ++i) {
-        if (node == statements_.get(i)) {
-          statements_.set(i, (Statement) replaceWith);
-          return true;
-        }
-      }
+    if (node == loopBlock_) {
+      setLoopBlock((Statement) replaceWith);
+      return true;
     }
     return false;
   }

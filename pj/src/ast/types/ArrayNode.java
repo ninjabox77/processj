@@ -11,7 +11,7 @@ import visitor.VoidVisitor;
 /**
  * Represents an array type in the AST.
  */
-public class ArrayNode extends ASTType {
+public class ArrayNode extends NodeType {
 
   /**
    * Used to determine whether brackets appear next to the type

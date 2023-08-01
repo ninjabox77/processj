@@ -1373,18 +1373,6 @@ public class ProcessJBaseListener implements ProcessJListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterArrayAccexxExpression(ProcessJParser.ArrayAccexxExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitArrayAccexxExpression(ProcessJParser.ArrayAccexxExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterExclusiveExpression(ProcessJParser.ExclusiveExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1500,6 +1488,18 @@ public class ProcessJBaseListener implements ProcessJListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitMultiplicativeExpression(ProcessJParser.MultiplicativeExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterArrayAccessExpression(ProcessJParser.ArrayAccessExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArrayAccessExpression(ProcessJParser.ArrayAccessExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

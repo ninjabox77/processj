@@ -1,7 +1,7 @@
 package ast.expr;
 
 import ast.SourceAST;
-import ast.types.ASTType;
+import ast.types.NodeType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -90,8 +90,8 @@ public class TernaryExpression extends Expression<TernaryExpression> {
   }
 
   @Override
-  public TernaryExpression setASTType(ASTType type) {
-    return super.setASTType(type);
+  public TernaryExpression setNodeType(NodeType type) {
+    return super.setNodeType(type);
   }
 
   @Override

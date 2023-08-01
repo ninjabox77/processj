@@ -1,7 +1,7 @@
 package ast.expr;
 
 import ast.SourceAST;
-import ast.types.ASTType;
+import ast.types.NodeType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -39,9 +39,11 @@ public class BinaryExpression extends Expression<BinaryExpression> {
   public static final String[] symbols = {"+", "-", "*", "/", "%", "<<", ">>", ">>>", "<", ">",
       "<=", ">=", "is", "==", "!=", "&", "|", "^", "&&", "||"};
 
-  private Expression<?> leftExpression_;
-  private Expression<?> rightExpression_;
-  private int operator_;
+  public String opString() { return symbols[operator_]; }
+
+  protected Expression<?> leftExpression_;
+  protected Expression<?> rightExpression_;
+  protected int operator_;
 
   public BinaryExpression(Expression<?> leftExpression, Expression<?> rightExpression, final int operator) {
     this(null, leftExpression, rightExpression, operator);
@@ -107,8 +109,8 @@ public class BinaryExpression extends Expression<BinaryExpression> {
   }
 
   @Override
-  public BinaryExpression setASTType(ASTType type) {
-    return super.setASTType(type);
+  public BinaryExpression setNodeType(NodeType type) {
+    return super.setNodeType(type);
   }
 
   @Override

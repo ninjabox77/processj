@@ -79,7 +79,7 @@ public interface GenericVisitor<R, A> {
 
   R visit(final ExternalDeclaration e, A arg);
 
-  R visit(final CallableDeclaration<?> m, A arg);
+  R visit(final CallabelDeclaration<?> m, A arg);
 
   R visit(final ProcedureTopLevel p, A arg);
 
@@ -162,7 +162,7 @@ public interface GenericVisitor<R, A> {
 
   R visit(final BooleanLiteral b, A arg);
 
-  R visit(final CallableExpression c, A arg);
+  R visit(final CallabelExpression c, A arg);
 
   R visit(final CastExpression c, A arg);
 

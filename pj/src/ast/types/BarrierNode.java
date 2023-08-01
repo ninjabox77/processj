@@ -12,7 +12,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class BarrierNode extends ASTType {
+public class BarrierNode extends NodeType {
 
   private BarrierType type_;
 

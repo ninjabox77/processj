@@ -1,8 +1,7 @@
 package ast;
 
-import ast.expr.EmptyExpression;
 import ast.expr.Expression;
-import ast.types.ASTType;
+import ast.types.NodeType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -18,7 +17,7 @@ import java.util.Objects;
 public class VariableDeclarator extends AnnotatedNode implements Variable<VariableDeclarator>, Modifier<VariableDeclarator> {
 
   private int modifiers_;
-  private ASTType type_;
+  private NodeType type_;
   private String name_;
   private Expression<?> rightExpression_;
 
@@ -26,22 +25,22 @@ public class VariableDeclarator extends AnnotatedNode implements Variable<Variab
     this(null, null);
   }
 
-  public VariableDeclarator(ASTType type, final String name) {
+  public VariableDeclarator(NodeType type, final String name) {
     this(0, type, name);
   }
 
-  public VariableDeclarator(final int modifiers, ASTType type, final String name) {
-    this(modifiers, type, name, new EmptyExpression());
+  public VariableDeclarator(final int modifiers, NodeType type, final String name) {
+    this(modifiers, type, name, null);
   }
 
-  public VariableDeclarator(final int modifiers, ASTType type, final String name, Expression<?> initExpression) {
+  public VariableDeclarator(final int modifiers, NodeType type, final String name, Expression<?> initExpression) {
     this(null, modifiers, type, name, initExpression);
   }
 
-  public VariableDeclarator(Token token, final int modifiers, ASTType type, final String name, Expression<?> rightExpression) {
+  public VariableDeclarator(Token token, final int modifiers, NodeType type, final String name, Expression<?> rightExpression) {
     super(token);
     setModifiers(modifiers);
-    setASTType(type);
+    setNodeType(type);
     setName(name);
     setRightExpression(rightExpression);
   }
@@ -65,8 +64,7 @@ public class VariableDeclarator extends AnnotatedNode implements Variable<Variab
     return this;
   }
 
-  @Override
-  public VariableDeclarator setASTType(ASTType type) {
+  public VariableDeclarator setNodeType(NodeType type) {
     if (type == type_) {
       return this;
     }
@@ -78,8 +76,7 @@ public class VariableDeclarator extends AnnotatedNode implements Variable<Variab
     return this;
   }
 
-  @Override
-  public ASTType getASTType() {
+  public NodeType getNodeType() {
     return type_;
   }
 

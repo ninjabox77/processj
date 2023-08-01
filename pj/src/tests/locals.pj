@@ -1,0 +1,23 @@
+
+void main(string...args) {
+  int a, b;
+  int c[];
+  timer t;
+  barrier b;
+  chan<int> ch;
+  chan<int> chs[];
+  chan<int>.read r;
+  const double pi = 3.1415;
+
+  int v;
+  v = r.read();
+  v = ch.read.read();
+  v = ch.read();
+
+  while (true) {
+    alt {
+      v = c1.read() : println("Value read on c1: " + v);
+      v = c2.read() : println("Value read on c2: " + v);
+    }
+  }
+}

@@ -17,12 +17,12 @@ public class ParBlock extends ParStatement<ParBlock> {
     this(null);
   }
 
-  public ParBlock(Sequence<Statement> statements) {
-    this(null, statements);
+  public ParBlock(Statement loopBlock) {
+    this(null, loopBlock);
   }
 
-  public ParBlock(Token token, Sequence<Statement> statements) {
-    super(token, statements);
+  public ParBlock(Token token, Statement loopBlock) {
+    super(token, loopBlock);
   }
 
   @Override

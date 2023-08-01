@@ -19,33 +19,33 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public class CallableExpression extends Expression<CallableExpression> {
+public class CallabelExpression extends Expression<CallabelExpression> {
 
   private Expression<?> methodExpression_;
   private Sequence<Expression<?>> arguments_;
   private boolean implicitThis_;
   private String identifier_;
 
-  public CallableExpression() {
+  public CallabelExpression() {
     this(null, null);
   }
 
-  public CallableExpression(Expression<?> methodExpression, String identifier) {
-    this(methodExpression, identifier, (Expression<?>) null);
+  public CallabelExpression(Expression<?> methodExpression, String identifier) {
+    this(methodExpression, identifier, new EmptyExpression());
   }
 
-  public CallableExpression(Expression<?> methodExpression, String identifier, Expression<?>... arguments) {
+  public CallabelExpression(Expression<?> methodExpression, String identifier, Expression<?>... arguments) {
     this(null, methodExpression, identifier, Sequence.sequenceList(arguments));
   }
 
-  public CallableExpression(Token token, Expression<?> methodExpression, String identifier, Sequence<Expression<?>> arguments) {
+  public CallabelExpression(Token token, Expression<?> methodExpression, String identifier, Sequence<Expression<?>> arguments) {
     super(token);
     setMethodExpression(methodExpression);
     setIdentifier(identifier);
     setArguments(arguments);
   }
 
-  public CallableExpression setMethodExpression(Expression<?> methodExpression) {
+  public CallabelExpression setMethodExpression(Expression<?> methodExpression) {
     if (methodExpression == methodExpression_) {
       return this;
     }
@@ -61,7 +61,7 @@ public class CallableExpression extends Expression<CallableExpression> {
     return Optional.ofNullable(methodExpression_);
   }
 
-  public CallableExpression setIdentifier(final String identifier) {
+  public CallabelExpression setIdentifier(final String identifier) {
     if (Objects.equals(identifier, identifier_)) {
       return this;
     }
@@ -73,7 +73,7 @@ public class CallableExpression extends Expression<CallableExpression> {
     return identifier_;
   }
 
-  public CallableExpression setImplicitThis(final boolean implicitThis) {
+  public CallabelExpression setImplicitThis(final boolean implicitThis) {
     if (implicitThis == implicitThis_) {
       return this;
     }
@@ -85,7 +85,7 @@ public class CallableExpression extends Expression<CallableExpression> {
     return implicitThis_ || getMethodExpression().isPresent();
   }
 
-  public CallableExpression setArguments(Sequence<Expression<?>> arguments) {
+  public CallabelExpression setArguments(Sequence<Expression<?>> arguments) {
     if (arguments == arguments_) {
       return this;
     }
@@ -107,7 +107,7 @@ public class CallableExpression extends Expression<CallableExpression> {
   }
 
   @Override
-  public CallableExpression asCallableExpression() {
+  public CallabelExpression asCallableExpression() {
     return this;
   }
 
@@ -128,7 +128,7 @@ public class CallableExpression extends Expression<CallableExpression> {
         }
       }
     }
-    return super.replace(node, replaceWith);
+    return false;
   }
 
   @Override
@@ -148,7 +148,7 @@ public class CallableExpression extends Expression<CallableExpression> {
         }
       }
     }
-    return super.remove(node);
+    return false;
   }
 
   public boolean isChannelReadExpression() {

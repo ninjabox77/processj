@@ -28,15 +28,14 @@ public abstract class CallableType<T extends CallableType<?>> extends Constructe
 
   public CallableType(Token token, Type returnType, Sequence<Type> parameterTypes, final boolean yields) {
     super(token);
-    setTSType(returnType);
+    setReturnType(returnType);
     setParameterTypes(parameterTypes);
     setYield(yields);
 
   }
 
   @SuppressWarnings("unchecked")
-  @Override
-  public T setTSType(Type retuntType) {
+  public T setReturnType(Type retuntType) {
     if (retuntType == returnType_) {
       return (T) this;
     }
@@ -48,8 +47,7 @@ public abstract class CallableType<T extends CallableType<?>> extends Constructe
     return (T) this;
   }
 
-  @Override
-  public Type getTSType() {
+  public Type getReturnType() {
     return returnType_;
   }
 
@@ -105,7 +103,7 @@ public abstract class CallableType<T extends CallableType<?>> extends Constructe
       return false;
     }
     if (node == returnType_) {
-      setTSType((Type) replaceWith);
+      setReturnType((Type) replaceWith);
       return true;
     }
     if (parameterTypes_ != null) {

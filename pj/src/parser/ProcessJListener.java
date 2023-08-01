@@ -1220,18 +1220,6 @@ public interface ProcessJListener extends ParseTreeListener {
 	 */
 	void exitAnnotatedExpression(ProcessJParser.AnnotatedExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code ArrayAccexxExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void enterArrayAccexxExpression(ProcessJParser.ArrayAccexxExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code ArrayAccexxExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void exitArrayAccexxExpression(ProcessJParser.ArrayAccexxExpressionContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code ExclusiveExpression}
 	 * labeled alternative in {@link ProcessJParser#expression}.
 	 * @param ctx the parse tree
@@ -1351,6 +1339,18 @@ public interface ProcessJListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitMultiplicativeExpression(ProcessJParser.MultiplicativeExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ArrayAccessExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterArrayAccessExpression(ProcessJParser.ArrayAccessExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ArrayAccessExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitArrayAccessExpression(ProcessJParser.ArrayAccessExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ProcessJParser#assignOp}.
 	 * @param ctx the parse tree

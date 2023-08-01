@@ -7,7 +7,7 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public interface NodeWithParent<T> {
+public interface HasParent<T> {
 
   default boolean isOrphan() {
     return getParentNode().isEmpty();

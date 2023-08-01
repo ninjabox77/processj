@@ -23,12 +23,12 @@ public class ParForBlock extends ParStatement<ParForBlock> {
     this(Sequence.sequenceList(), new BooleanLiteral("false"), Sequence.sequenceList(), null);
   }
 
-  public ParForBlock(Sequence<Expression<?>> initialization, Expression<?> conditional, Sequence<Expression<?>> update, Sequence<Statement> statements) {
-    this(null, initialization, conditional, update, statements);
+  public ParForBlock(Sequence<Expression<?>> initialization, Expression<?> conditional, Sequence<Expression<?>> update, Statement loopBlock) {
+    this(null, initialization, conditional, update, loopBlock);
   }
 
-  public ParForBlock(Token token, Sequence<Expression<?>> initialization, Expression<?> conditional, Sequence<Expression<?>> update, Sequence<Statement> statements) {
-    super(token, statements);
+  public ParForBlock(Token token, Sequence<Expression<?>> initialization, Expression<?> conditional, Sequence<Expression<?>> update, Statement loopBlock) {
+    super(token, loopBlock);
     setInitialization(initialization);
     setConditional(conditional);
     setUpdate(update);

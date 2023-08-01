@@ -25,7 +25,7 @@ public class ForStatement extends Statement implements LoopingStmt<ForStatement>
   private Statement loopBlock_;
 
   public ForStatement() {
-    this(Sequence.sequenceList(), new BooleanExpression(new BooleanLiteral("false")), Sequence.sequenceList(), new EmptyStatement());
+    this(Sequence.sequenceList(), new BooleanExpression(new BooleanLiteral("false")), Sequence.sequenceList(), null);
   }
 
   public ForStatement(Sequence<Expression<?>> initialization, BooleanExpression condition, Sequence<Expression<?>> update, Statement loopBlock) {

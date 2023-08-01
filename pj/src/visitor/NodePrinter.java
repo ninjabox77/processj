@@ -17,18 +17,21 @@ import typesystem.*;
 
 import java.io.PrintWriter;
 
+/**
+ * @author Ben
+ */
 public class NodePrinter implements VoidVisitor<Visitor> {
 
   private int tabLevel_ = 0;
-  private final PrintWriter writer_;
+  private final PrintWriter printer_;
 
   private String tabs(int line) {
     final String TAB = "  ";
     return line + ":" + TAB.repeat(Math.max(0, tabLevel_));
   }
 
-  public NodePrinter(PrintWriter writer) {
-    writer_ = writer;
+  public NodePrinter(PrintWriter printer) {
+    printer_ = printer;
   }
 
   @Override
@@ -37,7 +40,7 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final ArrayDimension a, Visitor arg) {
-    writer_.print(tabs(a.getLine()) + "ArrayDimension:");
+    printer_.println(tabs(a.getLine()) + "ArrayDimension:");
     tabLevel_++;
     a.getDimension().ifPresent(d -> d.accept(this, arg));
     tabLevel_--;
@@ -49,7 +52,7 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final CompileUnit c, Visitor arg) {
-    writer_.println(tabs(c.getLine()) + "CompileUnit:");
+    printer_.println(tabs(c.getLine()) + "CompileUnit:");
     tabLevel_++;
     if (c.getPackage() != null) {
       c.getPackage().accept(this, arg);
@@ -65,26 +68,26 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final Import i, Visitor arg) {
-    writer_.println(tabs(i.getLine()) + "Import: " + i.asString());
+    printer_.println(tabs(i.getLine()) + "Import: " + i.asString());
   }
 
   @Override
   public void visit(final Name n, Visitor arg) {
-    writer_.println(tabs(n.getLine()) + "Name: " + n.asString());
+    printer_.println(tabs(n.getLine()) + "Name: " + n.asString());
   }
 
   @Override
   public void visit(final Package p, Visitor arg) {
-    writer_.println(tabs(p.getLine()) + "Package: " + p.asString());
+    printer_.println(tabs(p.getLine()) + "Package: " + p.asString());
   }
 
   @Override
   public void visit(final Parameter p, Visitor arg) {
-    writer_.println(tabs(p.getLine()) + "Parameter:");
+    printer_.println(tabs(p.getLine()) + "Parameter:");
     tabLevel_++;
-    writer_.println(tabs(p.getLine()) + "Modifier: " + p.getModifiers());
-    p.getASTType().accept(this, arg);
-    writer_.println(tabs(p.getLine()) + "Identifier: " + p.getName());
+    printer_.println(tabs(p.getLine()) + "Modifier: " + p.modifierString());
+    p.getNodeType().accept(this, arg);
+    printer_.println(tabs(p.getLine()) + "Identifier: " + p.getName());
     tabLevel_--;
   }
 
@@ -95,13 +98,13 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final VariableDeclarator v, Visitor arg) {
-    writer_.println(tabs(v.getLine()) + "VariableDeclarator: ");
+    printer_.println(tabs(v.getLine()) + "VariableDeclarator: ");
     tabLevel_++;
-    writer_.println(tabs(v.getLine()) + "Modifier: " + v.getModifiers());
-    v.getASTType().accept(this, arg);
-    writer_.println(tabs(v.getLine()) + "Identifier: " + v.getName());
+    printer_.println(tabs(v.getLine()) + "Modifier: " + v.modifierString());
+    v.getNodeType().accept(this, arg);
+    printer_.println(tabs(v.getLine()) + "Identifier: " + v.getName());
     if (v.getRightExpression() != null) {
-      writer_.println(tabs(v.getLine()) + "Initializer: ");
+      printer_.println(tabs(v.getLine()) + "Initializer: ");
       tabLevel_++;
       v.getRightExpression().accept(this, arg);
       tabLevel_--;
@@ -111,12 +114,12 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final Label l, Visitor arg) {
-    writer_.println(tabs(l.getLine()) + "Label: " + l.getIdentifier());
+    printer_.println(tabs(l.getLine()) + "Label: " + l.getIdentifier());
   }
 
   @Override
   public void visit(final ArrayNode a, Visitor arg) {
-    writer_.println(tabs(a.getLine()) + "ArrayNode:");
+    printer_.println(tabs(a.getLine()) + "ArrayNode:");
     tabLevel_++;
     a.getTSType().accept(this, arg);
     tabLevel_--;
@@ -124,7 +127,7 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final BarrierNode b, Visitor arg) {
-    writer_.println(tabs(b.getLine()) + "BarrierNode:");
+    printer_.println(tabs(b.getLine()) + "BarrierNode:");
     tabLevel_++;
     b.getTSType().accept(this, arg);
     tabLevel_--;
@@ -132,7 +135,7 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final ChannelEndNode c, Visitor arg) {
-    writer_.println(tabs(c.getLine()) + "ChannelEndNode:");
+    printer_.println(tabs(c.getLine()) + "ChannelEndNode:");
     tabLevel_++;
     c.getTSType().accept(this, arg);
     tabLevel_--;
@@ -140,7 +143,7 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final ChannelNode c, Visitor arg) {
-    writer_.print(tabs(c.getLine()) + "ChannelNode:");
+    printer_.println(tabs(c.getLine()) + "ChannelNode:");
     tabLevel_++;
     c.getTSType().accept(this, arg);
     tabLevel_--;
@@ -148,12 +151,11 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final ExternalNode e, Visitor arg) {
-
   }
 
   @Override
   public void visit(final PrimitiveNode p, Visitor arg) {
-    writer_.println(tabs(p.getLine()) + "PrimitiveNode:");
+    printer_.println(tabs(p.getLine()) + "PrimitiveNode:");
     tabLevel_++;
     p.getTSType().accept(this, arg);
     tabLevel_--;
@@ -161,7 +163,7 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final TimerNode t, Visitor arg) {
-    writer_.print(tabs(t.getLine()) + "TimerNode:");
+    printer_.println(tabs(t.getLine()) + "TimerNode:");
     tabLevel_++;
     t.getTSType().accept(this, arg);
     tabLevel_--;
@@ -169,7 +171,7 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final VoidNode v, Visitor arg) {
-    writer_.print(tabs(v.getLine()) + "VoidNode:");
+    printer_.print(tabs(v.getLine()) + "VoidNode:");
     tabLevel_++;
     v.getTSType().accept(this, arg);
     tabLevel_--;
@@ -177,6 +179,10 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final ConstructedNode c, Visitor arg) {
+    printer_.println(tabs(c.getLine()) + "ConstructedNode:");
+    tabLevel_++;
+    c.getTSType().accept(this, arg);
+    tabLevel_--;
   }
 
   @Override
@@ -185,11 +191,12 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final ConstantDeclaration c, Visitor arg) {
-    writer_.println(tabs(c.getLine()) + "ConstantDeclaration:");
+    printer_.println(tabs(c.getLine()) + "ConstantDeclaration:");
     tabLevel_++;
-    writer_.println(tabs(c.getLine()) + "Modifier: " + c.getModifiers());
-    c.getASTType().accept(this, arg);
-    writer_.println(tabs(c.getLine()) + "Identifier: " + c.getName());
+    printer_.println(tabs(c.getLine()) + "Modifier: " + c.modifierString());
+    c.getNodeType().accept(this, arg);
+    printer_.println(tabs(c.getLine()) + "Identifier: " + c.getName());
+    c.getRightExpression().ifPresent(v -> v.accept(this, arg));
     tabLevel_--;
   }
 
@@ -198,50 +205,55 @@ public class NodePrinter implements VoidVisitor<Visitor> {
   }
 
   @Override
-  public void visit(final CallableDeclaration<?> m, Visitor arg) {
+  public void visit(final CallabelDeclaration<?> m, Visitor arg) {
   }
 
   @Override
   public void visit(final ProcedureTopLevel p, Visitor arg) {
-    writer_.println(tabs(p.getLine()) + "ProcedureTopLevel:");
+    printer_.println(tabs(p.getLine()) + "ProcedureTopLevel:");
     tabLevel_++;
-    writer_.println(tabs(p.getLine()) + "Modifier: " + p.getModifiers());
-    writer_.println(tabs(p.getLine()) + "Identifier: " + p.getName());
-    writer_.println(tabs(p.getLine()) + "Yields: " + p.doesYield());
-    tabLevel_++;
-    if (p.getParameters() != null) {
-      p.getParameters().forEach(v -> v.accept(this, arg));
-    }
+    printer_.println(tabs(p.getLine()) + "Modifier: " + p.modifierString());
+    printer_.println(tabs(p.getLine()) + "Identifier: " + p.getName());
+    printer_.println(tabs(p.getLine()) + "Yields: " + p.doesYield());
+    p.getParameters().forEach(v -> v.accept(this, arg));
     if (p.getBody() != null) {
       p.getBody().accept(this, arg);
     }
-    tabLevel_--;
     tabLevel_--;
   }
 
   @Override
   public void visit(final ProtocolCaseDeclaration p, Visitor arg) {
-
+    printer_.println(tabs(p.getLine()) + "ProtocolCaseDeclaration:");
+    tabLevel_++;
+    printer_.println(tabs(p.getLine()) + "Identifier: " + p.getName());
+    p.getDeclaredFields().ifPresent(f -> f.accept(this, arg));
+    tabLevel_--;
   }
 
   @Override
   public void visit(final ProtocolDeclaration p, Visitor arg) {
-
+    printer_.println(tabs(p.getLine()) + "ProtocolDeclaration:");
+    tabLevel_++;
+    printer_.println(tabs(p.getLine()) + "Modifier: " + p.modifierString());
+    printer_.println(tabs(p.getLine()) + "Identifier: " + p.getName());
+    p.getDeclaredTags().ifPresent(t -> t.accept(this, arg));
+    tabLevel_--;
   }
 
   @Override
   public void visit(final RecordDeclaration r, Visitor arg) {
-    writer_.println(tabs(r.getLine()) + "RecordDeclaration:");
+    printer_.println(tabs(r.getLine()) + "RecordDeclaration:");
     tabLevel_++;
-    writer_.println(tabs(r.getLine()) + "Modifier: " + r.getModifiers());
-    writer_.println(tabs(r.getLine()) + "Identifier: " + r.getName());
+    printer_.println(tabs(r.getLine()) + "Modifier: " + r.modifierString());
+    printer_.println(tabs(r.getLine()) + "Identifier: " + r.getName());
     r.getDeclaredFields().ifPresent(f -> f.accept(this, arg));
     tabLevel_--;
   }
 
   @Override
   public void visit(final BlockStatement b, Visitor arg) {
-    writer_.println(tabs(b.getLine()) + "BlockStatement:");
+    printer_.println(tabs(b.getLine()) + "BlockStatement:");
     tabLevel_++;
     if (b.getStatements() != null) {
       b.getStatements().forEach(s -> s.accept(this, arg));
@@ -251,35 +263,39 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final BreakStatement b, Visitor arg) {
-    writer_.println(tabs(b.getLine()) + "Statement: break");
+    printer_.println(tabs(b.getLine()) + "Statement: break");
   }
 
   @Override
   public void visit(final SwitchCaseStatement c, Visitor arg) {
-
+    printer_.println(tabs(c.getLine()) + "SwitchCaseStatement");
+    tabLevel_++;
+    c.getExpressions().forEach(e -> e.accept(this, arg));
+    c.getStatements().ifPresent(s -> s.accept(this, arg));
+    tabLevel_--;
   }
 
   @Override
   public void visit(final ContinueStatement c, Visitor arg) {
-    writer_.println(tabs(c.getLine()) + "ContinueStatement");
+    printer_.println(tabs(c.getLine()) + "ContinueStatement");
   }
 
   @Override
   public void visit(final SkipStatement s, Visitor arg) {
-    writer_.println(tabs(s.getLine()) + "SkipStatement");
+    printer_.println(tabs(s.getLine()) + "SkipStatement");
   }
 
   @Override
   public void visit(final StopStatement s, Visitor arg) {
-    writer_.println(tabs(s.getLine()) + "StopStatement");
+    printer_.println(tabs(s.getLine()) + "StopStatement");
   }
 
   @Override
   public void visit(final DoWhileStatement d, Visitor arg) {
-    writer_.println(tabs(d.getLine()) + "DoWhileStatement:");
+    printer_.println(tabs(d.getLine()) + "DoWhileStatement:");
     tabLevel_++;
     d.getLoopBlock().ifPresent(l -> l.accept(this, arg));
-    writer_.println(tabs(d.getLine()) + "Conditional:");
+    printer_.println(tabs(d.getLine()) + "Conditional:");
     tabLevel_++;
     d.getCondition().accept(this, arg);
     tabLevel_--;
@@ -288,12 +304,12 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final EmptyStatement e, Visitor arg) {
-    writer_.println(tabs(e.getLine()) + "EmptyStatement");
+    printer_.println(tabs(e.getLine()) + "EmptyStatement");
   }
 
   @Override
   public void visit(final ExpressionStatement e, Visitor arg) {
-    writer_.println(tabs(e.getLine()) + "ExpressionStatement:");
+    printer_.println(tabs(e.getLine()) + "ExpressionStatement:");
     tabLevel_++;
     e.getExpression().accept(this, arg);
     tabLevel_--;
@@ -301,33 +317,47 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final ForEachStatement f, Visitor arg) {
-
+    printer_.println(tabs(f.getLine()) + "ForEachStatement:");
+    tabLevel_++;
+    f.getVariable().accept(this, arg);
+    f.getCollectionExpr().accept(this, arg);
+    f.getLoopBlock().ifPresent(s -> s.accept(this, arg));
+    tabLevel_--;
   }
 
   @Override
   public void visit(final ForStatement f, Visitor arg) {
-
+    printer_.println(tabs(f.getLine()) + "ForStatement:");
+    tabLevel_++;
+    f.getInitialization().forEach(i -> i.accept(this, arg));
+    f.getConditional().accept(this, arg);
+    f.getUpdate().forEach(u -> u.accept(this, arg));
+    tabLevel_--;
   }
 
   @Override
   public void visit(final Guard g, Visitor arg) {
-
+    printer_.println(tabs(g.getLine()) + "Guard:");
+    tabLevel_++;
+    g.getExpression().accept(this, arg);
+    printer_.println(tabs(g.getLine()) + "Skip: " + g.isSkip());
+    tabLevel_--;
   }
 
   @Override
   public void visit(final IfStatement i, Visitor arg) {
-    writer_.println(tabs(i.getLine()) + "IfStatement:");
+    printer_.println(tabs(i.getLine()) + "IfStatement:");
     tabLevel_++;
-    writer_.println(tabs(i.getLine()) + "Conditional:");
+    printer_.println(tabs(i.getLine()) + "Conditional:");
     tabLevel_++;
     i.getConditional().accept(this, arg);
     tabLevel_--;
-    writer_.println(tabs(i.getLine()) + "If-then:");
+    printer_.println(tabs(i.getLine()) + "Then-part:");
     tabLevel_++;
     i.getIfPart().accept(this, arg);
     tabLevel_--;
     if (i.getElsePart().isPresent()) {
-      writer_.println(tabs(i.getLine()) + "Else-then:");
+      printer_.println(tabs(i.getLine()) + "Else-part:");
       tabLevel_++;
       i.getElsePart().get().accept(this, arg);
       tabLevel_--;
@@ -337,12 +367,15 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final AltBlock r, Visitor arg) {
-
+    printer_.println(tabs(r.getLine()) + "AltBlock: ");
+    tabLevel_++;
+    r.getLoopBlock().accept(this, arg);
+    tabLevel_--;
   }
 
   @Override
   public void visit(final ReturnStatement r, Visitor arg) {
-    writer_.println(tabs(r.getLine()) + "ReturnStatement: ");
+    printer_.println(tabs(r.getLine()) + "ReturnStatement: ");
     tabLevel_++;
     r.getExpression().ifPresent(e -> e.accept(this, arg));
     tabLevel_--;
@@ -350,37 +383,75 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final SwitchStatement s, Visitor arg) {
+    printer_.println(tabs(s.getLine()) + "SwitchStatement: ");
+    tabLevel_++;
+    printer_.println(tabs(s.getLine()) + "Selector: ");
+    tabLevel_++;
+    s.getSelector().accept(this, arg);
+    tabLevel_--;
+    s.getSwitchCases().ifPresent(c -> c.accept(this, arg));
+    tabLevel_--;
 
   }
 
   @Override
   public void visit(final WhileStatement w, Visitor arg) {
-
+    printer_.println(tabs(w.getLine()) + "WhileStatement:");
+    tabLevel_++;
+    printer_.println(tabs(w.getLine()) + "Conditional:");
+    tabLevel_++;
+    w.getCondition().accept(this, arg);
+    tabLevel_--;
+    w.getLoopBlock().ifPresent(l -> l.accept(this, arg));
+    tabLevel_--;
   }
 
   @Override
   public void visit(final ReplicatedAltBlock r, Visitor arg) {
-
+    printer_.println(tabs(r.getLine()) + "ReplicatedAltBlock:");
+    tabLevel_++;
+    r.getInitialization().forEach(i -> i.accept(this, arg));
+    r.getConditional().accept(this, arg);
+    r.getUpdate().forEach(u -> u.accept(this, arg));
+    tabLevel_--;
   }
 
   @Override
   public void visit(final AltCaseStatement a, Visitor arg) {
-
+    printer_.println(tabs(a.getLine()) + "AltCaseStatement:");
+    tabLevel_++;
+    a.getExpression().ifPresent(e -> e.accept(this, arg));
+    a.getGuard().accept(this, arg);
+    a.getStatement().accept(this, arg);
+    tabLevel_--;
   }
 
   @Override
   public void visit(final ParBlock r, Visitor arg) {
-
+    printer_.println(tabs(r.getLine()) + "ParBlock:");
+    tabLevel_++;
+    r.getBarriers().ifPresent(b -> b.accept(this, arg));
+    r.getLoopBlock().accept(this, arg);
+    tabLevel_--;
   }
 
   @Override
   public void visit(final ParForBlock p, Visitor arg) {
-
+    printer_.println(tabs(p.getLine()) + "ParForBlock:");
+    tabLevel_++;
+    p.getInitialization().forEach(i -> i.accept(this, arg));
+    p.getConditional().accept(this, arg);
+    p.getUpdate().forEach(u -> u.accept(this, arg));
+    tabLevel_--;
   }
 
   @Override
   public void visit(final LabelStatement l, Visitor arg) {
-
+    printer_.println(tabs(l.getLine()) + "LabelStatement:");
+    tabLevel_++;
+    l.getStatementLabels().ifPresent(s -> s.accept(this, arg));
+    l.getStatement().accept(this, arg);
+    tabLevel_--;
   }
 
   @Override
@@ -395,7 +466,7 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final FieldDeclaration f, Visitor arg) {
-    writer_.println(tabs(f.getLine()) + "FieldDeclaration:");
+    printer_.println(tabs(f.getLine()) + "FieldDeclaration:");
     tabLevel_++;
     f.getVariable().accept(this, arg);
     tabLevel_--;
@@ -403,19 +474,21 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final MethodDeclaration<?> m, Visitor arg) {
-
   }
 
   @Override
   public void visit(final ArrayInitializer a, Visitor arg) {
-
+    printer_.println(tabs(a.getLine()) + "ArrayInitializer:");
+    tabLevel_++;
+    a.getValues().ifPresent(v -> v.accept(this, arg));
+    tabLevel_--;
   }
 
   @Override
   public void visit(final AssignmentExpression a, Visitor arg) {
-    writer_.println(tabs(a.getLine()) + "AssignmentExpression:");
+    printer_.println(tabs(a.getLine()) + "AssignmentExpression:");
     tabLevel_++;
-    writer_.println(tabs(a.getLine()) + "Operator: =");
+    printer_.println(tabs(a.getLine()) + "Operator: " + a.opString());
     a.getLeftExpression().accept(this, arg);
     a.getRightExpression().accept(this, arg);
     tabLevel_--;
@@ -423,9 +496,9 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final BinaryExpression b, Visitor arg) {
-    writer_.println(tabs(b.getLine()) + "BinaryExpression:");
+    printer_.println(tabs(b.getLine()) + "BinaryExpression:");
     tabLevel_++;
-    writer_.println(tabs(b.getLine()) + "Operator: " + b.getOperator());
+    printer_.println(tabs(b.getLine()) + "Operator: " + b.opString());
     b.getLeftExpression().accept(this, arg);
     b.getRightExpression().accept(this, arg);
     tabLevel_--;
@@ -433,7 +506,7 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final BooleanExpression b, Visitor arg) {
-    writer_.println(tabs(b.getLine()) + "BooleanExpression:");
+    printer_.println(tabs(b.getLine()) + "BooleanExpression:");
     tabLevel_++;
     b.getExpression().accept(this, arg);
     tabLevel_--;
@@ -441,22 +514,30 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final BooleanLiteral b, Visitor arg) {
-    writer_.println(tabs(b.getLine()) + "BooleanLiteral: " + b.getValue());
+    printer_.println(tabs(b.getLine()) + "BooleanLiteral: " + b.getValue());
   }
 
   @Override
-  public void visit(final CallableExpression c, Visitor arg) {
-
+  public void visit(final CallabelExpression c, Visitor arg) {
+    printer_.println(tabs(c.getLine()) + "CallabelExpression: " + c.getIdentifier());
+    tabLevel_++;
+    c.getMethodExpression().ifPresent(m -> m.accept(this, arg));
+    c.getArguments().accept(this, arg);
+    tabLevel_--;
   }
 
   @Override
   public void visit(final CastExpression c, Visitor arg) {
-
+    printer_.println(tabs(c.getLine()) + "CastExpression: ");
+    tabLevel_++;
+    c.getNodeType().accept(this, arg);
+    c.getExpression().accept(this, arg);
+    tabLevel_--;
   }
 
   @Override
   public void visit(final CharacterLiteral c, Visitor arg) {
-    writer_.println(tabs(c.getLine()) + "CharacterLiteral: " + c.getValue());
+    printer_.println(tabs(c.getLine()) + "CharacterLiteral: " + c.getValue());
   }
 
   @Override
@@ -471,7 +552,7 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final DeclarationExpression d, Visitor arg) {
-    writer_.println(tabs(d.getLine()) + "DeclarationExpression:");
+    printer_.println(tabs(d.getLine()) + "DeclarationExpression:");
     tabLevel_++;
     d.getDeclaration().accept(this, arg);
     tabLevel_--;
@@ -479,32 +560,37 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final DoubleLiteral d, Visitor arg) {
-    writer_.println(tabs(d.getLine()) + "DoubleLiteral: " + d.getValue());
+    printer_.println(tabs(d.getLine()) + "DoubleLiteral: " + d.getValue());
   }
 
   @Override
   public void visit(final EmptyExpression e, Visitor arg) {
-
+    printer_.println(tabs(e.getLine()) + "EmptyExpression: ");
   }
 
   @Override
   public void visit(final FieldExpression f, Visitor arg) {
-
+    printer_.println(tabs(f.getLine()) + "FieldExpression: ");
+    tabLevel_++;
+    f.getFieldExpression().ifPresent(a -> a.accept(this, arg));
+    printer_.println(tabs(f.getLine()) + "Identifier: " + f.getIdentifier());
+    tabLevel_--;
   }
 
   @Override
   public void visit(final IntegerLiteral i, Visitor arg) {
-    writer_.println(tabs(i.getLine()) + "IntegerLiteral: " + i.getValue());
+    printer_.println(tabs(i.getLine()) + "IntegerLiteral: " + i.getValue());
   }
 
   @Override
   public void visit(final ListExpression<?> l, Visitor arg) {
-
+    printer_.println(tabs(l.getLine()) + "ListExpression: ");
+    l.getValues().ifPresent(v -> v.accept(this, arg));
   }
 
   @Override
   public void visit(final LongLiteral l, Visitor arg) {
-    writer_.println(tabs(l.getLine()) + "LongLiteral: " + l.getValue());
+    printer_.println(tabs(l.getLine()) + "LongLiteral: " + l.getValue());
   }
 
   @Override
@@ -524,75 +610,101 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final NewArrayExpression n, Visitor arg) {
-
+    printer_.println(tabs(n.getLine()) + "NewArrayExpression:");
+    tabLevel_++;
+    n.getNodeType().accept(this, arg);
+    n.getLevels().ifPresent(s -> s.accept(this, arg));
+    if (n.getArrayInitializer() != null) {
+      n.getArrayInitializer().accept(this, arg);
+    }
+    tabLevel_--;
   }
 
   @Override
   public void visit(final NotExpression n, Visitor arg) {
-
+    printer_.println(tabs(n.getLine()) + "NotExpression:");
+    tabLevel_++;
+    n.getExpression().accept(this, arg);
+    tabLevel_--;
   }
 
   @Override
   public void visit(final NullLiteral n, Visitor arg) {
-
+    printer_.println(tabs(n.getLine()) + "NullLiteral: " + n.getValue());
   }
 
   @Override
   public void visit(final PostfixExpression p, Visitor arg) {
-
+    printer_.println(tabs(p.getLine()) + "PostfixExpression:");
+    tabLevel_++;
+    printer_.println(tabs(p.getLine()) + "Operator = " + p.opString());
+    p.getExpression().accept(this, arg);
+    tabLevel_--;
   }
 
   @Override
   public void visit(final PrefixExpression p, Visitor arg) {
+    printer_.println(tabs(p.getLine()) + "PrefixExpression:");
+    tabLevel_++;
+    printer_.println(tabs(p.getLine()) + "Operator = " + p.opString());
+    p.getExpression().accept(this, arg);
+    tabLevel_--;
   }
 
   @Override
   public void visit(final SkipExpression s, Visitor arg) {
-
+    printer_.println(tabs(s.getLine()) + "SkipExpression:");
   }
 
   @Override
   public void visit(final StopExpression s, Visitor arg) {
-
+    printer_.println(tabs(s.getLine()) + "StopExpression:");
   }
 
   @Override
   public void visit(final TernaryExpression t, Visitor arg) {
-
+    printer_.println(tabs(t.getLine()) + "TernaryExpression:");
+    tabLevel_++;
+    t.getCondition().accept(this, arg);
+    t.getTrueExpression().accept(this, arg);
+    t.getFalseExpression().accept(this, arg);
+    tabLevel_--;
   }
 
   @Override
   public void visit(final UnaryMinusExpression u, Visitor arg) {
-
+    printer_.println(tabs(u.getLine()) + "UnaryMinusExpression:");
+    tabLevel_++;
+    u.getExpression().accept(this, arg);
+    tabLevel_--;
   }
 
   @Override
   public void visit(final UnaryPlusExpression u, Visitor arg) {
-
+    printer_.println(tabs(u.getLine()) + "UnaryPlusExpression:");
+    tabLevel_++;
+    u.getExpression().accept(this, arg);
+    tabLevel_--;
   }
 
   @Override
   public void visit(final VariableExpression v, Visitor arg) {
-    writer_.println(tabs(v.getLine()) + "Variable: " + v.getName());
+    printer_.println(tabs(v.getLine()) + "Variable: " + v.getName());
   }
 
   @Override
   public void visit(final FloatLiteral f, Visitor arg) {
-    writer_.println(tabs(f.getLine()) + "<float literal>");
-    tabLevel_++;
-    writer_.println(tabs(f.getLine()) + "\"" + f.getValue() + "\"");
-    tabLevel_--;
-    writer_.println(tabs(f.getLine()) + "</float literal>");
+    printer_.println(tabs(f.getLine()) + "FloatLiteral: " + f.getValue());
   }
 
   @Override
   public void visit(final StringLiteral s, Visitor arg) {
-    writer_.println(tabs(s.getLine()) + "StringLiteral: " + s.getValue());
+    printer_.println(tabs(s.getLine()) + "StringLiteral: " + s.getValue());
   }
 
   @Override
   public void visit(final BlockExpression b, Visitor arg) {
-    writer_.println(tabs(b.getLine()) + "BlockExpression:");
+    printer_.println(tabs(b.getLine()) + "BlockExpression:");
     tabLevel_++;
     if (b.getStatements() != null) {
       b.getStatements().forEach(s -> s.accept(this, arg));
@@ -602,37 +714,27 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final ChannelReadExpression c, Visitor arg) {
-    writer_.println(tabs(c.getLine()) + "<channel-read expression>");
+    printer_.println(tabs(c.getLine()) + "ChannelReadExpression:");
     tabLevel_++;
-    writer_.print(tabs(c.getLine()) + "<channel>");
     c.getChannel().accept(this, arg);
-    writer_.print(tabs(c.getLine()) + "</channel>");
     if (c.getExtendedRV() != null) {
-      writer_.print(tabs(c.getLine()) + "<extended rendezvous>");
       c.getExtendedRV().accept(this, arg);
-      writer_.print(tabs(c.getLine()) + "</extended rendezvous>");
     }
     tabLevel_--;
-    writer_.println(tabs(c.getLine()) + "</channel-read expression>");
   }
 
   @Override
   public void visit(final ChannelWriteExpression c, Visitor arg) {
-    writer_.println(tabs(c.getLine()) + "<channel-write expression>");
+    printer_.println(tabs(c.getLine()) + "ChannelWriteExpression:");
     tabLevel_++;
-    writer_.print(tabs(c.getLine()) + "<channel>");
     c.getChannel().accept(this, arg);
-    writer_.print(tabs(c.getLine()) + "</channel>");
-    writer_.print(tabs(c.getLine()) + "<expression>");
     c.getExpression().accept(this, arg);
-    writer_.print(tabs(c.getLine()) + "</expression>");
     tabLevel_--;
-    writer_.println(tabs(c.getLine()) + "</channel-write expression>");
   }
 
   @Override
   public void visit(final GroupExpression g, Visitor arg) {
-    writer_.println(tabs(g.getLine()) + "GroupExpression:");
+    printer_.println(tabs(g.getLine()) + "GroupExpression:");
     tabLevel_++;
     g.getExpression().accept(this, arg);
     tabLevel_--;
@@ -640,7 +742,7 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final ArrayAccess a, Visitor arg) {
-    writer_.println(tabs(a.getLine()) + "ArrayAccess:");
+    printer_.println(tabs(a.getLine()) + "ArrayAccess:");
     tabLevel_++;
     a.getName().accept(this, arg);
     a.getIndex().accept(this, arg);
@@ -649,7 +751,7 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final RecordLiteral r, Visitor arg) {
-    writer_.println(tabs(r.getLine()) + "RecordLiteral:");
+    printer_.println(tabs(r.getLine()) + "RecordLiteral:");
     tabLevel_++;
     r.getName().accept(this, arg);
     if (r.getMembers() != null) {
@@ -660,7 +762,7 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final RecordMemberLiteral r, Visitor arg) {
-    writer_.println(tabs(r.getLine()) + "RecordMemberLiteral:");
+    printer_.println(tabs(r.getLine()) + "RecordMemberLiteral:");
     tabLevel_++;
     r.getName().accept(this, arg);
     r.getExpression().accept(this, arg);
@@ -669,7 +771,7 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final ProtocolLiteral p, Visitor arg) {
-    writer_.println(tabs(p.getLine()) + "ProtocolLiteral");
+    printer_.println(tabs(p.getLine()) + "ProtocolLiteral:");
     tabLevel_++;
     p.getName().accept(this, arg);
     p.getTag().accept(this, arg);
@@ -689,25 +791,25 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final ArrayType a, Visitor arg) {
-    writer_.println(tabs(a.getLine()) + "ArrayType: " + a.asString());
-    tabLevel_++;
-    a.getComponentType().accept(this, arg);
-    tabLevel_--;
+    printer_.println(tabs(a.getLine()) + "ArrayType: " + a.asString());
+//    tabLevel_++;
+//    a.getComponentType().accept(this, arg);
+//    tabLevel_--;
   }
 
   @Override
   public void visit(final BarrierType b, Visitor arg) {
-    writer_.println(tabs(b.getLine()) + "BarrierType: " + b.asString());
+    printer_.println(tabs(b.getLine()) + "BarrierType: " + b.asString());
   }
 
   @Override
   public void visit(final ByteType b, Visitor arg) {
-    writer_.println(tabs(b.getLine()) + "ByteType: " + b.asString());
+    printer_.println(tabs(b.getLine()) + "ByteType: " + b.asString());
   }
 
   @Override
   public void visit(final ChannelEndType c, Visitor arg) {
-    writer_.println(tabs(c.getLine()) + "ChannelEndType: " + c.getChannelEnd());
+    printer_.println(tabs(c.getLine()) + "ChannelEndType: " + c.getChannelEnd());
     tabLevel_++;
     c.getComponentType().accept(this, arg);
     tabLevel_--;
@@ -715,7 +817,7 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final ChannelType c, Visitor arg) {
-    writer_.println(tabs(c.getLine()) + "ChannelType: " + c.getChannelEnd());
+    printer_.println(tabs(c.getLine()) + "ChannelType: " + c.getChannelEnd());
     tabLevel_++;
     c.getComponentType().accept(this, arg);
     tabLevel_--;
@@ -723,12 +825,12 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final CharType c, Visitor arg) {
-    writer_.println(tabs(c.getLine()) + "CharType: char");
+    printer_.println(tabs(c.getLine()) + "CharType: " + c.asString());
   }
 
   @Override
   public void visit(final DoubleType d, Visitor arg) {
-    writer_.println(tabs(d.getLine()) + "DoubleType: double");
+    printer_.println(tabs(d.getLine()) + "DoubleType: " + d.asString());
   }
 
   @Override
@@ -737,17 +839,17 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final FloatType f, Visitor arg) {
-    writer_.println(tabs(f.getLine()) + "FloatType: " + f.asString());
+    printer_.println(tabs(f.getLine()) + "FloatType: " + f.asString());
   }
 
   @Override
   public void visit(final IntegerType i, Visitor arg) {
-    writer_.println(tabs(i.getLine()) + "IntegerType: " + i.asString());
+    printer_.println(tabs(i.getLine()) + "IntegerType: " + i.asString());
   }
 
   @Override
   public void visit(final LongType l, Visitor arg) {
-    writer_.println(tabs(l.getLine()) + "LongType: " + l.asString());
+    printer_.println(tabs(l.getLine()) + "LongType: " + l.asString());
   }
 
   @Override
@@ -756,21 +858,21 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final NullType n, Visitor arg) {
-    writer_.println(tabs(n.getLine()) + "NullType: " + n.asString());
+    printer_.println(tabs(n.getLine()) + "NullType: " + n.asString());
   }
 
   @Override
   public void visit(final ProcedureType p, Visitor arg) {
-    writer_.println(tabs(p.getLine()) + "ProcedureType: " + p.asString());
+    printer_.println(tabs(p.getLine()) + "ProcedureType: " + p.asString());
     tabLevel_++;
-    p.getTSType().accept(this, arg);
+    p.getReturnType().accept(this, arg);
     p.getParameterTypes().ifPresent(t -> t.accept(this, arg));
     tabLevel_--;
   }
 
   @Override
   public void visit(final ProtocolTagType p, Visitor arg) {
-    writer_.println(tabs(p.getLine()) + "ProtocolTagType: ");
+    printer_.println(tabs(p.getLine()) + "ProtocolTagType: ");
     tabLevel_++;
     p.getTypeFields().ifPresent(f -> f.accept(this, arg));
     tabLevel_--;
@@ -778,47 +880,50 @@ public class NodePrinter implements VoidVisitor<Visitor> {
 
   @Override
   public void visit(final ProtocolType p, Visitor arg) {
-    writer_.println(tabs(p.getLine()) + "ProtocolType: " + p.getName());
+    printer_.println(tabs(p.getLine()) + "ProtocolType: " + p.getName());
+    tabLevel_++;
+    p.getFieldTypes().ifPresent(f -> f.accept(this, arg));
+    tabLevel_--;
   }
 
   @Override
   public void visit(final RecordType r, Visitor arg) {
-    writer_.println(tabs(r.getLine()) + "RecordType: " + r.getName());
+    printer_.println(tabs(r.getLine()) + "RecordType: " + r.getName());
   }
 
   @Override
   public void visit(final ShortType s, Visitor arg) {
-    writer_.println(tabs(s.getLine()) + "ShortType: short");
+    printer_.println(tabs(s.getLine()) + "ShortType: short");
   }
 
   @Override
   public void visit(final BooleanType b, Visitor arg) {
-    writer_.println(tabs(b.getLine()) + "BooleanType: boolean");
+    printer_.println(tabs(b.getLine()) + "BooleanType: boolean");
   }
 
   @Override
   public void visit(final StringType s, Visitor arg) {
-    writer_.println(tabs(s.getLine()) + "StringType: string");
+    printer_.println(tabs(s.getLine()) + "StringType: string");
   }
 
   @Override
   public void visit(final TimerType t, Visitor arg) {
-    writer_.println(tabs(t.getLine()) + "TimerType: timer");
+    printer_.println(tabs(t.getLine()) + "TimerType: timer");
   }
 
   @Override
   public void visit(final UnknownType u, Visitor arg) {
-    writer_.println(tabs(u.getLine()) + "UnknownType: ?");
+    printer_.println(tabs(u.getLine()) + "UnknownType: ?");
   }
 
   @Override
   public void visit(final VoidType v, Visitor arg) {
-    writer_.println(tabs(v.getLine()) + "VoidType: void");
+    printer_.println(tabs(v.getLine()) + "VoidType: void");
   }
 
   @Override
   public void visit(final NamedType t, Visitor arg) {
-    writer_.println(tabs(t.getLine()) + "TypeVariable:");
+    printer_.println(tabs(t.getLine()) + "TypeVariable:");
     tabLevel_++;
     t.getName().accept(this, arg);
     tabLevel_--;

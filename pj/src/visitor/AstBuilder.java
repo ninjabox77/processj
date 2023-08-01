@@ -10,6 +10,7 @@ import ast.types.*;
 import misc.Tuple;
 import misc.Tuple1;
 import misc.Tuple2;
+import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Opcodes;
 import parser.ProcessJBaseVisitor;
 import parser.ProcessJParser;
@@ -158,8 +159,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     for (int i = 0; i < ctx.modifier().size(); ++i) {
       modifiers += visitModifier(ctx.modifier(i));
     }
-//    ASTType type = visitType_(ctx.type_());
-    ASTType type = createASTType(visitType_(ctx.type_()));
+    NodeType type = createNodeType(visitType_(ctx.type_()));
     final String identifier = ctx.Identifier().getText();
     Sequence<Parameter> parameters = Sequence.sequenceList();
     if (ctx.formarlParameterList() != null) {
@@ -167,7 +167,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     }
     ProcedureTopLevel procedure = new ProcedureTopLevel();
     procedure.setModifiers(modifiers);
-    procedure.setASTType(type);
+    procedure.setNodeType(type);
     procedure.setName(identifier);
     procedure.setParameters(parameters);
     if (ctx.body() != null) {
@@ -198,7 +198,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     return Opcodes.ACC_PRIVATE;
   }
 
-  private ASTType createASTType(Type type) {
+  private NodeType createNodeType(Type type) {
     if (type.isPrimitiveType()) {
       Primitive t = type.asPrimitiveType();
       if (t.isBarrierType()) {
@@ -224,41 +224,18 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
       }
       return configureNode(new ConstructedNode(t), t);
     }
-    return null;
+    return configureNode(new VoidNode(type), type);
   }
 
   @Override
   public Type visitType_(ProcessJParser.Type_Context ctx) {
     if (ctx.primitiveType() != null) {
-//      Primitive type = visitPrimitiveType(ctx.primitiveType());
-//      if (type.isTimerType()) {
-//        return configureNode(new TimerNode(type), ctx);
-//      }
-//      if (type.isBarrierType()) {
-//        return configureNode(new BarrierNode(type), ctx);
-//      }
-//      return configureNode(new PrimitiveNode(type), ctx);
       return visitPrimitiveType(ctx.primitiveType());
     } else if (ctx.referenceType() != null) {
-//      Type type = visitReferenceType(ctx.referenceType());
-//      if (type.isConstructedType()) {
-//        Constructed ctr = type.asConstructedType();
-//        if (ctr.isArrayType()) {
-//          return configureNode(new ArrayNode(ctr.asArrayType()), ctx);
-//        } else if (ctr.isChannelType()) {
-//          return configureNode(new ChannelNode(ctr.asChannelType()), ctx);
-//        } else if (ctr.isChannelEndType()) {
-//          return configureNode(new ChannelEndNode(ctr.asChannelEndType()), ctx);
-//        } else if (ctr.isTypeVariable()) {
-//          return configureNode(new ConstructedNode(ctr.asTypeVariable()), ctx);
-//        }
-//      }
       return visitReferenceType(ctx.referenceType());
     } else if (ctx.classType() != null) {
       // TODO: this is for when a Java class is used
     }
-//    VoidType type = configureNode(new VoidType(), ctx);
-//    return configureNode(new VoidNode(type), ctx);
     return configureNode(new VoidType(), ctx);
   }
 
@@ -333,7 +310,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     return getParentArray(array);
   }
 
-  // we build an array-type in reverse order so that in the body of
+  // We build an array-type in reverse order so that in the body of
   // the caller we can set its component-type; e.g.:
   //
   //   ArrayType(ArrayType(ArrayType(<component-type>)))
@@ -439,52 +416,76 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   @Override
   public Parameter visitFormalParameter(ProcessJParser.FormalParameterContext ctx) {
     int modifiers = 0;
-    for (int i = 0; i < ctx.variableModifier().size(); ++i) {
-      Object obj = visitVariableModifier(ctx.variableModifier(i));
-      if (obj instanceof Integer) {
-        modifiers += (Integer) obj;
-      }
+    if (ctx.variableModifier() != null) {
+      modifiers = visitVariableModifier(ctx.variableModifier());
     }
     Parameter parameter = new Parameter();
     parameter.setModifiers(modifiers);
-//    ASTType type = visitType_(ctx.type_());
-    ASTType type = createASTType(visitType_(ctx.type_()));
+    NodeType type = createNodeType(visitType_(ctx.type_()));
     Tuple<?> tuple = visitVariableDeclaratorIdentifier(ctx.variableDeclaratorIdentifier());
     if (tuple.isTuple1()) {
       Tuple1<String> t1 = tuple.asTuple1();
       parameter.setName(t1.getV1());
-      parameter.setASTType(type);
+      parameter.setNodeType(type);
       configureNode(parameter, ctx.variableDeclaratorIdentifier());
     } else {
       Tuple2<String, ArrayType> t2 = tuple.asTuple2();
       ArrayNode arrayNode = configureNode(new ArrayNode(t2.getV2()), t2.getV2());
-      arrayNode.getTSType().setTSType(type.getTSType());
-      parameter.setASTType(arrayNode);
+      arrayNode.setBracketPosition(ArrayNode.BracketPosition.NAME);
+      setBaseType(type, arrayNode);
+      parameter.setNodeType(arrayNode);
       parameter.setName(t2.getV1());
       configureNode(parameter, ctx);
     }
     return parameter;
   }
 
+  public ArrayType getBaseType(Type type) {
+    while (type instanceof ArrayType) {
+      Type ct = ((ArrayType) type).getComponentType();
+      if (!(ct instanceof ArrayType)) {
+        break;
+      }
+      type = ct;
+    }
+    return (ArrayType) type;
+  }
+
+  public void setBaseType(NodeType type, ArrayNode arrayType) {
+    ArrayType t2 = arrayType.getTSType();
+    if (type.isArrayNode()) {
+      ArrayType t1 = type.getTSType().asConstructedType().asArrayType();
+      t1 = getBaseType(t1);
+      t2 = getBaseType(t2);
+      t2.setComponentType(t1.getComponentType());
+      t1.setComponentType(arrayType.getTSType());
+      arrayType.setTSType(type.getTSType());
+    } else {
+      t2 = getBaseType(t2);
+      t2.setComponentType(type.getTSType());
+    }
+  }
+
   @Override
   public Parameter visitLastFormalDeclaration(ProcessJParser.LastFormalDeclarationContext ctx) {
     if (ctx.type_() != null) {
       Parameter parameter = new Parameter();
-//      ASTType type = visitType_(ctx.type_());
-      ASTType type = createASTType(visitType_(ctx.type_()));
+      NodeType type = createNodeType(visitType_(ctx.type_()));
       Tuple<?> tuple = visitVariableDeclaratorIdentifier(ctx.variableDeclaratorIdentifier());
       if (tuple.isTuple1()) {
         Tuple1<String> t1 = tuple.asTuple1();
         ArrayType arrayType = configureNode(new ArrayType(type.getTSType()), type);
         ArrayNode arrayNode = configureNode(new ArrayNode(arrayType), arrayType);
         parameter.setName(t1.getV1());
-        parameter.setASTType(arrayNode);
+        parameter.setNodeType(arrayNode);
         configureNode(parameter, ctx.variableDeclaratorIdentifier());
       } else {
         Tuple2<String, ArrayType> t2 = tuple.asTuple2();
-        ArrayNode arrayNode = configureNode(new ArrayNode(t2.getV2()), t2.getV2());
-        ErrorNode errorNode = new ErrorNode(arrayNode.getTSType());
-        parameter.setASTType(configureNode(errorNode, arrayNode));
+        ArrayType arrayType = configureNode(new ArrayType(t2.getV2()), t2.getV2());
+        ArrayNode arrayNode = configureNode(new ArrayNode(arrayType), arrayType);
+        setBaseType(type, arrayNode);
+        arrayNode.setBracketPosition(ArrayNode.BracketPosition.NAME);
+        parameter.setNodeType(configureNode(arrayNode, arrayNode));
         parameter.setName(t2.getV1());
         configureNode(parameter, ctx);
       }
@@ -499,18 +500,14 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     String name = ctx.Identifier().getText();
     if (ctx.dims() != null) {
       ArrayType type = visitDims(ctx.dims());
-      return Tuple2.tuple(name, type);
+      return Tuple2.tuple(name, getParentArray(type));
     }
     return Tuple1.tuple(name);
   }
 
   @Override
-  public Object visitVariableModifier(ProcessJParser.VariableModifierContext ctx) {
-    // TODO: annotations?
-    if (ctx.CONST() != null) {
-      return Opcodes.ACC_FINAL;
-    }
-    return null;
+  public Integer visitVariableModifier(ProcessJParser.VariableModifierContext ctx) {
+    return Opcodes.ACC_FINAL;
   }
 
   @Override
@@ -551,21 +548,21 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   @Override
   public Sequence<FieldDeclaration> visitRecordMemberDeclaration(ProcessJParser.RecordMemberDeclarationContext ctx) {
     Sequence<FieldDeclaration> fields = Sequence.sequenceList();
-//    ASTType type = visitType_(ctx.type_());
-    ASTType type = createASTType(visitType_(ctx.type_()));
+    NodeType type = createNodeType(visitType_(ctx.type_()));
     List<Tuple<?>> variables = visitRecordMemberDeclarators(ctx.recordMemberDeclarators());
     for (Tuple<?> v : variables) {
       VariableDeclarator variableDecl = new VariableDeclarator();
       if (v.isTuple1()) {
         Tuple1<String> t1 = v.asTuple1();
         variableDecl.setName(t1.getV1());
-        variableDecl.setASTType(type);
+        variableDecl.setNodeType(type);
         configureNode(variableDecl, ctx.recordMemberDeclarators());
       } else {
         Tuple2<String, ArrayType> t2 = v.asTuple2();
         ArrayNode arrayNode = configureNode(new ArrayNode(t2.getV2()), t2.getV2());
-        arrayNode.getTSType().setTSType(type.getTSType());
-        variableDecl.setASTType(arrayNode);
+        arrayNode.setBracketPosition(ArrayNode.BracketPosition.NAME);
+        arrayNode.getTSType().setComponentType(type.getTSType());
+        variableDecl.setNodeType(arrayNode);
         variableDecl.setName(t2.getV1());
         configureNode(variableDecl, ctx);
       }
@@ -631,15 +628,14 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     for (int i = 0; i < ctx.modifier().size(); ++i) {
       modifiers += visitModifier(ctx.modifier(i));
     }
-//    ASTType type = visitType_(ctx.type_());
-    ASTType type = createASTType(visitType_(ctx.type_()));
+    NodeType type = createNodeType(visitType_(ctx.type_()));
     Sequence<ConstantDeclaration> constantDecls = visitConstantDeclarators(ctx.constantDeclarators());
     for (ConstantDeclaration constantDecl : constantDecls) {
-      if (constantDecl.getASTType() != null) {
-        ArrayNode arrayNode = constantDecl.getASTType().asArrayNode();
-        arrayNode.getTSType().setTSType(type.getTSType());
+      if (constantDecl.getNodeType() != null) {
+        ArrayNode arrayNode = constantDecl.getNodeType().asArrayNode();
+        arrayNode.getTSType().setComponentType(type.getTSType());
       } else {
-        constantDecl.setASTType(type);
+        constantDecl.setNodeType(type);
       }
       constantDecl.setModifiers(modifiers);
     }
@@ -664,7 +660,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     } else {
       Tuple2<String, ArrayType> t2 = tuple.asTuple2();
       ArrayNode arrayNode = configureNode(new ArrayNode(t2.getV2()), t2.getV2());
-      constantDecl.setASTType(arrayNode);
+      constantDecl.setNodeType(arrayNode);
       constantDecl.setName(t2.getV1());
       configureNode(constantDecl, ctx);
     }
@@ -719,20 +715,17 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   @Override
   public Sequence<VariableDeclarator> visitLocalVariableDeclaration(ProcessJParser.LocalVariableDeclarationContext ctx) {
     int modifiers = 0;
-    for (int i = 0; i < ctx.variableModifier().size(); ++i) {
-      Object obj = visitVariableModifier(ctx.variableModifier(i));
-      if (obj instanceof Integer) {
-        modifiers += (Integer) obj;
-      }
+    if (ctx.variableModifier() != null) {
+      modifiers = visitVariableModifier(ctx.variableModifier());
     }
-//    ASTType type = visitType_(ctx.type_());
-    ASTType type = createASTType(visitType_(ctx.type_()));
+    NodeType type = createNodeType(visitType_(ctx.type_()));
     Sequence<VariableDeclarator> variables = visitVariableDeclaratorList(ctx.variableDeclaratorList());
     for (VariableDeclarator v : variables) {
-      if (v.getASTType() != null && v.getASTType().isArrayNode()) {
-        v.getASTType().setASTType(type);
+      if (v.getNodeType() != null) {
+        ArrayNode arrayNode = v.getNodeType().asArrayNode();
+        setBaseType(type, arrayNode);
       } else {
-        v.setASTType(type);
+        v.setNodeType(type);
       }
       v.setModifiers(modifiers);
     }
@@ -757,7 +750,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     } else {
       Tuple2<String, ArrayType> t2 = tuple.asTuple2();
       ArrayNode arrayNode = configureNode(new ArrayNode(t2.getV2()), t2.getV2());
-      variableDecl.setASTType(arrayNode);
+      variableDecl.setNodeType(arrayNode);
       variableDecl.setName(t2.getV1());
       configureNode(variableDecl, ctx);
     }
@@ -822,20 +815,20 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   @Override
   public ForEachStatement visitEnhancedForControl(ProcessJParser.EnhancedForControlContext ctx) {
     Parameter parameter = new Parameter();
-//    ASTType type = visitType_(ctx.type_());
-    ASTType type = createASTType(visitType_(ctx.type_()));
+    NodeType type = createNodeType(visitType_(ctx.type_()));
     Expression<?> expression = (Expression<?>) visit(ctx.expression());
     Tuple<?> tuple = visitVariableDeclaratorIdentifier(ctx.variableDeclaratorIdentifier());
     if (tuple.isTuple1()) {
       Tuple1<String> t1 = tuple.asTuple1();
       parameter.setName(t1.getV1());
-      parameter.setASTType(type);
+      parameter.setNodeType(type);
       configureNode(parameter, ctx.variableDeclaratorIdentifier());
     } else {
       Tuple2<String, ArrayType> t2 = tuple.asTuple2();
       ArrayNode arrayNode = configureNode(new ArrayNode(t2.getV2()), t2.getV2());
-      arrayNode.getTSType().setTSType(type.getTSType());
-      parameter.setASTType(arrayNode);
+      arrayNode.setBracketPosition(ArrayNode.BracketPosition.NAME);
+      setBaseType(type, arrayNode);
+      parameter.setNodeType(arrayNode);
       parameter.setName(t2.getV1());
       configureNode(parameter, ctx);
     }
@@ -932,7 +925,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     }
     ParBlock parBlock = new ParBlock();
     parBlock.setBarriers(barriers);
-    parBlock.setStatemetns(new Sequence<>((Statement) visit(ctx.statement())));
+    parBlock.setLoopBlock((Statement) visit(ctx.statement()));
     return configureNode(parBlock, ctx);
   }
 
@@ -944,7 +937,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     parBlock.setConditional(forStmt.getConditional());
     parBlock.setUpdate(forStmt.getUpdate());
     parBlock.setStatementLabels(forStmt.getStatementLabels().orElse(null));
-    parBlock.setStatemetns(new Sequence<>((Statement) visit(ctx.statement())));
+    parBlock.setLoopBlock((Statement) visit(ctx.statement()));
     return configureNode(parBlock, ctx);
   }
 
@@ -967,7 +960,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   }
 
   @Override
-  public Sequence<SwitchCaseStatement> visitSwitchStatement(ProcessJParser.SwitchStatementContext ctx) {
+  public SwitchStatement visitSwitchStatement(ProcessJParser.SwitchStatementContext ctx) {
     Expression<?> expression = visitParExpression(ctx.parExpression());
     Sequence<SwitchCaseStatement> cases = Sequence.sequenceList();
     ctx.switchBlockStatementGroup().forEach(c -> cases.add(visitSwitchBlockStatementGroup(c)));
@@ -977,7 +970,8 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
         cases.add(configureNode(new SwitchCaseStatement(Sequence.sequenceList(expr)), expr));
       });
     }
-    return cases;
+    SwitchStatement switchStmt = new SwitchStatement(expression, cases);
+    return configureNode(switchStmt, ctx);
   }
 
   @Override
@@ -995,7 +989,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     if (ctx.expression() != null) {
       return (Expression<?>) visit(ctx.expression());
     }
-    // An empty expression implies that there is a default case
+    // an empty expression implies that there is a default case
     return configureNode(new EmptyExpression(), ctx.DEFAULT());
   }
 
@@ -1116,10 +1110,20 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   }
 
   @Override
-  public ArrayAccess visitArrayAccexxExpression(ProcessJParser.ArrayAccexxExpressionContext ctx) {
-    Expression<?> name = (Expression<?>) visit(ctx.expression(0));
-    Expression<?> index = (Expression<?>) visit(ctx.expression(1));
+  public Expression<?> visitArrayAccessExpression(ProcessJParser.ArrayAccessExpressionContext ctx) {
+    Expression<?> name = (Expression<?>) visit(ctx.name);
+    Expression<?> index = (Expression<?>) visit(ctx.index);
     ArrayAccess arrayAccess = new ArrayAccess(name, index);
+    if (name.isNewArrayExpression()) {
+      NewArrayExpression newArray = name.asNewArrayExpression();
+      ArrayDimension dims = configureNode(new ArrayDimension(index), index);
+      if (newArray.getLevels().isPresent()) {
+        newArray.getLevels().get().add(dims);
+      } else {
+        newArray.setLevels(Sequence.sequenceList(dims));
+      }
+      return newArray;
+    }
     return configureNode(arrayAccess, ctx);
   }
 
@@ -1132,13 +1136,13 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
       FieldExpression fieldExpr = new FieldExpression(scope, identifier.getName());
       return configureNode(fieldExpr, ctx);
     }
-    CallableExpression invocation = visitInvocation(ctx.invocation());
+    CallabelExpression invocation = visitInvocation(ctx.invocation());
     invocation.setMethodExpression(scope);
     return configureNode(invocation, ctx);
   }
 
   @Override
-  public CallableExpression visitInvocation(ProcessJParser.InvocationContext ctx) {
+  public CallabelExpression visitInvocation(ProcessJParser.InvocationContext ctx) {
     VariableExpression variable = visitIdentifier(ctx.identifier());
     Expression<?> arguments = visitArguments(ctx.arguments());
     if (variable.getName().equals("read")) {
@@ -1159,7 +1163,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
       chanWrite.setExpression(arguments);
       return configureNode(chanWrite, ctx);
     }
-    CallableExpression invocation = new CallableExpression();
+    CallabelExpression invocation = new CallabelExpression();
     if (variable.getName().equals("timeout")) {
       invocation = new TimeoutReadExpression();
     }
@@ -1220,6 +1224,11 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     PrimitiveNode primitiveNode = configureNode(new PrimitiveNode(type), type);
     CastExpression castExpr = new CastExpression(primitiveNode, expression, false);
     return configureNode(castExpr, ctx);
+  }
+
+  @Override
+  public Expression<?> visitObjectCreationExpression(ProcessJParser.ObjectCreationExpressionContext ctx) {
+    return visitCreator(ctx.creator());
   }
 
   @Override
@@ -1388,43 +1397,41 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
 
   @Override
   public Expression<?> visitCreator(ProcessJParser.CreatorContext ctx) {
-    SourceAST type = visitCreatorName(ctx.creatorName());
+    SourceAST creatorName = visitCreatorName(ctx.creatorName());
     if (ctx.recordExpression() != null) {
       RecordLiteral record = new RecordLiteral();
-      if (type instanceof Name) {
-        record.setName((Name) type);
-      } else {
-        // If it is not a type name or a class then it must be
-        // a primitive type which should not be allowed.
-        record.setASTType(configureNode(new ErrorNode((Type) type), type));
+      if (creatorName instanceof Name) {
+        record.setName((Name) creatorName);
+      } else if (creatorName instanceof Type) {
+        record.setName(new Name(creatorName.asString())); // this is an error
       }
       record.setMembers(visitRecordExpression(ctx.recordExpression()));
       return configureNode(record, ctx);
     }
     if (ctx.protocolExpression() != null) {
       ProtocolLiteral protocol = visitProtocolExpression(ctx.protocolExpression());
-      if (type instanceof Name) {
-        protocol.setName((Name) type);
-      } else {
-        // If it is not a type name or a class then it must be
-        // a primitive type which should not be allowed.
-        protocol.setASTType(configureNode(new ErrorNode((Type) type), type));
+      if (creatorName instanceof Name) {
+        protocol.setName((Name) creatorName);
+      } else if (creatorName instanceof Type) {
+        protocol.setName(new Name(creatorName.asString())); // this is an error
       }
       return configureNode(protocol, ctx);
     }
-    if (ctx.arrayExpression() != null) {
-      NewArrayExpression newArray = visitArrayExpression(ctx.arrayExpression());
-      if (type instanceof Type) {
-        newArray.setASTType(configureNode(new PrimitiveNode((Type) type), type));
-      } else {
-        // If it is not a primitive type then it must be a class or
-        // type name of some sort.
-        NamedType name = new NamedType((Name) type);
-        newArray.setASTType(configureNode(new ConstructedNode(name), type));
-      }
+    if (ctx.classExpression() != null) {
+      // TODO:?
     }
-    // TODO: class type??
-    return null;
+    NewArrayExpression newArray = new NewArrayExpression();
+    if (ctx.arrayExpression() != null) {
+      newArray = visitArrayExpression(ctx.arrayExpression());
+    }
+    if (creatorName instanceof Type) {
+      newArray.setNodeType(configureNode(new PrimitiveNode((Type) creatorName), creatorName));
+    } else {
+      // if it is not a primitive type then it must be the name of a constructed type
+      NamedType name = new NamedType((Name) creatorName);
+      newArray.setNodeType(configureNode(new ConstructedNode(name), creatorName));
+    }
+    return configureNode(newArray, ctx);
   }
 
   @Override
@@ -1500,12 +1507,15 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
       EmptyExpression emptyExpr = new EmptyExpression(ctx.LBRACK(i).getSymbol());
       dims.add(configureNode(new ArrayDimension(emptyExpr), ctx.LBRACK(i).getSymbol()));
     }
+    newArray.setLevels(dims);
     return configureNode(newArray, ctx);
   }
 
   @Override
   public ArrayInitializer visitArrayInitializer(ProcessJParser.ArrayInitializerContext ctx) {
     ArrayInitializer arrayInitializer = new ArrayInitializer();
+    Sequence<Expression<?>> values = visitVariableInitializerList(ctx.variableInitializerList());
+    arrayInitializer.setValues(values);
     return configureNode(arrayInitializer, ctx);
   }
 

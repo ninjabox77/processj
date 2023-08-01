@@ -1,11 +1,10 @@
 package ast;
 
 import ast.comments.Comment;
-import ast.types.ASTType;
+import ast.types.NodeType;
 import org.antlr.v4.runtime.Token;
 import visitor.Visitor;
 import visitor.EqualsVisitor;
-import visitor.HashcodeVisitor;
 
 import java.util.Optional;
 
@@ -14,7 +13,7 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public abstract class SourceAST extends CommonAST<SourceAST> implements NodeWithASTType<SourceAST, ASTType>, Visitor {
+public abstract class SourceAST extends CommonAST<SourceAST> implements Visitor {
 
   // The children of this node if it is the root of a subtree.
   protected final Sequence<SourceAST> children_ = new Sequence<>();
@@ -116,7 +115,7 @@ public abstract class SourceAST extends CommonAST<SourceAST> implements NodeWith
 
   @Override
   public int hashCode() {
-    return HashcodeVisitor.hashCode(this);
+    return 0;//HashcodeVisitor.hashCode(this);
   }
 
   @Override

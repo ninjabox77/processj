@@ -10,7 +10,7 @@ import java.util.Objects;
  *
  * @author Ben
  */
-public abstract class CommonAST<N extends CommonAST<?>> implements NodeWithParent<N> {
+public abstract class CommonAST<N extends CommonAST<?>> implements HasParent<N> {
 
   /**
    * The line number on which the token appears.

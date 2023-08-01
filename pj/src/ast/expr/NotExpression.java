@@ -1,6 +1,6 @@
 package ast.expr;
 
-import ast.types.ASTType;
+import ast.types.NodeType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -36,8 +36,8 @@ public class NotExpression extends BooleanExpression {
   }
 
   @Override
-  public NotExpression setASTType(ASTType type) {
-    return (NotExpression) super.setASTType(type);
+  public NotExpression setNodeType(NodeType type) {
+    return (NotExpression) super.setNodeType(type);
   }
 
   @Override

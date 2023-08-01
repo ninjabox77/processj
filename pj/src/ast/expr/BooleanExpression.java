@@ -1,7 +1,7 @@
 package ast.expr;
 
 import ast.SourceAST;
-import ast.types.ASTType;
+import ast.types.NodeType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -56,8 +56,8 @@ public class BooleanExpression extends Expression<BooleanExpression> {
   }
 
   @Override
-  public BooleanExpression setASTType(ASTType type) {
-    return super.setASTType(type);
+  public BooleanExpression setNodeType(NodeType type) {
+    return super.setNodeType(type);
   }
 
   public boolean isNotExpression() {

@@ -74,7 +74,7 @@ public interface DefaultVisitor<R> {
 
   R visit(final ExternalDeclaration e);
 
-  R visit(final CallableDeclaration<?> m);
+  R visit(final CallabelDeclaration<?> m);
 
   R visit(final ProcedureTopLevel p);
 
@@ -158,7 +158,7 @@ public interface DefaultVisitor<R> {
 
   R visit(final BooleanLiteral b);
 
-  R visit(final CallableExpression c);
+  R visit(final CallabelExpression c);
 
   R visit(final CastExpression c);
 

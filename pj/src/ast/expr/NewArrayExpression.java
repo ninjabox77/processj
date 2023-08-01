@@ -3,7 +3,7 @@ package ast.expr;
 import ast.ArrayDimension;
 import ast.SourceAST;
 import ast.Sequence;
-import ast.types.ASTType;
+import ast.types.NodeType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -24,23 +24,23 @@ public class NewArrayExpression extends Expression<NewArrayExpression> {
   private ArrayInitializer arrayLiteral_;
 
   public NewArrayExpression() {
-    this(null, null, null);
+    this(null, Sequence.sequenceList(), null);
   }
 
-  public NewArrayExpression(ASTType elementType, Sequence<ArrayDimension> levels, ArrayInitializer arrayLiteral) {
+  public NewArrayExpression(NodeType elementType, Sequence<ArrayDimension> levels, ArrayInitializer arrayLiteral) {
     this(null, elementType, levels, arrayLiteral);
   }
 
-  public NewArrayExpression(Token token, ASTType elementType, Sequence<ArrayDimension> levels, ArrayInitializer arrayLiteral) {
+  public NewArrayExpression(Token token, NodeType elementType, Sequence<ArrayDimension> levels, ArrayInitializer arrayLiteral) {
     super(token);
-    this.setASTType(elementType);
+    this.setNodeType(elementType);
     setLevels(levels);
     setArrayInitializer(arrayLiteral);
   }
 
   @Override
-  public NewArrayExpression setASTType(ASTType type) {
-    return super.setASTType(type);
+  public NewArrayExpression setNodeType(NodeType type) {
+    return super.setNodeType(type);
   }
 
   public NewArrayExpression setLevels(Sequence<ArrayDimension> levels) {

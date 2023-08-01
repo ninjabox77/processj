@@ -13,7 +13,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ExternalNode extends ASTType {
+public class ExternalNode extends NodeType {
 
   private ExternalType type_;
 

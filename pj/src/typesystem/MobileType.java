@@ -28,8 +28,8 @@ public class MobileType extends CallableType<MobileType> {
     super(token, type, typeArguments, yields);
   }
 
-  public MobileType setTSType(Type retuntType) {
-    return super.setTSType(retuntType);
+  public MobileType setReturnType(Type retuntType) {
+    return super.setReturnType(retuntType);
   }
 
   public MobileType setParameterTypes(Sequence<Type> argumentsType) {

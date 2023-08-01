@@ -27,7 +27,7 @@ public class ProcedureType extends CallableType<ProcedureType> {
     super(token, new VoidType(), typeArguments, yields);
   }
 
-  public ProcedureType setTSType(Type retuntType) {
+  public ProcedureType setReturnType(Type retuntType) {
     throw new UnsupportedOperationException("Cannot change the return type of a ProcedureType");
   }
 

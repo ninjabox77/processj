@@ -6,6 +6,7 @@ import parser.ProcessJParser;
 import visitor.AstBuilder;
 import visitor.NodePrinter;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -122,15 +123,13 @@ public class Compiler {
     System.exit(0);
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     Compiler c = new Compiler(args);
     // Do we have any arguments?
     if (args.length == 2) {
       System.out.println();
     }
-    ProcessJLexer lex = new ProcessJLexer(CharStreams.fromString("package b;\n import a.b.g::l;\n const int a, b;\n const long[][][] lon;"
-    + "record A { int x; string[][] str; }\n void f(int a) { int t = 89; barrier b; chan<int[][]>[][] c; " +
-        " if (a > b) { } else { } do { } while (a != 5); }"));
+    ProcessJLexer lex = new ProcessJLexer(CharStreams.fromFileName("/Users/oswaldocisneros/Documents/compiler/pj/src/tests/locals.pj"));
     CommonTokenStream tokens = new CommonTokenStream(lex);
     ProcessJParser parser = new ProcessJParser(tokens);
     ProcessJParser.CompilationUnitContext init = parser.compilationUnit();

@@ -13,7 +13,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ChannelEndNode extends ASTType {
+public class ChannelEndNode extends NodeType {
 
   private ChannelEndType type_;
 

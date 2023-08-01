@@ -1,0 +1,9 @@
+package HelloWorld;
+
+import std.io;
+
+const string greeting = "Hello World!";
+
+public void main(string...args) {
+  println(greeting);
+}

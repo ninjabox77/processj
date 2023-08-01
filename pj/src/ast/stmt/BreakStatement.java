@@ -1,6 +1,6 @@
 package ast.stmt;
 
-import ast.NodeWithLabel;
+import ast.LabelNode;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -14,7 +14,7 @@ import java.util.Optional;
  *
  * @author Ben
  */
-public class BreakStatement extends Statement implements NodeWithLabel<BreakStatement> {
+public class BreakStatement extends Statement implements LabelNode<BreakStatement> {
 
   private String label_;
 

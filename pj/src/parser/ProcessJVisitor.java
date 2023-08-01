@@ -730,13 +730,6 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAnnotatedExpression(ProcessJParser.AnnotatedExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code ArrayAccexxExpression}
-	 * labeled alternative in {@link ProcessJParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitArrayAccexxExpression(ProcessJParser.ArrayAccexxExpressionContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code ExclusiveExpression}
 	 * labeled alternative in {@link ProcessJParser#expression}.
 	 * @param ctx the parse tree
@@ -806,6 +799,13 @@ public interface ProcessJVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitMultiplicativeExpression(ProcessJParser.MultiplicativeExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ArrayAccessExpression}
+	 * labeled alternative in {@link ProcessJParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArrayAccessExpression(ProcessJParser.ArrayAccessExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ProcessJParser#assignOp}.
 	 * @param ctx the parse tree

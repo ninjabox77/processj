@@ -1,6 +1,6 @@
 package ast.expr;
 
-import ast.types.ASTType;
+import ast.types.NodeType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -29,6 +29,8 @@ public class AssignmentExpression extends BinaryExpression {
   public static final String[] symbols = {"=", "*=", "/=", "%=", "+=", "-=",
       "<<=", ">>=", ">>>=", "&=", "|=", "^="};
 
+  public String opString() { return symbols[operator_]; }
+
   public AssignmentExpression() {
     this(null, null, EQ);
   }
@@ -52,8 +54,8 @@ public class AssignmentExpression extends BinaryExpression {
   }
 
   @Override
-  public BinaryExpression setASTType(ASTType type) {
-    return super.setASTType(type);
+  public BinaryExpression setNodeType(NodeType type) {
+    return super.setNodeType(type);
   }
 
   @Override

@@ -2,7 +2,6 @@ package ast.types;
 
 import ast.SourceAST;
 import org.antlr.v4.runtime.Token;
-import typesystem.IntegerType;
 import typesystem.Primitive;
 import typesystem.Type;
 import visitor.DefaultVisitor;
@@ -14,7 +13,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class PrimitiveNode extends ASTType {
+public class PrimitiveNode extends NodeType {
 
   private Primitive type_;
 
@@ -45,6 +44,11 @@ public class PrimitiveNode extends ASTType {
   }
 
   @Override
+  public Primitive getTSType() {
+    return type_;
+  }
+
+  @Override
   public boolean replace(SourceAST node, SourceAST replaceWith) {
     if (node == null) {
       return false;
@@ -54,11 +58,6 @@ public class PrimitiveNode extends ASTType {
       return true;
     }
     return false;
-  }
-
-  @Override
-  public Primitive getTSType() {
-    return type_;
   }
 
   @Override

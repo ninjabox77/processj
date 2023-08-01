@@ -8,6 +8,32 @@ public interface Modifier<T extends Modifier<?>> extends Opcodes {
 
   T setModifiers(final int modifiers);
 
+  default String modifierString() {
+    if (getModifiers() != 0) {
+      StringBuilder sb = new StringBuilder();
+      if (isStatic()) {
+        sb.append("static").append(" ");
+      }
+      if (isFinal()) {
+        sb.append("final").append(" ");
+      }
+      if (isPublic()) {
+        sb.append("public").append(" ");
+      }
+      if (isProtected()) {
+        sb.append("protected").append(" ");
+      }
+      if (isPrivate()) {
+        sb.append("private").append(" ");
+      }
+      if (isNative()) {
+        sb.append("native").append(" ");
+      }
+      return sb.toString();
+    }
+    return "none";
+  }
+
   default boolean isStatic() {
     return (getModifiers() & ACC_STATIC) != 0;
   }

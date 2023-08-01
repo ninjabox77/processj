@@ -3,9 +3,8 @@ package ast.java;
 import ast.Parameter;
 import ast.Sequence;
 import ast.stmt.BlockStatement;
-import ast.types.ASTType;
+import ast.types.NodeType;
 import org.antlr.v4.runtime.Token;
-import scope.VariableScope;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
 import visitor.VoidVisitor;
@@ -20,7 +19,7 @@ import java.util.Optional;
  */
 public class MethodDeclaration<T extends MethodDeclaration<?>> extends BodyDeclaration<T> {
 
-  private ASTType type_;
+  private NodeType type_;
   private String name_;
   private BlockStatement body_;
   private Sequence<Parameter> parameters_;
@@ -29,25 +28,24 @@ public class MethodDeclaration<T extends MethodDeclaration<?>> extends BodyDecla
     this(ACC_PUBLIC, null, null);
   }
 
-  public MethodDeclaration(final int modifiers, ASTType type, final String name) {
+  public MethodDeclaration(final int modifiers, NodeType type, final String name) {
     this(modifiers, type, name, null, new BlockStatement());
   }
 
-  public MethodDeclaration(final int modifiers, ASTType type, final String name, Sequence<Parameter> parameters, BlockStatement body) {
+  public MethodDeclaration(final int modifiers, NodeType type, final String name, Sequence<Parameter> parameters, BlockStatement body) {
     this(null, modifiers, type, name, parameters, body);
   }
 
-  public MethodDeclaration(Token token, final int modifiers, ASTType type, final String name, Sequence<Parameter> parameters, BlockStatement body) {
+  public MethodDeclaration(Token token, final int modifiers, NodeType type, final String name, Sequence<Parameter> parameters, BlockStatement body) {
     super(token, modifiers);
     setModifiers(modifiers);
-    setASTType(type);
+    setNodeType(type);
     setName(name);
     setParameters(parameters);
     setBody(body);
   }
 
-  @Override
-  public T setASTType(ASTType type) {
+  public T setNodeType(NodeType type) {
     if (type == type_) {
       return (T) this;
     }
@@ -64,8 +62,7 @@ public class MethodDeclaration<T extends MethodDeclaration<?>> extends BodyDecla
     return super.setModifiers(modifiers);
   }
 
-  @Override
-  public ASTType getASTType() {
+  public NodeType getNodeType() {
     return type_;
   }
 

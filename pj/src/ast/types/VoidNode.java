@@ -13,7 +13,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class VoidNode extends ASTType {
+public class VoidNode extends NodeType {
 
   private VoidType type_;
 

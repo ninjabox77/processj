@@ -74,7 +74,7 @@ public interface VoidVisitor<A> {
 
   void visit(final ExternalDeclaration e, A arg);
 
-  void visit(final CallableDeclaration<?> m, A arg);
+  void visit(final CallabelDeclaration<?> m, A arg);
 
   void visit(final ProcedureTopLevel p, A arg);
 
@@ -158,7 +158,7 @@ public interface VoidVisitor<A> {
 
   void visit(final BooleanLiteral b, A arg);
 
-  void visit(final CallableExpression c, A arg);
+  void visit(final CallabelExpression c, A arg);
 
   void visit(final CastExpression c, A arg);
 

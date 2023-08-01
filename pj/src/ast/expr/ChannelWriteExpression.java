@@ -1,7 +1,7 @@
 package ast.expr;
 
 import ast.SourceAST;
-import ast.types.ASTType;
+import ast.types.NodeType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -12,7 +12,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ChannelWriteExpression extends CallableExpression {
+public class ChannelWriteExpression extends CallabelExpression {
 
   private Expression<?> channel_;
   private Expression<?> expression_;
@@ -74,8 +74,8 @@ public class ChannelWriteExpression extends CallableExpression {
   }
 
   @Override
-  public ChannelWriteExpression setASTType(ASTType type) {
-    return (ChannelWriteExpression) super.setASTType(type);
+  public ChannelWriteExpression setNodeType(NodeType type) {
+    return (ChannelWriteExpression) super.setNodeType(type);
   }
 
   @Override

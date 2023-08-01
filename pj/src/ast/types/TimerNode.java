@@ -12,7 +12,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class TimerNode extends ASTType {
+public class TimerNode extends NodeType {
 
   private TimerType type_;
 

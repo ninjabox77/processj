@@ -1,7 +1,7 @@
 package ast.expr;
 
 import ast.VariableDeclarator;
-import ast.types.ASTType;
+import ast.types.NodeType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -37,7 +37,7 @@ public class DeclarationExpression extends Expression<DeclarationExpression> {
   @Override
   public void customInitialization() {
     if (declaration_ != null) {
-      setASTType(declaration_.getASTType());
+      setNodeType(declaration_.getNodeType());
     }
   }
 
@@ -58,8 +58,8 @@ public class DeclarationExpression extends Expression<DeclarationExpression> {
   }
 
   @Override
-  public DeclarationExpression setASTType(ASTType type) {
-    return super.setASTType(type);
+  public DeclarationExpression setNodeType(NodeType type) {
+    return super.setNodeType(type);
   }
 
   @Override

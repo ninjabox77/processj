@@ -13,7 +13,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ConstructedNode extends ASTType {
+public class ConstructedNode extends NodeType {
 
   Constructed type_;
 

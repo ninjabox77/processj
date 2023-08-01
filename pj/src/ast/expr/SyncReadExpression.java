@@ -8,7 +8,7 @@ import org.antlr.v4.runtime.Token;
  *
  * @author Ben
  */
-public class SyncReadExpression extends CallableExpression {
+public class SyncReadExpression extends CallabelExpression {
 
   public SyncReadExpression() {
     this(null, (Expression<?>) null);

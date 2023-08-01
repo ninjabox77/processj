@@ -18,7 +18,7 @@ import java.util.Optional;
 public class ProtocolType extends Constructed {
 
   private String name_;
-  private Sequence<ProtocolTagType> typeFields_;
+  private Sequence<ProtocolTagType> fieldTypes_;
 
   public ProtocolType() {
     this(null, null, null);
@@ -28,14 +28,14 @@ public class ProtocolType extends Constructed {
     this(null, name, null);
   }
 
-  public ProtocolType(final String name, Sequence<ProtocolTagType> typeFields) {
-    this(null, name, typeFields);
+  public ProtocolType(final String name, Sequence<ProtocolTagType> fieldTypes) {
+    this(null, name, fieldTypes);
   }
 
-  public ProtocolType(Token token, final String name, Sequence<ProtocolTagType> typeFields) {
+  public ProtocolType(Token token, final String name, Sequence<ProtocolTagType> fieldTypes) {
     super(token);
     setName(name);
-    setTypeFields(typeFields);
+    setFieldTypes(fieldTypes);
   }
 
   public ProtocolType setName(final String name) {
@@ -50,25 +50,25 @@ public class ProtocolType extends Constructed {
     return name_;
   }
 
-  public ProtocolType setTypeFields(Sequence<ProtocolTagType> typeFields) {
-    if (typeFields == typeFields_) {
+  public ProtocolType setFieldTypes(Sequence<ProtocolTagType> typeFields) {
+    if (typeFields == fieldTypes_) {
       return this;
     }
-    if (typeFields_ != null) {
-      typeFields_.setParentNode(null);
+    if (fieldTypes_ != null) {
+      fieldTypes_.setParentNode(null);
     }
-    typeFields_ = typeFields;
+    fieldTypes_ = typeFields;
     setAsParentNodeOf(typeFields);
     return this;
   }
 
-  public Optional<Sequence<ProtocolTagType>> getTypeFields() {
-    return Optional.ofNullable(typeFields_);
+  public Optional<Sequence<ProtocolTagType>> getFieldTypes() {
+    return Optional.ofNullable(fieldTypes_);
   }
 
   @Override
   public String asString() {
-    return name_;
+    return "<P" + name_ + ";";
   }
 
   @Override
@@ -86,12 +86,12 @@ public class ProtocolType extends Constructed {
     if (node == null) {
       return false;
     }
-    if (typeFields_ == null) {
+    if (fieldTypes_ == null) {
       return false;
     }
-    for (int i = 0; i < typeFields_.size(); ++i) {
-      if (node == typeFields_.get(i)) {
-        typeFields_.remove(i);
+    for (int i = 0; i < fieldTypes_.size(); ++i) {
+      if (node == fieldTypes_.get(i)) {
+        fieldTypes_.remove(i);
         return true;
       }
     }
@@ -103,12 +103,12 @@ public class ProtocolType extends Constructed {
     if (node == null) {
       return false;
     }
-    if (typeFields_ == null) {
+    if (fieldTypes_ == null) {
       return false;
     }
-    for (int i = 0; i < typeFields_.size(); ++i) {
-      if (node == typeFields_.get(i)) {
-        typeFields_.set(i, (ProtocolTagType) replaceWith);
+    for (int i = 0; i < fieldTypes_.size(); ++i) {
+      if (node == fieldTypes_.get(i)) {
+        fieldTypes_.set(i, (ProtocolTagType) replaceWith);
         return true;
       }
     }

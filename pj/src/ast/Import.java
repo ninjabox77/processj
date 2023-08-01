@@ -113,7 +113,7 @@ public class Import extends AnnotatedNode {
     if (alias_ != null && !alias_.isEmpty() && !alias_.equals(fieldName_)) {
       return name_.asString() + " as " + alias_;
     }
-    if (alias_ == null || alias_.isEmpty()) {
+    if ((alias_ == null || alias_.isEmpty()) && fieldName_ != null) {
       return name_.asString() + "::" + fieldName_;
     }
     return name_.asString();

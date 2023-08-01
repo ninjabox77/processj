@@ -1,7 +1,7 @@
 package ast.expr;
 
 import ast.SourceAST;
-import ast.types.ASTType;
+import ast.types.NodeType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -17,6 +17,8 @@ public class PostfixExpression extends Expression<PostfixExpression> {
   public static final int PLUSPLUS = 0; // ++
   public static final int MINUSMINUS = 1; // --
   public static final String[] symbols = {"++", "--"};
+
+  public String opString() { return symbols[operator_]; }
 
   private Expression<?> expression_;
   private int operator_;
@@ -74,8 +76,8 @@ public class PostfixExpression extends Expression<PostfixExpression> {
   }
 
   @Override
-  public PostfixExpression setASTType(ASTType type) {
-    return super.setASTType(type);
+  public PostfixExpression setNodeType(NodeType type) {
+    return super.setNodeType(type);
   }
 
   @Override
