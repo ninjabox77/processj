@@ -56,26 +56,30 @@ public class ProcedureType extends CallableType<ProcedureType> {
     return this;
   }
 
-  // α = procedure(name1, {t1,1, . . . , t1,m1 }, t1) ∧ β = procedure(name2,
-  // {t2,1, . . . , t2,m2 }, t2)
-  // α =T β ⇔ procedure?(α) ∧ procedure?(β) ∧ (m1 = m2) ∧ (t1 =T t2) ∧ (name1 =
-  // name2) ∧ ∧^m1_i=1 (t1,i =T t2,i)
+  // α = procedure(name1, {t1,1, . . . , t1,m1 }, t1) ∧
+  // β = procedure(name2, {t2,1, . . . , t2,m2 }, t2)
+  // α =T β ⇔ Procedure?(α) ∧ Procedure?(β) ∧ (m1 = m2) ∧
+  // (t1 =T t2) ∧ (name1 = name2) ∧ ∧^m1_i=1 (t1,i =T t2,i)
   @Override
   public boolean typeEqual(Type other) {
     if (!other.isConstructedType()) {
       return false;
     }
+    // Procedure?(β)
     if (!other.asConstructedType().isCallableType() &&
         !other.asConstructedType().asCallableType().isProcedureType()) {
       return false;
     }
+    // (m1 = m2)
     ProcedureType pt = other.asConstructedType().asCallableType().asProcedureType();
     if (parameterTypes_.size() != pt.parameterTypes_.size()) {
       return false;
     }
+    // (t1 =T t2)
     if (!returnType_.typeEqual(pt.returnType_)) {
       return false;
     }
+    // ∧^m1_i=1 (t1,i =T t2,i)
     boolean b = true;
     for (int i = 0; i < parameterTypes_.size(); ++i) {
       b = b && parameterTypes_.get(i).typeEqual(pt.parameterTypes_.get(i));
@@ -83,27 +87,36 @@ public class ProcedureType extends CallableType<ProcedureType> {
     return false;
   }
 
+  // α ∼T β ⇔ α =T β
   @Override
   public boolean typeEquivalent(Type other) {
     return typeEqual(other);
   }
 
+  // α = procedure(name1, {t1,1, . . . , t1,m1 }, t1) ∧
+  // β = procedure(name2, {t2,1, . . . , t2,m2 }, t2)
+  // α =T β ⇔ procedure?(α) ∧ procedure?(β) ∧ (m1 = m2) ∧
+  // (t2 :=T t1) ∧ ∧^m1_i=1 (t1,i :=T t2,i)
   @Override
   public boolean typeAssignmentCompatible(Type other) {
     if (!other.isConstructedType()) {
       return false;
     }
+    // Procedure?(β)
     if (!other.asConstructedType().isCallableType() &&
         !other.asConstructedType().asCallableType().isProcedureType()) {
       return false;
     }
+    // (m1 = m2)
     ProcedureType pt = other.asConstructedType().asCallableType().asProcedureType();
     if (parameterTypes_.size() != pt.parameterTypes_.size()) {
       return false;
     }
-    if (!returnType_.typeEqual(pt.returnType_)) {
+    // (t2 :=T t1)
+    if (!returnType_.typeAssignmentCompatible(pt.returnType_)) {
       return false;
     }
+    // ∧^m1_i=1 (t1,i =T t2,i)
     boolean b = true;
     for (int i = 0; i < parameterTypes_.size(); ++i) {
       b = b && parameterTypes_.get(i).typeAssignmentCompatible(pt.parameterTypes_.get(i));

@@ -2,7 +2,7 @@ package ast.expr;
 
 import ast.SourceAST;
 import ast.Sequence;
-import ast.types.NodeType;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 import org.jetbrains.annotations.NotNull;
 import visitor.DefaultVisitor;
@@ -11,7 +11,6 @@ import visitor.VoidVisitor;
 
 import java.util.Iterator;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Represents a mutable list expression.
@@ -83,8 +82,8 @@ public class ListExpression<T extends ListExpression<?>> extends Expression<T> i
   }
 
   @Override
-  public T setNodeType(NodeType type) {
-    return (T) super.setNodeType(type);
+  public T setASTType(ASTType type) {
+    return (T) super.setASTType(type);
   }
 
   @Override

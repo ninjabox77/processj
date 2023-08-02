@@ -1,7 +1,7 @@
 package ast.expr;
 
 import ast.SourceAST;
-import ast.types.NodeType;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -74,8 +74,8 @@ public class MapEntryExpression extends Expression<MapEntryExpression> {
   }
 
   @Override
-  public MapEntryExpression setNodeType(NodeType type) {
-    return super.setNodeType(type);
+  public MapEntryExpression setASTType(ASTType type) {
+    return super.setASTType(type);
   }
 
   @Override

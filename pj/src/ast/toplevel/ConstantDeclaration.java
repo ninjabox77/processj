@@ -2,7 +2,7 @@ package ast.toplevel;
 
 import ast.SourceAST;
 import ast.expr.Expression;
-import ast.types.NodeType;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -23,19 +23,19 @@ public class ConstantDeclaration extends TopLevelDeclaration<ConstantDeclaration
     this(null, null);
   }
 
-  public ConstantDeclaration(NodeType type, String name) {
+  public ConstantDeclaration(ASTType type, String name) {
     this(ACC_PUBLIC, type, name);
   }
 
-  public ConstantDeclaration(int modifier, NodeType type, String name) {
+  public ConstantDeclaration(int modifier, ASTType type, String name) {
     this(modifier, type, name, null);
   }
 
-  public ConstantDeclaration(int modifier, NodeType type, String name, Expression<?> rightExpression) {
+  public ConstantDeclaration(int modifier, ASTType type, String name, Expression<?> rightExpression) {
     this(null, modifier, type, name, rightExpression);
   }
 
-  public ConstantDeclaration(Token token, int modifier, NodeType type, String name, Expression<?> rightExpression) {
+  public ConstantDeclaration(Token token, int modifier, ASTType type, String name, Expression<?> rightExpression) {
     super(token, modifier, type, name, null);
     setRightExpression(rightExpression);
   }

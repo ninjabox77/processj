@@ -2,7 +2,7 @@ package ast.expr;
 
 import ast.SourceAST;
 import ast.Variable;
-import ast.types.NodeType;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -35,14 +35,14 @@ public class VariableExpression extends Expression<VariableExpression> implement
     this(null, null);
   }
 
-  public VariableExpression(NodeType type, final String name) {
+  public VariableExpression(ASTType type, final String name) {
     this(null, type, name);
   }
 
-  public VariableExpression(Token token, NodeType type, final String name) {
+  public VariableExpression(Token token, ASTType type, final String name) {
     super(token);
-    setNodeType(type);
-    setName(name);
+    setASTType(type);
+    setIdentifier(name);
   }
 
   public VariableExpression setAccessVariable(Variable<?> accessVariable) {
@@ -58,12 +58,12 @@ public class VariableExpression extends Expression<VariableExpression> implement
   }
 
   @Override
-  public VariableExpression setNodeType(NodeType type) {
-    return super.setNodeType(type);
+  public VariableExpression setASTType(ASTType type) {
+    return super.setASTType(type);
   }
 
   @Override
-  public VariableExpression setName(String name) {
+  public VariableExpression setIdentifier(String name) {
     if (Objects.equals(name, name_)) {
       return this;
     }
@@ -72,7 +72,7 @@ public class VariableExpression extends Expression<VariableExpression> implement
   }
 
   @Override
-  public String getName() {
+  public String getIdentifier() {
     return name_;
   }
 

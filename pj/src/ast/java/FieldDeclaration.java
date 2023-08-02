@@ -56,17 +56,17 @@ public class FieldDeclaration extends BodyDeclaration<FieldDeclaration> implemen
   }
 
   @Override
-  public FieldDeclaration setName(String name) {
-    if (Objects.equals(name, variable_.getName())) {
+  public FieldDeclaration setIdentifier(String name) {
+    if (Objects.equals(name, variable_.getIdentifier())) {
       return this;
     }
-    variable_.setName(name);
+    variable_.setIdentifier(name);
     return this;
   }
 
   @Override
-  public String getName() {
-    return variable_.getName();
+  public String getIdentifier() {
+    return variable_.getIdentifier();
   }
 
   @Override

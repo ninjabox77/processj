@@ -1,8 +1,8 @@
 package ast;
 
 import ast.comments.Comment;
-import ast.types.NodeType;
 import org.antlr.v4.runtime.Token;
+import visitor.HashcodeVisitor;
 import visitor.Visitor;
 import visitor.EqualsVisitor;
 
@@ -115,7 +115,7 @@ public abstract class SourceAST extends CommonAST<SourceAST> implements Visitor 
 
   @Override
   public int hashCode() {
-    return 0;//HashcodeVisitor.hashCode(this);
+    return HashcodeVisitor.hashCode(this);
   }
 
   @Override

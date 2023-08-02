@@ -11,7 +11,7 @@ import visitor.VoidVisitor;
 /**
  * Represents an array type in the AST.
  */
-public class ArrayNode extends NodeType {
+public class ArrayNode extends ASTType {
 
   /**
    * Used to determine whether brackets appear next to the type
@@ -44,12 +44,12 @@ public class ArrayNode extends NodeType {
 
   public ArrayNode(Token token, Type arrayType, BracketPosition position) {
     super(token);
-    setTSType(arrayType);
+    setType(arrayType);
     setBracketPosition(position);
   }
 
   @Override
-  public ArrayNode setTSType(Type arrayType) {
+  public ArrayNode setType(Type arrayType) {
     if (arrayType == arrayType_) {
       return this;
     }
@@ -62,7 +62,7 @@ public class ArrayNode extends NodeType {
   }
 
   @Override
-  public ArrayType getTSType() {
+  public ArrayType getType() {
     return arrayType_;
   }
 
@@ -84,7 +84,7 @@ public class ArrayNode extends NodeType {
       return false;
     }
     if (node == arrayType_) {
-      setTSType((ArrayType) replaceWith);
+      setType((ArrayType) replaceWith);
       return true;
     }
     return false;

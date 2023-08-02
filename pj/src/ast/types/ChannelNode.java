@@ -13,7 +13,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ChannelNode extends NodeType {
+public class ChannelNode extends ASTType {
 
   private ChannelType type_;
 
@@ -27,11 +27,11 @@ public class ChannelNode extends NodeType {
 
   public ChannelNode(Token token, Type type) {
     super(token);
-    setTSType(type);
+    setType(type);
   }
 
   @Override
-  public ChannelNode setTSType(Type type) {
+  public ChannelNode setType(Type type) {
     if (type == type_) {
       return this;
     }
@@ -44,7 +44,7 @@ public class ChannelNode extends NodeType {
   }
 
   @Override
-  public ChannelType getTSType() {
+  public ChannelType getType() {
     return type_;
   }
 
@@ -54,7 +54,7 @@ public class ChannelNode extends NodeType {
       return false;
     }
     if (node == type_) {
-      setTSType((ChannelType) replaceWith);
+      setType((ChannelType) replaceWith);
       return true;
     }
     return false;

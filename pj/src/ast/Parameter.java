@@ -1,6 +1,6 @@
 package ast;
 
-import ast.types.NodeType;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -16,7 +16,7 @@ import java.util.Objects;
 public class Parameter extends AnnotatedNode implements Modifier<Parameter>, Variable<Parameter> {
 
   private int modifiers_;
-  private NodeType type_;
+  private ASTType type_;
   private String name_;
   private boolean isVarArgs_;
 
@@ -24,18 +24,18 @@ public class Parameter extends AnnotatedNode implements Modifier<Parameter>, Var
     this(null, null);
   }
 
-  public Parameter(NodeType type, final String name) {
+  public Parameter(ASTType type, final String name) {
     this(ACC_NATIVE, type, name);
   }
 
-  public Parameter(final int modifiers, NodeType type, final String name) {
+  public Parameter(final int modifiers, ASTType type, final String name) {
     this(null, modifiers, type, name);
   }
 
-  public Parameter(Token token, final int modifiers, NodeType type, final String name) {
+  public Parameter(Token token, final int modifiers, ASTType type, final String name) {
     super(token);
-    setNodeType(type);
-    setName(name);
+    setASTType(type);
+    setIdentifier(name);
   }
 
   public Parameter setVarArgs(boolean isVarargs) {
@@ -50,7 +50,7 @@ public class Parameter extends AnnotatedNode implements Modifier<Parameter>, Var
     return isVarArgs_;
   }
 
-  public Parameter setNodeType(NodeType type) {
+  public Parameter setASTType(ASTType type) {
     if (type == type_) {
       return this;
     }
@@ -62,12 +62,12 @@ public class Parameter extends AnnotatedNode implements Modifier<Parameter>, Var
     return this;
   }
 
-  public NodeType getNodeType() {
+  public ASTType getASTType() {
     return type_;
   }
 
   @Override
-  public Parameter setName(final String name) {
+  public Parameter setIdentifier(final String name) {
     if (Objects.equals(name, name_)) {
       return this;
     }
@@ -76,7 +76,7 @@ public class Parameter extends AnnotatedNode implements Modifier<Parameter>, Var
   }
 
   @Override
-  public String getName() {
+  public String getIdentifier() {
     return name_;
   }
 
@@ -86,7 +86,7 @@ public class Parameter extends AnnotatedNode implements Modifier<Parameter>, Var
       return false;
     }
     if (node == type_) {
-      setNodeType((NodeType) replaceWith);
+      setASTType((ASTType) replaceWith);
       return true;
     }
     return false;

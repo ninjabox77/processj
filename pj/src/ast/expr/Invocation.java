@@ -33,8 +33,8 @@ public class Invocation extends Expression<Invocation> {
     this(scope, identifier, new TupleExpression());
   }
 
-  public Invocation(Expression<?> methodExpression, String identifier, Expression<?> arguments) {
-    this(null, methodExpression, identifier, arguments);
+  public Invocation(Expression<?> scope, String identifier, Expression<?> arguments) {
+    this(null, scope, identifier, arguments);
   }
 
   public Invocation(Token token, Expression<?> scope, String identifier, Expression<?> arguments) {
@@ -121,8 +121,7 @@ public class Invocation extends Expression<Invocation> {
     }
     if (arguments_ != null) {
       if (arguments_.isListExpression()) {
-        ListExpression<?> tuple = arguments_.asListExpression();
-        return tuple.replace(node, replaceWith);
+        return arguments_.asListExpression().replace(node, replaceWith);
       }
     }
     return false;
@@ -139,8 +138,7 @@ public class Invocation extends Expression<Invocation> {
     }
     if (arguments_ != null) {
       if (arguments_.isListExpression()) {
-        ListExpression<?> tuple = arguments_.asListExpression();
-        return tuple.remove(node);
+        return arguments_.asListExpression().remove(node);
       }
     }
     return false;

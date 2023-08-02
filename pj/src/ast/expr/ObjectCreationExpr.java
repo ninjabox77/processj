@@ -16,14 +16,14 @@ import visitor.VoidVisitor;
 public class ObjectCreationExpr extends MethodCallExpression {
 
   public ObjectCreationExpr() {
-    this(null, null, Sequence.sequenceList(), Sequence.sequenceList());
+    this(null, null, new TupleExpression(), Sequence.sequenceList());
   }
 
-  public ObjectCreationExpr(Expression<?> methodExpression, final String identifier, Sequence<Expression<?>> arguments, Sequence<Type> typeArguments) {
+  public ObjectCreationExpr(Expression<?> methodExpression, final String identifier, Expression<?> arguments, Sequence<Type> typeArguments) {
     this(null, methodExpression, identifier, arguments, typeArguments);
   }
 
-  public ObjectCreationExpr(Token token, Expression<?> methodExpression, final String identifier, Sequence<Expression<?>> arguments, Sequence<Type> typeArguments) {
+  public ObjectCreationExpr(Token token, Expression<?> methodExpression, final String identifier, Expression<?> arguments, Sequence<Type> typeArguments) {
     super(token, methodExpression, identifier, arguments, typeArguments);
   }
 

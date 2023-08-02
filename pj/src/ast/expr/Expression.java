@@ -2,7 +2,8 @@ package ast.expr;
 
 import ast.AnnotatedNode;
 import ast.SourceAST;
-import ast.types.NodeType;
+import ast.types.UnknownNode;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 
 /**
@@ -12,7 +13,7 @@ import org.antlr.v4.runtime.Token;
  */
 public abstract class Expression<E extends Expression<?>> extends AnnotatedNode {
 
-  private NodeType type_;
+  private ASTType type_ = new UnknownNode();
 
   public Expression() {
     this(null);
@@ -23,7 +24,8 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
     customInitialization();
   }
 
-  public E setNodeType(NodeType type) {
+  @SuppressWarnings("unchecked")
+  public E setASTType(ASTType type) {
     if (type == type_) {
       return (E) this;
     }
@@ -35,7 +37,7 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
     return (E) this;
   }
 
-  public NodeType getNodeType() {
+  public ASTType getASTType() {
     return type_;
   }
 
@@ -45,7 +47,7 @@ public abstract class Expression<E extends Expression<?>> extends AnnotatedNode 
       return false;
     }
     if (node == type_) {
-      setNodeType((NodeType) replaceWith);
+      setASTType((ASTType) replaceWith);
       return true;
     }
     return false;

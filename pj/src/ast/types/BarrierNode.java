@@ -12,7 +12,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class BarrierNode extends NodeType {
+public class BarrierNode extends ASTType {
 
   private BarrierType type_;
 
@@ -26,11 +26,11 @@ public class BarrierNode extends NodeType {
 
   public BarrierNode(Token token, Type type) {
     super(token);
-    setTSType(type);
+    setType(type);
   }
 
   @Override
-  public BarrierNode setTSType(Type type) {
+  public BarrierNode setType(Type type) {
     if (type == type_) {
       return this;
     }
@@ -43,7 +43,7 @@ public class BarrierNode extends NodeType {
   }
 
   @Override
-  public BarrierType getTSType() {
+  public BarrierType getType() {
     return type_;
   }
 

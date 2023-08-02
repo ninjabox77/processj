@@ -1,7 +1,7 @@
 package ast.toplevel;
 
 import ast.*;
-import ast.types.NodeType;
+import ast.types.ASTType;
 import ast.types.ConstructedNode;
 import org.antlr.v4.runtime.Token;
 
@@ -16,7 +16,7 @@ import java.util.Optional;
 public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> extends AnnotatedNode implements Modifier<T> {
 
   protected int modifiers_;
-  protected NodeType type_;
+  protected ASTType type_;
   protected String name_;
   protected Sequence<ConstructedNode> implementedNames_;
 
@@ -24,29 +24,29 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
     this(null, null);
   }
 
-  public TopLevelDeclaration(NodeType type, final String name) {
+  public TopLevelDeclaration(ASTType type, final String name) {
     this(ACC_PRIVATE, type, name);
   }
 
-  public TopLevelDeclaration(final int modifier, NodeType type, final String name) {
+  public TopLevelDeclaration(final int modifier, ASTType type, final String name) {
     this(modifier, type, name, null);
   }
 
-  public TopLevelDeclaration(final int modifier, NodeType type, final String name, Sequence<ConstructedNode> implementedNames) {
+  public TopLevelDeclaration(final int modifier, ASTType type, final String name, Sequence<ConstructedNode> implementedNames) {
     this(null, modifier, type, name, implementedNames);
   }
 
-  public TopLevelDeclaration(Token token, final int modifier, NodeType type, final String name, Sequence<ConstructedNode> implementedNames) {
+  public TopLevelDeclaration(Token token, final int modifier, ASTType type, final String name, Sequence<ConstructedNode> implementedNames) {
     super(token);
     setModifiers(modifier);
-    setNodeType(type);
-    setName(name);
+    setASTType(type);
+    setIdentifier(name);
     setImplementedNames(implementedNames);
     customInitialization();
   }
 
   @SuppressWarnings("unchecked")
-  public T setNodeType(NodeType type) {
+  public T setASTType(ASTType type) {
     if (type == type_) {
       return (T) this;
     }
@@ -58,7 +58,7 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
     return (T) this;
   }
 
-  public NodeType getNodeType() {
+  public ASTType getASTType() {
     return type_;
   }
 
@@ -78,7 +78,7 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
   }
 
   @SuppressWarnings("unchecked")
-  public T setName(final String name) {
+  public T setIdentifier(final String name) {
     if (Objects.equals(name, name_)) {
       return (T) this;
     }
@@ -86,7 +86,7 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
     return (T) this;
   }
 
-  public String getName() {
+  public String getIdentifier() {
     return name_;
   }
 
@@ -130,7 +130,7 @@ public abstract class TopLevelDeclaration<T extends TopLevelDeclaration<?>> exte
       return false;
     }
     if (node == type_) {
-      setNodeType((NodeType) replaceWith);
+      setASTType((ASTType) replaceWith);
       return true;
     }
     if (implementedNames_ == null) {

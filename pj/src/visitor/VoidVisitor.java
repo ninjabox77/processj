@@ -64,7 +64,7 @@ public interface VoidVisitor<A> {
 
   void visit(final ConstructedNode c, A arg);
 
-  void visit(final ErrorNode e, A arg);
+  void visit(final UnknownNode e, A arg);
 
   /*********************************************************
    * Top-level nodes

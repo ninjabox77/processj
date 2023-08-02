@@ -1,6 +1,6 @@
 package ast.expr;
 
-import ast.types.NodeType;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -18,18 +18,18 @@ public class ClassExpression extends Expression<ClassExpression> {
     this(null);
   }
 
-  public ClassExpression(NodeType type) {
+  public ClassExpression(ASTType type) {
     this(null, type);
   }
 
-  public ClassExpression(Token token, NodeType type) {
+  public ClassExpression(Token token, ASTType type) {
     super(token);
-    this.setNodeType(type);
+    this.setASTType(type);
   }
 
   @Override
-  public ClassExpression setNodeType(NodeType type) {
-    return super.setNodeType(type);
+  public ClassExpression setASTType(ASTType type) {
+    return super.setASTType(type);
   }
 
   @Override

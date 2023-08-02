@@ -20,8 +20,8 @@ import java.util.Optional;
  */
 public class MethodCallExpression extends Expression<MethodCallExpression> {
 
-  private Expression<?> methodExpression_;
-  private Sequence<Expression<?>> arguments_;
+  private Expression<?> scope_;
+  private Expression<?> arguments_;
   private Sequence<Type> typeArguments_;
   private String identifier_;
   private boolean implicitThis_;
@@ -31,24 +31,24 @@ public class MethodCallExpression extends Expression<MethodCallExpression> {
   }
 
   public MethodCallExpression(final String identifier) {
-    this(identifier, Sequence.sequenceList());
+    this(identifier, new TupleExpression());
   }
 
-  public MethodCallExpression(final String identifier, Sequence<Expression<?>> arguments) {
+  public MethodCallExpression(final String identifier, Expression<?> arguments) {
     this(null, identifier, arguments);
   }
 
-  public MethodCallExpression(Expression<?> methodExpression, final String identifier, Sequence<Expression<?>> arguments) {
-    this(methodExpression, identifier, arguments, Sequence.sequenceList());
+  public MethodCallExpression(Expression<?> scope, final String identifier, Expression<?> arguments) {
+    this(scope, identifier, arguments, Sequence.sequenceList());
   }
 
-  public MethodCallExpression(Expression<?> methodExpression, final String identifier, Sequence<Expression<?>> arguments, Sequence<Type> typeArguments) {
-    this(null, methodExpression, identifier, arguments, typeArguments);
+  public MethodCallExpression(Expression<?> scope, final String identifier, Expression<?> arguments, Sequence<Type> typeArguments) {
+    this(null, scope, identifier, arguments, typeArguments);
   }
 
-  public MethodCallExpression(Token token, Expression<?> methodExpression, final String identifier, Sequence<Expression<?>> arguments, Sequence<Type> typeArguments) {
+  public MethodCallExpression(Token token, Expression<?> scope, final String identifier, Expression<?> arguments, Sequence<Type> typeArguments) {
     super(token);
-    setMethodExpression(methodExpression);
+    setScope(scope);
     setIdentifier(identifier);
     setArguments(arguments);
     setTypeArguments(typeArguments);
@@ -67,23 +67,23 @@ public class MethodCallExpression extends Expression<MethodCallExpression> {
     return identifier_;
   }
 
-  public MethodCallExpression setMethodExpression(Expression<?> methodExpression) {
-    if (methodExpression == methodExpression_) {
+  public MethodCallExpression setScope(Expression<?> scope) {
+    if (scope == scope_) {
       return this;
     }
-    if (methodExpression_ != null) {
-      methodExpression_.setParentNode(null);
+    if (scope_ != null) {
+      scope_.setParentNode(null);
     }
-    methodExpression_ = methodExpression;
-    setAsParentNodeOf(methodExpression);
+    scope_ = scope;
+    setAsParentNodeOf(scope);
     return this;
   }
 
-  public Expression<?> getMethodExpression() {
-    return methodExpression_;
+  public Optional<Expression<?>> getScope() {
+    return Optional.ofNullable(scope_);
   }
 
-  public MethodCallExpression setArguments(Sequence<Expression<?>> arguments) {
+  public MethodCallExpression setArguments(Expression<?> arguments) {
     if (arguments == arguments_) {
       return this;
     }
@@ -95,8 +95,8 @@ public class MethodCallExpression extends Expression<MethodCallExpression> {
     return this;
   }
 
-  public Optional<Sequence<Expression<?>>> getArguments() {
-    return Optional.ofNullable(arguments_);
+  public Expression<?> getArguments() {
+    return arguments_;
   }
 
   public MethodCallExpression setTypeArguments(Sequence<Type> typeArguments) {
@@ -123,7 +123,7 @@ public class MethodCallExpression extends Expression<MethodCallExpression> {
     return this;
   }
 
-  public boolean getImplicitThis() {
+  public boolean isImplicitThis() {
     return implicitThis_;
   }
 
@@ -150,15 +150,12 @@ public class MethodCallExpression extends Expression<MethodCallExpression> {
     if (node == null) {
       return false;
     }
-    if (node == methodExpression_) {
-      setMethodExpression((Expression<?>) replaceWith);
+    if (node == scope_) {
+      setScope((Expression<?>) replaceWith);
       return true;
     }
-    for (int i = 0; i < arguments_.size(); ++i) {
-      if (node == arguments_.get(i)) {
-        arguments_.set(i, (Expression<?>) replaceWith);
-        return true;
-      }
+    if (arguments_.isListExpression()) {
+      return arguments_.asListExpression().replace(node, replaceWith);
     }
     for (int i = 0; i < typeArguments_.size(); ++i) {
       if (node == typeArguments_.get(i)) {
@@ -174,15 +171,12 @@ public class MethodCallExpression extends Expression<MethodCallExpression> {
     if (node == null) {
       return false;
     }
-    if (node == methodExpression_) {
-      setMethodExpression(null);
+    if (node == scope_) {
+      setScope(null);
       return true;
     }
-    for (int i = 0; i < arguments_.size(); ++i) {
-      if (node == arguments_.get(i)) {
-        arguments_.remove(i);
-        return true;
-      }
+    if (arguments_.isListExpression()) {
+      return arguments_.asListExpression().remove(node);
     }
     for (int i = 0; i < typeArguments_.size(); ++i) {
       if (node == typeArguments_.get(i)) {

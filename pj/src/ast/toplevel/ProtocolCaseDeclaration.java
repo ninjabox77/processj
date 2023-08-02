@@ -34,11 +34,11 @@ public class ProtocolCaseDeclaration extends AnnotatedNode {
 
   public ProtocolCaseDeclaration(Token token, final String name, Sequence<FieldDeclaration> declaredFields) {
     super(token);
-    setName(name);
+    setIdentifier(name);
     setDeclaredFields(declaredFields);
   }
 
-  public ProtocolCaseDeclaration setName(final String name) {
+  public ProtocolCaseDeclaration setIdentifier(final String name) {
     if (Objects.equals(name, name_)) {
       return this;
     }
@@ -46,7 +46,7 @@ public class ProtocolCaseDeclaration extends AnnotatedNode {
     return this;
   }
 
-  public String getName() {
+  public String getIdentifier() {
     return name_;
   }
 

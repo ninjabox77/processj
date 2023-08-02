@@ -69,7 +69,7 @@ public interface GenericVisitor<R, A> {
 
   R visit(final ConstructedNode c, A arg);
 
-  R visit(final ErrorNode e, A arg);
+  R visit(final UnknownNode e, A arg);
 
   /*********************************************************
    * Top-level nodes

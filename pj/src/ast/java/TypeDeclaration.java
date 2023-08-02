@@ -32,11 +32,11 @@ public abstract class TypeDeclaration<T extends TypeDeclaration<?>> extends Anno
   public TypeDeclaration(Token token, final int modifiers, final String name, Sequence<BodyDeclaration<?>> declarations) {
     super(token);
     setModifiers(modifiers);
-    setName(name);
+    setIdentifier(name);
     setDeclarations(declarations);
   }
 
-  public T setName(final String name) {
+  public T setIdentifier(final String name) {
     if (Objects.equals(name, name_)) {
       return (T) this;
     }
@@ -44,7 +44,7 @@ public abstract class TypeDeclaration<T extends TypeDeclaration<?>> extends Anno
     return (T) this;
   }
 
-  public String getName() {
+  public String getIdentifier() {
     return name_;
   }
 

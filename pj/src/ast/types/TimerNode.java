@@ -12,7 +12,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class TimerNode extends NodeType {
+public class TimerNode extends ASTType {
 
   private TimerType type_;
 
@@ -26,11 +26,11 @@ public class TimerNode extends NodeType {
 
   public TimerNode(Token token, Type type) {
     super(token);
-    setTSType(type);
+    setType(type);
   }
 
   @Override
-  public TimerNode setTSType(Type type) {
+  public TimerNode setType(Type type) {
     if (type == type_) {
       return this;
     }
@@ -43,7 +43,7 @@ public class TimerNode extends NodeType {
   }
 
   @Override
-  public TimerType getTSType() {
+  public TimerType getType() {
     return type_;
   }
 

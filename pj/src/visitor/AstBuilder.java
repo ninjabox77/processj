@@ -29,7 +29,7 @@ import static misc.ConfigureAST.configureNode;
 public class AstBuilder extends ProcessJBaseVisitor<Object> {
 
   private ArrayType getParentArray(ArrayType array) {
-    while (!array.isOrphan()) {
+    while (array.getParentNode().isPresent()) {
       array = (ArrayType) array.getParentNode().get();
     }
     return array;
@@ -158,7 +158,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     for (int i = 0; i < ctx.modifier().size(); ++i) {
       modifiers += visitModifier(ctx.modifier(i));
     }
-    NodeType type = createNodeType(visitType_(ctx.type_()));
+    ASTType type = createNodeType(visitType_(ctx.type_()));
     final String identifier = ctx.Identifier().getText();
     Sequence<Parameter> parameters = Sequence.sequenceList();
     if (ctx.formarlParameterList() != null) {
@@ -166,8 +166,8 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     }
     ProcedureDeclaration procedure = new ProcedureDeclaration();
     procedure.setModifiers(modifiers);
-    procedure.setNodeType(type);
-    procedure.setName(identifier);
+    procedure.setASTType(type);
+    procedure.setIdentifier(identifier);
     procedure.setParameters(parameters);
     if (ctx.body() != null) {
       procedure.setBody(visitBody(ctx.body()));
@@ -197,7 +197,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     return Opcodes.ACC_PRIVATE;
   }
 
-  private NodeType createNodeType(Type type) {
+  private ASTType createNodeType(Type type) {
     if (type.isPrimitiveType()) {
       Primitive t = type.asPrimitiveType();
       if (t.isBarrierType()) {
@@ -420,20 +420,20 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     }
     Parameter parameter = new Parameter();
     parameter.setModifiers(modifiers);
-    NodeType type = createNodeType(visitType_(ctx.type_()));
+    ASTType type = createNodeType(visitType_(ctx.type_()));
     Tuple<?> tuple = visitVariableDeclaratorIdentifier(ctx.variableDeclaratorIdentifier());
     if (tuple.isTuple1()) {
       Tuple1<String> t1 = tuple.asTuple1();
-      parameter.setName(t1.getV1());
-      parameter.setNodeType(type);
+      parameter.setIdentifier(t1.getV1());
+      parameter.setASTType(type);
       configureNode(parameter, ctx.variableDeclaratorIdentifier());
     } else {
       Tuple2<String, ArrayType> t2 = tuple.asTuple2();
       ArrayNode arrayNode = configureNode(new ArrayNode(t2.getV2()), t2.getV2());
       arrayNode.setBracketPosition(ArrayNode.BracketPosition.NAME);
       setBaseType(type, arrayNode);
-      parameter.setNodeType(arrayNode);
-      parameter.setName(t2.getV1());
+      parameter.setASTType(arrayNode);
+      parameter.setIdentifier(t2.getV1());
       configureNode(parameter, ctx);
     }
     return parameter;
@@ -450,18 +450,18 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     return (ArrayType) type;
   }
 
-  public void setBaseType(NodeType type, ArrayNode arrayType) {
-    ArrayType t2 = arrayType.getTSType();
+  public void setBaseType(ASTType type, ArrayNode arrayNode) {
+    ArrayType t2 = arrayNode.getType();
     if (type.isArrayNode()) {
-      ArrayType t1 = type.getTSType().asConstructedType().asArrayType();
+      ArrayType t1 = type.getType().asConstructedType().asArrayType();
       t1 = getBaseType(t1);
       t2 = getBaseType(t2);
       t2.setComponentType(t1.getComponentType());
-      t1.setComponentType(arrayType.getTSType());
-      arrayType.setTSType(type.getTSType());
+      t1.setComponentType(arrayNode.getType());
+      arrayNode.setType(type.getType());
     } else {
       t2 = getBaseType(t2);
-      t2.setComponentType(type.getTSType());
+      t2.setComponentType(type.getType());
     }
   }
 
@@ -469,14 +469,14 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   public Parameter visitLastFormalDeclaration(ProcessJParser.LastFormalDeclarationContext ctx) {
     if (ctx.type_() != null) {
       Parameter parameter = new Parameter();
-      NodeType type = createNodeType(visitType_(ctx.type_()));
+      ASTType type = createNodeType(visitType_(ctx.type_()));
       Tuple<?> tuple = visitVariableDeclaratorIdentifier(ctx.variableDeclaratorIdentifier());
       if (tuple.isTuple1()) {
         Tuple1<String> t1 = tuple.asTuple1();
-        ArrayType arrayType = configureNode(new ArrayType(type.getTSType()), type);
+        ArrayType arrayType = configureNode(new ArrayType(type.getType()), type);
         ArrayNode arrayNode = configureNode(new ArrayNode(arrayType), arrayType);
-        parameter.setName(t1.getV1());
-        parameter.setNodeType(arrayNode);
+        parameter.setIdentifier(t1.getV1());
+        parameter.setASTType(arrayNode);
         configureNode(parameter, ctx.variableDeclaratorIdentifier());
       } else {
         Tuple2<String, ArrayType> t2 = tuple.asTuple2();
@@ -484,8 +484,8 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
         ArrayNode arrayNode = configureNode(new ArrayNode(arrayType), arrayType);
         setBaseType(type, arrayNode);
         arrayNode.setBracketPosition(ArrayNode.BracketPosition.NAME);
-        parameter.setNodeType(configureNode(arrayNode, arrayNode));
-        parameter.setName(t2.getV1());
+        parameter.setASTType(configureNode(arrayNode, arrayNode));
+        parameter.setIdentifier(t2.getV1());
         configureNode(parameter, ctx);
       }
       parameter.setVarArgs(true);
@@ -519,7 +519,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     Sequence<FieldDeclaration> fields = visitRecordBody(ctx.recordBody());
     RecordDeclaration recordDecl = new RecordDeclaration();
     recordDecl.setModifiers(modifiers);
-    recordDecl.setName(identifier);
+    recordDecl.setIdentifier(identifier);
     recordDecl.setDeclaredFields(fields);
     if (ctx.extends_() != null) {
       Sequence<NamedType> types = visitExtends(ctx.extends_());
@@ -547,22 +547,22 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   @Override
   public Sequence<FieldDeclaration> visitRecordMemberDeclaration(ProcessJParser.RecordMemberDeclarationContext ctx) {
     Sequence<FieldDeclaration> fields = Sequence.sequenceList();
-    NodeType type = createNodeType(visitType_(ctx.type_()));
+    ASTType type = createNodeType(visitType_(ctx.type_()));
     List<Tuple<?>> variables = visitRecordMemberDeclarators(ctx.recordMemberDeclarators());
     for (Tuple<?> v : variables) {
       VariableDeclarator variableDecl = new VariableDeclarator();
       if (v.isTuple1()) {
         Tuple1<String> t1 = v.asTuple1();
-        variableDecl.setName(t1.getV1());
-        variableDecl.setNodeType(type);
+        variableDecl.setIdentifier(t1.getV1());
+        variableDecl.setASTType(type);
         configureNode(variableDecl, ctx.recordMemberDeclarators());
       } else {
         Tuple2<String, ArrayType> t2 = v.asTuple2();
         ArrayNode arrayNode = configureNode(new ArrayNode(t2.getV2()), t2.getV2());
         arrayNode.setBracketPosition(ArrayNode.BracketPosition.NAME);
-        arrayNode.getTSType().setComponentType(type.getTSType());
-        variableDecl.setNodeType(arrayNode);
-        variableDecl.setName(t2.getV1());
+        arrayNode.getType().setComponentType(type.getType());
+        variableDecl.setASTType(arrayNode);
+        variableDecl.setIdentifier(t2.getV1());
         configureNode(variableDecl, ctx);
       }
       fields.add(configureNode(new FieldDeclaration(variableDecl), ctx));
@@ -591,7 +591,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     final String identifier = ctx.Identifier().getText();
     ProtocolDeclaration protocolDecl = new ProtocolDeclaration();
     protocolDecl.setModifiers(modifiers);
-    protocolDecl.setName(identifier);
+    protocolDecl.setIdentifier(identifier);
     if (ctx.extends_() != null) {
       Sequence<NamedType> types = visitExtends(ctx.extends_());
       Sequence<ConstructedNode> implNames = Sequence.sequenceList();
@@ -616,7 +616,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     final String identifier = ctx.Identifier().getText();
     Sequence<FieldDeclaration> fields = visitRecordBody(ctx.recordBody());
     ProtocolCaseDeclaration caseDecl = new ProtocolCaseDeclaration();
-    caseDecl.setName(identifier);
+    caseDecl.setIdentifier(identifier);
     caseDecl.setDeclaredFields(fields);
     return configureNode(caseDecl, ctx);
   }
@@ -627,14 +627,14 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     for (int i = 0; i < ctx.modifier().size(); ++i) {
       modifiers += visitModifier(ctx.modifier(i));
     }
-    NodeType type = createNodeType(visitType_(ctx.type_()));
+    ASTType type = createNodeType(visitType_(ctx.type_()));
     Sequence<ConstantDeclaration> constantDecls = visitConstantDeclarators(ctx.constantDeclarators());
     for (ConstantDeclaration constantDecl : constantDecls) {
-      if (constantDecl.getNodeType() != null) {
-        ArrayNode arrayNode = constantDecl.getNodeType().asArrayNode();
-        arrayNode.getTSType().setComponentType(type.getTSType());
+      if (constantDecl.getASTType() != null) {
+        ArrayNode arrayNode = constantDecl.getASTType().asArrayNode();
+        arrayNode.getType().setComponentType(type.getType());
       } else {
-        constantDecl.setNodeType(type);
+        constantDecl.setASTType(type);
       }
       constantDecl.setModifiers(modifiers);
     }
@@ -654,13 +654,13 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     Tuple<?> tuple = visitVariableDeclaratorIdentifier(ctx.variableDeclaratorIdentifier());
     if (tuple.isTuple1()) {
       Tuple1<String> t1 = tuple.asTuple1();
-      constantDecl.setName(t1.getV1());
+      constantDecl.setIdentifier(t1.getV1());
       configureNode(constantDecl, ctx.variableDeclaratorIdentifier());
     } else {
       Tuple2<String, ArrayType> t2 = tuple.asTuple2();
       ArrayNode arrayNode = configureNode(new ArrayNode(t2.getV2()), t2.getV2());
-      constantDecl.setNodeType(arrayNode);
-      constantDecl.setName(t2.getV1());
+      constantDecl.setASTType(arrayNode);
+      constantDecl.setIdentifier(t2.getV1());
       configureNode(constantDecl, ctx);
     }
     if (ctx.EQ() != null) {
@@ -717,14 +717,14 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     if (ctx.variableModifier() != null) {
       modifiers = visitVariableModifier(ctx.variableModifier());
     }
-    NodeType type = createNodeType(visitType_(ctx.type_()));
+    ASTType type = createNodeType(visitType_(ctx.type_()));
     Sequence<VariableDeclarator> variables = visitVariableDeclaratorList(ctx.variableDeclaratorList());
     for (VariableDeclarator v : variables) {
-      if (v.getNodeType() != null) {
-        ArrayNode arrayNode = v.getNodeType().asArrayNode();
+      if (v.getASTType() != null) {
+        ArrayNode arrayNode = v.getASTType().asArrayNode();
         setBaseType(type, arrayNode);
       } else {
-        v.setNodeType(type);
+        v.setASTType(type);
       }
       v.setModifiers(modifiers);
     }
@@ -744,13 +744,13 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     Tuple<?> tuple = visitVariableDeclaratorIdentifier(ctx.variableDeclaratorIdentifier());
     if (tuple.isTuple1()) {
       Tuple1<String> t1 = tuple.asTuple1();
-      variableDecl.setName(t1.getV1());
+      variableDecl.setIdentifier(t1.getV1());
       configureNode(variableDecl, ctx.variableDeclaratorIdentifier());
     } else {
       Tuple2<String, ArrayType> t2 = tuple.asTuple2();
       ArrayNode arrayNode = configureNode(new ArrayNode(t2.getV2()), t2.getV2());
-      variableDecl.setNodeType(arrayNode);
-      variableDecl.setName(t2.getV1());
+      variableDecl.setASTType(arrayNode);
+      variableDecl.setIdentifier(t2.getV1());
       configureNode(variableDecl, ctx);
     }
     if (ctx.EQ() != null) {
@@ -814,21 +814,21 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   @Override
   public ForEachStatement visitEnhancedForControl(ProcessJParser.EnhancedForControlContext ctx) {
     Parameter parameter = new Parameter();
-    NodeType type = createNodeType(visitType_(ctx.type_()));
+    ASTType type = createNodeType(visitType_(ctx.type_()));
     Expression<?> expression = (Expression<?>) visit(ctx.expression());
     Tuple<?> tuple = visitVariableDeclaratorIdentifier(ctx.variableDeclaratorIdentifier());
     if (tuple.isTuple1()) {
       Tuple1<String> t1 = tuple.asTuple1();
-      parameter.setName(t1.getV1());
-      parameter.setNodeType(type);
+      parameter.setIdentifier(t1.getV1());
+      parameter.setASTType(type);
       configureNode(parameter, ctx.variableDeclaratorIdentifier());
     } else {
       Tuple2<String, ArrayType> t2 = tuple.asTuple2();
       ArrayNode arrayNode = configureNode(new ArrayNode(t2.getV2()), t2.getV2());
       arrayNode.setBracketPosition(ArrayNode.BracketPosition.NAME);
       setBaseType(type, arrayNode);
-      parameter.setNodeType(arrayNode);
-      parameter.setName(t2.getV1());
+      parameter.setASTType(arrayNode);
+      parameter.setIdentifier(t2.getV1());
       configureNode(parameter, ctx);
     }
     return new ForEachStatement(parameter, expression);
@@ -1094,7 +1094,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   @Override
   public VariableExpression visitIdentifier(ProcessJParser.IdentifierContext ctx) {
     VariableExpression identifier = new VariableExpression();
-    identifier.setName(ctx.getText());
+    identifier.setIdentifier(ctx.getText());
     return configureNode(identifier, ctx);
   }
 
@@ -1132,7 +1132,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
     Expression<?> scope = (Expression<?>) visit(ctx.expression());
     if (ctx.identifier() != null) {
       VariableExpression identifier = visitIdentifier(ctx.identifier());
-      FieldExpression fieldExpr = new FieldExpression(scope, identifier.getName());
+      FieldExpression fieldExpr = new FieldExpression(scope, identifier.getIdentifier());
       return configureNode(fieldExpr, ctx);
     }
     Invocation invocation = visitInvocation(ctx.invocation());
@@ -1144,7 +1144,7 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
   public Invocation visitInvocation(ProcessJParser.InvocationContext ctx) {
     VariableExpression variable = visitIdentifier(ctx.identifier());
     Expression<?> arguments = visitArguments(ctx.arguments());
-    if (variable.getName().equals("read")) {
+    if (variable.getIdentifier().equals("read")) {
       ChannelReadExpression chanRead = new ChannelReadExpression();
       if (arguments.isBlockExpression()) {
         chanRead.setArguments(arguments.asBlockExpression());
@@ -1152,17 +1152,17 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
       chanRead.setChannel(variable);
       return configureNode(chanRead, ctx);
     }
-    if (variable.getName().equals("write")) {
+    if (variable.getIdentifier().equals("write")) {
       ChannelWriteExpression chanWrite = new ChannelWriteExpression();
       chanWrite.setChannel(variable);
       chanWrite.setArguments(arguments);
       return configureNode(chanWrite, ctx);
     }
     Invocation invocation = new Invocation();
-    if (variable.getName().equals("timeout")) {
+    if (variable.getIdentifier().equals("timeout")) {
       invocation = new TimeoutReadExpression();
     }
-    invocation.setIdentifier(variable.getName());
+    invocation.setIdentifier(variable.getIdentifier());
     invocation.setArguments(arguments);
     return configureNode(invocation, ctx);
   }
@@ -1414,11 +1414,11 @@ public class AstBuilder extends ProcessJBaseVisitor<Object> {
       newArray = visitArrayExpression(ctx.arrayExpression());
     }
     if (creatorName instanceof Type) {
-      newArray.setNodeType(configureNode(new PrimitiveNode((Type) creatorName), creatorName));
+      newArray.setASTType(configureNode(new PrimitiveNode((Type) creatorName), creatorName));
     } else {
       // if it is not a primitive type then it must be the name of a constructed type
       NamedType name = new NamedType((Name) creatorName);
-      newArray.setNodeType(configureNode(new ConstructedNode(name), creatorName));
+      newArray.setASTType(configureNode(new ConstructedNode(name), creatorName));
     }
     return configureNode(newArray, ctx);
   }

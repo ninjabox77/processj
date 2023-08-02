@@ -13,7 +13,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ConstructedNode extends NodeType {
+public class ConstructedNode extends ASTType {
 
   Constructed type_;
 
@@ -27,11 +27,11 @@ public class ConstructedNode extends NodeType {
 
   public ConstructedNode(Token token, Type type) {
     super(token);
-    setTSType(type);
+    setType(type);
   }
 
   @Override
-  public ConstructedNode setTSType(Type type) {
+  public ConstructedNode setType(Type type) {
     if (type == type_) {
       return this;
     }
@@ -45,7 +45,7 @@ public class ConstructedNode extends NodeType {
   }
 
   @Override
-  public Constructed getTSType() {
+  public Constructed getType() {
     return type_;
   }
 
@@ -55,7 +55,7 @@ public class ConstructedNode extends NodeType {
       return false;
     }
     if (node == type_) {
-      setTSType((Constructed) replaceWith);
+      setType((Constructed) replaceWith);
       return true;
     }
     return false;

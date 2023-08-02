@@ -11,12 +11,12 @@ public interface Variable<N extends SourceAST> {
   /**
    * Sets the name of the variable.
    */
-  N setName(final String name);
+  N setIdentifier(final String name);
 
   /**
    * Returns the name of the variable.
    */
-  String getName();
+  String getIdentifier();
 
   /**
    * Returns true if the variable has an initial value.

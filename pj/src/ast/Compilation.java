@@ -107,7 +107,7 @@ public class Compilation extends AnnotatedNode {
     for (TopLevelDeclaration<?> decl : typeDeclarations_) {
       if (decl.isProcedureDeclaration()) {
         ProcedureDeclaration procedure = decl.asProcedureDeclaration();
-        if (procedure.getName().equals(name) && hasCompatibleNumberOfArguments(procedure, count)) {
+        if (procedure.getIdentifier().equals(name) && hasCompatibleNumberOfArguments(procedure, count)) {
           return true;
         }
       }
@@ -117,11 +117,11 @@ public class Compilation extends AnnotatedNode {
 
   public boolean hasCompatibleType(TupleExpression args, ProcedureDeclaration procedure, int idx) {
     int lastParamIndex = procedure.getParameters().size() - 1;
-    return (idx <= lastParamIndex && args.getValue(idx).getNodeType().equals(procedure.getParameter(idx).getNodeType()))
+    return (idx <= lastParamIndex && args.getValue(idx).getASTType().equals(procedure.getParameter(idx).getASTType()))
         || (idx >= lastParamIndex && isPossibleVarArgs(procedure, lastParamIndex) &&
-        (args.getValue(idx).getNodeType().getTSType().typeEqual(procedure.getParameter(lastParamIndex).getNodeType().getTSType())
-            || args.getValue(idx).getNodeType().getTSType().typeEquivalent(procedure.getParameter(lastParamIndex).getNodeType().getTSType())
-            || args.getValue(idx).getNodeType().getTSType().typeAssignmentCompatible(procedure.getParameter(lastParamIndex).getNodeType().getTSType())));
+        (args.getValue(idx).getASTType().getType().typeEqual(procedure.getParameter(lastParamIndex).getASTType().getType())
+            || args.getValue(idx).getASTType().getType().typeEquivalent(procedure.getParameter(lastParamIndex).getASTType().getType())
+            || args.getValue(idx).getASTType().getType().typeAssignmentCompatible(procedure.getParameter(lastParamIndex).getASTType().getType())));
   }
 
   public boolean hasCompatibleNumberOfArguments(ProcedureDeclaration procedure, final int count) {
@@ -130,7 +130,7 @@ public class Compilation extends AnnotatedNode {
   }
 
   public boolean isPossibleVarArgs(ProcedureDeclaration fd, final int lastParamIndex) {
-    return lastParamIndex >= 0 && fd.getParameter(lastParamIndex).getNodeType().isArrayNode();
+    return lastParamIndex >= 0 && fd.getParameter(lastParamIndex).getASTType().isArrayNode();
   }
 
   @Override

@@ -92,7 +92,7 @@ public class SwitchStatement extends Statement {
     return Optional.ofNullable(defaultStmt_);
   }
 
-  public SwitchCaseStatement getCase(int index) {
+  public SwitchCaseStatement getSwitchCase(int index) {
     if (switchCases_ != null) {
       if (index >= 0 && index < switchCases_.size()) {
         return switchCases_.get(index);

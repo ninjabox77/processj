@@ -92,19 +92,38 @@ public class ChannelEndType extends Constructed {
     return this;
   }
 
+  // α =T β ⇔ Channel?(α) ∧ Channel?(β) ∧ α = β ∧ (m1 = m2)
   @Override
   public boolean typeEqual(Type other) {
-    return false;
+    if (!other.isConstructedType()) {
+      return false;
+    }
+    if (!other.asConstructedType().isChannelEndType()) {
+      return false;
+    }
+    ChannelEndType cet = other.asConstructedType().asChannelEndType();
+    boolean b = cet.componentType_.typeAssignmentCompatible(componentType_);
+    if (b) {
+      boolean bb = false;
+      if (isShared() && cet.isShared()) {
+        bb = true;
+      } else if ((isShared() && cet.isRead()) || (isWrite() && cet.isWrite())) {
+        bb = true;
+      }
+      b = b && bb;
+    }
+    return b;
   }
 
+  // α =T β ⇔ Channel?(α) ∧ Channel?(β) ∧ α = β ∧ (m1 = m2)
   @Override
   public boolean typeEquivalent(Type other) {
-    return false;
+    return typeEqual(other);
   }
 
   @Override
   public boolean typeAssignmentCompatible(Type other) {
-    return false;
+    return typeEqual(other);
   }
 
   @Override

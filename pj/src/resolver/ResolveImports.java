@@ -130,7 +130,7 @@ public class ResolveImports implements VoidVisitor<Visitor> {
   }
 
   @Override
-  public void visit(ErrorNode e, Visitor arg) {
+  public void visit(UnknownNode e, Visitor arg) {
 
   }
 

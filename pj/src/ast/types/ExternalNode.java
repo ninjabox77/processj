@@ -13,7 +13,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ExternalNode extends NodeType {
+public class ExternalNode extends ASTType {
 
   private ExternalType type_;
 
@@ -23,11 +23,11 @@ public class ExternalNode extends NodeType {
 
   public ExternalNode(Token token, Type type) {
     super(token);
-    setTSType(type);
+    setType(type);
   }
 
   @Override
-  public ExternalNode setTSType(Type type) {
+  public ExternalNode setType(Type type) {
     if (type == type_) {
       return this;
     }
@@ -40,7 +40,7 @@ public class ExternalNode extends NodeType {
   }
 
   @Override
-  public ExternalType getTSType() {
+  public ExternalType getType() {
     return type_;
   }
 
@@ -50,7 +50,7 @@ public class ExternalNode extends NodeType {
       return false;
     }
     if (node == type_) {
-      setTSType((ExternalType) replaceWith);
+      setType((ExternalType) replaceWith);
       return true;
     }
     return false;

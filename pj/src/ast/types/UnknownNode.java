@@ -12,25 +12,25 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class ErrorNode extends NodeType {
+public class UnknownNode extends ASTType {
 
   private Type type_;
 
-  public ErrorNode() {
+  public UnknownNode() {
     this(null);
   }
 
-  public ErrorNode(Type type) {
+  public UnknownNode(Type type) {
     this(null, type);
   }
 
-  public ErrorNode(Token token, Type type) {
+  public UnknownNode(Token token, Type type) {
     super(token);
-    setTSType(type);
+    setType(type);
   }
 
   @Override
-  public ErrorNode setTSType(Type type) {
+  public UnknownNode setType(Type type) {
     if (type == type_) {
       return this;
     }
@@ -42,17 +42,17 @@ public class ErrorNode extends NodeType {
   }
 
   @Override
-  public Type getTSType() {
+  public Type getType() {
     return type_;
   }
 
   @Override
-  public boolean isErrorNode() {
+  public boolean isUnknownNode() {
     return true;
   }
 
   @Override
-  public ErrorNode asErrorNode() {
+  public UnknownNode asUnknownNode() {
     return this;
   }
 
@@ -62,7 +62,7 @@ public class ErrorNode extends NodeType {
       return false;
     }
     if (node == type_) {
-      setTSType((Type) replaceWith);
+      setType((Type) replaceWith);
       return true;
     }
     return false;

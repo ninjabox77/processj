@@ -98,16 +98,33 @@ public class ChannelType extends Constructed {
     return this;
   }
 
+  // if α = Channel(t1, a1) ∧ β = Channel(t2, a2)
+  // α =T β ⇔ Channel?(α) ∧ Channel?(β) ∧ (t1 =T t2) ∧ (a1 = a2)
   @Override
   public boolean typeEqual(Type other) {
-    return false;
+    if (!other.isConstructedType()) {
+      return false;
+    }
+    // Channel?(β) -- is t a channel?
+    if (!other.asConstructedType().isChannelType()) {
+      return false;
+    }
+    ChannelType ct = other.asConstructedType().asChannelType();
+    // (a1 = a2) -- are both channels' ends shared in the same way?
+    if (shared_ != ct.shared_) {
+      return false;
+    }
+    // (t1 =T t2) -- are the base types type equal?
+    return ct.componentType_.typeEqual(componentType_);
   }
 
+  // α ∼T β ⇔ α =T β
   @Override
   public boolean typeEquivalent(Type other) {
-    return false;
+    return typeEqual(other);
   }
 
+  // Channels cannot be assigned.
   @Override
   public boolean typeAssignmentCompatible(Type other) {
     return false;

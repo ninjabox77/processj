@@ -64,7 +64,7 @@ public interface DefaultVisitor<R> {
 
   R visit(final ConstructedNode c);
 
-  R visit(final ErrorNode e);
+  R visit(final UnknownNode e);
 
   /*********************************************************
    * Top-level nodes

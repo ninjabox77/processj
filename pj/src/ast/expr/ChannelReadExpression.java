@@ -1,7 +1,7 @@
 package ast.expr;
 
 import ast.SourceAST;
-import ast.types.NodeType;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -60,8 +60,8 @@ public class ChannelReadExpression extends Invocation {
   }
 
   @Override
-  public ChannelReadExpression setNodeType(NodeType type) {
-    return (ChannelReadExpression) super.setNodeType(type);
+  public ChannelReadExpression setASTType(ASTType type) {
+    return (ChannelReadExpression) super.setASTType(type);
   }
 
   @Override

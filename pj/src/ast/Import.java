@@ -1,5 +1,6 @@
 package ast;
 
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -19,6 +20,7 @@ public class Import extends AnnotatedNode {
   private String fieldName_;
   private boolean isJavaImport_;
   private boolean isStar_;
+  private ASTType type_;  // reference to the imported type
 
   public Import() {
     this(null, new Name(), null, null, false, false);
@@ -103,6 +105,18 @@ public class Import extends AnnotatedNode {
 
   public String getFieldName() {
     return fieldName_;
+  }
+
+  public Import setASTType(ASTType type) {
+    if (type == type_) {
+      return this;
+    }
+    type_ = type;
+    return this;
+  }
+
+  public ASTType getASTType() {
+    return type_;
   }
 
   @Override

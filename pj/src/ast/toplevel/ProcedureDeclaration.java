@@ -3,7 +3,7 @@ package ast.toplevel;
 import ast.Sequence;
 import ast.Parameter;
 import ast.stmt.BlockStatement;
-import ast.types.NodeType;
+import ast.types.ASTType;
 import ast.types.ConstructedNode;
 import org.antlr.v4.runtime.Token;
 import scope.VariableScope;
@@ -29,23 +29,23 @@ public class ProcedureDeclaration extends TopLevelDeclaration<ProcedureDeclarati
     this(null, null);
   }
 
-  public ProcedureDeclaration(NodeType type, final String name) {
+  public ProcedureDeclaration(ASTType type, final String name) {
     this(ACC_PUBLIC, type, name);
   }
 
-  public ProcedureDeclaration(int modifiers, NodeType type, final String name) {
+  public ProcedureDeclaration(int modifiers, ASTType type, final String name) {
     this(modifiers, type, name, null);
   }
 
-  public ProcedureDeclaration(int modifiers, NodeType type, final String name, Sequence<ConstructedNode> implementedNames) {
+  public ProcedureDeclaration(int modifiers, ASTType type, final String name, Sequence<ConstructedNode> implementedNames) {
     this(modifiers, type, name, implementedNames, new BlockStatement());
   }
 
-  public ProcedureDeclaration(int modifiers, NodeType type, final String name, Sequence<ConstructedNode> implementedNames, BlockStatement body) {
+  public ProcedureDeclaration(int modifiers, ASTType type, final String name, Sequence<ConstructedNode> implementedNames, BlockStatement body) {
     this(null, modifiers, type, name, implementedNames, null, body);
   }
 
-  public ProcedureDeclaration(Token token, int modifiers, NodeType type, final String name, Sequence<ConstructedNode> implementedNames, Sequence<Parameter> parameters, BlockStatement body) {
+  public ProcedureDeclaration(Token token, int modifiers, ASTType type, final String name, Sequence<ConstructedNode> implementedNames, Sequence<Parameter> parameters, BlockStatement body) {
     super(token, modifiers, type, name, implementedNames);
     setParameters(parameters);
     setBody(body);

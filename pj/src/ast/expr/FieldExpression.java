@@ -1,7 +1,7 @@
 package ast.expr;
 
 import ast.SourceAST;
-import ast.types.NodeType;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -38,15 +38,15 @@ public class FieldExpression extends Expression<FieldExpression> {
     setIdentifier(identifier);
   }
 
-  public FieldExpression setScope(Expression<?> fieldExpression) {
-    if (fieldExpression == scope_) {
+  public FieldExpression setScope(Expression<?> scope) {
+    if (scope == scope_) {
       return this;
     }
     if (scope_ != null) {
       scope_.setParentNode(null);
     }
-    scope_ = fieldExpression;
-    setAsParentNodeOf(fieldExpression);
+    scope_ = scope;
+    setAsParentNodeOf(scope);
     return this;
   }
 
@@ -89,8 +89,8 @@ public class FieldExpression extends Expression<FieldExpression> {
   }
 
   @Override
-  public FieldExpression setNodeType(NodeType type) {
-    return super.setNodeType(type);
+  public FieldExpression setASTType(ASTType type) {
+    return super.setASTType(type);
   }
 
   @Override

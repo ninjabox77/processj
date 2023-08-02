@@ -13,7 +13,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class PrimitiveNode extends NodeType {
+public class PrimitiveNode extends ASTType {
 
   private Primitive type_;
 
@@ -27,11 +27,11 @@ public class PrimitiveNode extends NodeType {
 
   public PrimitiveNode(Token token, Type type) {
     super(token);
-    setTSType(type);
+    setType(type);
   }
 
   @Override
-  public PrimitiveNode setTSType(Type type) {
+  public PrimitiveNode setType(Type type) {
     if (type == type_) {
       return this;
     }
@@ -44,7 +44,7 @@ public class PrimitiveNode extends NodeType {
   }
 
   @Override
-  public Primitive getTSType() {
+  public Primitive getType() {
     return type_;
   }
 
@@ -54,7 +54,7 @@ public class PrimitiveNode extends NodeType {
       return false;
     }
     if (node == type_) {
-      setTSType((Primitive) replaceWith);
+      setType((Primitive) replaceWith);
       return true;
     }
     return false;

@@ -1,7 +1,7 @@
 package ast.expr;
 
 import ast.SourceAST;
-import ast.types.NodeType;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -64,8 +64,8 @@ public class ArrayAccess extends Expression<ArrayAccess> {
   }
 
   @Override
-  public ArrayAccess setNodeType(NodeType type) {
-    return super.setNodeType(type);
+  public ArrayAccess setASTType(ASTType type) {
+    return super.setASTType(type);
   }
 
   @Override

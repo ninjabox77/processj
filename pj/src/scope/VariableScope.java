@@ -36,7 +36,7 @@ public class VariableScope {
     if (declaredVariables_ == Collections.EMPTY_MAP) {
       declaredVariables_ = new HashMap<>();
     }
-    declaredVariables_.put(variable.getName(), variable);
+    declaredVariables_.put(variable.getIdentifier(), variable);
   }
 
   public Variable<?> getDeclaredVariable(final String name) {
@@ -61,7 +61,7 @@ public class VariableScope {
     if (referencedLocalVariables_ == Collections.EMPTY_MAP) {
       referencedLocalVariables_ = new HashMap<>();
     }
-    referencedLocalVariables_.put(variable.getName(), variable);
+    referencedLocalVariables_.put(variable.getIdentifier(), variable);
   }
 
   public Variable<?> getReferencedVariable(final String name) {

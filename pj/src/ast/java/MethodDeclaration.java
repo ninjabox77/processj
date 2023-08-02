@@ -3,7 +3,7 @@ package ast.java;
 import ast.Parameter;
 import ast.Sequence;
 import ast.stmt.BlockStatement;
-import ast.types.NodeType;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -19,7 +19,7 @@ import java.util.Optional;
  */
 public class MethodDeclaration<T extends MethodDeclaration<?>> extends BodyDeclaration<T> {
 
-  private NodeType type_;
+  private ASTType type_;
   private String name_;
   private BlockStatement body_;
   private Sequence<Parameter> parameters_;
@@ -28,24 +28,24 @@ public class MethodDeclaration<T extends MethodDeclaration<?>> extends BodyDecla
     this(ACC_PUBLIC, null, null);
   }
 
-  public MethodDeclaration(final int modifiers, NodeType type, final String name) {
+  public MethodDeclaration(final int modifiers, ASTType type, final String name) {
     this(modifiers, type, name, null, new BlockStatement());
   }
 
-  public MethodDeclaration(final int modifiers, NodeType type, final String name, Sequence<Parameter> parameters, BlockStatement body) {
+  public MethodDeclaration(final int modifiers, ASTType type, final String name, Sequence<Parameter> parameters, BlockStatement body) {
     this(null, modifiers, type, name, parameters, body);
   }
 
-  public MethodDeclaration(Token token, final int modifiers, NodeType type, final String name, Sequence<Parameter> parameters, BlockStatement body) {
+  public MethodDeclaration(Token token, final int modifiers, ASTType type, final String name, Sequence<Parameter> parameters, BlockStatement body) {
     super(token, modifiers);
     setModifiers(modifiers);
-    setNodeType(type);
-    setName(name);
+    setASTType(type);
+    setIdentifier(name);
     setParameters(parameters);
     setBody(body);
   }
 
-  public T setNodeType(NodeType type) {
+  public T setASTType(ASTType type) {
     if (type == type_) {
       return (T) this;
     }
@@ -62,11 +62,11 @@ public class MethodDeclaration<T extends MethodDeclaration<?>> extends BodyDecla
     return super.setModifiers(modifiers);
   }
 
-  public NodeType getNodeType() {
+  public ASTType getASTType() {
     return type_;
   }
 
-  public T setName(final String name) {
+  public T setIdentifier(final String name) {
     if (Objects.equals(name, name_)) {
       return (T) this;
     }
@@ -74,7 +74,7 @@ public class MethodDeclaration<T extends MethodDeclaration<?>> extends BodyDecla
     return (T) this;
   }
 
-  public String getName() {
+  public String getIdentifier() {
     return name_;
   }
 

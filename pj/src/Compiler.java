@@ -140,15 +140,5 @@ public class Compiler {
     ProcessJParser parser = new ProcessJParser(tokens);
     ProcessJParser.CompilationUnitContext init = parser.compilationUnit();
     Compilation unit = new AstBuilder().visitCompilationUnit(init);
-    unit.accept(new TreePrinter(new PrintWriter(System.out, true)), null);
-
-    RecordType r1 = new RecordType();
-    r1.setName("A");
-    r1.setImplementedTypes(Sequence.sequenceList(new NamedType(new Name("B"))));
-    RecordType r2 = new RecordType();
-    r2.setName("D");
-    r2.setImplementedTypes(Sequence.sequenceList(r1));
-    r2.getImplementedTypes().ifPresent(i -> i.accept(new TreePrinter(new PrintWriter(System.out, true)), null));
-    System.out.println(r1.typeAssignmentCompatible(r2));
   }
 }

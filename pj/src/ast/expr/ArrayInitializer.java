@@ -1,7 +1,7 @@
 package ast.expr;
 
 import ast.Sequence;
-import ast.types.NodeType;
+import ast.types.ASTType;
 import org.antlr.v4.runtime.Token;
 import visitor.DefaultVisitor;
 import visitor.GenericVisitor;
@@ -43,8 +43,8 @@ public class ArrayInitializer extends ListExpression<ArrayInitializer> {
   }
 
   @Override
-  public ArrayInitializer setNodeType(NodeType type) {
-    return super.setNodeType(type);
+  public ArrayInitializer setASTType(ASTType type) {
+    return super.setASTType(type);
   }
 
   @Override

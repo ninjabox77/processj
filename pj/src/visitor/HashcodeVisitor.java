@@ -48,7 +48,11 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
 
   @Override
   public Integer visit(final Compilation c) {
-    return null;
+    return c.getFile().hashCode() * 31 +
+        c.getPackage().accept(this) * 31 +
+        (c.getImports().isPresent() ? c.getImports().get().accept(this) : 0) * 31 +
+        (c.getTypeDeclarations().isPresent() ? c.getTypeDeclarations().get().accept(this) : 0) * 31 +
+        (c.getComment().isPresent() ? c.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
@@ -58,60 +62,82 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
 
   @Override
   public Integer visit(final Import i) {
-    return null;
+    return i.getName().accept(this) * 31 +
+        (i.getAlias() != null ? i.getAlias().hashCode() : 0) * 31 +
+        (i.getFieldName() != null ? i.getFieldName().hashCode() : 0) * 31 +
+        (i.isJavaImport() ? 1 : 0) * 31 +
+        (i.isStar() ? 1 : 0) * 31 +
+        (i.getComment().isPresent() ? i.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final Name n) {
-    return null;
+    return n.getIdentifier().hashCode() * 31 +
+        (n.getQualifier().isPresent() ? n.getQualifier().get().accept(this) : 0) * 31 +
+        (n.getComment().isPresent() ? n.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final Package p) {
-    return null;
+    return p.getName().accept(this) * 31 +
+        (p.getComment().isPresent() ? p.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final Parameter p) {
-    return null;
+    return p.getModifiers() * 31 +
+        p.getASTType().accept(this) * 31 +
+        p.getIdentifier().hashCode() * 31 +
+        (p.isVarArgs() ? 1 : 0) * 31 +
+        (p.getComment().isPresent() ? p.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final Sequence<?> s) {
     int hash = 0;
-    for (Object object : s)
-      hash += ((Visitor) object).accept(this) * 31;
+    for (Visitor object : s)
+      hash += object.accept(this) * 31;
     return hash;
   }
 
   @Override
   public Integer visit(final VariableDeclarator v) {
-    return null;
+    return v.getModifiers() * 31 +
+        v.getASTType().accept(this) * 31 +
+        v.getIdentifier().hashCode() * 31 +
+        (v.getRightExpression() != null ? v.getRightExpression().accept(this) : 0) * 31 +
+        (v.getComment().isPresent() ? v.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final Label s) {
-    return null;
+    return s.getIdentifier().hashCode() * 31 +
+        (s.getComment().isPresent() ? s.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ArrayNode a) {
-    return null;
+    return a.getType().accept(this) * 31 +
+        a.getBracketPosition().hashCode() * 31 +
+        (a.getComment().isPresent() ? a.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final BarrierNode b) {
-    return null;
+    return b.getType().accept(this) * 31 +
+        (b.getComment().isPresent() ? b.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ChannelEndNode c) {
-    return null;
+    return c.getType().accept(this) * 31 +
+        (c.getComment().isPresent() ? c.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ChannelNode c) {
-    return null;
+    return c.getType().accept(this) * 31 +
+        (c.getComment().isPresent() ? c.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
@@ -121,32 +147,40 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
 
   @Override
   public Integer visit(final PrimitiveNode p) {
-    return null;
+    return p.getType().accept(this) * 31 +
+        (p.getComment().isPresent() ? p.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final TimerNode t) {
-    return null;
+    return t.getType().accept(this) * 31 +
+        (t.getComment().isPresent() ? t.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final VoidNode v) {
-    return null;
+    return v.getType().accept(this) * 31 +
+        (v.getComment().isPresent() ? v.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ConstructedNode c) {
-    return null;
+    return c.getType().accept(this) * 31 +
+        (c.getComment().isPresent() ? c.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
-  public Integer visit(final ErrorNode e) {
-    return null;
+  public Integer visit(final UnknownNode u) {
+    return u.getType().accept(this) * 31 +
+        (u.getComment().isPresent() ? u.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ConstantDeclaration c) {
-    return null;
+    return c.getModifiers() * 31 +
+        c.getASTType().accept(this) * 31 +
+        c.getIdentifier().hashCode() * 31 +
+        (c.getRightExpression().isPresent() ? c.getRightExpression().get().accept(this) : 0) * 31;
   }
 
   @Override
@@ -156,367 +190,517 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
 
   @Override
   public Integer visit(final ProcedureDeclaration p) {
-    return null;
+    return p.getModifiers() * 31 +
+        p.getASTType().accept(this) * 31 +
+        p.getIdentifier().hashCode() * 31 +
+        (p.getImplementedNames().isPresent() ? p.getImplementedNames().get().accept(this) : 0) * 31 +
+        p.getParameters().accept(this) * 31 +
+        p.getBody().accept(this) * 31 +
+        (p.doesYield() ? 1 : 0) * 31 +
+        (p.getComment().isPresent() ? p.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ProtocolCaseDeclaration p) {
-    return null;
+    return p.getIdentifier().hashCode() * 31 +
+        (p.getDeclaredFields().isPresent() ? p.getDeclaredFields().get().accept(this) : 0) * 31 +
+        (p.getComment().isPresent() ? p.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ProtocolDeclaration p) {
-    return null;
+    return p.getModifiers() * 31 +
+        p.getASTType().accept(this) * 31 +
+        p.getIdentifier().hashCode() * 31 +
+        (p.getImplementedNames().isPresent() ? p.getImplementedNames().get().accept(this) : 0) * 31 +
+        (p.getDeclaredTags().isPresent() ? p.getDeclaredTags().get().accept(this) : 0) * 31 +
+        (p.getComment().isPresent() ? p.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final RecordDeclaration r) {
-    return null;
+    return r.getModifiers() * 31 +
+        r.getASTType().accept(this) * 31 +
+        r.getIdentifier().hashCode() * 31 +
+        (r.getImplementedNames().isPresent() ? r.getImplementedNames().get().accept(this) : 0) * 31 +
+        (r.getDeclaredFields().isPresent() ? r.getDeclaredFields().get().accept(this) : 0) * 31 +
+        (r.getComment().isPresent() ? r.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final BlockStatement b) {
-    return null;
+    return b.getStatements().accept(this) * 31 +
+        (b.getComment().isPresent() ? b.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final SequentialBlock s) {
-    return null;
+    return s.getStatements().accept(this) * 31 +
+        (s.getComment().isPresent() ? s.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final BreakStatement b) {
-    return null;
+    return (b.getComment().isPresent() ? b.getComment().get().accept(this) : 0) * 31 +
+        (b.getLabel().isPresent() ? b.getLabel().get().hashCode() : 0) * 31;
   }
 
   @Override
-  public Integer visit(final SwitchCaseStatement c) {
-    return null;
+  public Integer visit(final SwitchCaseStatement s) {
+    return s.getExpressions().accept(this) * 31 +
+        (s.getStatements().isPresent() ? s.getStatements().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ContinueStatement c) {
-    return null;
+    return (c.getComment().isPresent() ? c.getComment().get().accept(this) : 0) * 31 +
+        (c.getLabel().isPresent() ? c.getLabel().get().hashCode() : 0) * 31;
   }
 
   @Override
   public Integer visit(final SkipStatement s) {
-    return null;
+    return (s.getComment().isPresent() ? s.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final StopStatement s) {
-    return null;
+    return (s.getComment().isPresent() ? s.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final DoWhileStatement d) {
-    return null;
+    return d.getCondition().accept(this) * 31 +
+        (d.getLoopBlock().isPresent() ? d.getLoopBlock().get().accept(this) : 0) * 31 +
+        (d.getComment().isPresent() ? d.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final EmptyStatement e) {
-    return null;
+    return (e.getComment().isPresent() ? e.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ExpressionStatement e) {
-    return null;
+    return e.getExpression().accept(this) * 31 +
+        (e.getComment().isPresent() ? e.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ForEachStatement f) {
-    return null;
+    return f.getVariable().accept(this) * 31 +
+        f.getCollectionExpr().accept(this) * 31 +
+        (f.getLoopBlock().isPresent() ? f.getLoopBlock().get().accept(this) : 0) * 31 +
+        (f.getComment().isPresent() ? f.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ForStatement f) {
-    return null;
+    return f.getInitialization().accept(this) * 31 +
+        f.getConditional().accept(this) * 31 +
+        f.getUpdate().accept(this) * 31 +
+        (f.getLoopBlock().isPresent() ? f.getLoopBlock().get().accept(this) : 0) * 31 +
+        (f.getComment().isPresent() ? f.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final Guard g) {
-    return null;
+    return g.getExpression().accept(this) * 31 +
+        (g.isSkip() ? 1 : 0) * 31 +
+        (g.getComment().isPresent() ? g.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final IfStatement i) {
-    return null;
+    return i.getConditional().accept(this) * 31 +
+        i.getIfPart().accept(this) * 31 +
+        (i.getElsePart().isPresent() ? i.getElsePart().get().accept(this) : 0) * 31 +
+        (i.getComment().isPresent() ? i.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final AltBlock r) {
-    return null;
+    return r.getLoopBlock().accept(this) * 31 +
+        (r.isFairAlt() ? 1 : 0) * 31 +
+        (r.getComment().isPresent() ? r.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ReturnStatement r) {
-    return null;
+    return (r.getExpression().isPresent() ? r.getExpression().get().accept(this) : 0) * 31 +
+        (r.getComment().isPresent() ? r.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final SwitchStatement s) {
-    return null;
+    return s.getSelector().accept(this) * 31 +
+        s.getSwitchCases().accept(this) * 31 +
+        (s.getDefaultStmt().isPresent() ? 1 : 0) * 31 +
+        (s.getComment().isPresent() ? s.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final WhileStatement w) {
-    return null;
+    return w.getCondition().accept(this) * 31 +
+        (w.getLoopBlock().isPresent() ? w.getLoopBlock().get().accept(this) : 0) * 31 +
+        (w.getComment().isPresent() ? w.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ReplicatedAltBlock r) {
-    return null;
+    return r.getInitialization().accept(this) * 31 +
+        r.getConditional().accept(this) * 31 +
+        r.getUpdate().accept(this) * 31 +
+        r.getLoopBlock().accept(this) * 31 +
+        (r.getComment().isPresent() ? r.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final AltCaseStatement a) {
-    return null;
+    return (a.getExpression().isPresent() ? a.getExpression().get().accept(this) : 0) * 31 +
+        a.getGuard().accept(this) * 31 +
+        a.getStatement().accept(this) * 31 +
+        (a.getComment().isPresent() ? a.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
-  public Integer visit(final ParBlock r) {
-    return null;
+  public Integer visit(final ParBlock p) {
+    return (p.getBarriers().isPresent() ? p.getBarriers().get().accept(this) : 0) * 31 +
+        p.getLoopBlock().accept(this) * 31 +
+        (p.getComment().isPresent() ? p.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ParForBlock p) {
-    return null;
+    return (p.getBarriers().isPresent() ? p.getBarriers().get().accept(this) : 0) * 31 +
+        p.getLoopBlock().accept(this) * 31 +
+        p.getInitialization().accept(this) * 31 +
+        p.getConditional().accept(this) * 31 +
+        p.getUpdate().accept(this) * 31 +
+        (p.getComment().isPresent() ? p.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final LabelStatement l) {
-    return null;
+    return (l.getStatementLabels().isPresent() ? l.getStatementLabels().get().accept(this) : 0) * 31 +
+        l.getStatement().accept(this) * 31 +
+        (l.getComment().isPresent() ? l.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ClassDeclaration c) {
-    return null;
+    return c.getModifiers() * 31 +
+        c.getIdentifier().hashCode() * 31 +
+        (c.getExtendedClasses().isPresent() ? c.getExtendedClasses().get().accept(this) : 0) * 31 +
+        (c.getImplementedClasses().isPresent() ? c.getImplementedClasses().get().accept(this) : 0) * 31 +
+        (c.getComment().isPresent() ? c.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ConstructorDeclaration c) {
-    return null;
+    return c.getModifiers() * 31 +
+        c.getASTType().accept(this) * 31 +
+        c.getIdentifier().hashCode() * 31 +
+        c.getBody().accept(this) * 31 +
+        (c.getParameters().isPresent() ? c.getParameters().get().accept(this) : 0) * 31 +
+        (c.getComment().isPresent() ? c.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final FieldDeclaration f) {
-    return null;
+    return f.getModifiers() * 31 +
+        f.getVariable().accept(this) * 31 +
+        (f.getComment().isPresent() ? f.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final MethodDeclaration<?> m) {
-    return null;
+    return m.getModifiers() * 31 +
+        m.getASTType().accept(this) * 31 +
+        m.getIdentifier().hashCode() * 31 +
+        m.getBody().accept(this) * 31 +
+        (m.getParameters().isPresent() ? m.getParameters().get().accept(this) : 0) * 31 +
+        (m.getComment().isPresent() ? m.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ArrayInitializer a) {
-    return null;
+    return a.getValues().accept(this) * 31 +
+        (a.getComment().isPresent() ? a.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final TupleExpression t) {
-    return null;
+    return t.getValues().accept(this) * 31 +
+        (t.getComment().isPresent() ? t.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final AssignmentExpression a) {
-    return null;
+    return a.getOperator() * 31 +
+        a.getLeftExpression().accept(this) * 31 +
+        a.getRightExpression().accept(this) * 31 +
+        (a.getComment().isPresent() ? a.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final BinaryExpression b) {
-    return null;
+    return b.getOperator() * 31 +
+        b.getLeftExpression().accept(this) * 31 +
+        b.getRightExpression().accept(this) * 31 +
+        (b.getComment().isPresent() ? b.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final BooleanExpression b) {
-    return null;
+    return b.getExpression().accept(this) * 31 +
+        (b.getComment().isPresent() ? b.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final BooleanLiteral b) {
-    return null;
+    return b.getValue().hashCode() * 31 +
+        (b.getComment().isPresent() ? b.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
-  public Integer visit(final Invocation c) {
-    return null;
+  public Integer visit(final Invocation i) {
+    return (i.getScope().isPresent() ? i.getScope().get().accept(this) : 0) * 31 +
+        i.getArguments().accept(this) * 31 +
+        (i.isImplicitThis() ? 1 : 0) * 31 +
+        i.getIdentifier().hashCode() * 31 +
+        (i.getComment().isPresent() ? i.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final CastExpression c) {
-    return null;
+    return c.getExpression().accept(this) * 31 +
+        (c.isCoerce() ? 1 : 0) * 31 +
+        (c.isIgnoreAutoboxing() ? 1 : 0) * 31 +
+        (c.getComment().isPresent() ? c.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final CharacterLiteral c) {
-    return null;
+    return c.getValue().hashCode() * 31 +
+        (c.getComment().isPresent() ? c.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ClassExpression c) {
-    return null;
+    return (c.getComment().isPresent() ? c.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
-  public Integer visit(final ObjectCreationExpr c) {
-    return null;
+  public Integer visit(final ObjectCreationExpr o) {
+    return (o.getScope().isPresent() ? o.getScope().get().accept(this) : 0) * 31 +
+        o.getArguments().accept(this) * 31 +
+        (o.getTypeArguments().isPresent() ? o.getTypeArguments().get().accept(this) : 0) * 31 +
+        o.getIdentifier().hashCode() * 31 +
+        (o.isImplicitThis() ? 1 : 0) * 31 +
+        (o.getComment().isPresent() ? o.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final DeclarationExpression d) {
-    return null;
+    return d.getVariable().accept(this) * 31 +
+        (d.getComment().isPresent() ? d.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final DoubleLiteral d) {
-    return null;
+    return d.getValue().hashCode() * 31 +
+        (d.getComment().isPresent() ? d.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final EmptyExpression e) {
-    return null;
+    return (e.getComment().isPresent() ? e.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final FieldExpression f) {
-    return null;
+    return (f.getScope().isPresent() ? f.getScope().get().accept(this) : 0) * 31 +
+        f.getIdentifier().hashCode() * 31 +
+        (f.isImplicitThis() ? 1 : 0) * 31 +
+        (f.getComment().isPresent() ? f.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final IntegerLiteral i) {
-    return null;
+    return i.getValue().hashCode() * 31 +
+        (i.getComment().isPresent() ? i.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ListExpression<?> l) {
-    return null;
+    return l.getValues().accept(this) * 31 +
+        (l.getComment().isPresent() ? l.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final LongLiteral l) {
-    return null;
+    return l.getValue().hashCode() * 31 +
+        (l.getComment().isPresent() ? l.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final MapEntryExpression m) {
-    return null;
+    return m.getKeyExpression().accept(this) * 31 +
+        m.getValueExpression().accept(this) * 31 +
+        (m.getComment().isPresent() ? m.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final MapExpression m) {
-    return null;
+    return m.getMapEntry().accept(this) * 31 +
+        (m.getComment().isPresent() ? m.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final MethodCallExpression m) {
-    return null;
+    return (m.getScope().isPresent() ? m.getScope().get().accept(this) : 0) * 31 +
+        m.getArguments().accept(this) * 31 +
+        (m.getTypeArguments().isPresent() ? m.getTypeArguments().get().accept(this) : 0) * 31 +
+        m.getIdentifier().hashCode() * 31 +
+        (m.isImplicitThis() ? 1 : 0) * 31 +
+        (m.getComment().isPresent() ? m.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final NewArrayExpression n) {
-    return null;
+    return (n.getLevels().isPresent() ? n.getLevels().get().accept(this) : 0) * 31 +
+        n.getArrayInitializer().accept(this) * 31 +
+        (n.getComment().isPresent() ? n.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final NotExpression n) {
-    return null;
+    return n.getExpression().accept(this) * 31 +
+        (n.getComment().isPresent() ? n.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final NullLiteral n) {
-    return null;
+    return n.getValue().hashCode() * 31 +
+        (n.getComment().isPresent() ? n.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final PostfixExpression p) {
-    return null;
+    return p.getOperator() * 31 +
+        p.getExpression().accept(this) * 31 +
+        (p.getComment().isPresent() ? p.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final PrefixExpression p) {
-    return null;
+    return p.getOperator() * 31 +
+        p.getExpression().accept(this) * 31 +
+        (p.getComment().isPresent() ? p.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final SkipExpression s) {
-    return null;
+    return (s.getComment().isPresent() ? s.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final StopExpression s) {
-    return null;
+    return (s.getComment().isPresent() ? s.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final TernaryExpression t) {
-    return null;
+    return t.getCondition().accept(this) * 31 +
+        t.getTrueExpression().accept(this) * 31 +
+        t.getFalseExpression().accept(this) * 31 +
+        (t.getComment().isPresent() ? t.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final UnaryMinusExpression u) {
-    return null;
+    return u.getExpression().accept(this) * 31 +
+        (u.getComment().isPresent() ? u.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final UnaryPlusExpression u) {
-    return null;
+    return u.getExpression().accept(this) * 31 +
+        (u.getComment().isPresent() ? u.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final VariableExpression v) {
-    return null;
+    return v.getIdentifier().hashCode() * 31 +
+        (v.getAccessVariable().isPresent() ? 1 : 0) * 31 +
+        (v.getComment().isPresent() ? v.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final FloatLiteral f) {
-    return null;
+    return f.getValue().hashCode() * 31 +
+        (f.getComment().isPresent() ? f.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final StringLiteral s) {
-    return null;
+    return s.getValue().hashCode() * 31 +
+        (s.getComment().isPresent() ? s.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final BlockExpression b) {
-    return null;
+    return b.getStatements().accept(this) * 31 +
+        (b.getComment().isPresent() ? b.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ChannelReadExpression c) {
-    return null;
+    return c.getChannel().accept(this) * 31 +
+        c.getArguments().accept(this) * 31 +
+        (c.getComment().isPresent() ? c.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ChannelWriteExpression c) {
-    return null;
+    return c.getChannel().accept(this) * 31 +
+        c.getArguments().accept(this) * 31 +
+        (c.getComment().isPresent() ? c.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final GroupExpression g) {
-    return null;
+    return g.getExpression().accept(this) * 31 +
+        (g.getComment().isPresent() ? g.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ArrayAccess a) {
-    return null;
+    return a.getName().accept(this) * 31 +
+        a.getIndex().accept(this) * 31 +
+        (a.getComment().isPresent() ? a.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final RecordLiteral r) {
-    return null;
+    return r.getName().accept(this) * 31 +
+        r.getMembers().accept(this) * 31 +
+        (r.getComment().isPresent() ? r.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final RecordMemberLiteral r) {
-    return null;
+    return r.getName().accept(this) * 31 +
+        r.getExpression().accept(this) * 31 +
+        (r.getComment().isPresent() ? r.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ProtocolLiteral p) {
-    return null;
+    return p.getName().accept(this) * 31 +
+        p.getTag().accept(this) * 31 +
+        p.getMembers().accept(this) * 31 +
+        (p.getComment().isPresent() ? p.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
@@ -531,37 +715,43 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
 
   @Override
   public Integer visit(final ArrayType a) {
-    return null;
+    return a.getArrayLevel() * 31 +
+        a.getComponentType().accept(this) * 31 +
+        (a.getComment().isPresent() ? a.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final BarrierType b) {
-    return null;
+    return b.getKind() * 31 + (b.getComment().isPresent() ? b.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ByteType b) {
-    return null;
+    return b.getKind() * 31 + (b.getComment().isPresent() ? b.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ChannelEndType c) {
-    return null;
+    return c.getChannelEnd() * 31 +
+        c.getComponentType().accept(this) * 31 +
+        (c.getComment().isPresent() ? c.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ChannelType c) {
-    return null;
+    return c.getChannelEnd() * 31 +
+        c.getComponentType().accept(this) * 31 +
+        (c.getComment().isPresent() ? c.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final CharType c) {
-    return (c.getComment().isPresent() ? c.getComment().get().accept(this) : 0) * 31;
+    return c.getKind() * 31 + (c.getComment().isPresent() ? c.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final DoubleType d) {
-    return (d.getComment().isPresent() ? d.getComment().get().accept(this) : 0) * 31;
+    return d.getKind() * 31 + (d.getComment().isPresent() ? d.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
@@ -571,17 +761,17 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
 
   @Override
   public Integer visit(final FloatType f) {
-    return (f.getComment().isPresent() ? f.getComment().get().accept(this) : 0) * 31;
+    return f.getKind() * 31 + (f.getComment().isPresent() ? f.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final IntegerType i) {
-    return (i.getComment().isPresent() ? i.getComment().get().accept(this) : 0) * 31;
+    return i.getKind() * 31 + (i.getComment().isPresent() ? i.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final LongType l) {
-    return (l.getComment().isPresent() ? l.getComment().get().accept(this) : 0) * 31;
+    return l.getKind() * 31 + (l.getComment().isPresent() ? l.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
@@ -596,7 +786,11 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
 
   @Override
   public Integer visit(final ProcedureType p) {
-    return null;
+    return (p.doesYield() ? 1 : 0) * 31 +
+        p.getReturnType().accept(this) * 31 +
+        p.getParameterTypes().accept(this) * 31 +
+        (p.getImplementedTypes().isPresent() ? p.getImplementedTypes().get().accept(this) : 0) * 31 +
+        (p.getComment().isPresent() ? p.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
@@ -610,6 +804,7 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   public Integer visit(final ProtocolType p) {
     return p.getName().hashCode() * 31 +
         (p.getFieldTypes().isPresent() ? p.getFieldTypes().get().accept(this) : 0) * 31 +
+        (p.getImplementedTypes().isPresent() ? p.getImplementedTypes().get().accept(this) : 0) * 31 +
         (p.getComment().isPresent() ? p.getComment().get().accept(this) : 0) * 31;
   }
 
@@ -617,27 +812,28 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
   public Integer visit(final RecordType r) {
     return r.getName().hashCode() * 31 +
         (r.getTypeFields().isPresent() ? r.getTypeFields().get().accept(this) : 0) * 31 +
+        (r.getImplementedTypes().isPresent() ? r.getImplementedTypes().get().accept(this) : 0) * 31 +
         (r.getComment().isPresent() ? r.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final ShortType s) {
-    return (s.getComment().isPresent() ? s.getComment().get().accept(this) : 0) * 31;
+    return s.getKind() * 31 + (s.getComment().isPresent() ? s.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final BooleanType b) {
-    return (b.getComment().isPresent() ? b.getComment().get().accept(this) : 0) * 31;
+    return b.getKind() * 31 + (b.getComment().isPresent() ? b.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final StringType s) {
-    return (s.getComment().isPresent() ? s.getComment().get().accept(this) : 0) * 31;
+    return s.getKind() * 31 + (s.getComment().isPresent() ? s.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
   public Integer visit(final TimerType t) {
-    return (t.getComment().isPresent() ? t.getComment().get().accept(this) : 0) * 31;
+    return t.getKind() * 31 + (t.getComment().isPresent() ? t.getComment().get().accept(this) : 0) * 31;
   }
 
   @Override
@@ -652,6 +848,7 @@ public class HashcodeVisitor implements DefaultVisitor<Integer> {
 
   @Override
   public Integer visit(final NamedType t) {
-    return (t.getComment().isPresent() ? t.getComment().get().accept(this) : 0) * 31;
+    return t.getName().accept(this) * 31 +
+        (t.getComment().isPresent() ? t.getComment().get().accept(this) : 0) * 31;
   }
 }

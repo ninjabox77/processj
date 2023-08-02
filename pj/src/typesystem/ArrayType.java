@@ -71,19 +71,34 @@ public class ArrayType extends Constructed {
     return this;
   }
 
+  // if α=Array(t1,I1) ∧ β=Array(t2,I2)
+  // α =T β ⇔ Array?(α) ∧ Array?(β) ∧ (t1 =T t2) ∧ ((I1 =I2) ∨ (I1 =⊥) ∨ (I2 =⊥))
   @Override
   public boolean typeEqual(Type other) {
-    return false;
+    if (!other.isConstructedType()) {
+      return false;
+    }
+    if (!other.asConstructedType().isArrayType()) {
+      return false;
+    }
+    ArrayType at = other.asConstructedType().asArrayType();
+    if (getArrayLevel() != at.getArrayLevel()) {
+      return false;
+    }
+    return componentType_.typeEqual(at.componentType_);
   }
 
   @Override
   public boolean typeEquivalent(Type other) {
-    return false;
+    return typeEqual(other);
   }
 
   @Override
   public boolean typeAssignmentCompatible(Type other) {
-    return false;
+    if (!other.isConstructedType()) {
+      return false;
+    }
+    return typeEqual(other);
   }
 
   @Override

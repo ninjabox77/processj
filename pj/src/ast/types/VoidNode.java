@@ -13,7 +13,7 @@ import visitor.VoidVisitor;
  *
  * @author Ben
  */
-public class VoidNode extends NodeType {
+public class VoidNode extends ASTType {
 
   private VoidType type_;
 
@@ -27,11 +27,11 @@ public class VoidNode extends NodeType {
 
   public VoidNode(Token token, Type type) {
     super(token);
-    setTSType(type);
+    setType(type);
   }
 
   @Override
-  public VoidNode setTSType(Type type) {
+  public VoidNode setType(Type type) {
     if (type == type_) {
       return this;
     }
@@ -44,7 +44,7 @@ public class VoidNode extends NodeType {
   }
 
   @Override
-  public Type getTSType() {
+  public Type getType() {
     return type_;
   }
 
@@ -54,7 +54,7 @@ public class VoidNode extends NodeType {
       return false;
     }
     if (node == type_) {
-      setTSType((VoidType) replaceWith);
+      setType((VoidType) replaceWith);
       return true;
     }
     return false;
